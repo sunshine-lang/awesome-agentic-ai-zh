@@ -4,7 +4,7 @@
 
 This repo is a **community-maintained learning roadmap**: no release date, no promised schedule. This document makes public “where we know things are not good enough and where we want to go next”, so people who want to contribute can pick one piece to start with, without reading the whole repo first just to know what is missing.
 
-> Want to work on one item? Open a [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions) first, or send a PR directly. For long-term stage / branch maintainers, see [`CONTRIBUTORS.md`](CONTRIBUTORS.md). For beginner entry points, see the “5 easy entry points” section in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+> Want to work on one item? Open a [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions) first, or send a PR directly. For long-term stage / branch maintainers, see [`CONTRIBUTORS.md`](CONTRIBUTORS.md). For beginner entry points, see the “5 easy entry points” section in [`CONTRIBUTING.en.md`](CONTRIBUTING.en.md).
 
 **Status legend**: 🟢 In progress / always open to contributions · 🟡 Known gap, wanted · 🔵 Idea, pending discussion · ✅ Recently completed
 

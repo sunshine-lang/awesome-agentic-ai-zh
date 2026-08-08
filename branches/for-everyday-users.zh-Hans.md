@@ -72,20 +72,20 @@ ChatGPT 桌面版。可以对屏幕截图问问题、语音对话、跟其他 Ap
 
 > 这些工具虽然定位给开发者，但**日常用户也能用**——例如批量重命名文件、整理下载文件夹、自动写每周回顾、把 PDF 摘要存成 Markdown。
 >
-> 想看详细比较？见 [`resources/cli-agents-guide.zh-Hans.md`](../resources/cli-agents-guide.zh-Hans.md)（7 个主流 CLI agent 并列、依 use case 推荐、常见坑、实用搭配）。
+> 想看详细比较？见 [`resources/cli-agents-guide.zh-Hans.md`](../resources/cli-agents-guide.zh-Hans.md)（8 个主流 CLI agent 并列、依 use case 推荐、常见坑、实用搭配）。
 >
 > 想要 step-by-step 上手？见 [`tracks/cli/A1-cli-intro.zh-Hans.md`](../tracks/cli/A1-cli-intro.zh-Hans.md)（Track A 第一站，从安装到第一个任务）。
 >
-> 想把 CLI agent 接到你的 Notion / Obsidian / Excel / Google 文件等日常工具？见 [`resources/mcp-skills-catalog.zh-Hans.md`](../resources/mcp-skills-catalog.zh-Hans.md)（按分类整理 62 个 MCP server / Skill）。
+> 想把 CLI agent 接到你的 Notion / Obsidian / Excel / Google 文件等日常工具？见 [`resources/mcp-skills-catalog.zh-Hans.md`](../resources/mcp-skills-catalog.zh-Hans.md)（按分类整理 77+ 个 MCP server / Skill）。
 
 #### [anthropics/claude-code](https://github.com/anthropics/claude-code) ⭐⭐⭐⭐⭐
-★ 120k+ — Anthropic 官方的 CLI agent。能读写文件、执行指令、做多步骤任务。**日常用户最容易上手的 CLI 工具**。
+★ 138k+ — Anthropic 官方的 CLI agent。能读写文件、执行指令、做多步骤任务。**日常用户最容易上手的 CLI 工具**。
 
 #### [openai/codex](https://github.com/openai/codex) ⭐⭐⭐⭐⭐
 
 | 栏位 | 内容 |
 |---|---|
-| Stars | ★ 80k+ |
+| Stars | ★ 100k+ |
 | License | Apache-2.0 |
 
 **教什么**：OpenAI 出品的终端机 agent——可以在命令行帮你整理文件、批量处理文字、执行多步骤任务；写程序只是其中一种用途。跟 Claude Code 同类，但用的是 OpenAI 的模型。
@@ -96,7 +96,7 @@ ChatGPT 桌面版。可以对屏幕截图问问题、语音对话、跟其他 Ap
 
 | 栏位 | 内容 |
 |---|---|
-| Stars | ★ 155k+ |
+| Stars | ★ 187k+ |
 | License | MIT |
 
 **教什么**：开源版的 coding agent，**不绑定特定 LLM provider**——可以用 Claude、GPT、Gemini、本地 Ollama 任何一个。社群维护、迭代速度快。
@@ -176,4 +176,4 @@ ChatGPT 桌面版。可以对屏幕截图问问题、语音对话、跟其他 Ap
 - 中文友善的 chat tools（国产 LLM、本地化 wrapper）
 - 隐私 / 安全相关的最佳实践（什么数据能送 / 不能送）
 
-详见 [CONTRIBUTING.md](../CONTRIBUTING.md)。
+详见 [CONTRIBUTING.zh-Hans.md](../CONTRIBUTING.zh-Hans.md)。

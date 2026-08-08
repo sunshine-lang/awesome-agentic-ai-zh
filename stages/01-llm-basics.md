@@ -16,14 +16,17 @@
 | 詞 | 中文 | 一句話 |
 |---|---|---|
 | **token** | 詞元 | 模型計算文字長度與費用的基本單位（中文 1 字 ≈ 1.5-2 token） |
-| **context window** | 上下文視窗 | 模型一次能看到多少 token（Claude 1M / GPT ~400k / Gemini 2M）|
+| **context window** | 上下文視窗 | 模型一次能看到多少 token（Claude 1M / GPT 1.05M / Gemini 2M）|
 | **temperature** | 隨機程度參數 | 控制回答穩定或發散（0 = 最穩定、1 = 創意；分類任務用 0.0-0.3、創作用 0.7-1.0）|
 
 → 這 3 個詞貫穿後續所有 stage。Stage 1 的目標就是讓你用 API 跑出來、親手摸到它們如何影響輸出。
 
+> 🧠 **temperature 為什麼能調？先懂 next-token**：LLM 的核心動作是**預測下一個 token**：它對「下一個字」算出一個機率分布，再從裡面**抽樣**一個。`temperature` 跟 `top_p` 就是在「重塑這個分布」——temperature 低 → 分布變尖、幾乎只挑最可能的（穩定、可重現）；temperature 高 → 分布變平、更敢挑冷門字（有創意但易跑題）。`max_tokens` 則是「最多抽幾次就停」。所以這些不是魔法旋鈕，而是在控制「怎麼從機率分布裡選字」。
+
 ## 📌 學習目標
 
 走完這個階段後你會：
+
 - 解釋 LLM 是什麼、token 是什麼、context window 是什麼意思
 - 第一次成功呼叫 Claude / GPT / Gemini API 並解析回應
 - 在強項上比較四大 LLM 家族（Claude / GPT / Gemini / Llama）
@@ -42,25 +45,40 @@
 
 這 3 家是 SaaS API、付 token 用、不能 self-host：
 
-| Model 家族 | 旗艦（2026-06）| Context | 強項 | 適合任務 | 官方 docs |
+<!-- 維護慣例（下面 3 張表共用）：「旗艦」這格只寫現在的旗艦，最多再留前一代；出了新的就把舊名字換掉、別一直往上加；太舊、官網已經查不到的就刪掉。會變的資訊（暫停、preview、還沒出）別塞在格子裡，寫到表格下面那行「註」；等狀態結束了（正式上線、恢復、或永久退役）就把那行刪掉。「Context」這格只填數字。改完記得更新標題的月份（2026-MM）。 -->
+
+| Model 家族 | 旗艦（2026-07）| Context | 強項 | 適合任務 | 官方 docs |
 |---|---|---|---|---|---|
-| **Claude**（Anthropic）| Fable 5（Mythos-class、2026-06 最新最高階）/ Opus 4.8（Opus-class 旗艦、Fable 5 安全 fallback）/ Sonnet 4.6 / Haiku 4.5 | Fable 5 官方未公布；Opus 4.8 為 1M（Haiku 4.5 為 200k）| long-form / coding / agent / safety alignment | 寫 paper / code review / agent runtime | [platform.claude.com/docs](https://platform.claude.com/docs/en/about-claude/models/overview) |
-| **GPT**（OpenAI）| GPT-5.5 / GPT-5 / o-series | ~400k | 通用 / function calling / ecosystem 最廣 | 廣度查詢 / function-call 框架 / GPTs 生態 | [platform.openai.com/docs/models](https://platform.openai.com/docs/models) |
-| **Gemini**（Google）| 3.1 Pro / Flash | **2M**（Pro 系列、Flash 為 1M）| 長 context / 原生 multimodal / Google 整合 | PDF / 影音 / 大量文件 / Google Workspace | [ai.google.dev](https://ai.google.dev/gemini-api/docs/models/gemini) |
+| **Claude**（Anthropic）| Opus 5 / Sonnet 5 / Haiku 4.5 | 1M | long-form / coding / agent / safety alignment | 寫 paper / code review / agent runtime | [platform.claude.com/docs](https://platform.claude.com/docs/en/about-claude/models/overview) |
+| **GPT**（OpenAI）| GPT-5.6 Sol / Terra / Luna | 1.05M | 通用 / function calling / ecosystem 最廣 | 廣度查詢 / function-call 框架 / GPTs 生態 | [platform.openai.com/docs/models](https://platform.openai.com/docs/models) |
+| **Gemini**（Google）| 3.5 Flash / 3.5 Pro（開發中）| 2M | 長 context / 原生 multimodal / Google 整合 | PDF / 影音 / 大量文件 / Google Workspace | [ai.google.dev](https://ai.google.dev/gemini-api/docs/models/gemini) |
+
+> **註**：`（開發中）`= 還沒推出。Claude **Fable 5**（Mythos-class、位階在 Opus 之上、$10/$50）是目前最強的 Claude 層級；**Opus 5**（2026-07-24 推出、`claude-opus-5`、1M、$5/$25，跟前一代 Opus 4.8 同價）是官方 docs 建議的預設起點，Anthropic 宣稱它「接近 Fable 5 的能力、一半的價格」。**Opus 4.8 仍可用**（官方 docs 已移入 Legacy 區、未 deprecated）。Context 欄填的是旗艦的上限：Gemini Pro 系列 2M、Flash 1M；Claude 1M（Haiku 4.5 是 200k）；GPT-5.6 三款都是 1.05M。另外 **Sonnet 5**（2026-06-30 上線）是目前的 Sonnet 版本：1M context、速度快、比 Opus 便宜（$3/$15，Opus 是 $5/$25）。**GPT-5.6**（2026-07 上線）分三級：**Sol** 旗艦（$5/$30）、**Terra** 均衡（$2.50/$15）、**Luna** 最快最省（$1/$6），ChatGPT / Codex / API 皆可用。
 
 ### 🇨🇳 中國商業 + 開源 frontier（7 家）
 
-中文場景的主力——有些純 API（DeepSeek / Kimi / Hunyuan）、有些**同時釋出 OSS weights**（Qwen / GLM-5.1 / Yi 可在 Ollama 跑）：
+中文場景的主力，分兩類：**純 API**（雲端付費、不能 self-host）和**有開源 weights**（可在自己機器跑）。
 
-| Model 家族 | 旗艦（2026-05）| Context | 強項 | 適合任務 | 授權 | 官方 |
-|---|---|---|---|---|---|---|
-| **DeepSeek**（深度求索）| V3（`deepseek-chat`）/ R1（`deepseek-reasoner`）⚠️ V4 系列 weights 開源、消費 API 尚未全公開 | 128k | 推理 / coding / **cost 最低** | 大量 token / code 生成 / math | API proprietary、部分 weights OSS 在 HF | [api-docs.deepseek.com](https://api-docs.deepseek.com/zh-cn/) |
-| **Qwen**（阿里）| Qwen3（cloud DashScope + Apache 2.0 OSS）| 128k+ | **中文最強 OSS** / 多模態 / agent | 中文長文 / agent / self-host | Apache 2.0（OSS）+ proprietary（cloud）| [qwen.ai](https://qwen.ai/) · [DashScope](https://help.aliyun.com/zh/dashscope/) |
-| **Kimi**（Moonshot）| K2.6 multimodal + Agent | **超長 context（1M+）** | 長 context / 中文長文 | 整本書讀 / 文獻分流 | Proprietary | [platform.moonshot.cn](https://platform.moonshot.cn/) |
-| **GLM**（智譜 Zhipu）| GLM-5 proprietary / GLM-5.1 Apache 2.0 | 128k | 中文 / tool use / agent | 中文 agent / 多輪對話 | proprietary + Apache 2.0（5.1）| [open.bigmodel.cn](https://open.bigmodel.cn/) · [chatglm.cn](https://chatglm.cn/) |
-| **Hunyuan**（騰訊）| T1（deep-thinking、Transformer-Mamba MoE）+ TurboS | 128k | **可比 DeepSeek R1 推理**、中文 | 中文推理 / 騰訊生態 | Proprietary | [hunyuan.tencent.com](https://hunyuan.tencent.com/) |
-| **MiniMax** | abab6.5 + M2.7 | 200k | 多模態 / 中文長 prose | 中文寫作 / 影音 multimodal | Proprietary | [platform.minimax.io](https://platform.minimax.io/) |
-| **Yi**（01.AI / 李開復）| Yi-Lightning（API 新旗艦）/ Yi-34B-Chat（OSS、200k context）| 200k | **中文 OSS** 替代 Llama | 中文 self-host / 中文 API | Apache 2.0（OSS）/ proprietary（Lightning）| [01.ai](https://01.ai/) · [GitHub](https://github.com/01-ai/Yi) |
+**① 純 API（雲端、付費為主）**
+
+| Model 家族 | 旗艦（2026-05）| Context | 強項 | 適合任務 | 官方 |
+|---|---|---|---|---|---|
+| **DeepSeek**（深度求索）| V4-Flash（`deepseek-v4-flash`）/ V4-Pro（`deepseek-v4-pro`）| 1M | 推理 / coding / **cost 最低** | 大量 token / code 生成 / math | [api-docs.deepseek.com](https://api-docs.deepseek.com/zh-cn/) |
+| **Kimi**（Moonshot）| K3（2.8T 參數、原生多模態）| **1M** | 長 context / 中文長文 | 整本書讀 / 文獻分流 | [platform.moonshot.cn](https://platform.moonshot.cn/) |
+| **Hunyuan**（騰訊）| T1（深度思考）+ TurboS | 128k | **深度思考推理**（對標 DeepSeek R1 這條 2025 推理基線）、中文 | 中文推理 / 騰訊生態 | [hunyuan.tencent.com](https://hunyuan.tencent.com/) |
+| **MiniMax** | M3 | 1M | 多模態 / 中文長 prose / coding | 中文寫作 / 影音 multimodal | [platform.minimax.io](https://platform.minimax.io/) |
+
+> **註**：這組以雲端 API 為主、多為 proprietary。DeepSeek 另有部分開源權重（在 HF），主要用法仍是雲端 API（舊名 `deepseek-chat`/`deepseek-reasoner` 於 2026-07-24 停用、已改指向 v4-flash）。
+
+**② 有開源 weights（可 self-host）**
+
+| Model 家族 | 旗艦（2026-05）| Context | 強項 | 適合任務 | 官方 |
+|---|---|---|---|---|---|
+| **Qwen**（阿里）| Qwen 3.7 / 3.6（開源）| 128k+ | **中文最強 OSS** / 多模態 / agent | 中文長文 / agent / self-host | [qwen.ai](https://qwen.ai/) · [DashScope](https://help.aliyun.com/zh/dashscope/) |
+| **GLM**（智譜 Zhipu）| GLM-5.2 | 1M | 中文 / tool use / agent | 中文 agent / 多輪對話 | [open.bigmodel.cn](https://open.bigmodel.cn/) · [chatglm.cn](https://chatglm.cn/) |
+| **Yi**（01.AI / 李開復）| Yi-Lightning / Yi-34B-Chat | 200k | **中文 OSS**（⚠️ 01.AI 2025 起停 foundation 訓練、Yi 已凍結）| 中文 self-host / 中文 API | [01.ai](https://01.ai/) · [GitHub](https://github.com/01-ai/Yi) |
+
+> **註**：這三家都走 **開源版（Apache 2.0 或 MIT）+ 付費雲端 API** 兩條路（GLM 開源版現為 5.2、MIT）。開源版可用 [Ollama](https://ollama.com/) 在自己機器跑。
 
 > ⚠️ **小米 MiMo** 雖在 [`resources/cli-agents-guide.md`](../resources/cli-agents-guide.md) 列入 Hermes Agent routing、但 2026-05 無權威官方 source 可驗證、暫不收進此表。要試 → 透過 [Hermes Agent](https://github.com/NousResearch/hermes-agent) 200+ provider routing 接入。
 
@@ -70,10 +88,12 @@
 
 | Model 家族 | 大小（活躍）| License | 強項 | 適合任務 | 官方 |
 |---|---|---|---|---|---|
-| **Llama**（Meta）| 3.3 70B（**Llama 4 截至 2026-05 還沒釋出**）| Llama Community License | 通用 / 生態最廣 / Ollama 預設 | self-host 入門 / fine-tune base | [llama.com](https://www.llama.com/) · [HF Meta](https://huggingface.co/meta-llama) |
-| **Gemma**（Google）| Gemma 4 26B MoE + 31B dense（2026-04 釋出、Arena #3）| Apache 2.0 | **小巧高效** / Apple MLX 整合好 / multimodal | Edge / mobile / 4-8GB RAM 機器 | [ai.google.dev/gemma](https://ai.google.dev/gemma) |
-| **Mistral**（Mistral AI）| 7B / Mixtral 8x7B / Codestral | Apache 2.0（OSS 部分）| 開源 7B 級最強 | 商用 self-host / EU 主權 | [mistral.ai](https://mistral.ai/) · [HF Mistral](https://huggingface.co/mistralai) |
-| **Phi**（Microsoft）| Phi-4 14B reasoning + Phi-4-multimodal-instruct（multimodal 版）| MIT | **小但強** / reasoning / 適 edge | 4GB+ RAM / mobile / reasoning 入門 | [HF microsoft](https://huggingface.co/microsoft) |
+| **Llama**（Meta）| 3.3 70B | Llama Community License | 通用 / 生態最廣 / Ollama 預設 | self-host 入門 / fine-tune base | [llama.com](https://www.llama.com/) · [HF Meta](https://huggingface.co/meta-llama) |
+| **Gemma**（Google）| Gemma 4 26B MoE + 31B dense | Apache 2.0 | **小巧高效** / Apple MLX 整合好 / multimodal | Edge / mobile / 4-8GB RAM 機器 | [ai.google.dev/gemma](https://ai.google.dev/gemma) |
+| **Mistral**（Mistral AI）| Small 4 / Ministral 3 / Large 3 | 開源權重（license 依版本、Large 3 為 Apache 2.0）| Small 4 統一 reasoning / vision / coding、EU 主權 | 商用 self-host / EU 主權 | [mistral.ai](https://mistral.ai/) · [HF Mistral](https://huggingface.co/mistralai) |
+| **Phi**（Microsoft）| Phi-4 14B + multimodal | MIT | **小但強** / reasoning / 適 edge | 4GB+ RAM / mobile / reasoning 入門 | [HF microsoft](https://huggingface.co/microsoft) |
+
+> **註**：Llama 4（Scout / Maverick）於 2025-04 釋出，但屬大型 MoE，單機自架的實用基準仍是 3.3 70B（表中為 3.3）、Behemoth 未釋出；Gemma 4 為 2026-04 釋出、LMArena 開源組第 3；Phi-4 另有 multimodal 版。
 
 ### 🎯 我該選哪家？（按場景反查）
 
@@ -84,11 +104,11 @@
 | 多模態（PDF / 影音 / 圖）| **Gemini** 或 **Kimi** — 原生 multimodal |
 | 廣度查詢 + function calling 框架 | **GPT** — ecosystem 最廣、SDK 整合最深 |
 | **中文場景 + 商業 API** | **Kimi**（長 context 強、能塞整本書）或 **DeepSeek**（cost 最低）或 **GLM**（agent 友善）|
-| **中文場景 + 開源 self-host** | **Qwen 3**（Apache 2.0、目前中文最強 OSS）|
-| 推理 / math（reasoning model）| **DeepSeek R1** / **Hunyuan T1** / **OpenAI o-series** |
+| **中文場景 + 開源 self-host** | **Qwen 3.7 / GLM-5.2**（Apache 2.0 / MIT、中文最強 OSS 之一）|
+| 推理 / math（reasoning model）| **DeepSeek V4-Pro** / **Hunyuan T1** / **OpenAI o-series** |
 | 隱私 / offline / 不付 API | **Llama 3.3** / **Gemma 4** / **Qwen 3 OSS** via [Ollama](https://ollama.com/) |
 | Edge / 4GB RAM 機器 | **Gemma 4** / **Phi-4** / **Qwen 3（3B 以下版本）** |
-| 100k+ token 大文件 | **Gemini 3.1**（2M context）或 **Kimi K2.6**（1M+）|
+| 100k+ token 大文件 | **Gemini 3.1**（2M context）或 **Kimi K3**（1M）|
 | **想 cost 最低**（API 帳單敏感）| **DeepSeek V4-Flash** — 同級英文 model 中 token 單價最低 |
 
 ### 📊 中立 benchmark 資源（自己 verify、不靠單一 source）
@@ -111,6 +131,7 @@
 ## 🚪 進入條件
 
 你應該已經：
+
 - 能跑 Python script
 - 概念上知道 HTTP / REST 是什麼
 - 至少有一家供應商的 API key（Anthropic / OpenAI / Google）
@@ -119,13 +140,14 @@
 
 ## 📚 必修閱讀
 
-1. [**Anthropic — Claude 模型總覽**](https://docs.claude.com/en/about-claude/models/overview) — 官方模型 family、含 2026 最新 Claude Fable 5（`claude-fable-5`、Mythos-class、2026-06-09 GA）以及 Opus 4.8 / Sonnet 4.6 / Haiku 4.5。Fable 5 為對外開放的安全版；其同源、解除部分安全限制的 Mythos 5（`claude-mythos-5`）僅透過 Project Glasswing 限量開放給核准客戶
-2. [**anthropics/courses — Anthropic API Fundamentals**](https://github.com/anthropics/courses) ⭐⭐⭐⭐⭐ ★ 21k+ — Anthropic 官方 5 course umbrella、**module 1「Anthropic API Fundamentals」對應本 stage**。Jupyter notebook、用 Claude 3 Haiku（最便宜）跑、跟著做就能拿到 API 基本功
+1. [**Anthropic — Claude 模型總覽**](https://docs.claude.com/en/about-claude/models/overview) — 官方模型 family、含 2026 的 Claude Fable 5（`claude-fable-5`、Mythos-class、2026-06-09 GA）以及 Opus 5 / Sonnet 5 / Haiku 4.5。**Fable 5 是目前最高階的 Claude 層級；Opus 5（2026-07-24 推出、`claude-opus-5`）是現行的 Opus 級旗艦，Opus 4.8 仍可用（官方 docs 已移入 Legacy 區、未 deprecated）。**
+2. [**anthropics/courses — Anthropic API Fundamentals**](https://github.com/anthropics/courses) ⭐⭐⭐⭐⭐ ★ 22k+ — Anthropic 官方 5 course umbrella、**module 1「Anthropic API Fundamentals」對應本 stage**。Jupyter notebook、用 Claude 3 Haiku（最便宜）跑、跟著做就能拿到 API 基本功
 3. [**OpenAI Quickstart**](https://platform.openai.com/docs/quickstart) — 第一次 API call 的步驟
 4. [**A Visual Guide to LLM Tokenizers**](https://huggingface.co/learn/llm-course/chapter6/1) — Hugging Face 的入門
 5. [**Anthropic API Pricing**](https://www.anthropic.com/pricing#anthropic-api) — 把計價表看完，算一下 1k input + 1k output 的成本
 
 **🎥 中文影片補充（強烈推薦）**：
+
 - [**李宏毅 — 生成式 AI 導論（2024 春台大課程）**](https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php) ⭐⭐⭐ — 第 1-5 集講 LLM 是什麼、怎麼運作、token / context window / temperature 怎麼影響輸出。中文圈最高品質的 LLM 學術級導論、台大授課、官方頁含投影片 + YouTube。最新整合版見 [**GenAI-ML 2025 秋**](https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php)
 - [**3Blue1Brown — Transformer 視覺化**](https://www.youtube.com/watch?v=wjZofJX0v4M)（中文配音版：[3Blue1Brown 中文](https://www.youtube.com/@3Blue1BrownCN)）— LLM 內部運作 visual intro
 - [**Andrej Karpathy — Intro to LLMs**](https://www.youtube.com/watch?v=zjkBMFhNj_g) — 英文影片、1hr、英文圈最被推薦的 LLM 入門影片
@@ -141,7 +163,7 @@
 ### 練習 1：LLM API（hello world）
 五行 Python 呼叫 LLM 並印出回應。**預設用 Ollama 本機跑（免費、offline）**；想看 cloud 答案品質改 Path B Anthropic。詳見 [`examples/README.md`](../examples/README.md#三條路徑--預設用-ollama成本考量)。
 
-<details open>
+<details markdown="1" open>
 <summary>📋 <b>起手碼 — Path A（本機 Ollama gemma4:e4b、預設）</b>（複製到 <code>practice_1.py</code>、<code>python practice_1.py</code> 就跑）</summary>
 
 ```python
@@ -186,7 +208,7 @@ usage: CompletionUsage(completion_tokens=35, prompt_tokens=12, total_tokens=47)
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>📋 <b>起手碼 — Path B（Anthropic API、選擇性、想看 cloud 高品質時）</b>（複製到 <code>practice_1_anthropic.py</code>）</summary>
 
 ```python
@@ -229,10 +251,11 @@ usage: Usage(input_tokens=18, output_tokens=42, ...)
 
 ### 練習 2：Tokens
 同一個 prompt 跑 100 次，觀察 token 數的變化。
+
 - 注意：`temperature ≠ 0` 會產生變動
 - 注意：同一句話的英文 vs 中文 token 數差異
 
-<details open>
+<details markdown="1" open>
 <summary>📋 <b>起手碼 — Path A（本機 Ollama gemma4:e4b、預設）</b>（複製到 <code>practice_2.py</code>）</summary>
 
 ```python
@@ -283,7 +306,7 @@ print("💡 中文 prompt 通常 input tokens 比 English 多（中文 token 化
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>📋 <b>起手碼 — Path B（Anthropic API、選擇性）</b>（複製到 <code>practice_2_anthropic.py</code>）</summary>
 
 ```python
@@ -313,7 +336,7 @@ for label, prompt in PROMPTS.items():
 ### 練習 3：Pricing / Latency
 **成本敏感的工作必修**：算出你的 hello-world prompt 在不同 model 上跑 1000 次的成本。Ollama 本機是 $0 但有 latency 成本；Cloud LLM 有 $ 成本但快。**會算這兩個 trade-off 才能挑對 model**。
 
-<details open>
+<details markdown="1" open>
 <summary>📋 <b>起手碼 — Path A（本機 Ollama gemma4:e4b、量 latency）</b>（複製到 <code>practice_3.py</code>）</summary>
 
 ```python
@@ -369,7 +392,7 @@ avg output: 48 tokens、約 7.3 tokens/sec
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>📋 <b>起手碼 — Path B（Anthropic API、算 $ 成本）</b>（複製到 <code>practice_3_anthropic.py</code>）</summary>
 
 ```python
@@ -383,9 +406,9 @@ import anthropic
 # Anthropic 2026 Q2 公開計價（每 1M token、USD）— 跑前對照 https://www.anthropic.com/pricing
 PRICING = {
     "claude-haiku-4-5":   {"input": 1.00, "output":  5.00},
-    "claude-sonnet-4-6":  {"input": 3.00, "output": 15.00},
-    "claude-opus-4-8":    {"input": 5.00, "output": 25.00},  # Opus 4.8 (May 2026, Dynamic Workflows) — 維持 5/25 同價
-    "claude-fable-5":     {"input": 10.00, "output": 50.00},  # Fable 5 (Mythos-class, 2026-06-09 GA) — 最新最高階、約 Opus 4.8 的 2 倍
+    "claude-sonnet-5":    {"input": 3.00, "output": 15.00},  # 標準價；2026-08-31 前為優惠價 2.00 / 10.00
+    "claude-opus-5":      {"input": 5.00, "output": 25.00},  # Opus 5 (2026-07-24、接替 Opus 4.8) — 維持 5/25 同價
+    "claude-fable-5":     {"input": 10.00, "output": 50.00},  # Fable 5 (Mythos-class、最高層級) 約 Opus 的 2 倍
 }
 
 client = anthropic.Anthropic()
@@ -406,7 +429,7 @@ for name, r in PRICING.items():
 
 # === 自我驗證 ===
 assert cost_one > 0, "Cloud LLM 一定有成本"
-print(f"\n✅ 練習 3 通過（Anthropic）— 1000 次 haiku ≈ $0.25、sonnet 4.6 ≈ $0.76、opus 4.8 ≈ $1.27")
+print(f"\n✅ 練習 3 通過（Anthropic）— 1000 次 haiku ≈ $0.25、sonnet 5 ≈ $0.76、opus 5 ≈ $1.27")
 ```
 
 **預期輸出**：
@@ -415,8 +438,9 @@ model: claude-haiku-4-5
 single: input=14 output=48 → $0.000254
 1000 calls cost across model tiers:
   claude-haiku-4-5       $0.2540
-  claude-sonnet-4-6      $0.7620
-  claude-opus-4-8        $1.2700
+  claude-sonnet-5        $0.7620
+  claude-opus-5          $1.2700
+  claude-fable-5         $2.5400
 ```
 
 **Trade-off 對照**：本機 Ollama 跑 1000 次免費但要 ~2 hr；Anthropic haiku ~10 min $0.25；sonnet ~10 min $0.76。**production 場景才考慮 cloud；學習 / 實驗 / debug 全用本機**。
@@ -430,6 +454,7 @@ single: input=14 output=48 → $0.000254
 
 ### 練習 5：Error Handling
 故意觸發錯誤情境並寫 retry：
+
 - API key 錯誤 → 看怎麼 raise
 - prompt 超長 → context window 滿了會發生什麼
 - 網路斷掉 → 寫一個有 exponential backoff 的 retry wrapper
@@ -447,7 +472,7 @@ ollama pull qwen2.5:3b
 ollama serve  # 預設 port 11434
 ```
 
-<details>
+<details markdown="1">
 <summary>📋 <b>起手碼</b>（複製到 <code>practice_6.py</code>）</summary>
 
 ```python
@@ -497,22 +522,22 @@ print(f"💡 跑這次完全沒花錢（除了你的電力）")
 
 | 分類 | Project | ⭐ | 適合誰 | 為什麼推薦 / 備註 |
 |---|---|---|---|---|
-| **官方 cookbook / 入門** | [Anthropic Cookbook](https://github.com/anthropics/claude-cookbooks) | ⭐⭐⭐⭐⭐ | 開始用 Claude API、當參考書查 | Claude API 全功能 notebook（tool use / batch / prompt cache），★ 42k+、MIT |
-| | [Anthropic Courses](https://github.com/anthropics/courses) | ⭐⭐⭐⭐⭐ | 系統性從零學一遍 Claude | Anthropic 自家完整 5 門課（API 基礎 / prompt eval / real-world prompting / tool use），★ 21k+。先跑 `anthropic_api_fundamentals` |
+| **官方 cookbook / 入門** | [Anthropic Cookbook](https://github.com/anthropics/claude-cookbooks) | ⭐⭐⭐⭐⭐ | 開始用 Claude API、當參考書查 | Claude API 全功能 notebook（tool use / batch / prompt cache），★ 50k+、MIT |
+| | [Anthropic Courses](https://github.com/anthropics/courses) | ⭐⭐⭐⭐⭐ | 系統性從零學一遍 Claude | Anthropic 自家完整 5 門課（API 基礎 / prompt eval / real-world prompting / tool use），★ 22k+。先跑 `anthropic_api_fundamentals` |
 | | [OpenAI Cookbook](https://github.com/openai/openai-cookbook) | ⭐⭐⭐⭐⭐ | 用 OpenAI API + structured output / function calling | 跟 Anthropic Cookbook 對照、★ 73k+、MIT。比 Anthropic 大很多、用搜尋 |
 | | [Anthropic Claude API Quickstart](https://docs.anthropic.com/en/docs/get-started) | ⭐⭐⭐⭐ | 5 分鐘上手 | 官方文件、加 bookmark 用 |
-| **中文教材**<br>（章節式） | [datawhalechina/happy-llm](https://github.com/datawhalechina/happy-llm) | ⭐⭐⭐⭐⭐ | 中文讀者想徹底搞懂 LLM 原理 | 對應 Karpathy「Zero to Hero」中文版，★ 29k+。等同 HF LLM Course 中文版 |
+| **中文教材**<br>（章節式） | [datawhalechina/happy-llm](https://github.com/datawhalechina/happy-llm) | ⭐⭐⭐⭐⭐ | 中文讀者想徹底搞懂 LLM 原理 | 對應 Karpathy「Zero to Hero」中文版，★ 32k+。等同 HF LLM Course 中文版 |
 | | [datawhalechina/llm-universe](https://github.com/datawhalechina/llm-universe) | ⭐⭐⭐⭐⭐ | 中文新手想用 LLM 做東西 | API 基礎 / 知識庫 / RAG / 進階技巧，★ 13k+ |
 | | [datawhalechina/llm-cookbook](https://github.com/datawhalechina/llm-cookbook) | ⭐⭐⭐⭐ | 想要完整中文 LLM 學習路線 | Andrew Ng 課程中文翻譯改編（⚠️ 2025-06 後更新放緩、CC BY-NC-SA）|
-| | [jingyaogong/minimind](https://github.com/jingyaogong/minimind) | ⭐⭐⭐⭐ | 看完 Karpathy 影片想實際跑訓練 | 2hr 從零訓 64M LLM、Pretrain + SFT + LoRA + DPO + RLHF 全包，★ 48k+、Apache-2.0 |
+| | [jingyaogong/minimind](https://github.com/jingyaogong/minimind) | ⭐⭐⭐⭐ | 看完 Karpathy 影片想實際跑訓練 | 2hr 從零訓 64M LLM、Pretrain + SFT + LoRA + DPO + RLHF 全包，★ 53k+、Apache-2.0 |
 | **英文 course**<br>（系統式） | [HuggingFace — LLM Course](https://huggingface.co/learn/llm-course) | ⭐⭐⭐⭐⭐ | 想搞懂 transformer 內部 + HF 生態 | 含 transformer 原理 + 應用、Apache 2.0 |
 | | [LangChain Academy](https://academy.langchain.com/) | ⭐⭐⭐⭐ | 喜歡影片教學的視覺型學習者 | LangChain 官方免費課、含 RAG / agent。**忽略 LangChain 行銷段落** |
 | **本地端執行**<br>（不付 API 費）| [ollama/ollama](https://github.com/ollama/ollama) | ⭐⭐⭐⭐⭐ | 第一次跑本地 LLM | 本 repo Path A 預設、OpenAI-compat API、★ 170k+ |
-| | [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | ⭐⭐⭐⭐⭐ | 想搞懂 quantization / 為什麼 7B 能塞 8GB RAM | Ollama 底層 inference engine，★ 108k+、MIT |
+| | [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | ⭐⭐⭐⭐⭐ | 想搞懂 quantization / 為什麼 7B 能塞 8GB RAM | Ollama 底層 inference engine，★ 119k+、MIT |
 | | [mudler/LocalAI](https://github.com/mudler/LocalAI) | ⭐⭐⭐⭐ | 團隊合規、要 self-host 全套 OpenAI 替代 | drop-in OpenAI API 替代品（chat / embedding / image / TTS / STT），★ 46k+ |
-| | [ml-explore/mlx](https://github.com/ml-explore/mlx) | ⭐⭐⭐⭐ | Mac 開發、想榨乾 Apple Silicon | Apple 為 M1+ 量身打造的 ML framework，★ 25k+。搭 `mlx-lm` 用最方便 |
+| | [ml-explore/mlx](https://github.com/ml-explore/mlx) | ⭐⭐⭐⭐ | Mac 開發、想榨乾 Apple Silicon | Apple 為 M1+ 量身打造的 ML framework，★ 27k+。搭 `mlx-lm` 用最方便 |
 | **從零打造**<br>（理解原理）| [karpathy — Let's build GPT from scratch](https://www.youtube.com/watch?v=kCc8FmEb1nY) | ⭐⭐⭐⭐⭐ | 想搞懂 LLM 內部、不只會呼叫 | 2hr 高密度影片、用 PyTorch 從零打造 GPT。**暫停跟著寫 code 不要被動看** |
-| | [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | ⭐⭐⭐⭐⭐ | 想用整本書速度慢慢讀完 | Karpathy 影片的書本版：tokenizer → attention → pretraining → finetuning，★ 91k+、Apache-2.0 |
+| | [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | ⭐⭐⭐⭐⭐ | 想用整本書速度慢慢讀完 | Karpathy 影片的書本版：tokenizer → attention → pretraining → finetuning，★ 100k+、Apache-2.0 |
 | | [karpathy/LLM101n](https://github.com/karpathy/LLM101n) | ⭐⭐ | 歷史紀錄 | ⚠️ 已封存（2024-08）、只有大綱、課程沒做完。**直接看上面的「Build GPT from scratch」影片即可** |
 
 > 💡 **建議閱讀路徑**：API 入手就 Anthropic / OpenAI Cookbook → 中文系統路線就 happy-llm + llm-universe → 想深入內部就 Karpathy 影片 + rasbt 書搭 code → 想跑本地就 Ollama 起步、進階再讀 llama.cpp。
@@ -520,6 +545,7 @@ print(f"💡 跑這次完全沒花錢（除了你的電力）")
 ## ✅ 進 Stage 2 前的自我檢查
 
 你能不能：
+
 - [ ] 用 5 行 Python 呼叫 Claude API
 - [ ] 解釋為什麼「你好」可能用 2 個 token，但「Hello」只用 1 個
 - [ ] 大致說出 Claude Sonnet vs Opus 的 per-token 價格

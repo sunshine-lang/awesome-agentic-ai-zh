@@ -5,6 +5,12 @@
 # Exercise 4: Advanced SDK (streaming + prompt caching)
 
 Pairs with [Stage 7 — Multi-Agent & Production](../../../stages/07-multi-agent-production.en.md) Exercise 4.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
+
+> 📚 **Want the chapter-length version?** The starter in this folder is an illustrative build focused on the core pattern plus two SDK paths — it is not in-depth teaching material. Recommended for depth:
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ the most complete Chinese-language resource — chapter-by-chapter, covering 16 production capabilities. **This exercise maps to hello-agents' advanced SDK features chapter**
+> - [Anthropic Prompt Caching docs](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) + [Anthropic Batch API](https://docs.anthropic.com/en/docs/build-with-claude/batch-processing)
+> - Full references in [Stage 7 Curated Projects](../../../stages/07-multi-agent-production.en.md#-featured-projects-templates--sdks--tool-collections)
 
 ## Two SDK features production needs
 
@@ -86,11 +92,13 @@ First call: `cache_creation_input_tokens=2000` (25% write premium)
 Subsequent calls within 5 min: `cache_read_input_tokens=2000` (10% cost = 90% off)
 
 **When to use**:
+
 - Long system prompts called repeatedly (chatbots)
 - Tool schemas reused across calls (multi-tool agents)
 - Same document queried multiple times (RAG on a fixed doc)
 
 **When not**:
+
 - Every prompt is unique
 - Fewer than 1 call per 5 min (cache expires)
 

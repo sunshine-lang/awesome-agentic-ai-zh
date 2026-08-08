@@ -8,7 +8,7 @@
 
 > 📋 **Chapter Outline**: [What are Agent Interfaces? (Positioning)] → [Learning Objectives] → [Prerequisites] → [Required Reading] → [🖱 Computer Use (Screen-level)] → [🌐 Browser Use (Web-level)] → [📦 Code Sandbox (Isolated Execution, with Mini-Glossary)] → [How Track A Uses It] → [How Track B Builds It] → [⚠ 2026 Safety & Security] → [Hands-on Exercises] → [Recommended Tools] → [Featured Projects] → [Self-Check] → [The Next Frontier (Voice/VLA Forward Note)]
 
-> 🔑 **Key Terms**: See explanations within this chapter and in the main [`resources/glossary.md`](../resources/glossary.md).
+> 🔑 **Key Terms**: See explanations within this chapter and in the main [`resources/glossary.en.md`](../resources/glossary.en.md).
 
 **👥 Shared Hub**: Like Stage 5 (The Claude Code Ecosystem), this chapter serves as a hub for both Track A (CLI Power User) and Track B (Agent Builder). Stages 5 and 8 are the two central hubs of this curriculum.
 
@@ -21,7 +21,7 @@
 | Interface | Target of Operation | How it Works | Representative Tools |
 |---|---|---|---|
 | **🖱 Computer Use** (screen-level)| Any desktop app (Excel, SAP, Photoshop, software without APIs) | Screenshot → Vision model analyzes → Calculate coordinates → Simulate keyboard/mouse | Anthropic Claude Computer Use / OpenAI Codex desktop / Gemini in Chrome |
-| **🌐 Browser Use** (web-level) | Any webpage | DOM-aware navigation + Vision fallback when necessary | Atlas / Comet / browser-use (OSS, 86k stars) |
+| **🌐 Browser Use** (web-level) | Any webpage | DOM-aware navigation + Vision fallback when necessary | Comet / browser-use (OSS, 86k stars) / ChatGPT Agent Mode |
 | **📦 Code Sandbox** (isolated exec)| Agent-generated code running in an isolated environment | microVM / Container / Userspace kernel | E2B / Daytona / Modal / Vercel Sandbox / OpenAI Agents SDK (built-in as of April 2026) |
 
 ### How This Stage Differs from Previous Ones (Avoiding Conceptual Confusion)
@@ -43,7 +43,7 @@
 - **Before Oct 2024**: Agents could only interact with the API-driven world (calling OpenAI/GitHub/Slack APIs, returning text).
 - **Oct 2024**: Anthropic's Computer Use beta is released → **Agents can operate a real screen for the first time.**
 - **2025-2026**: OpenAI (Atlas + Codex desktop) and Google (Gemini in Chrome) enter the field → Mainstream adoption.
-- **May 2026**: The OSWorld benchmark reaches **76.26%** (superhuman, vs. a 72.36% human baseline) → It transitions from a research curiosity to a production reality.
+- **May 2026**: OSWorld **v1** reaches **76.26%** (superhuman, vs. a 72.36% human baseline) → It transitions from a research curiosity to a production reality. (Note: v1 then approached saturation; the long-horizon **OSWorld 2.0** in June 2026 reset SOTA to ~20% — see the benchmark-discipline section below.)
 
 **The curriculum gap without this stage**: After completing Stage 7, you might think you're done. In reality, your agent can only talk to APIs. **It can't operate software without APIs, interact with real webpages, or run code.** You also wouldn't have been warned about safety issues like the Comet injection or the Amazon injunction (see [Safety](#-2026-safety--security-highlights)).
 
@@ -63,7 +63,7 @@ After completing this stage, you will be able to:
 - Distinguish between the 3 layers of agent interfaces (Computer Use, Browser Use, Sandbox) and their relationship to Tools, MCP, and Harnesses.
 - Explain the mental models for Computer Use and Browser Use (screenshot → vision → coords vs. DOM-aware).
 - Define isolation technology terms like microVM, Container, Firecracker, gVisor, and Cold Start.
-- Recall the May 2026 SOTA numbers for OSWorld/WebArena and interpret the warnings about reward-hacking.
+- Know how to read the OSWorld/WebArena SOTA numbers (including the v1→2.0 saturation gap) and interpret the warnings about reward-hacking.
 - **For Track A**: Integrate Computer Use, browser MCPs, and Codex background mode into your daily CLI workflow.
 - **For Track B**: Use `browser-use` and E2B to embed environmental interactions and sandbox isolation into your own agents.
 - Design with 4 safety patterns (approval gate, sandbox, human-in-the-loop, output filter) to prevent injection attacks.
@@ -72,8 +72,8 @@ After completing this stage, you will be able to:
 
 You should have already:
 
-- Completed [Stage 5](05-claude-code-ecosystem.md) (understand MCP/Skills/Plugins, use Claude Code daily).
-- Completed [Stage 7](07-multi-agent-production.md) (understand harness engineering, know what the reward-hacking warning is about).
+- Completed [Stage 5](05-claude-code-ecosystem.en.md) (understand MCP/Skills/Plugins, use Claude Code daily).
+- Completed [Stage 7](07-multi-agent-production.en.md) (understand harness engineering, know what the reward-hacking warning is about).
 - Have a basic familiarity with Docker/VM concepts (this chapter explains the difference between microVMs and Containers, but you'll struggle if you've never touched Docker).
 - **For Track A only**: Completing Stage 5 is sufficient; Stage 7 is optional. The Track A portion of this chapter does not depend on building experience.
 - **For Track B**: Stage 7 is mandatory, otherwise you will get stuck on the build examples in 9.
@@ -83,7 +83,7 @@ If you don't meet these, go back and catch up.
 ## 📚 Required Reading
 
 1. [**Anthropic — Introducing Computer Use**](https://www.anthropic.com/news/3-5-models-and-computer-use) — The original launch announcement for Computer Use. A must-read to understand how it works.
-2. [**Anthropic — Claude Opus 4.8 Release Notes**](https://docs.anthropic.com/en/release-notes/overview) — Opus 4.8 (May 2026) introduces Dynamic Workflows + parallel subagent harness, and remains the Opus-class flagship. **On 2026-06-09 Anthropic also released Claude Fable 5 (`claude-fable-5`), the safeguarded, widely-available member of the new Mythos-class tier positioned above the Opus class.** The same-day Claude Mythos 5 (`claude-mythos-5`) is a limited-availability variant with some safeguards lifted; sensitive queries (cybersecurity, biology/chemistry, distillation) fall back to Opus 4.8.
+2. [**Anthropic — Claude Release Notes (model overview)**](https://docs.anthropic.com/en/release-notes/overview) — Claude Opus 5 (`claude-opus-5`, 2026-07-24) is the current recommended default; Anthropic's docs say to "start with Claude Opus 5 for complex agentic coding and enterprise work". Above it sits the Mythos-class Claude Fable 5 (`claude-fable-5`), Anthropic's most capable widely released model, reserved for workloads that need the highest available capability; Mythos 5 (`claude-mythos-5`) has the same specs but is invitation-only. Opus 4.8 (May 2026, which shipped Dynamic Workflows + the parallel subagent harness) is still available, but the docs have moved it into the Legacy models section.
 3. [**OpenAI — The next evolution of the Agents SDK**](https://openai.com/index/the-next-evolution-of-the-agents-sdk/) ⭐ **April 2026** — A milestone for architecturally sound production coding agents, with a built-in sandbox and harness abstractions.
 4. [**OpenAI — Computer-Using Agent (CUA)**](https://openai.com/index/computer-using-agent/) — OpenAI's version of Computer Use, with WebArena/OSWorld numbers.
 5. [**browser-use docs**](https://docs.browser-use.com/) — The #1 open-source web agent (86k+ stars), get started with 5 lines of Python.
@@ -111,11 +111,13 @@ Agent receives a task
 ```
 
 **Why this paradigm (vs. Tool Use)?**:
+
 - Most software **has no API, only a GUI**—SAP, Excel, Photoshop, any traditional desktop app. The only way for an agent to use them is at the screen level.
 - API integration (Stage 3 Tool Use) requires waiting for vendors to provide an interface, which doesn't always happen.
 - The screen-level is the **final mile**—"an agent can do anything a human can do on a computer."
 
 **Why this only became feasible in 2026**:
+
 - **Advances in Vision Models**: Claude 4.x and GPT-5.x are fully multimodal, dramatically improving the accuracy of identifying screen elements.
 - **OS-level Training Data**: The [OSWorld dataset (NeurIPS 2024)](https://github.com/xlang-ai/OSWorld) released 369 real-world tasks across multiple OSes, giving frontier labs the data they needed for training.
 - **Anthropic's Computer Use beta (Oct 2024) kicked off a commercial race**—OpenAI and Google followed, and benchmarks soared.
@@ -124,11 +126,11 @@ Agent receives a task
 
 | Vendor | Product | 2026 Status | OSWorld | Strengths |
 |---|---|---|---|---|
-| **Anthropic** | [Claude Fable 5 (2026-06-09, Mythos-class) / Opus 4.8 / Sonnet 4.6 Computer Use](https://www.anthropic.com/news/3-5-models-and-computer-use) | GA, cross-platform on macOS/Linux/Windows (Docker) | **72.7%** (Opus 4.6 baseline, near human-level 72.36%; specific Computer Use numbers for Opus 4.7 / 4.8 and Fable 5 not yet public) | Reasoning + code agent, home turf for Stages 5/7; Fable 5 is the highest-capability, widely-available tier with Opus 4.8 as its safeguard fallback |
-| **OpenAI** | [Codex desktop](https://openai.com/index/codex-for-almost-everything/) (April 2026)| GA, **background mode** doesn't hog the cursor, in-app browser, 90+ plugins | CUA 38.1% | Merged with ChatGPT + Atlas to become a **Desktop Superapp** |
+| **Anthropic** | [Opus 5 / Sonnet 5 Computer Use](https://www.anthropic.com/news/3-5-models-and-computer-use) | GA, cross-platform on macOS/Linux/Windows (Docker) | **72.7%** (Opus 4.6 baseline, near human-level 72.36%; Computer Use numbers for Opus 4.7 / 4.8 / 5 all not yet public) | Reasoning + code agent, home turf for Stages 5/7. Opus 5 (2026-07-24) is the Opus-class flagship; the Mythos-class Fable 5 (2026-06-09) was suspended 2026-06-12 and restored 2026-07-01 |
+| **OpenAI** | [Codex desktop](https://openai.com/index/codex-for-almost-everything/) (April 2026)| GA, **background mode** doesn't hog the cursor, in-app browser, 90+ plugins | CUA 38.1% | Standalone desktop coding agent + cross-app workflow; agentic browsing now lives in the ChatGPT desktop app (Atlas folded in, discontinued Aug 2026) |
 | **OpenAI** | [Computer-Using Agent (CUA)](https://openai.com/index/computer-using-agent/) | API | 38.1% / WebArena 58.1% | API-first, can be integrated into your own stack |
 | **Google** | [Gemini in Chrome](https://gemini.google/overview/gemini-in-chrome/) (Gemini 3) | GA + Android | — | **Auto Browse** + **Chrome Skills**, Chrome Enterprise Premium $6/user/month |
-| **OpenAI Operator**| (Discontinued Aug 2025) | ❌ Unavailable | — | Unstable handling of CAPTCHA, JS, and sessions; replaced by Atlas |
+| **OpenAI Operator**| (Discontinued Aug 2025) | ❌ Unavailable | — | Unstable handling of CAPTCHA, JS, and sessions; replaced by Atlas (itself discontinued Aug 2026) |
 
 → For the latest details, see [Agentic Browser Landscape 2026](https://nohacks.co/blog/agentic-browser-landscape-2026) and the [OSWorld leaderboard](https://os-world.github.io/).
 
@@ -140,16 +142,20 @@ Agent receives a task
 |---|---|---|
 | Human baseline | **72.36%** | — |
 | Claude Opus 4.6 (Anthropic)| **72.7%** | On par |
-| May 2026 SOTA (Strongest Model)| **76.26%** | **Superhuman** |
+| OSWorld v1 May 2026 SOTA | **76.26%** | **Superhuman** (v1; see below)|
 | OpenAI CUA | 38.1% | -34% |
 | Most other models | 30-50% | -22% to -42% |
 
+> **⚠️ June 2026 update (OSWorld 2.0)**: The table above is OSWorld **v1**. v1 has since been driven near saturation by frontier models, and "superhuman" only holds for v1's short tasks (mostly 1-2 apps). [OSWorld 2.0](https://osworld-v2.xlang.ai/) (2026-06, arXiv 2606.29537) switched to 108 long-horizon workflows (~318 tool calls each, vs. ~30 in v1); the strongest model at the time, Claude Opus 4.8 (max thinking), reached only **20.6%** (at a 500-step budget), GPT-5.5 ~14%, and no model clears 10% on tasks over 137 minutes. SOTA falling from "76% superhuman" to "20% on realistic long tasks" is exactly the gap this benchmark-discipline section warns you about.
+
 **Why it's harder than SWE-bench**:
+
 - **More open-ended tasks**: SWE-bench has clear tests to determine pass/fail; OSWorld tasks have vague specs (e.g., "help me turn this csv into a chart").
 - **Cross-OS**: Covers Ubuntu, Windows, and macOS.
 - **Cross-application chains**: Often requires opening 3-4 apps (e.g., Excel → Chrome → Slack).
 
 **Why real ability ≠ the numbers** (echoing the [reward-hacking warning in Stage 7](07-multi-agent-production.en.md#-agent-benchmark-landscape-how-to-read-it-not-just-the-leaderboard---reward-hacking-warning)):
+
 - OSWorld was also on the list in the [UC Berkeley April 2026 reward-hacking report](https://rdi.berkeley.edu/blog/trustworthy-benchmarks-cont/), which proved it could be hacked to 100%.
 - **Discipline when looking at numbers**: Don't just look at the top of the leaderboard. The ground truth is the hold-out test for your own use case.
 
@@ -157,9 +163,9 @@ Agent receives a task
 
 | OS | Anthropic | OpenAI | Google |
 |---|---|---|---|
-| **macOS** | ✅ GA | ✅ Atlas + Codex desktop GA | Inside Chrome |
+| **macOS** | ✅ GA | ✅ Codex desktop GA (Atlas discontinued) | Inside Chrome |
 | **Linux** | ✅ Docker | ⚠ More restricted | Inside Chrome |
-| **Windows** | ✅ Docker | 🔜 Native preview / Atlas for Win coming | Inside Chrome |
+| **Windows** | ✅ Docker | 🔜 Native preview (Atlas never shipped for Windows) | Inside Chrome |
 | **Mobile** | — | — | ✅ Gemini in Chrome on Android |
 
 ## 🌐 Browser Use — The Web-Level Agent
@@ -174,12 +180,15 @@ Agent receives a task
 | **Screen-pixel + vision** (no DOM, sees a screenshot)| Same as Computer Use: screenshot → vision → coords | `iframe`, `canvas`, Shadow DOM, anti-automation sites |
 
 **Why DOM-aware is more precise than screenshots**:
+
 - Directly grabs the `<input name="username">` element, **no need for vision models to parse pixels**.
 - 10-100× faster (doesn't run a vision model).
 - Doesn't misclick (elements have a precise bounding box).
 - **Downside**: Fails when the DOM isn't exposed, such as with dynamic JS rendering, Shadow DOM, `canvas`, or `iframe`.
 
 **Conclusion — The production browser agent pattern**: **DOM-first with a screenshot fallback**. First try the DOM, and if that fails, use vision. `browser-use`, Atlas, and Comet all use this pattern.
+
+> 🌐 **A third browser modality: the accessibility tree**: beyond DOM-aware and screen-pixel (screenshot + click coordinates), the 2026 production mainstream reads the **accessibility tree**: more stable than pixels, far fewer tokens than raw DOM. To wire one up, [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) (★ 35k+, Apache-2.0, accessibility-tree-based) is the browser MCP a Track A user can attach to Claude Code today.
 
 ### Mini-Glossary (In-Place Explanations)
 
@@ -195,9 +204,9 @@ Agent receives a task
 
 | Browser | Source | Platform | Agent Mode | Risks / Notes |
 |---|---|---|---|---|
-| **Atlas** | OpenAI (Oct 2025) | macOS GA, Win 🔜 | ✅ (Plus / Pro / Business) | — |
+| **Atlas** ⚠️ | OpenAI (Oct 2025, **discontinued Aug 2026**) | macOS only (never Windows) | folded into ChatGPT app | — |
 | **Comet** | Perplexity | iOS / Android / Win / Mac | ✅ Strongest for research | ⚠ Brave discovered in 2026 it could be injected by malicious webpages; a federal injunction in Mar 2026 blocked its access to Amazon. |
-| **Dia** | The Browser Company (acquired by Atlassian for $610M)| macOS | ❌ (**No agent mode**, focuses on performance) | — |
+| **Dia** | [The Browser Company (acquired by Atlassian for $610M)](https://efficient.app/compare/dia-vs-comet)| macOS | ❌ (**No agent mode**, focuses on performance) | — |
 | **Gemini in Chrome**| Google (Gemini 3) | All Chrome platforms + Android | ✅ **Auto Browse** + **Chrome Skills** | Enterprise Premium $6/user/month |
 | **Operator** | OpenAI | — | ❌ **Discontinued Aug 2025** | Unstable handling of CAPTCHA, JS, and sessions. |
 
@@ -208,10 +217,11 @@ Agent receives a task
 | Framework | Status | Strengths |
 |---|---|---|
 | [**browser-use**](https://github.com/browser-use/browser-use) ⭐ | **86k+ stars, MIT** | Hottest OSS in 2026, Python, 5-line setup, supports OpenAI/Claude/Gemini/Ollama. |
-| [**Microsoft OmniParser v2**](https://github.com/microsoft/OmniParser) | Updated 2026, Apache 2.0 | Vision-based GUI parsing, 60% latency improvement, 39.6% accuracy with ScreenSpot Pro. The same repo includes **OmniTool** (Windows 11 VM control, can be used with GPT-5.5 / Claude Fable 5 / Claude Opus 4.8 / DeepSeek-V4-Pro / Qwen 2.5VL / Claude Computer Use). |
+| [**Microsoft OmniParser v2**](https://github.com/microsoft/OmniParser) | Updated 2026, Apache 2.0 | Vision-based GUI parsing, 60% latency improvement, 39.6% accuracy with ScreenSpot Pro. The same repo includes **OmniTool** (Windows 11 VM control, can be used with GPT-5.5 / Claude Opus 5 / DeepSeek-V4-Pro / Qwen 2.5VL / Claude Computer Use). |
 | **Playwright + LLM** (DIY)| — | Not a dedicated framework, but Playwright is the standard for web automation. Just add an LLM wrapper to use it. |
 
 **Why is `browser-use` so popular (86k stars)?**:
+
 - The DOM-first paradigm is **more accurate for the web than screenshot+vision** and much faster.
 - It's LLM-vendor agnostic (not tied to Claude or GPT).
 - Low entry barrier with a 5-line Python setup.
@@ -229,13 +239,15 @@ Agent receives a task
 ### Why Agents Absolutely Need a Sandbox
 
 **The Threat Model**: An agent writes code → Where does it run?
+
 - ❌ **On the host machine (worst case)**: The agent could run `rm -rf /`, leak data to the internet, read `~/.ssh/id_rsa`, or install malware.
 - ⚠ **In a process isolated as the same user (mediocre)**: Can block some things, but the file system and network are still open.
 - ✅ **In an isolated sandbox (necessary)**: Has an independent filesystem, process space, and network. If something goes wrong, you can just throw it away.
 
 **Why this only became a production requirement in 2026**:
+
 - **April 2026 OpenAI Agents SDK Update**: [Built-in support for 7 sandbox providers](https://openai.com/index/the-next-evolution-of-the-agents-sdk/) (Blaxel, Cloudflare, Daytona, E2B, Modal, Runloop, Vercel).
-- Before that, protection relied on approval gates in tools like [Claude Code](05-claude-code-ecosystem.md) or [Cursor](https://www.cursor.com). But a production agent runs **unattended and must have a sandbox.**
+- Before that, protection relied on approval gates in tools like [Claude Code](05-claude-code-ecosystem.en.md) or [Cursor](https://www.cursor.com). But a production agent runs **unattended and must have a sandbox.**
 
 ### 🔑 Mini-Glossary of Isolation Technologies
 
@@ -253,6 +265,7 @@ A common sticking point for new readers, explained here:
 | **GPU passthrough**| A technique for a VM/microVM to access the host's GPU. (**Only Modal supports this**). | — | — | For running inference/fine-tuning inside a sandbox |
 
 **Key takeaways**:
+
 - **Container** = Fast + Weak isolation (shared kernel)
 - **VM** = Slow + Strong isolation (separate kernel)
 - **microVM** = The best of both worlds (Fast < 100ms + separate kernel) → **Most agent sandboxes are microVMs.**
@@ -279,6 +292,7 @@ A common sticking point for new readers, explained here:
 - **After April 2026**: It's **architecturally sound**—the SDK has a built-in harness abstraction, a sandbox abstraction, and Codex filesystem tools.
 
 **3 Key New Features**:
+
 1. **Native harness** — The agent loop, model calls, tool routing, handoffs, approvals, tracing, and recovery are all at the SDK level.
 2. **Native sandbox execution** — Bring your own sandbox or use one of the 7 built-in providers (Blaxel, Cloudflare, Daytona, E2B, Modal, Runloop, Vercel).
 3. **Codex filesystem tools** — SDK-level APIs for the agent to write files, read files, and run commands.
@@ -291,10 +305,10 @@ A common sticking point for new readers, explained here:
 
 ### 1. Connect to Computer Use / Browser MCPs in Claude Code
 
-**Why the MCP route**: You're already familiar with Claude Code ([Stage 5](05-claude-code-ecosystem.md)). New features can be connected via MCP without switching tools.
+**Why the MCP route**: You're already familiar with Claude Code ([Stage 5](05-claude-code-ecosystem.en.md)). New features can be connected via MCP without switching tools.
 
 - **Computer-use MCP** (many community implementations): After adding the server to your `.mcp.json`, you can call "screenshot → analyze → operate" from within Claude Code.
-- **Browser MCP**: Tools like the [Playwright MCP](https://github.com/modelcontextprotocol/servers) allow Claude Code to open a browser and run web tasks.
+- **Browser MCP**: Tools like [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) allow Claude Code to open a browser and run web tasks.
 
 ### 2. Run Tasks in the Background with Codex Desktop
 
@@ -303,18 +317,19 @@ A common sticking point for new readers, explained here:
 - Best for tasks that are **long-running and don't need constant supervision**, like "Analyze the Q3 financial report, turn it into a slide deck, and post it to Slack."
 - Complements Claude Code: Use Claude Code for coding tasks, and Codex desktop for cross-app workflows.
 
-### 3. Use Atlas / Comet / Gemini in Chrome for Web Tasks
+### 3. Use Comet / Gemini in Chrome / ChatGPT Agent Mode for Web Tasks
 
 | Scenario | Recommendation | Reason |
 |---|---|---|
 | Research / cross-page synthesis | **Comet** | Tuned for research, citation-backed. |
-| ChatGPT user / Agent Mode | **Atlas** | Built into Plus/Pro/Business. |
+| ChatGPT user / Agent Mode | **ChatGPT desktop app** (Agent Mode) | Built into Plus/Pro/Business (Atlas folded in after its Aug 2026 discontinuation). |
 | Chrome / Google ecosystem | **Gemini in Chrome** | Auto Browse + Skills, enterprise DLP. |
 | **Avoid**: Using Comet for e-commerce/banking| — | ⚠ Federal injunction in Mar 2026 (see [Safety](#-2026-safety--security-highlights)). |
 
 ### Example Cross-App Workflow
 
 "**Help me turn the Q3 CSV into a chart and post it to the #finance Slack channel**":
+
 1. Use Claude Code (with a Computer-use MCP) to open Excel.
 2. Load the CSV and use the chart wizard to generate a chart.
 3. Take a screenshot.
@@ -337,7 +352,7 @@ from langchain_openai import ChatOpenAI
 
 agent = Agent(
     task="Search Hacker News for top AI agent posts this week and summarize",
-    llm=ChatOpenAI(model="gpt-5.5"), # Can also swap for Claude Fable 5 / Claude Opus 4.8 / Gemini 3.1 Pro / DeepSeek-V4-Pro
+    llm=ChatOpenAI(model="gpt-5.5"), # Can also swap for Claude Opus 5 / Gemini 3.5 Flash / DeepSeek-V4-Pro
 )
 result = await agent.run()
 ```
@@ -376,6 +391,7 @@ agent = Agent(
 ### 4. Training Data for GUI Agents
 
 If you want to **train your own Computer Use model** (few people will do this):
+
 - [**OSWorld dataset**](https://github.com/xlang-ai/OSWorld) — 369 cross-OS tasks with screenshots and ground truth actions.
 - [**WebArena**](https://github.com/web-arena-x/webarena) — A benchmark for web navigation.
 - [**Mind2Web**](https://github.com/OSU-NLP-Group/Mind2Web) — Real-world web tasks.
@@ -389,11 +405,13 @@ If you want to **train your own Computer Use model** (few people will do this):
 ### Case 1: Comet Found to be Vulnerable to Web Page Injection by Brave
 
 **How the attack works** ([Brave Research 2026](https://brave.com/blog/comet-prompt-injection)):
+
 - The Comet agent views a webpage → The page contains a hidden malicious prompt (e.g., in an HTML comment).
 - The LLM executes the malicious prompt as a command while parsing the page.
 - Result: The agent is hijacked to manipulate the user's Gmail, bank account, etc.
 
 **Why this is a new attack surface**:
+
 - The traditional SQL injection attack path: **user input → server** (can be blocked by server-side filtering).
 - Prompt injection through web content: **web content → LLM context** (hard to distinguish commands from content within the LLM context).
 - **The defense is completely different**—you can't apply the same methods as for SQL injection.
@@ -403,6 +421,7 @@ If you want to **train your own Computer Use model** (few people will do this):
 In March 2026, a US federal judge issued a preliminary injunction against Comet, **prohibiting the agent from accessing Amazon accounts**. The reason was that Comet's operations on Amazon accounts were unstable and involved unauthorized commercial activity.
 
 **Why this is a legal risk signal**:
+
 - An agent operating someone else's account may violate that platform's ToS.
 - Large e-commerce and banking platforms may use legal action to block agents.
 - **You must check the ToS of the target platform** before deploying a production agent.
@@ -442,7 +461,7 @@ Use the OpenAI Agents SDK (April 2026 version) to integrate a sandbox for runnin
 | **Desktop background workflows** | [OpenAI Codex desktop](https://openai.com/index/codex-for-almost-everything/) (April 2026)| Doesn't hog the cursor, allows parallel tasks. |
 | **First web agent** (OSS) | [browser-use](https://github.com/browser-use/browser-use) ⭐ | 86k+ stars, 5 lines of Python, LLM-vendor agnostic. |
 | **GUI parsing research** (OSS) | [Microsoft OmniParser v2](https://github.com/microsoft/OmniParser) | Vision-based, 60% latency improvement. |
-| **Main AI Browser** (consumer/research)| [Comet](https://comet.perplexity.ai/) (research) / [Atlas](https://openai.com/index/introducing-chatgpt-atlas/) (ChatGPT user)| Different browsers excel at different agent modes. |
+| **Main AI Browser** (consumer/research)| [Comet](https://comet.perplexity.ai/) (research) / ChatGPT Agent Mode (ChatGPT user; Atlas discontinued Aug 2026)| Different browsers excel at different agent modes. |
 | **Enterprise / Chrome ecosystem** | [Gemini in Chrome](https://gemini.google/overview/gemini-in-chrome/) | Auto Browse + Skills + DLP. |
 | **First sandbox** (agent Python) | [E2B](https://github.com/e2b-dev/E2B) | Firecracker microVM, Python REPL-friendly. |
 | **Latency-critical sandbox** | [Daytona](https://www.daytona.io/) | < 90ms cold start. |
@@ -451,6 +470,7 @@ Use the OpenAI Agents SDK (April 2026 version) to integrate a sandbox for runnin
 | **Native path for Claude agents** | [claude-agent-sdk-python](https://github.com/anthropics/claude-agent-sdk-python) | Introduced in Stage 7; Anthropic abstracted the harness before OpenAI. |
 
 **Suggested starting path**:
+
 1. **Track A Intro**: Use the Claude Computer Use Docker quickstart to run your first cross-app task (30 mins).
 2. **Track B Intro**: Write a web agent with `browser-use` (10 mins).
 3. Add sandbox isolation: Connect E2B or Daytona.
@@ -459,7 +479,7 @@ Use the OpenAI Agents SDK (April 2026 version) to integrate a sandbox for runnin
 
 ## 🎯 Featured Projects (Templates / SDKs / Tool Collections)
 
-A table of 15 projects, categorized by use case.
+A table of 17 projects, categorized by use case.
 
 | Category | Project | ⭐ | Who it's for | Why it's recommended / Notes |
 |---|---|---|---|---|
@@ -468,13 +488,15 @@ A table of 15 projects, categorized by use case.
 | | [anthropics/claude-agent-sdk-python](https://github.com/anthropics/claude-agent-sdk-python) | ⭐⭐⭐⭐⭐ | Building production agents with Claude | Anthropic's agent SDK, predates OpenAI's, same runtime as Claude Code. |
 | **Browser Use OSS**| [browser-use/browser-use](https://github.com/browser-use/browser-use) ⭐ | ⭐⭐⭐⭐⭐ | #1 OSS web agent | 86k+ stars, MIT, LLM-vendor agnostic. |
 | | [microsoft/OmniParser](https://github.com/microsoft/OmniParser) | ⭐⭐⭐⭐ | Vision-based GUI parsing | v2 has 60% latency improvement, Apache 2.0, includes OmniTool (Windows VM control). |
-| **AI Browser** (closed-source/consumer)| [Atlas](https://openai.com/index/introducing-chatgpt-atlas/) | ⭐⭐⭐⭐ | ChatGPT users + Agent Mode | From OpenAI, GA on macOS. |
+| **Computer Use Agent Stack** | [bytedance/UI-TARS-desktop](https://github.com/bytedance/UI-TARS-desktop) | ⭐⭐⭐⭐ | Running an open computer-use agent on the desktop | ByteDance's open "computer use" agent that sees the screen and controls your desktop. 36k+ stars, Apache-2.0. |
+| | [trycua/cua](https://github.com/trycua/cua) | ⭐⭐⭐⭐ | Building / sandboxing computer-use agents | Open toolkit for building "computer use" agents — safe sandboxes, SDKs, and tests on macOS / Linux / Windows. 18k+ stars, MIT. |
+| **AI Browser** (closed-source/consumer)| [Atlas](https://openai.com/index/introducing-chatgpt-atlas/) (⚠️ discontinued Aug 2026) | ⭐⭐⭐ | ChatGPT users + Agent Mode | From OpenAI; features folded into the ChatGPT desktop app. |
 | | [Comet](https://comet.perplexity.ai/) | ⭐⭐⭐⭐ | Research-focused agent browser | From Perplexity, all platforms, citation-backed. ⚠ Brave injection + Amazon injunction. |
 | | [Dia](https://www.diabrowser.com/) | ⭐⭐⭐ | For those who want an AI browser **without** agent mode| From The Browser Company (acquired by Atlassian for $610M), focuses on performance. |
 | **Sandbox** (microVM)| [e2b-dev/E2B](https://github.com/e2b-dev/E2B) | ⭐⭐⭐⭐⭐ | For agents running a Python loop | Firecracker microVM, most templates, Apache 2.0. |
 | **Sandbox** (fast container)| [Daytona](https://www.daytona.io/) | ⭐⭐⭐⭐ | Latency-critical tasks | < 90ms cold start, Docker ecosystem. |
 | **Sandbox** (GPU)| [Modal](https://modal.com/) | ⭐⭐⭐⭐ | For running inference/fine-tuning in a sandbox | The only sandbox with GPU support, serverless. |
-| **Benchmark Dataset**| [xlang-ai/OSWorld](https://github.com/xlang-ai/OSWorld) | ⭐⭐⭐⭐⭐ | For training/evaluating Computer Use agents| NeurIPS 2024, 369 cross-OS tasks, SOTA 76.26%. |
+| **Benchmark Dataset**| [xlang-ai/OSWorld](https://github.com/xlang-ai/OSWorld) | ⭐⭐⭐⭐⭐ | For training/evaluating Computer Use agents| NeurIPS 2024, 369 cross-OS tasks; successor [OSWorld 2.0](https://osworld-v2.xlang.ai/) (2026-06, 108 long-horizon workflows) SOTA only ~20%. |
 | | [web-arena-x/webarena](https://github.com/web-arena-x/webarena) | ⭐⭐⭐⭐ | For evaluating web agents | Self-hosted real websites, OpenAI CUA 58.1%. |
 | | [OSU-NLP-Group/Mind2Web](https://github.com/OSU-NLP-Group/Mind2Web) | ⭐⭐⭐⭐ | Real-world web tasks dataset | 137 websites / 2350 tasks. |
 | **Visual Web Agent**| [illuin-tech/colpali](https://github.com/illuin-tech/colpali) | ⭐⭐⭐⭐ | Vision RAG for PDF/documents | Directly embeds page images, bypasses OCR, NeurIPS 2024. |
@@ -491,7 +513,7 @@ Can you:
 - [ ] Write a web agent in 5 lines of Python with `browser-use` (Exercise 2)?
 - [ ] Use E2B to run agent-generated code and feel the difference from running on the host (Exercise 3)?
 - [ ] Explain why prompt injection through web content is a new attack surface and what the 4 defensive patterns each block?
-- [ ] Explain the discipline behind the OSWorld 76.26% SOTA number (why you can't blindly trust it)?
+- [ ] Explain the discipline behind the OSWorld v1 76.26% → 2.0 ~20% gap (why you can't blindly trust a SOTA number)?
 
 If you can do all of this → you've completed the main curriculum. Pick a [specialized branch](../README.en.md#-learning-map-two-tracks), or see below for the next frontier.
 
@@ -520,6 +542,6 @@ This stage covered the three interface layers of **desktop, browser, and sandbox
 
 You've completed the main curriculum. Next steps:
 
-1. **Pick a specialist branch** ([for-researcher](../branches/for-researcher.md), [for-developer](../branches/for-developer.md), [for-teacher](../branches/for-teacher.md), [for-knowledge-workers](../branches/for-knowledge-worker.md), [for-everyday-users](../branches/for-everyday-users.md)).
+1. **Pick a specialist branch** ([for-researcher](../branches/for-researcher.en.md), [for-developer](../branches/for-developer.en.md), [for-teacher](../branches/for-teacher.en.md), [for-knowledge-workers](../branches/for-knowledge-worker.en.md), [for-everyday-users](../branches/for-everyday-users.en.md)).
 2. **Contribute upstream**—`browser-use`, OmniParser, and OSWorld all welcome PRs.
 3. **Follow developments after 2026**—Voice and VLA are the next wave. Follow Stage 9 (TBD).

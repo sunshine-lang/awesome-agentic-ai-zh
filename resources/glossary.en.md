@@ -64,7 +64,7 @@ LLMs see **tokens** (sub-word units), not characters. Roughly 1 English word ≈
 
 ### Context Window
 
-The maximum tokens an LLM can "see" in one call. **2026 frontier**: Claude Sonnet 4.6 / Opus 4.8 1M, GPT-5.5 ~400k, Gemini 3.1 Pro 2M. **Bigger isn't always better** — beyond a length the LLM gets "Lost in the Middle".
+The maximum tokens an LLM can "see" in one call. **2026 frontier**: Claude Sonnet 5 / Opus 5 1M, GPT-5.6 1.05M, Gemini 3.5 Flash 1M (Pro series up to 2M), xAI Grok 4.5 500K, Mistral Medium 3.5 256k. **Bigger isn't always better** — beyond a length the LLM gets "Lost in the Middle".
 
 ### Prompt
 
@@ -72,10 +72,13 @@ The text you feed an LLM. **Prompt engineering** = designing that text to get go
 
 📍 Detail: [Stage 2](../stages/02-prompt-engineering.en.md)
 
-### Few-shot / Zero-shot
+### Zero-shot / One-shot / Few-shot
 
-- **Zero-shot**: ask directly without examples.
-- **Few-shot**: give 2–5 input → output examples first. **Few-shot usually improves accuracy a lot**, especially for strict formatting.
+Put "a few worked examples" in the prompt for the LLM to copy — the only difference between the three terms is **how many examples you give**:
+
+- **Zero-shot** (0 examples): just ask, no examples at all.
+- **One-shot** (1 example): give **1** input → output example first, then ask.
+- **Few-shot** (a handful): give **2–5** input → output examples first. **Few-shot usually improves accuracy a lot**, especially for strict formatting.
 
 ### Chain-of-Thought (CoT)
 
@@ -107,6 +110,7 @@ The difference is this: plain LLM = Q&A; agent = the three elements + a continui
 Lets the LLM call functions you defined (DB lookup, math, browser, …). Instead of plain text, the LLM returns `{"function": "search", "args": {…}}`. Your code executes it and feeds the result back to the LLM.
 
 **The concept is the same; the API schema differs**:
+
 - **Anthropic "Tool Use"**: uses `input_schema` (JSON Schema directly)
 - **OpenAI / Ollama "Function Calling"**: wraps it in an outer `{"type": "function", "function": {...}}`
 - The token representation the LLM sees differs internally, so when writing a cross-vendor SDK you need to map them correctly
@@ -233,7 +237,7 @@ One agent transfers a task to another. Adds "how to pass context" and "who handl
 
 ### A2A (Agent-to-Agent) Protocol
 
-Google's protocol for agent ↔ agent communication. Sibling to MCP, but for agent-to-agent rather than agent-to-tool.
+An agent ↔ agent communication protocol started by Google and now governed by the Linux Foundation. Sibling to MCP, but for agent-to-agent rather than agent-to-tool. Reached **v1.0** in 2026 (150+ organizations, plus identity verification so one agent can confirm another really is who it claims to be).
 
 ---
 
@@ -241,14 +245,15 @@ Google's protocol for agent ↔ agent communication. Sibling to MCP, but for age
 
 ### MCP (Model Context Protocol)
 
-Anthropic's open protocol, introduced in 2024, that lets any LLM host (Claude Code, Cursor, your own agent) connect to external tool servers through one interface. Think "**USB for LLMs**".
+Anthropic's open protocol, introduced in 2024, that lets any LLM host (Claude Code, Cursor, your own agent) connect to external tool servers through one interface; donated to the Linux Foundation's Agentic AI Foundation in 2025-12. Think "**USB for LLMs**".
 
 **Technically it standardizes 3 primitives**:
+
 - **Tools**: functions an LLM can call (read DB / search web / send email…)
 - **Resources**: data an LLM can read (file contents, API responses, DB rows…)
 - **Prompts**: reusable prompt templates (triggered inside the host with `/`)
 
-**Architecture**: server / client pattern — the tool server runs locally or remotely, and the LLM host connects as the client. The server exposes those primitives over one of three transports: stdio / SSE / HTTP.
+**Architecture**: server / client pattern — the tool server runs locally or remotely, and the LLM host connects as the client. The server exposes those primitives over one of two transports: **stdio** (local subprocess) or **Streamable HTTP** (remote); the older HTTP+SSE transport was deprecated in the 2025-03-26 spec revision.
 
 📍 Detail: [Stage 5.2](../stages/05-claude-code-ecosystem.en.md#52--mcp-model-context-protocol--foundation)
 
@@ -289,6 +294,12 @@ Scripts that run before or after specific Claude Code events. **The official sys
 | `PostCompact` | After compact | Check what context got compressed |
 
 Configuration: add a `"hooks"` block in `.claude/settings.json` and point it at your script path.
+
+### Deep Agent
+
+An agent design that comes "fully equipped" — beyond just calling tools, it has built-in planning (a todo list), long-term memory (a filesystem), division of labor via subagents, and loadable skills. Contrast: a plain agent is just an LLM plus a few tools. Reference implementation: LangChain's [deepagents](https://github.com/langchain-ai/deepagents).
+
+---
 
 ### Subagent
 
@@ -332,6 +343,14 @@ Per LLM call: input tokens × input price + output tokens × output price. Costs
 
 Rule layer that prevents the LLM from doing bad things — block prompt injection, PII leakage, harmful output, etc. NeMo Guardrails, Guardrails AI, etc.
 
+### Prompt Injection
+
+Hiding malicious instructions inside content the LLM will read (web pages, documents, tool results) so it ignores its real task and does what the attacker wants. Root cause: the LLM can't tell "instructions" apart from "instructions smuggled inside data". Defenses: least privilege, isolating untrusted content, human review of high-risk actions. Related: lethal trifecta, Guardrails.
+
+### Lethal Trifecta
+
+Simon Willison's framing: an agent becomes exploitable when it has all three of (1) access to private data, (2) exposure to untrusted content, (3) the ability to communicate externally — at which point prompt injection can make it steal and exfiltrate data. The defense is to break at least one leg (commonly: cut external comms, or isolate untrusted input).
+
 ---
 
 ## 7. Buzzwords / Loose Terms
@@ -362,7 +381,7 @@ The LLM "confidently asserts something false" — invents APIs, fabricates numbe
 
 ### Frontier Model
 
-The current top tier (**2026-06**: Claude Fable 5 (Mythos-class, positioned above Opus — the highest-capability, widely-available Claude tier); **2026-05**: GPT-5.5, Claude Opus 4.8 (Opus-class flagship, and Fable 5's safeguard fallback), Gemini 3.1 Pro, DeepSeek-V4-Pro, etc.). Use frontier for hard reasoning; use cheap small models for simple classification / translation to save cost.
+The current top tier (**2026-07**: Claude **Opus 5** (2026-07-24, `claude-opus-5`, 1M, $5/$25 — the default starting point the official docs recommend), OpenAI **GPT-5.6** (Sol / Terra / Luna — three tiers, 1.05M context, available in ChatGPT, Codex, and the API); **2026-06 (late)**: Claude Sonnet 5 (best speed-intelligence balance, close to Opus-class but cheaper), Google Gemini 3.5 Flash, xAI Grok 4.5 (500K context), Mistral Medium 3.5; **2026-06 (early)**: Claude Fable 5 (Mythos-class, above Opus) shipped, was suspended 2026-06-12 by a US export-control directive, but **the controls were lifted 2026-06-30 and [Fable 5 was redeployed globally 2026-07-01](https://www.anthropic.com/news/redeploying-fable-5)** (Mythos 5 restored only for approved US orgs); **2026-05**: GPT-5.5, Claude Opus 4.8 (the Opus-class flagship at the time; superseded by Opus 5 in 2026-07 but still available), Gemini 3.1 Pro, DeepSeek-V4-Pro, etc.). Use frontier for hard reasoning; use cheap small models for simple classification / translation to save cost.
 
 ### Context Engineering
 
@@ -376,12 +395,26 @@ The discipline of engineering **what information goes into the context window on
 The discipline of engineering the **execution and control layer around the model** — everything that is not model weights and not just the prompt string itself: agent loop / tool registry / context manager / permissions / safety layer / memory layer / eval / observability / retry / circuit breaker, etc. Simon Willison 2025: **coding agent = LLM + harness**. Addy Osmani: harness = all the code that is not the model itself. [OpenAI also used the term "Harness Engineering" in February 2026](https://openai.com/index/harness-engineering). Claude Code, Cursor, OpenCode, etc. are harnesses. **A framework wraps an LLM into an agent; a harness wraps an agent into a product that can actually go live.**
 
 Contrast:
+
 - **Framework** (Stage 4) defines the **API**: what the interface you call looks like
 - **Harness** (this term) defines the **runtime**: how it runs, how it recovers, how it is observed
 
 📍 Discipline-level concept (**8 core components** / prompt→context→harness three-layer engineering split / framework vs harness): [Stage 7 Harness Engineering](../stages/07-multi-agent-production.en.md)
-📍 Reference implementation case study (reading Claude Code source): [Stage 5 5.6](../stages/05-claude-code-ecosystem.en.md)
+📍 Reference implementation case study (reading Claude Code source): [Stage 5 5.7](../stages/05-claude-code-ecosystem.en.md)
 📍 Further: [`anthropics/claude-agent-sdk-python`](https://github.com/anthropics/claude-agent-sdk-python), [`ai-boost/awesome-harness-engineering`](https://github.com/ai-boost/awesome-harness-engineering), [`ZhangHanDong/harness-engineering-from-cc-to-ai-coding`](https://github.com/ZhangHanDong/harness-engineering-from-cc-to-ai-coding)
+
+### Loop Engineering
+
+The fourth discipline after prompt → context → harness engineering: designing and tuning an agent's iteration loop itself (goal, tools, context management, termination logic, error handling) so long-running, multi-step, cross-session execution stays reliable and on-target. Related: harness, Dynamic Workflows, ReAct.
+
+### Graph Engineering
+
+Designing an agent's execution flow as an **explicit graph**: nodes are steps (as of 2026 a node can hold an entire agent run, not just a single function), edges are transition conditions, and nodes pass around a schema'd state that can be checkpointed and replayed. **Two things to know when you meet this term**:
+
+- **The "graph" here is a control / execution graph, not the knowledge-graph retrieval of GraphRAG** — for that, see [Stage 6](../stages/06-memory-rag.en.md). The two are frequently conflated.
+- **It is a name that became popular in July 2026, not a new technique.** LangGraph has worked this way since 2023, and LangChain itself says the idea is not new; Anthropic calls the equivalent mechanism *dynamic workflows*, while Google ADK and Microsoft Agent Framework say *graph-based workflow(s)* — none of the three vendors' docs use the phrase "graph engineering".
+
+What is actually worth learning lives in [Stage 4's multi-agent patterns](../stages/04-agent-frameworks.en.md) and the runnable [`examples/stage-4/03-graph-workflow/`](../examples/stage-4/03-graph-workflow/README.en.md) (`StateGraph` / conditional edges / checkpointer). Related: harness, Loop Engineering, orchestration.
 
 ---
 
@@ -389,13 +422,13 @@ Contrast:
 
 ### Computer Use (screen-level agent)
 
-An agent operates real desktop apps via **screenshot → vision → coordinates → simulated mouse/keyboard** — no API needed, the agent uses the screen like a human. Representative: Anthropic Claude Computer Use (Opus 4.8 / Sonnet 4.6), OpenAI Codex desktop, Google Gemini in Chrome. **Anthropic public beta opened Oct 2024; OSWorld benchmark reached 76.26% (superhuman) by May 2026**.
+An agent operates real desktop apps via **screenshot → vision → coordinates → simulated mouse/keyboard** — no API needed, the agent uses the screen like a human. Representative: Anthropic Claude Computer Use (Opus 5 / Sonnet 5), OpenAI Codex desktop, Google Gemini in Chrome. **Anthropic public beta opened Oct 2024; OSWorld v1 hit 76.26% by May 2026 but then approached saturation — OSWorld 2.0 (2026-06, long-horizon) reset SOTA to ~20% (Opus 4.8)**.
 
 📍 Full coverage + 4-vendor comparison: [Stage 8 Computer Use](../stages/08-agent-interfaces.en.md)
 
 ### Browser Use (web-level agent)
 
-An agent operates web pages, primarily via **DOM-aware navigation** (direct CSS selector queries) with vision fallback. Closed-source: Atlas / Comet / Dia / Gemini in Chrome. OSS leader: [browser-use](https://github.com/browser-use/browser-use) (★ 95k+).
+An agent operates web pages, primarily via **DOM-aware navigation** (direct CSS selector queries) with vision fallback. Closed-source: Comet / Dia / Gemini in Chrome (Atlas discontinued Aug 2026). OSS leader: [browser-use](https://github.com/browser-use/browser-use) (★ 105k+).
 
 📍 Full coverage + 5-vendor comparison + OSS frameworks: [Stage 8 Browser Use](../stages/08-agent-interfaces.en.md)
 
@@ -425,4 +458,5 @@ Google's "user-space kernel" — intercepts syscalls and emulates them itself, n
 
 - Read the actual stage content: [Stage 5.2 MCP](../stages/05-claude-code-ecosystem.en.md#52--mcp-model-context-protocol--foundation) / [5.3 Skills](../stages/05-claude-code-ecosystem.en.md#53--skills-claude-codes-behavior-layer--the-most-critical-layer-of-the-claude-code-ecosystem) / [5.4 Plugins](../stages/05-claude-code-ecosystem.en.md#54--plugins--marketplaces)
 - Required reading lists in [Stage 1](../stages/01-llm-basics.en.md) / [Stage 6](../stages/06-memory-rag.en.md) / [Stage 7](../stages/07-multi-agent-production.en.md) / [Stage 8](../stages/08-agent-interfaces.en.md)
+- Want plainer language? [baihuaai.com (白话AI)](https://baihuaai.com) is a free, ad-free Simplified-Chinese beginner glossary that explains AI terms in everyday words with real-world analogies (has a term index + a zero-basics zone).
 - Missing? Open an issue or PR a new entry.

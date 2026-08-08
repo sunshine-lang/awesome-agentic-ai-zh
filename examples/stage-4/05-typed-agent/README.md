@@ -134,7 +134,7 @@ Pydantic AI 看到 ValidationError、會把錯誤訊息塞回 prompt、要求 LL
 ## 想看更聰明的答案？
 
 ```bash
-MODEL=claude-sonnet-4-6 python starter_anthropic.py # 一次過機率最高
+MODEL=claude-sonnet-5 python starter_anthropic.py # 一次過機率最高
 MODEL=qwen2.5:7b python starter.py # 較大本機 model
 ```
 

@@ -106,6 +106,7 @@ or branches — responsible for periodic review, triaging issues in that area,
 and gating PRs.
 
 Self-nomination process:
+
 1. Open an issue titled `[maintainer] Stage N — your-handle` or `[maintainer] for-X branch — your-handle`
 2. State your time commitment (suggested: at least one quarter = 3 months)
 3. Briefly describe your background in this area

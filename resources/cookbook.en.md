@@ -2,7 +2,7 @@
 
 > [繁體中文](./cookbook.md) | [简体中文](./cookbook.zh-Hans.md) | **English**
 
-> Stage 5 (Claude Code Ecosystem) talks about "Concepts" and "Available Tools" with [`mcp-skills-catalog.md`](mcp-skills-catalog.md). This cookbook fills in the gap in between: "**How to build it**". Each recipe is a step-by-step guide + sample code + common pitfalls, designed to be completed in about 30-50 minutes.
+> Stage 5 (Claude Code Ecosystem) talks about "Concepts" and "Available Tools" with [`mcp-skills-catalog.en.md`](mcp-skills-catalog.en.md). This cookbook fills in the gap in between: "**How to build it**". Each recipe is a step-by-step guide + sample code + common pitfalls, designed to be completed in about 30-50 minutes.
 >
 > This is not a reference or a tutorial—it's a recipe. Pick the one you need and start cooking.
 
@@ -22,10 +22,13 @@
 ## 1. Write Your First Skill
 
 > A Skill is a folder containing `SKILL.md`, which Claude Code discovers automatically upon startup and loads contextually. The minimum viable version can run with as few as 50 lines of code.
+>
+> 📚 **This is the hands-on "get your first one running in 30 minutes" version. For the deeper discussion of what makes a Skill good** → [Hello-Agents Extra08: How to Write a Good Skill](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra08-如何写出好的Skill.md) (the most complete Chinese-language write-up of Skill best practices, covering how to word the description, how to design references / scripts, and more). The two are complementary: use this recipe to get a first Skill running, then read that one to polish how you write them.
 
 ### Why
 
 The difference between writing a Skill and adding a few instructions within a prompt lies in:
+
 - Skills are **per-domain**, meaning they don't pollute all conversations.
 - They can be packaged and shared across projects or teams.
 - Claude decides when to load them (based on whether the description matches the context).
@@ -157,8 +160,11 @@ You can then use tools like promptfoo for batch testing.
 #### Step 1: Install the Official SDK
 
 ```bash
-pip install mcp
+pip install "mcp>=2,<3"
 ```
+
+> ⚠️ **Always pin the version.** The official Python SDK **released v2.0.0 on 2026-07-28**, and it is a breaking change (`FastMCP` was renamed `MCPServer`; the low-level `Server` takes handlers as constructor parameters instead of decorators). A bare `pip install mcp` gets you 2.x, and **the v1 tutorials written in 2025 that are all over the web will fail on the import line**.
+> Have v1 code you aren't ready to migrate? Pin `pip install "mcp>=1,<2"` (v1.x is in maintenance mode and only receives security fixes). Side-by-side mapping: [official migration guide](https://py.sdk.modelcontextprotocol.io/migration/).
 
 #### Step 2: Write `server.py`
 
@@ -166,45 +172,20 @@ A minimal template for an echo tool:
 
 ```python
 # server.py
-from mcp.server import Server
-from mcp.server.stdio import stdio_server
-from mcp.types import Tool, TextContent
+from mcp.server.mcpserver import MCPServer
 
-app = Server("hello-mcp")
+app = MCPServer("hello-mcp")
 
-@app.list_tools()
-async def list_tools() -> list[Tool]:
-    return [
-        Tool(
-            name="echo",
-            description="Echo the input text back to the user.",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "text": {
-                        "type": "string",
-                        "description": "Text to echo back",
-                    }
-                },
-                "required": ["text"],
-            },
-        )
-    ]
-
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    if name == "echo":
-        return [TextContent(type="text", text=f"Echo: {arguments['text']}")]
-    raise ValueError(f"Unknown tool: {name}")
-
-async def main():
-    async with stdio_server() as (read, write):
-        await app.run(read, write, app.create_initialization_options())
+@app.tool()
+async def echo(text: str) -> str:
+    """Echo the input text back to the user."""
+    return f"Echo: {text}"
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    app.run(transport="stdio")
 ```
+
+> 💡 **Why it's so short**: v2 **derives the inputSchema from your type hints** (`text: str` → a required string parameter), uses the **docstring as the tool description**, and wraps return values into MCP content automatically—all three were hand-written in v1. So the schema-design effort now goes into "name the parameters well, write the type hints, write a clear docstring".
 
 #### Step 3: Configure in Claude Desktop / Code
 
@@ -224,7 +205,7 @@ if __name__ == "__main__":
 **Claude Code**: Use the `claude mcp add` command:
 
 ```bash
-claude mcp add hello-mcp python /absolute/path/to/server.py
+claude mcp add hello-mcp --scope project -- python /absolute/path/to/server.py
 ```
 
 #### Step 4: Restart Claude Desktop / Code and Test
@@ -239,14 +220,16 @@ Claude replies (with a tool call icon): Echo: hello world
 | Symptom | Cause | Solution |
 |---|---|---|
 | Claude Desktop doesn't see the tool | `server.py` failed to start | Run `python server.py` directly in the terminal and check `stderr` for errors |
-| Tool is listed but call fails | Incorrect `inputSchema` format (missing `required` fields, wrong `type`) | Refer to [`schema-design-cheatsheet.md`](schema-design-cheatsheet.en.md) |
-| Claude doesn't proactively call the tool | `description` is too generic | Refine `description` to be specific trigger phrases like "When the user asks X, use this tool" |
-| stdio vs. SSE? | `stdio` is for local desktop integration; `SSE` is for remote/web | Always use `stdio` for the first server. |
+| Tool is listed but call fails | A parameter is missing its type hint (v2 builds the schema from it), or the types don't line up | Add a type hint to every parameter; refer to [`schema-design-cheatsheet.en.md`](schema-design-cheatsheet.en.md) |
+| Claude doesn't proactively call the tool | The docstring (= tool description) is too generic | Rewrite the docstring as a specific trigger, like "When the user asks X, use this tool" |
+| `ImportError` / `AttributeError` on the import line | v1 code (`from mcp.server import Server`, `@app.list_tools()`) running on v2 | Use the v2 form shown above, or pin `mcp>=1,<2` and stay on v1 |
+| stdio or HTTP? | **stdio** for local desktop integration; **Streamable HTTP** for remote (the old HTTP+SSE transport was deprecated in the 2025-03-26 spec revision—don't use it) | Always use `stdio` for the first server. |
+| Does a stdio server need OAuth? | No. The spec says authorization is optional overall; only the HTTP transport SHOULD follow it, and **stdio SHOULD NOT use authorization** | Take credentials from the **environment** (e.g. `os.environ["API_KEY"]`) instead of implementing a login flow inside the server |
 
 ### Further Reading
 
 - See [Stage 5.2](../stages/05-claude-code-ecosystem.en.md#52--mcp-model-context-protocol--foundation) for a full introduction to MCP.
-- Refer to the official examples in [`modelcontextprotocol/servers`](https://github.com/modelcontextprotocol/servers) (e.g., filesystem, github, sqlite, time).
+- Refer to the official reference servers in [`modelcontextprotocol/servers`](https://github.com/modelcontextprotocol/servers) (7 of them today: everything / fetch / filesystem / git / memory / sequentialthinking / time; github and sqlite have moved to `servers-archived`). The official README says these are reference implementations and **not production-ready**—to find servers you can actually use, go to the [official Registry](https://registry.modelcontextprotocol.io) (still in preview).
 - For production servers, see [Stage 5.2 "Practice: MCP in production"](../stages/05-claude-code-ecosystem.en.md#52--mcp-model-context-protocol--foundation) and the `~/.claude/skills/` examples in [`anthropics/claude-code`](https://github.com/anthropics/claude-code).
 
 ---
@@ -258,6 +241,7 @@ Claude replies (with a tool call icon): Echo: hello world
 ### Why
 
 Common scenarios include:
+
 - Generating a Word / PPT document from Markdown / an outline.
 - Summarizing / extracting data from multiple PDFs / Excel files.
 - Editing received `.docx` files (e.g., adding track changes, reformatting).
@@ -340,6 +324,7 @@ and write each into separate markdown sections in ./notes/research-summary.md.
 ### Why
 
 NotebookLM's strengths:
+
 - Automatically indexes up to 50 uploaded PDFs.
 - Provides Q&A with citations (each answer links to the source document and page number).
 - Generates summaries, mind maps, or podcast-style audio overviews.
@@ -347,6 +332,7 @@ NotebookLM's strengths:
 Its weakness: It's used via the NotebookLM web interface, disconnecting it from your other workflows (Claude Code, Obsidian, Zotero).
 
 Two solutions bridge this gap:
+
 1. **PleasePrompto/notebooklm-skill** (Skill, browser automation)
 2. **teng-lin/notebooklm-py** (Python API + CLI)
 
@@ -425,6 +411,7 @@ print(answer.citations)
 ### Why
 
 Classic pain points in the research workflow:
+
 - "Where is that paper?" — Zotero has it, but requires switching windows.
 - "Give me summaries of all papers discussing transformers." — Requires manual selection, export, then feeding to an LLM.
 - "What tags should I add to this paper?" — Manual process.
@@ -445,6 +432,7 @@ They are complementary and not mutually exclusive; you can install both.
 #### Step 1: Enable Zotero Local API
 
 Zotero's desktop app doesn't enable the API by default. Enable it:
+
 - **Edit → Preferences → Advanced → Config Editor**
 - Find `extensions.zotero.httpServer.enabled` and set it to `true`.
 - Find `extensions.zotero.httpServer.port`; the default is `23119`.
@@ -583,7 +571,7 @@ Watch three things:
 | Cost | Subscription or per-token | `$0` token cost |
 | Speed | Usually steadier | Hardware-dependent, often 2-5x slower |
 | Privacy | Content goes to Anthropic | Content stays local |
-| Reasoning ceiling | Stronger with Claude 4.5+ | Depends on the local model |
+| Reasoning ceiling | Stronger with Claude 4.8+ | Depends on the local model |
 | Best use case | Complex codebases, long context, reliable reasoning | Private files, offline demos, low-cost repetition |
 
 ### Important Limitation: Claude Code Cannot Directly Use a Local LLM
@@ -604,16 +592,16 @@ For local LLM work, treat "Claude Code" and "BYO-LLM CLI agents" as separate too
 ### Further Reading
 
 - Stage 1 [Local LLM exercise](../stages/01-llm-basics.en.md#exercise-6-local-llm): Ollama / llama.cpp / vLLM tradeoffs
-- [`cli-agents-guide.md`](cli-agents-guide.en.md): how to choose among 7 CLI agents
+- [`cli-agents-guide.en.md`](cli-agents-guide.en.md): how to choose among 8 CLI agents
 - Hermes Agent README: multi-platform gateway setup for Telegram / Discord / Slack and providers
 
 ---
 
 ## Can't Find the Recipe You Need?
 
-- See [Stage 5](../stages/05-claude-code-ecosystem.md) for the full concept.
-- See [`mcp-skills-catalog.md`](mcp-skills-catalog.en.md) for a comprehensive list of tools.
-- See [`schema-design-cheatsheet.md`](schema-design-cheatsheet.en.md) for details on writing tool schemas.
-- See [`cli-agents-guide.md`](cli-agents-guide.en.md) for a comparison of 7 popular CLI agents.
+- See [Stage 5](../stages/05-claude-code-ecosystem.en.md) for the full concept.
+- See [`mcp-skills-catalog.en.md`](mcp-skills-catalog.en.md) for a comprehensive list of tools.
+- See [`schema-design-cheatsheet.en.md`](schema-design-cheatsheet.en.md) for details on writing tool schemas.
+- See [`cli-agents-guide.en.md`](cli-agents-guide.en.md) for a comparison of 7 popular CLI agents.
 
 Want a new recipe? Open an issue or submit a PR. Recipe format: **Why + Steps + Sample Prompt + Common Pitfalls + Further Reading**.

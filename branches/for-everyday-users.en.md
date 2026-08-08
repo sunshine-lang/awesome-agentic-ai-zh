@@ -70,20 +70,20 @@ Desktop version of ChatGPT. Ask questions about screenshots, voice conversation,
 
 > These tools are positioned for developers but **everyday users can use them too** — e.g. batch-rename files, organize the Downloads folder, auto-write weekly reviews, summarize PDFs into Markdown.
 >
-> Want a detailed comparison? See [`resources/cli-agents-guide.en.md`](../resources/cli-agents-guide.en.md) — six major CLI agents side by side, recommendations by use case, common pitfalls, real-world setups.
+> Want a detailed comparison? See [`resources/cli-agents-guide.en.md`](../resources/cli-agents-guide.en.md) — eight major CLI agents side by side, recommendations by use case, common pitfalls, real-world setups.
 >
 > Want step-by-step onboarding? See [`tracks/cli/A1-cli-intro.en.md`](../tracks/cli/A1-cli-intro.en.md) — Track A first stop, from install to your first task.
 >
-> Want to wire your CLI agent to Notion / Obsidian / Excel / Google docs / etc.? See [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) — 62 MCP servers / Skills grouped by use case.
+> Want to wire your CLI agent to Notion / Obsidian / Excel / Google docs / etc.? See [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) — 77+ MCP servers / Skills grouped by use case.
 
 #### [anthropics/claude-code](https://github.com/anthropics/claude-code) ⭐⭐⭐⭐⭐
-★ 120k+ — Anthropic's official CLI agent. Reads/writes files, runs commands, handles multi-step tasks. **The most beginner-friendly CLI tool for everyday users.**
+★ 138k+ — Anthropic's official CLI agent. Reads/writes files, runs commands, handles multi-step tasks. **The most beginner-friendly CLI tool for everyday users.**
 
 #### [openai/codex](https://github.com/openai/codex) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 80k+ |
+| Stars | ★ 100k+ |
 | License | Apache-2.0 |
 
 **What it teaches**: OpenAI's terminal agent — it can help organize files, batch-process text, and run multi-step tasks from the command line; coding is only one use case. Same category as Claude Code, but uses OpenAI models.
@@ -94,7 +94,7 @@ Desktop version of ChatGPT. Ask questions about screenshots, voice conversation,
 
 | Field | Value |
 |---|---|
-| Stars | ★ 155k+ |
+| Stars | ★ 187k+ |
 | License | MIT |
 
 **What it teaches**: Open-source coding agent **not tied to any specific LLM provider** — use Claude, GPT, Gemini, or local Ollama, your choice. Community-maintained, fast iteration.
@@ -173,4 +173,4 @@ Contributions especially welcome:
 - Chinese-friendly chat tools (Chinese LLMs, localized wrappers)
 - Privacy / safety best practices (what data is OK to send / what isn't)
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md).
+See [CONTRIBUTING.en.md](../CONTRIBUTING.en.md).

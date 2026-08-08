@@ -13,6 +13,7 @@
 ## 何時可以跳過這個階段
 
 如果你能：
+
 - 寫一個會呼叫公開 API 並解析 JSON 回應的 Python 函式
 - 用 git 做 clone、commit、push，並處理基本的 merge 衝突
 - 在自己的作業系統上使用命令列（cd、ls、mkdir、執行 script）
@@ -55,7 +56,7 @@
 | **CLI / Shell** | [The Art of Command Line](https://github.com/jlevy/the-art-of-command-line) | 想系統性學命令列 | ★ 160k+、多語言版、新手到進階都涵蓋 |
 | | [Learn Shell](https://www.learnshell.org/) | 喜歡互動式練習 | 互動式 Bash 教學、瀏覽器內跑 |
 | | [explainshell.com](https://explainshell.com/) | debug shell 指令 | 把任何 shell 指令拆解講解（debug 救星）|
-| **REST API** | [MDN — HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) | 想搞懂 HTTP 協定 | 最 canonical 的 web reference |
+| **REST API** | [MDN — HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) | 想搞懂 HTTP 協定 | Mozilla 維護的 web 平台參考文件 |
 | | [Postman Learning Center](https://learning.postman.com/) | 用 GUI 探索 API | API 探索工具、視覺化好 |
 | | [HTTPie](https://github.com/httpie/cli) | 偏好 CLI、`curl` 太醜 | 比 `curl` 友善的命令列 HTTP client |
 | **YAML / JSON** | [YAML 官網](https://yaml.org/) | 需要查語法規格 | YAML 規格文件 |

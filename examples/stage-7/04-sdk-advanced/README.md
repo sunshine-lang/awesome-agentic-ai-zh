@@ -93,11 +93,13 @@ resp = client.messages.create(
 之後 5 分鐘內：`cache_read_input_tokens=2000`（10% cost = 90% off）
 
 **何時用**：
+
 - Long system prompt 重複 call（聊天機器人）
 - Tool schema 重複（multi-tool agent）
 - Document context 重複問（RAG with same doc）
 
 **不用的時候**：
+
 - 每次 prompt 都不同
 - 5 分鐘內 call 次數 < 1（cache 過期）
 

@@ -13,6 +13,7 @@
 ### 為什麼分軌
 
 原本 7-stage 假設讀者都想「**從零打造 agent**」（寫 Python、選 framework、自己 deploy），但實際上：
+
 - 多數 AI agent 使用者**沒在自己寫 agent**——他們是 Claude Code / Cursor / ChatGPT 重度使用者
 - 「framework-heavy」內容（LangGraph / AutoGen / Smolagents 等 Stage 4 那塊）受眾比 CLI 工具小很多
 - 但「打造 agent」這條路還是有受眾（研究者、ML 工程師、想懂內部的人）
@@ -32,11 +33,13 @@
 | A5 | Production CLI workflow（CI / cost / observability / plugin 打包） | → 合進最終 A3 |
 
 合併邏輯：
+
 - 草稿 A3 + A4 + A5 都是「**把 CLI 跟外部系統 / 流程接起來**」這同一件事的不同面向，砍 3 為 1 不會切碎概念
 - 草稿 A1 邊界清楚（入門 + 選擇），保留為最終 A1
 - 草稿 A2 邊界清楚（一個人在 CLI 內部如何工作），保留為最終 A2
 
 最終 3 個 stage：
+
 - **A1**：入門 + 選擇（CLI 安裝、認證、第一個任務）
 - **A2**：Workflow Patterns（CLAUDE.md / slash command / 多步拆解 / portable prompt）
 - **A3**：Integration & Production（MCP 接 CLI、多 CLI 並用、CI 自動化、cost / observability、plugin 打包）
@@ -46,6 +49,7 @@
 ### 為什麼 Stage 5 特別放在「兩軌共用」
 
 Stage 5（Claude Code 生態）兩條軌都會碰到：
+
 - Track A：A2 用 5.1（Claude Code 基礎）；A3 用 5.2（MCP）+ 選擇性用到 5.3（Skills）跟 5.4（Plugins）——A3 的 動手練習 CLI-12 會教 plugin 打包。讀的角度是「**怎麼用 Claude Code 把工作做好**」
 - Track B：把整個 Stage 5 當「**Claude Code 內部運作**」的深度學，從 5.1 完整走到 5.4
 
@@ -123,6 +127,7 @@ stage 的價值 = 讀者學完後**能回答這個問題**。
 ```
 
 **已知例外**：
+
 - **Stage 0**：prerequisite gateway，沒有完整結構（見 「Stage 0 為什麼可以 skip」）
 - **Stage 5**：分 4 個 sub-stage（5.1-5.4），每個 sub-stage 各有自己的 學習目標 / 必修閱讀 / 動手練習 / 精選 Projects
 - **Stage 6 / 7**：直接跳過 進入條件 section（前面 stage 已隱含 prerequisite）
@@ -192,6 +197,7 @@ style-guide 講格式、用詞、license。這份補跨 stage 的考量：
 
 ### 跟 stage 核心問題的相關度
 entry 的「教什麼」應該是該 stage 核心問題的一個答案的具體實作。
+
 - Stage 1 核心問題：LLM 是什麼。→ Anthropic Cookbook（教怎麼用）✓、rasbt/LLMs-from-scratch（教內部）✓
 - Stage 1 核心問題不該 cover：tool use（那是 Stage 3）、memory（那是 Stage 6）
 
@@ -209,6 +215,7 @@ entry 的「教什麼」應該是該 stage 核心問題的一個答案的具體�
 
 ### Measurable 是核心
 反例：
+
 - 「了解 LangGraph」 ❌
 - 「能解釋 LangGraph 為什麼用 graph」 ❌（subjective）
 - 「能寫一個 LangGraph workflow 含 conditional edge + checkpoint」 ✓（binary）
@@ -257,6 +264,7 @@ Repo 名字是 `awesome-agentic-ai-zh`，受眾偏 Claude Code 使用者。Stage
 ## Stage 0 為什麼可以 skip
 
 Stage 0 不是 stage——它是 prerequisite gateway。
+
 - Python / git / CLI / JSON 已經會的人 → 直接 Stage 1
 - 不會的人 → Stage 0 不是要從零教 Python，是給「我該不該學這 4 樣才能開始」的 self-test，順便給快速 reference 連結
 

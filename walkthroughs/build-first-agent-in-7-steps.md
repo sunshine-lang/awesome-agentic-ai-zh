@@ -35,7 +35,7 @@
 | 6 | 加 RAG memory：跟過去看過的論文比較 | ~60 行 |
 | 7 | 加 eval、observability、deploy | ~100 行 |
 
-**總計**：約 350 行 Python + 結構化設定 = 一個你看著它從零長到 production 的具體例子。
+**總計**：約 300 行 Python + 結構化設定 = 一個你看著它從零長到 production 的具體例子。
 
 ---
 
@@ -76,7 +76,7 @@ from anthropic import Anthropic
 client = Anthropic()
 
 response = client.messages.create(
-    model="claude-sonnet-4-6",
+    model="claude-sonnet-5",
     max_tokens=500,
     messages=[{
         "role": "user",
@@ -117,14 +117,16 @@ SYSTEM_PROMPT = """你是學術論文摘要助手。你的任務：
 
 PAPER_TEXT = """[論文 abstract 貼這裡]"""
 
-response = client.messages.create(
-    model="claude-sonnet-4-6",
-    max_tokens=800,
-    system=SYSTEM_PROMPT,
-    messages=[{"role": "user", "content": PAPER_TEXT}]
-)
-
-print(response.content[0].text)
+# 跑（包在 __main__ guard 裡：後面的 stage 會 import 這個檔案拿 SYSTEM_PROMPT，
+#   沒有 guard 的話，光是 import 就會送出一次真實 API 呼叫、而且是拿佔位字串去問）
+if __name__ == "__main__":
+    response = client.messages.create(
+        model="claude-sonnet-5",
+        max_tokens=800,
+        system=SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": PAPER_TEXT}]
+    )
+    print(response.content[0].text)
 ```
 
 **學到什麼**：system prompt 跟 user message 分工、明確格式要求、防 hallucinate 的「不知道就說沒提到」。
@@ -168,7 +170,7 @@ def run_agent(user_query: str):
     
     while True:
         response = client.messages.create(
-            model="claude-sonnet-4-6",
+            model="claude-sonnet-5",
             max_tokens=2000,
             tools=TOOLS,
             messages=messages,
@@ -193,8 +195,10 @@ def run_agent(user_query: str):
                 }]
             })
 
-# 跑
-print(run_agent("摘要這篇論文：https://arxiv.org/abs/2210.03629"))
+# 跑（同樣要 guard：Stage 7 的 eval_provider / step7 都會 import run_agent，
+#   沒 guard 的話每次 import 都會多跑一輪完整 agent）
+if __name__ == "__main__":
+    print(run_agent("摘要這篇論文：https://arxiv.org/abs/2210.03629"))
 ```
 
 **學到什麼**：tool schema 怎麼寫、ReAct loop 怎麼運作、`stop_reason` 怎麼判定結束、tool_result 怎麼回傳給 LLM。
@@ -232,7 +236,7 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
     revisions: int  # 防止無限 loop
 
-llm = ChatAnthropic(model="claude-sonnet-4-6")
+llm = ChatAnthropic(model="claude-sonnet-5")
 react_agent = create_react_agent(llm, tools=[fetch_arxiv])
 
 MAX_REVISIONS = 2
@@ -272,12 +276,14 @@ graph.add_conditional_edges("reflect", should_continue, {"agent": "agent", END: 
 graph.set_entry_point("agent")
 app = graph.compile()
 
-# 跑
-result = app.invoke({
-    "messages": [HumanMessage(content="摘要 https://arxiv.org/abs/2210.03629")],
-    "revisions": 0,
-})
-print(result["messages"][-1].content)
+# 跑（同樣要 guard：Stage 6 會 import 這個檔案的 State / react_agent / reflect）
+if __name__ == "__main__":
+    result = app.invoke({
+        "messages": [HumanMessage(content="摘要 https://arxiv.org/abs/2210.03629")],
+        "revisions": 0,
+    })
+    # 同理：messages[-1] 是 reviewer 判定，要看摘要得往回找最後一則 AI 訊息
+    print(next(m.content for m in reversed(result["messages"]) if m.type == "ai"))
 ```
 
 **學到什麼**：framework 抽掉的東西（while loop、message 結構、tool 註冊）、graph 怎麼定義條件分支跟正確的終止條件、reflection pattern 怎麼讓 agent 在限定回合內 self-correct（不會無限 loop）。
@@ -353,7 +359,7 @@ import chromadb
 from chromadb.utils import embedding_functions
 from langchain_anthropic import ChatAnthropic
 
-llm = ChatAnthropic(model="claude-sonnet-4-6")
+llm = ChatAnthropic(model="claude-sonnet-5")
 
 # 開一個本地 vector DB
 chroma = chromadb.PersistentClient(path="./paper_memory")
@@ -364,8 +370,9 @@ collection = chroma.get_or_create_collection(
 )
 
 def store_paper(arxiv_id: str, summary: str):
-    """把摘要存進 vector DB."""
-    collection.add(
+    """把摘要存進 vector DB。用 upsert：同一篇重跑時覆蓋，
+    而不是像 add() 那樣被靜默忽略。"""
+    collection.upsert(
         documents=[summary],
         ids=[arxiv_id],
         metadatas=[{"arxiv_id": arxiv_id}],
@@ -381,11 +388,16 @@ def find_similar(query_summary: str, top_k: int = 3) -> list[dict]:
 
 # 修改 Stage 4 的 agent，加上 compare_with_memory step：
 def compare_with_memory(state):
-    new_summary = state["messages"][-1].content
+    # compare 這個 node 跑在 reflect 之後，所以 messages[-1] 是 reflect 塞進去的
+    # 「[Reviewer 判定: …]」，不是摘要。要往回找最後一則 AI 訊息才是 agent 的產出。
+    new_summary = next(m.content for m in reversed(state["messages"]) if m.type == "ai")
     similar = find_similar(new_summary, top_k=3)
     
     if not similar:
-        return {"comparison": "（資料庫裡沒有相關論文）"}
+        # 先存再回傳。第一篇論文進來時 DB 是空的，如果這裡直接 return，
+        # store_paper 永遠不會被呼叫，memory 會一直是空的。
+        store_paper(arxiv_id=state["arxiv_id"], summary=new_summary)
+        return {"comparison": "（資料庫裡沒有相關論文，這是第一篇）"}
     
     compare_prompt = f"""新論文摘要：{new_summary}
     
@@ -397,7 +409,7 @@ def compare_with_memory(state):
     response = llm.invoke(compare_prompt)
     
     # 存新論文進 memory
-    store_paper(arxiv_id="...", summary=new_summary)
+    store_paper(arxiv_id=state["arxiv_id"], summary=new_summary)
     
     return {"comparison": response.content}
 ```
@@ -408,8 +420,16 @@ def compare_with_memory(state):
 # step6_memory.py 接續上面
 from step4_langgraph import State, react_agent, reflect, should_continue, MAX_REVISIONS
 from langgraph.graph import StateGraph, END
+from langchain_core.messages import HumanMessage
 
-graph = StateGraph(State)
+# State 只宣告 messages / revisions，而 LangGraph 會把沒宣告的 key 丟掉。
+# compare_with_memory 要回傳 comparison，就得先在 schema 裡有位子，
+# 否則那次 LLM 呼叫照樣計費、結果卻拿不到。
+class MemoryState(State):
+    arxiv_id: str      # 存進 vector DB 用的 key；不要寫死
+    comparison: str    # compare_with_memory 的輸出
+
+graph = StateGraph(MemoryState)
 graph.add_node("agent", react_agent)
 graph.add_node("reflect", reflect)
 graph.add_node("compare", compare_with_memory)  # 新加的 node
@@ -418,6 +438,15 @@ graph.add_conditional_edges("reflect", should_continue, {"agent": "agent", END: 
 graph.add_edge("compare", END)
 graph.set_entry_point("agent")
 app_with_memory = graph.compile()
+
+# 跑（arxiv_id 一定要傳：store_paper 拿它當 vector DB 的 key）
+if __name__ == "__main__":
+    result = app_with_memory.invoke({
+        "messages": [HumanMessage(content="摘要 https://arxiv.org/abs/2210.03629")],
+        "revisions": 0,
+        "arxiv_id": "2210.03629",
+    })
+    print(result["comparison"])   # 注意讀的是 comparison，不是 messages[-1]
 ```
 
 **學到什麼**：vector DB 怎麼用、embedding 跟相似度查詢、把 agent 從「stateless」變成「有記憶」、persistent storage 的設計、graph 怎麼擴新 node 而不重寫前面的邏輯。
@@ -567,7 +596,7 @@ docker run -p 8000:8000 \
 - [ ] 加 RAG memory 讓 agent 變成有狀態（Stage 6）
 - [ ] 寫 eval + 接 observability + deploy（Stage 7）
 
-**這個範例的程式碼大約 350 行**——比一般的 framework example 多，但每一行都是真的會用到的。
+**這個範例的程式碼大約 300 行**——比一般的 framework example 多，但每一行都是真的會用到的。
 
 ---
 

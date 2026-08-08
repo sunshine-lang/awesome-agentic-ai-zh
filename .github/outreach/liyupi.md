@@ -5,7 +5,7 @@
 > **Status**: not contacted · **Channel**: GitHub PR
 > **Primary lang**: zh-Hans
 > **Last updated**: 2026-05-09
-> **Repo**: https://github.com/liyupi/ai-guide (★ 14k+)
+> **Repo**: https://github.com/liyupi/ai-guide (★ 16k+)
 
 **Why this target**: liyupi 的 ai-guide 是中國大陸最大的 AI 資源 hub 之一（★13k+），定位是 aggregator——「整理所有相關資源」。我們是結構化 7 階段學習地圖，剛好是他們資源海中缺的「**怎麼依序學**」這一塊。
 

@@ -5,6 +5,13 @@
 # Exercise 6: Function Schema Design (bad vs good)
 
 Corresponds to [Stage 3 — Tool Use & Agent Intro](../../../stages/03-tool-use-and-hello-agent.en.md) Exercise 6.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
+
+> 📚 **Want the chapter-length version?** The starter in this folder is a 70-150 line illustrative build focused on `the core pattern + two SDK paths` — it is not in-depth teaching material. Recommended for depth:
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ the most complete Chinese-language course out there — chapter-based, covering 16 production capabilities. **this exercise maps to hello-agents' [Extra08 — How to Write a Good Skill](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra08-如何写出好的Skill.md)**
+> - [OpenAI Function Calling guide](https://platform.openai.com/docs/guides/function-calling) + [the schema design cheatsheet](../../../resources/schema-design-cheatsheet.en.md)
+> - Full references in [Stage 3 Curated Projects](../../../stages/03-tool-use-and-hello-agent.en.md#-curated-projects)
+
 
 ## Why this matters
 
@@ -75,7 +82,7 @@ In other words: **time spent writing good schemas saves you the cost of upgradin
 
 ## Further reading
 
-More schema design rules in [`resources/schema-design-cheatsheet.md`](../../../resources/schema-design-cheatsheet.md): clear usage, correct types, required fields, enum constraints, structured error returns.
+More schema design rules in [`resources/schema-design-cheatsheet.en.md`](../../../resources/schema-design-cheatsheet.en.md): clear usage, correct types, required fields, enum constraints, structured error returns.
 
 ## Extensions
 

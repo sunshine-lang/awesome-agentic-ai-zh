@@ -3,7 +3,7 @@
 Mirror sync reminder.
 
 當 PR 改了 zh-TW canonical .md 檔（path 內含 stages/ branches/ tracks/ resources/
-walkthroughs/ 或 README.md / CONTRIBUTING.md）、但沒同時改對應的 .en.md / .zh-Hans.md
+walkthroughs/ examples/ 或 README.md / CONTRIBUTING.md）、但沒同時改對應的 .en.md / .zh-Hans.md
 mirror、產生一個 PR comment body 寫到 .mirror-sync-comment.md、提示 contributor。
 
 Soft reminder — 不擋 PR。zh-TW canonical、mirror sync 是 Path B（slower cadence）。

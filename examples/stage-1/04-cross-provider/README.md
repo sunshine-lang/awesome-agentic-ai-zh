@@ -1,4 +1,6 @@
-> **繁體中文** | [简体中文](./README.zh-Hans.md) | [English](./README.en.md)
+<div align="right">
+  <strong>繁體中文</strong> | <a href="./README.zh-Hans.md">简体中文</a> | <a href="./README.en.md">English</a>
+</div>
 
 # 練習 4：Cross-Provider 比較（Claude / GPT / Gemini）
 
@@ -9,6 +11,7 @@
 ## 為什麼要比較
 
 同樣是「解釋 AGI vs narrow AI」這個 prompt、三家 LLM 回得不一樣：
+
 - **Claude**：通常傾向先給結構（定義 → 例子）、語氣中性
 - **GPT**：傾向先給簡短答案、再展開（type-A 風格）
 - **Gemini**：傾向 list / bullet 排列、example 多
@@ -122,6 +125,6 @@ def call_ollama(prompt: str) -> Reply | None:
 
 ## 延伸
 
-- **成本對照** → 接 [`examples/stage-1/03-pricing/`](../) 的 PRICING dict、印 dollar cost column
+- **成本對照** → 接 [Stage 1 的計價練習](../../../stages/01-llm-basics.md) 的 PRICING dict、印 dollar cost column
 - **同 prompt 跑 N 次取平均** → 在 `compare()` 內加 for-loop、看 latency stdev
 - **加 quality eval** → 加第四家 LLM 當 judge、給每家回應打分（這在 Stage 7 練習 2 會教）

@@ -21,4 +21,4 @@ labels: bug
 
 ## 其他資訊 / Other info
 - [ ] 我已經確認連結真的失效（用 `curl -I` 或瀏覽器試過）
-- [ ] 我看過 [`resources/style-guide.md`](../resources/style-guide.md)
+- [ ] 我看過 [`resources/style-guide.md`](../../resources/style-guide.md)

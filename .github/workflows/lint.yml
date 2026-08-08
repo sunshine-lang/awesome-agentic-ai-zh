@@ -1,15 +1,37 @@
 name: Lint (link rot + banned words + schema)
 
 on:
+  # 刻意「不」加 paths 過濾。這是 blocking gate，將來可能被設成 required status check；
+  # 而 GitHub 對「required 但從未回報」的 check 是無限期等待，PR 會永遠卡在
+  # 「Expected — Waiting for status to be reported」。paths 過濾會讓整個 workflow 不觸發、
+  # 連 check 物件都不產生，正是那個死鎖。
+  # （job 層的 `if:` 不一樣——被 skip 的 job 仍然會回報一個 skipped 的 check，GitHub 視為
+  # 通過，所以本檔的 link-rot / star-drift 那種 guard 是安全的，不必動。）
+  # 這個 filter 原本讓 130 / 473 個 tracked 檔案觸發不了任何一次執行（examples/ 114、
+  # .github/ 9、root 6、docs/ 1）。它也會跳過只動 CITATION.cff 的 chore(release) commit
+  # ——全部 12 個 release commit 裡有 9 個是這種；另外 3 個只是因為同時改了 CHANGELOG.md
+  # 才僥倖觸發，不是設計。
+  # 整份 workflow 只要數十秒，省下的 CI 時間遠不值得這個風險。
   pull_request:
-    paths:
-      - '**.md'
-      - 'scripts/**'
-      - 'resources/**'
+  # 也在 push 到 main 時跑。這個 repo 的小改動常常直接進 main（維護者自己推），
+  # 那條路徑以前完全不經過這個 workflow，所以 blocking gate 等於沒跑。
+  # 2026-08-03 的實例：一個 overclaim 片語在 main 上紅了約 15 小時沒人發現
+  #（47c9682 07:06 EDT 引入 → c0f2bbe 22:07 EDT 修掉），而且不是我們自己抓到的，
+  # 是靠一個外部 PR 照出來的——因為 GitHub 的 PR 檢查跑的是「合併後」的結果，不是分支本身。
+  # link-rot / star-drift 兩個 job 有 `if: schedule || workflow_dispatch` 的 guard，
+  # 不會被 push 觸發，所以 push 只跑 banned-words + freshness-tests（實測 17s + 9s）。
+  push:
+    branches: [main]
   schedule:
     # 每月 1 號 UTC 03:00 跑完整檢查（catch link rot + star drift）
     - cron: '0 3 1 * *'
   workflow_dispatch:
+
+# 這個 workflow 只讀 repo、不寫回任何東西。pull_request 事件下 GitHub 對 fork 一律
+# 發唯讀 token，但 push 事件的權限來自 repo 設定，未來被改掉就會靜默放寬，所以明寫。
+# 跟 anchor-validator / stage-template-check / freshness-2026 一致。
+permissions:
+  contents: read
 
 jobs:
   banned-words:
@@ -148,6 +170,126 @@ jobs:
           # stdlib-only script; ubuntu-latest ships python3 (no pip deps).
           python3 scripts/zh-hans-localize.py --check
 
+      - name: Install opencc (for the Traditional-residue check)
+        # The only pip dep in this job. zh-hans-localize.py stays stdlib-only;
+        # this is for check-hans-chars.py, which asserts the real invariant
+        # (converting a zh-Hans file with opencc t2s must be a no-op) instead of
+        # approximating it with a hand-written character list.
+        run: pip install opencc-python-reimplemented
+
+      - name: Check for Traditional-character residue in zh-Hans (blocking)
+        run: |
+          # Blocking gate. zh-hans-localize.py checks Taiwan VOCABULARY and quote
+          # style only — character-level 繁→簡 was assumed to have happened
+          # upstream when the mirror was made with opencc. That left a permanent
+          # hole: a character never converted in the first place was invisible to
+          # every gate here. In 2026-08 it was holding 13 real residues, including
+          # 動手練習 sitting mid-sentence in README.zh-Hans.md.
+          # --require-opencc so a missing dependency fails loudly instead of
+          # turning this into a silent no-op.
+          python3 scripts/check-hans-chars.py --require-opencc
+
+      - name: check-hans-chars.py detection unit tests
+        # Pins the tw2s trap (tw2s maps 么->幺, mangling correct Simplified 什么
+        # into ~880 false positives — the checker must use t2s) and every
+        # exemption: code fences, link targets whose anchors point at zh-TW
+        # headings, the 繁體中文 proper name, and the uniform shields.io badge row.
+        # --require-opencc: fail rather than skip if the dep is missing, so this
+        # step can never exit green having run zero tests.
+        run: python3 scripts/test_hans_chars.py --require-opencc
+
+      - name: Check no mirror lost content vs the canonical (blocking, ratchet)
+        run: |
+          # Blocking gate, and the systemic one. The recurring failure in this repo
+          # is not a bad translation but a MISSING one — in a single 2026-08 sweep
+          # that class turned up five times (the catalog's composition section, the
+          # A2/A3 entry conditions, five expected-output blocks in stages/01, an
+          # entire free-local exercise path, and 202 blockquote lines across 21
+          # example READMEs). No other gate could see any of it: they all check that
+          # what IS there is correct, never that anything is missing.
+          # This is a RATCHET against scripts/mirror-parity-baseline.json — real
+          # legitimate deltas are baselined, and it fails only when a deficit grows
+          # or appears somewhere new. Deficits can therefore only shrink.
+          python3 scripts/check-mirror-parity.py
+
+      - name: check-mirror-parity.py detection unit tests
+        # Pins the ratchet in BOTH directions: a growing gap must fail, a shrinking
+        # one must pass without regenerating the baseline, and a mirror with MORE
+        # content than the canonical is not a deficit.
+        run: python3 scripts/test_mirror_parity.py
+
+      - name: Check mirror pages embed their own locale's image (blocking)
+        run: |
+          # Blocking gate. check-locale-links.py only matches link targets ending
+          # in .md, so image paths were invisible to every gate — 9 mismatches
+          # were shipping, English and Simplified pages embedding Traditional-only
+          # diagrams under localized alt text. Fails on a mismatch whose correct
+          # sibling already exists (a one-line fix) or a dead reference; the 9
+          # assets that genuinely do not exist yet are listed in KNOWN_MISSING so
+          # a NEW mismatch fails instead of quietly joining the pile.
+          python3 scripts/check-image-locale.py
+
+      - name: check-image-locale.py detection unit tests
+        run: python3 scripts/test_image_locale.py
+
+      - name: Check MCP catalog counts are consistent (blocking)
+        run: |
+          # Blocking gate: the catalog's Index per-section counts and the
+          # "NN+ MCP servers" headline repeated across README / RESOURCES /
+          # branches / stages / tracks must all match the file's real entry
+          # count. In 2026-08 the Index summed to 73 while the file held 76,
+          # and 39 places still advertised a long-stale number — and two
+          # separate hand-counts got it wrong in different ways, which is why
+          # the number is now computed from the file instead of tallied by hand.
+          python3 scripts/check-catalog-counts.py
+
+      - name: check-catalog-counts.py detection unit tests
+        # Pins BOTH incident classes: the entry-counting rule (an entry whose
+        # heading has no bracket link must still count) and the claim coverage
+        # (the first version of the checker validated only 17 of 36 real claims
+        # because its regex demanded a fixed keyword right after the number).
+        run: python3 scripts/test_catalog_counts.py
+
+      - name: Check mirror pages link to their own locale (blocking)
+        run: |
+          # Blocking gate: an .en.md / .zh-Hans.md page must not link to the
+          # zh-TW canonical when a same-locale sibling exists — that silently
+          # drops non-Traditional readers onto a page they may not read.
+          # 2026-08 sweep fixed 111 such links across 37 files; nothing else in
+          # CI catches this (check-anchors only proves targets resolve, and
+          # sync-language-switchers only manages the switcher row).
+          # Fix with: python scripts/check-locale-links.py --apply
+          python3 scripts/check-locale-links.py
+
+      - name: check-locale-links.py detection unit tests
+        # Pins the conservative exemptions (missing sibling / switcher row /
+        # fenced code / external URL) so a future tweak can't start rewriting
+        # links into dead ends. stdlib-only.
+        run: python3 scripts/test_locale_links.py
+
+      - name: Repo-walker exclude-path regression tests
+        # The 2026-08-02 "silent false all-clear" class: eight gates matched
+        # EXCLUDE_DIRS against the ABSOLUTE path, so a checkout under
+        # `.claude/worktrees/<name>/` (this repo's standard worktree location)
+        # skipped every file and still printed its success line.
+        # check-catalog-counts.py was live — 0 of 248 files scanned, exit 0,
+        # as a BLOCKING gate. CI never saw it: the runner path has no excluded
+        # component, so the gates only went blind locally, which is the one
+        # place they run pre-commit.
+        # Includes a source-level scan that fails if any script reintroduces
+        # the pattern, so this cannot come back a ninth time. stdlib-only.
+        run: python3 scripts/test_repo_scan_excludes.py
+
+      - name: refresh-stars.py detection unit tests
+        # Pins the 2026-07 star-line write-back + neighbour-leak fix
+        # (scripts/test_refresh_stars.py). stdlib-only; runs on every PR.
+        run: python3 scripts/test_refresh_stars.py
+
+      - name: pr-link-audit.py detection unit tests
+        # Pins the PR link-audit bot's diff-parsing + advisory-flag logic
+        # (scripts/test_pr_link_audit.py). stdlib-only, network-free.
+        run: python3 scripts/test_pr_link_audit.py
+
   link-rot:
     name: Link rot check (GitHub URLs)
     runs-on: ubuntu-latest
@@ -192,3 +334,25 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  freshness-tests:
+    name: Freshness gate unit tests
+    runs-on: ubuntu-latest
+    # Runs on every PR and every push to main (no paths filter, no schedule-only
+    # guard), so the freshness-gate coverage can't silently regress the way it
+    # did in 2026-07.
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Run freshness gate regression tests
+        # Pins the 2026-07 coverage fixes: mirror-locale scanning +
+        # DeepSeek space-form regex (scripts/test_freshness.py).
+        run: python scripts/test_freshness.py

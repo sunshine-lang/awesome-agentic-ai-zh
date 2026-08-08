@@ -40,6 +40,7 @@
 
 - Replies need to be handled. If we batch-send all 8 in one day, we can't respond
   to early-positive replies before they cool.
+
 - Multiple open conversations dilute attention; one-at-a-time keeps quality.
 - If 5 replies land in week 1, that's a good problem; if 0 land, we don't burn
   all our cards before learning what's not working.
@@ -50,18 +51,23 @@ after upstream-target audit caught the awesome-claude-code reorg):
 1. **Day 1**: [#6 punkpeye/awesome-mcp-servers PR](outreach/awesome-mcp-servers.md)
    — has `## Tutorials` section, ★86k repo, reciprocal cite already exists.
    Lowest-risk concrete-action target.
+
 2. **Day 2**: [#5 awesome-claude-code **issue**](outreach/awesome-claude-code.md)
    — repo mid-reorg, no PR-able sections; open an issue parking the proposal
    for when their new TOC lands.
+
 3. **Day 3**: [#1 Datawhale](outreach/datawhale.md) — most strategic for zh-Hans
    reach (we cite Hello-Agents Extra05/08).
+
 4. **Day 4**: [#2 liyupi](outreach/liyupi.md) — high reach if accepted (★13k
    resource hub).
+
 5. **Day 5**: [#4 LangChain (kyrolabs/awesome-langchain)](outreach/langchain-ai.md).
 6. **Day 6**: pause — review responses to date.
 7. **Day 7+**: [#3 HuggingFace](outreach/huggingface-zh.md), then
    [#7 Zhipu](outreach/zhipu.md), [#8 Moonshot](outreach/moonshot.md) only
    after digesting earlier feedback.
+
 8. **Day 8+ (added 2026-05-10 retroactively)**: targets 9-11 (`travisvn/awesome-claude-skills`,
    `WangRongsheng/awesome-LLM-resources`, `AiHubCN/Awesome-Chinese-LLM`) — discovered they were
    on `.github/launch-checklist.md` from day 1 but missing from this outreach matrix. Pitch
@@ -73,6 +79,7 @@ after upstream-target audit caught the awesome-claude-code reorg):
 - Always update this matrix when contacted / received reply / closed.
 - Use `git commit -m "outreach: status update for <target> (<status>)"` so the
   log is greppable.
+
 - Dates: ISO format `YYYY-MM-DD`.
 - Notes: 1-2 lines max — full context lives in the per-target `outreach/<slug>.md`.
 
@@ -84,6 +91,7 @@ after upstream-target audit caught the awesome-claude-code reorg):
 - ❌ Ping after one reply — give 5+ business days
 - ❌ Pitch via Discord DM unless explicitly invited (follow each project's
   preferred contact channel; Discord DM cold = annoying)
+
 - ❌ Edit pitch templates without recording the change in the file's git history
 
 ## Success indicators
@@ -124,6 +132,7 @@ de-zh-gated (commit b4bb862). Drafts ready — maintainer posts manually.
 
 1. **First**: README positioning + GitHub metadata (✅ done b4bb862) —
    without it every English referral bounces on "this is Chinese-only".
+
 2. Then **one** of E1/E2 (HN or r/AI_Agents) — not both same day; gauge response.
 3. E3–E5 spaced 1 sub/day, each tailored (identical body = spam-flag).
 4. E6 newsletters only AFTER an E1–E5 signal exists ("already trending").

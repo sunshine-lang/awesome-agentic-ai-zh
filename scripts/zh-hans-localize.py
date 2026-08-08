@@ -127,9 +127,24 @@ def main() -> int:
     ap.add_argument("--check", action="store_true", help="exit 1 if any file would change (CI gate, read-only)")
     args = ap.parse_args()
 
+    # `.claude` holds git worktrees (`.claude/worktrees/<name>/`), which contain a
+    # full second copy of the tree. Without this the gate scans those copies and
+    # reports drift that does not exist in the working tree — and worse, the
+    # PROTECT list below never matches them, because it is keyed on repo-relative
+    # paths like "resources/style-guide.zh-Hans.md" while the worktree copy is at
+    # ".claude/worktrees/<name>/resources/style-guide.zh-Hans.md". A protected file
+    # therefore becomes unprotected the moment a worktree exists. Found 2026-08-02
+    # when a stray worktree made this gate fail on a file it is meant to skip.
+    SKIP_PARTS = {".ai", ".claude", "node_modules", "_build", "_site", "book"}
     files = sorted(
         p for p in REPO.rglob("*.zh-Hans.md")
-        if ".ai" not in p.parts and "node_modules" not in p.parts and "_build" not in p.parts
+        # Intersect against the REPO-RELATIVE parts. Using p.parts tests the
+        # ABSOLUTE path, and SKIP_PARTS contains ".claude" — so from a checkout
+        # under `.claude/worktrees/<name>/` this matched every file and the gate
+        # scanned 0 of 68 zh-Hans files while printing "✓ zh-Hans localization
+        # clean — no drift". Eighth instance of the 2026-08-02 bug class; pinned
+        # by test_repo_scan_excludes.py.
+        if not SKIP_PARTS & set(p.relative_to(REPO).parts)
         and p.relative_to(REPO).as_posix() not in PROTECT
     )
     total = 0

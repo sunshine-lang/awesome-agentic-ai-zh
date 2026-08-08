@@ -25,6 +25,7 @@ while not done:
 ```
 
 LangGraph / CrewAI 把這個 loop 藏起來了。你**自己寫過一次**才知道：
+
 - 為什麼 messages array 一直長
 - tool_use_id 跟 tool_result 怎麼配對
 - stop_reason 為什麼是 `tool_use` 或 `end_turn`
@@ -117,7 +118,7 @@ python test_anthropic.py # 驗 Path B (Anthropic) starter_anthropic.py 邏輯
 預設用 `claude-haiku-4-5`（最便宜）。改成 sonnet：
 
 ```bash
-MODEL=claude-sonnet-4-6 python starter.py
+MODEL=claude-sonnet-5 python starter.py
 ```
 
 或在 `starter.py` 改 `MODEL = ...` 那行。

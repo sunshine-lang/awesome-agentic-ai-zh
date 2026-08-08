@@ -5,6 +5,7 @@
 After finishing a track, **build something yourself** — this file is not a tutorial, not a walkthrough, and there is no model answer. Its purpose is to turn "I read the roadmap" into "I have something I can show + a grade I gave myself."
 
 **How to use this file**:
+
 1. Pick **a problem you actually have** (work, research, daily life). Don't pick a toy problem — a capstone's value comes from being real.
 2. Check your track's "Prerequisites" and confirm the required stages have each passed their "Self-check".
 3. When done, **self-assess with the matching rubric** (4 levels: Not yet / Basic / Good / Excellent). Scoring honestly is more useful than scoring high.
@@ -21,6 +22,7 @@ After finishing a track, **build something yourself** — this file is not a tut
 **Brief**: Assemble a CLI-agent workflow **you will reuse**, automating something you currently do by hand.
 
 **Requirements** (all mandatory):
+
 - A CLI agent (Claude Code or equivalent) at the core
 - At least **1** MCP server **or** a skill / command you wrote yourself
 - A clear input → a usable artifact out (not "chatting with it")
@@ -48,10 +50,12 @@ After finishing a track, **build something yourself** — this file is not a tut
 **Prerequisites**: Stage 0–8 (including Stage 3, 4, 5, 6, 7, 7.5, 8) have each passed their self-check.
 
 **Brief**: Design, build, and **evaluate** a small system that solves a concrete problem. Pick one:
+
 - **A. Multi-agent**: ≥ 2 cooperating agents with orchestration logic; or
 - **B. RAG system**: a complete retrieval + generation pipeline.
 
 **Requirements** (all mandatory):
+
 - Has tool use
 - Has one outward interface (CLI / API / chat — any one, mapping to Stage 8)
 - **Has explicit evaluation**: define ≥ 5 test cases yourself + measure a pass rate / qualitative assessment (this one is non-negotiable — the thing this curriculum most often skips is "verification")

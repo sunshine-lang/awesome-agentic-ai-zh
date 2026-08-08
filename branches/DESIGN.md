@@ -11,6 +11,7 @@
 ### Branch 跟 Track 的關係
 
 5 條 branch 設計成 **兩條軌道走完都接得上**：
+
 - Track A 完成 A3 → 從 branches 選一條繼續
 - Track B 完成 Stage 7 → 從 branches 選一條繼續
 - Branch entry 的 curation 標準**不依軌道區分**——同一個工具不論是 Track A 用法（用現成 CLI）還是 Track B 用法（自己接 SDK），都放在對應 audience 的 branch 內
@@ -24,6 +25,7 @@ Branch maintainer 應該意識到：**進來看 branch 的讀者背景可能差�
 
 ### 太多（≥7）的問題
 audience 切太細會：
+
 - 每個 branch 都很薄（沒幾個 entry），讀者覺得不被照顧
 - 邊界開始模糊（資料科學家 vs 機器學習工程師？產品經理 vs 顧問？）
 - maintain 成本變高（要看的 branch 變多）
@@ -63,6 +65,7 @@ audience 切太細會：
 
 ### 3. 應用場景
 同一個工具在不同場景下歸類不同。例如：
+
 - **Ollama**：給 everyday-users 是「隱私場景跑本地 LLM」（Tier 3），給 developer 是「開發 agent 的本地測試 backend」——但這份 catalog 把它放在 **Stage 1**（基礎設施層級），各 branch 從那裡引用。
 - **f/awesome-chatgpt-prompts**：放 for-teacher（給教師當教材參考）、也放 for-everyday-users（不寫 code 也能用的 prompt 庫）。
 
@@ -71,6 +74,7 @@ audience 切太細會：
 **規則**：同一 repo 可以在多 branch 出現，但每處要有不同的 **framing**（適合誰、教什麼）。**推薦星等預設一致**——同一個工具的客觀價值不會因 audience 改變；除非有明確的 audience-specific 理由（譬如「進階度差太多」），且寫進 Notes 解釋。詳見 [`resources/style-guide.md`](../resources/style-guide.md) 2。
 
 **範例**：
+
 - `obra/superpowers` 出現在 Stage 5、for-developer、for-knowledge-worker、for-teacher
   - Stage 5：作為 SKILL.md collection 範例
   - for-developer：作為 TDD / debug skill 來源
@@ -79,6 +83,7 @@ audience 切太細會：
   - **4 處都是 ⭐⭐⭐⭐**（這是規則的正例：framing 不同、評等一致）
 
 **反例（不該這樣做）**：
+
 - `kaixindelele/ChatPaper` 只放 for-researcher，不放 for-everyday-users。原因：它是研究者專用流程（總結 / 翻譯 / 審稿回覆），everyday user 用不到也不該被推。
 
 ---

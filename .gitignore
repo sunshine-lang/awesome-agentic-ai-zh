@@ -32,3 +32,11 @@ resources/diagrams/stage5-stack*.svg
 # weekly-catalog-refresh.yml diagnostic logs — must NOT leak into the auto-PR
 star-refresh.log
 link-report.txt
+
+# Agent-created git worktrees. Each is a FULL second copy of the tree, so any gate
+# that walks the filesystem with Path.rglob (which descends into dot-directories,
+# unlike glob.glob) scans it too. In 2026-08 a stray worktree doubled the corpus for
+# three gates and silently defeated zh-hans-localize.py's PROTECT allowlist, whose
+# repo-relative paths never match a worktree copy. Previously only in this machine's
+# .git/info/exclude; tracked here so every contributor gets the same protection.
+.claude/worktrees/

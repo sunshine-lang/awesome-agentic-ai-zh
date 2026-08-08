@@ -4,16 +4,17 @@
 
 ⏱ **Estimated time**: 2-3 weeks (approx. 10-15 hours)
 
-> 💡 Unfamiliar with terms like `framework`, `supervisor`, `worker`, `handoff`? → Check [`resources/glossary.md`](../resources/glossary.md).
+> 💡 Unfamiliar with terms like `framework`, `supervisor`, `worker`, `handoff`? → Check [`resources/glossary.en.md`](../resources/glossary.en.md).
 
 > 📋 **Chapter structure**: Learning Objectives → Entry Conditions → Required Reading → [Optional · Concept Map: multi-agent intro + advanced tool patterns] → Hands-on Exercises → Curated Projects → Self-Check
-> 🔑 **Key Terms**: See [`resources/glossary.md`](../resources/glossary.md) (2 & 4 cover terms like `framework`, `agent loop`, `handoff`, `supervisor`).
+> 🔑 **Key Terms**: See [`resources/glossary.en.md`](../resources/glossary.en.md) (2 & 4 cover terms like `framework`, `agent loop`, `handoff`, `supervisor`).
 
 You've built a ReAct agent from scratch (Stage 3). Now, let's see what a framework actually does for you. **Pick one to learn deeply**, and just skim the others to know when to switch.
 
 ## 📌 Learning Objectives
 
 After completing this stage, you will be able to:
+
 - Compare 5 major agent frameworks (LangGraph, AutoGen, CrewAI, Smolagents, OpenAI Agents SDK)
 - Select the right framework for a given task
 - Build the same agent using two different frameworks to experience the differences firsthand
@@ -22,6 +23,7 @@ After completing this stage, you will be able to:
 ## 🚪 Entry Conditions
 
 You should have already:
+
 - Completed all 5 hello-X projects from Stage 3
 - Written a ReAct agent from scratch (Exercise 3)
 - Become comfortable with async Python (frameworks rely heavily on it)
@@ -105,6 +107,7 @@ The fundamental difference from the framework path (in one line): the **framewor
 > 📌 **The full dimension-by-dimension comparison table (startup / runtime / context isolation / provider lock-in / learning curve) lives canonically at [Stage 5.5](05-claude-code-ecosystem.en.md#55--subagents-claude-codes-native-multi-agent-mechanism--2025-new-feature)** — this stage only needs you to know "there's a second, Claude-Code-native path"; see 5.5 for the per-item implementation differences.
 
 **When to choose subagents over a framework**:
+
 - You're already using Claude Code for your daily work.
 - The task context is large and would consume the entire main session window (e.g., reading a whole codebase).
 - You want to run multiple subagents in parallel (research / write / critic) to save wall-clock time.
@@ -119,6 +122,7 @@ Frameworks abstract away the orchestration boilerplate for the 5 patterns above 
 ### 📚 Want a more systematic, in-depth look?
 
 **🇺🇸 Academic Papers (Influenced all subsequent framework designs)**:
+
 1. [**Anthropic — "Building Effective Agents"**](https://www.anthropic.com/engineering/building-effective-agents) ⭐⭐⭐ — When to use a workflow vs. an agent, 5 classic orchestration patterns. **Essential reading for multi-agent design in the English-speaking world.**
 2. [**AutoGen paper (Wu et al. 2023)**](https://arxiv.org/abs/2308.08155) — The original paper for Microsoft's multi-agent conversation framework.
 3. [**CAMEL paper (Li et al. 2023)**](https://arxiv.org/abs/2303.17760) — The seminal work on multi-agent role-playing.
@@ -126,10 +130,12 @@ Frameworks abstract away the orchestration boilerplate for the 5 patterns above 
 5. [**Generative Agents paper (Park et al. 2023)**](https://arxiv.org/abs/2304.03442) — 25 agents interacting in a Sims-like environment, a classic in social simulation.
 
 **🀄 Chinese Systematic Resources**:
+
 1. [**hello-agents Ch6 "Framework Development Practice" + Ch7 "Build Your Agent Framework"**](https://github.com/datawhalechina/hello-agents) ⭐ — A comprehensive Chinese resource on framework development and building one from scratch. **Note: Ch4 "Classic Agent Paradigm Construction" covers single-agent paradigms (ReAct / Plan-and-Solve / Reflection), not multi-agent.**
 2. [**Hung-yi Lee — Introduction to Generative AI**](https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php) — Later episodes cover AI agents / multi-agent systems.
 
 **Framework Official Multi-Agent Docs**:
+
 - [**LangGraph — Multi-Agent Systems**](https://langchain-ai.github.io/langgraph/concepts/multi_agent/) — Official tutorials for supervisor, swarm, and hierarchical architectures.
 - [**Anthropic Cookbook — `customer_service_agent.ipynb`**](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) — A canonical example of multi-agent orchestration (routing + handoff).
 - [**Microsoft AutoGen — Examples**](https://microsoft.github.io/autogen/) — Complete examples for group-chat, debate, and peer review patterns.
@@ -154,6 +160,7 @@ Stage 3 taught you to write single-tool / multi-tool selection (by hand-writing 
 | **Tool-augmented retrieval**| The tool itself is a RAG search → returns results → the agent reasons on the results. | A combination of the Stage 6 Exercise 4 RAG pipeline and Stage 3 Exercise 2 multi-tool selection (LangGraph wraps the retriever as a tool node). |
 
 **📚 In-depth Resources**:
+
 - [**Anthropic — Tool Use best practices**](https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview) — The official tool design guide.
 - [**LlamaIndex — Tool Router pattern**](https://docs.llamaindex.ai/en/stable/module_guides/deploying/agents/tools/) — The canonical reference for dynamic selection.
 - [**LangGraph — Tool Node**](https://langchain-ai.github.io/langgraph/) — How to write a composition graph.
@@ -164,6 +171,7 @@ Stage 3 taught you to write single-tool / multi-tool selection (by hand-writing 
 
 ### Exercise 1: Same agent, two frameworks
 Build the same simple agent (search + summarize) using these two frameworks:
+
 - LangGraph
 - CrewAI
 Compare the lines of code, the debugging experience, and where each framework hides its complexity.
@@ -182,31 +190,35 @@ Use Pydantic AI to build an agent that returns structured output (e.g., for a gi
 
 ## 🎯 Curated Projects
 
-15 projects across 5 categories, all in one table. **Start by looking at "Who it's for", then if you want to dive deeper, check out the repo / quickstart link.**
+17 projects across 5 categories, all in one table. **Start by looking at "Who it's for", then if you want to dive deeper, check out the repo / quickstart link.**
 
 | Category | Project | ⭐ | Who it's for | Why it's recommended / Notes |
 | ------------------------------------------ | ---------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Production-tier**<br>(Complex multi-agent / needs audit) | [LangGraph](https://github.com/langchain-ai/langgraph) ⭐ **This stage's #1 recommendation** | ⭐⭐⭐⭐⭐ | Production multi-agent systems that require audit trails / rollback / replay. | Graph-based orchestration + checkpointing + time-travel debugging. Widely adopted across enterprises. ★ 34k+, MIT, Python+TS. Pairs with LangSmith for observability. |
-| | [microsoft/semantic-kernel](https://github.com/microsoft/semantic-kernel) | ⭐⭐⭐⭐ | Building agents in .NET / Java environments, within the Microsoft tech stack. | Official SDKs in C#, Python, and Java. Follows a kernel + plugin + planner pattern. ★ 27k+, MIT. Thick abstraction, not for beginners. |
-| | [agno-agi/agno](https://github.com/agno-agi/agno) | ⭐⭐⭐⭐ | Those who want a "build + serve + monitor" solution without the full LangGraph + LangSmith suite. | Multi-modal agent runtime + control plane. ★ 39k+, Apache-2.0. Learn the API in Stage 4, use the runtime in Stage 7. |
-| **Rapid Prototyping / Multi-agent**<br>(Role-based / handoff) | [CrewAI](https://github.com/crewAIInc/crewAI) ⭐ **This stage's #2 recommendation** | ⭐⭐⭐⭐ | Rapidly prototyping "researcher → writer → critic" pipelines. | Build a crew in ~20 lines of code. Lowest learning curve. ★ 50k+, MIT. ⚠️ No checkpointing for long workflows; use CrewAI for prototypes, LangGraph for production. |
-| | [Microsoft AutoGen / AG2](https://github.com/microsoft/autogen) | ⭐⭐⭐⭐ | Multi-agent debate / brainstorming / peer review patterns. | Conversational multi-agent, strong group-chat capabilities. ★ 57k+, CC-BY-4.0 (for docs). ⚠️ AG2 v0.4 was a major async-first rewrite; most tutorials are for v0.2, mind the version. |
-| | [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) | ⭐⭐⭐⭐⭐ | Teams already committed to the OpenAI ecosystem. | OpenAI's official library. Clean API for agent hand-off + structured output. MIT. **Major update in April 2026**: built-in sandbox (7 providers) + harness abstraction layer. The first architecturally sound approach for production coding agents ([details in Stage 8](08-agent-interfaces.en.md#why-the-april-2026-openai-agents-sdk-update-is-a-milestone)). |
+| **Production-tier**<br>(Complex multi-agent / needs audit) | [LangGraph](https://github.com/langchain-ai/langgraph) ⭐ **This stage's #1 recommendation** | ⭐⭐⭐⭐⭐ | Production multi-agent systems that require audit trails / rollback / replay. | Graph-based orchestration + checkpointing + time-travel debugging. Widely adopted across enterprises. ★ 37k+, MIT, Python+TS. Pairs with LangSmith for observability. |
+| | [microsoft/semantic-kernel](https://github.com/microsoft/semantic-kernel) | ⭐⭐⭐⭐ | Building agents in .NET / Java environments, within the Microsoft tech stack. | Official SDKs in C#, Python, and Java. Follows a kernel + plugin + planner pattern. ★ 28k+, MIT. Thick abstraction, not for beginners. |
+| | [agno-agi/agno](https://github.com/agno-agi/agno) | ⭐⭐⭐⭐ | Those who want a "build + serve + monitor" solution without the full LangGraph + LangSmith suite. | Multi-modal agent runtime + control plane. ★ 41k+, Apache-2.0. Learn the API in Stage 4, use the runtime in Stage 7. |
+| | [microsoft/agent-framework](https://github.com/microsoft/agent-framework) | ⭐⭐⭐⭐ | Teams wanting Microsoft's unified successor to AutoGen + Semantic Kernel, in Python or .NET. | Microsoft's open framework for getting multiple agents to work together — the successor that merges AutoGen and Semantic Kernel. ★ 12k+, MIT, Python + .NET. |
+| **Rapid Prototyping / Multi-agent**<br>(Role-based / handoff) | [CrewAI](https://github.com/crewAIInc/crewAI) ⭐ **This stage's #2 recommendation** | ⭐⭐⭐⭐ | Rapidly prototyping "researcher → writer → critic" pipelines. | Build a crew in ~20 lines of code. Lowest learning curve. ★ 55k+, MIT. ⚠️ No checkpointing for long workflows; use CrewAI for prototypes, LangGraph for production. |
+| | [Microsoft AutoGen / AG2](https://github.com/microsoft/autogen) | ⭐⭐⭐⭐ | Multi-agent debate / brainstorming / peer review patterns. | Conversational multi-agent, strong group-chat capabilities. ★ 60k+, CC-BY-4.0 (for docs). ⚠️ AG2 v0.4 was a major async-first rewrite; older tutorials still target v0.2 while newer ones use v0.4, mind the version. |
+| | [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) | ⭐⭐⭐⭐⭐ | Teams already committed to the OpenAI ecosystem. | OpenAI's official library. Clean API for agent hand-off + structured output. MIT. **Built-in since April 2026**: a sandbox (7 providers) + harness abstraction layer. The first architecturally sound approach for production coding agents ([details in Stage 8](08-agent-interfaces.en.md#why-the-april-2026-openai-agents-sdk-update-is-a-milestone)). |
+| | [deepagents (LangChain)](https://github.com/langchain-ai/deepagents) | ⭐⭐⭐⭐ | Want a "batteries-included" deep-agent harness without wiring it yourself. | An opinionated harness (it makes the design choices for you) on top of LangGraph: built-in planning (todo list), filesystem memory, subagents, loadable skills, context offload (keeps big intermediate results out of the LLM's window). `pip install deepagents`, MIT, v0.6.12 (2026-06). |
 | | [OpenAI Swarm](https://github.com/openai/swarm) | ⭐⭐⭐⭐ Edu<br>⭐⭐⭐ Prod | To understand the **core mental model** of multi-agent systems without learning a full framework. | ~200 LOC, just two concepts: Agent + handoff. MIT. ⚠️ OpenAI labels it experimental/educational, not a production tool. **Read the source code as a chapter-length tutorial.** |
 | | [Strands Agents (AWS)](https://github.com/strands-agents/sdk-python) | ⭐⭐⭐⭐ | Teams already committed to the AWS cloud and Bedrock-native solutions. | Model-driven design (LLM plans on its own, no explicit graph). Apache 2.0. Released late 2025, integrates with AWS Lambda / Step Functions / Bedrock Agents. |
-| **Specialized Paths**<br>(CodeAct / typed / memory-first) | [Hugging Face Smolagents](https://github.com/huggingface/smolagents) | ⭐⭐⭐⭐ | Local LLM ecosystems, HF integration scenarios. | A prime example of the CodeAct pattern (agent writes Python code as its action, not JSON tool calls). ★ 27k+, Apache 2.0, ≤1000 LOC. |
+| **Specialized Paths**<br>(CodeAct / typed / memory-first / filesystem-first) | [Hugging Face Smolagents](https://github.com/huggingface/smolagents) | ⭐⭐⭐⭐ | Local LLM ecosystems, HF integration scenarios. | A prime example of the CodeAct pattern (agent writes Python code as its action, not JSON tool calls). ★ 28k+, Apache 2.0, ≤1000 LOC. |
 | | [Pydantic AI](https://github.com/pydantic/pydantic-ai) | ⭐⭐⭐ | Production systems that require runtime type safety + structured output by default. | Type-safe agents from the Pydantic team. MIT. Relatively new. |
-| | [Letta (formerly MemGPT)](https://github.com/letta-ai/letta) | ⭐⭐⭐⭐ | **Long-session / cross-day / persona-stable** agents (long-term assistants, therapists, tutors). | A memory-first multi-agent system based on OS-paging concepts (working memory + archival store). ★ 22k+, Apache 2.0. Also mentioned in Stage 6, Exercise 5. |
+| | [Letta (formerly MemGPT)](https://github.com/letta-ai/letta) | ⭐⭐⭐⭐ | **Long-session / cross-day / persona-stable** agents (long-term assistants, therapists, tutors). | A memory-first multi-agent system based on OS-paging concepts (working memory + archival store). ★ 24k+, Apache 2.0. Also mentioned in Stage 6, Exercise 5. |
+| | [vercel/eve](https://github.com/vercel/eve) | ⭐⭐⭐ | Building long-running, operable agents in the TS/JS ecosystem; you like a "files as the interface" project layout. | Vercel's filesystem-first framework: an agent's parts are conventional files — `instructions.md` (system prompt), `tools/`, `skills/`, `channels/` (HTTP / Slack / Discord), `schedules/` (cron) — easy to inspect and extend. Start with `npx eve@latest init`. Apache-2.0, TypeScript, ★ 4.1k+. ⚠️ Released 2026-06, very new. |
 | **Specialized** | [LlamaIndex Agents](https://github.com/run-llama/llama_index) | ⭐⭐⭐ | Document-heavy agents (research assistants, knowledge workers, etc.). | Tightly integrated with RAG. ★ 49k+, MIT. Strong on retrieval, weak on orchestration—don't choose it for pure orchestration. |
-| | [agentscope-ai/agentscope](https://github.com/agentscope-ai/agentscope) | ⭐⭐⭐ | Researchers who want to visually debug multi-agent workflows. | A multi-agent platform with strong visual debugging tools. ★ 26k+, Apache 2.0. Low adoption in Western communities, but solid tech. |
-| | [LangChain](https://github.com/langchain-ai/langchain) | ⭐⭐⭐ | Rapid prototypes that need to glue together many components (retrieval + chains). | The swiss-army-knife framework. ★ 135k+, MIT. **For agent orchestration, use LangGraph now.** LangChain is better for gluing retrieval + chaining. |
-| **Infrastructure**<br>(Not a framework, used across stages) | [BerriAI/litellm](https://github.com/BerriAI/litellm) | ⭐⭐⭐⭐ | When you need to switch between Claude / GPT / Gemini / open-source models without changing code. | A provider-agnostic SDK + AI gateway. Call 100+ LLMs using OpenAI's format. Includes cost tracking / fallbacks / guardrails. ★ 49k+, MIT (`enterprise/` subdirectory licensed separately). |
+| | [agentscope-ai/agentscope](https://github.com/agentscope-ai/agentscope) | ⭐⭐⭐ | Researchers who want to visually debug multi-agent workflows. | A multi-agent platform with strong visual debugging tools. ★ 28k+, Apache 2.0. Low adoption in Western communities, but solid tech. |
+| | [LangChain](https://github.com/langchain-ai/langchain) | ⭐⭐⭐ | Rapid prototypes that need to glue together many components (retrieval + chains). | The swiss-army-knife framework. ★ 143k+, MIT. **For agent orchestration, use LangGraph now.** LangChain is better for gluing retrieval + chaining. |
+| **Infrastructure**<br>(Not a framework, used across stages) | [BerriAI/litellm](https://github.com/BerriAI/litellm) | ⭐⭐⭐⭐ | When you need to switch between Claude / GPT / Gemini / open-source models without changing code. | A provider-agnostic SDK + AI gateway. Call 100+ LLMs using OpenAI's format. Includes cost tracking / fallbacks / guardrails. ★ 54k+, MIT (`enterprise/` subdirectory licensed separately). |
 
-> 💡 **Recommended reading path**: Pick **1 for production deployment** (LangGraph) + **1 for rapid prototyping** (CrewAI) framework to learn deeply → Do exercises 1-3 → Skim the READMEs of the others to know they exist. The **3 specialized paths** (CodeAct / typed / memory-first) are only rivals in specific scenarios; you don't need to touch them otherwise.
+> 💡 **Recommended reading path**: Pick **1 for production deployment** (LangGraph) + **1 for rapid prototyping** (CrewAI) framework to learn deeply → Do exercises 1-3 → Skim the READMEs of the others to know they exist. The **4 specialized paths** (CodeAct / typed / memory-first / filesystem-first) are only rivals in specific scenarios; you don't need to touch them otherwise.
 
 ## ✅ Self-Check Before Moving to Stage 5
 
 Can you:
+
 - [ ] Build the same agent using both LangGraph and CrewAI?
 - [ ] Choose the right framework for a task (production vs. prototype)?
 - [ ] Explain the difference between LangGraph's checkpointing and CrewAI's task delegation?

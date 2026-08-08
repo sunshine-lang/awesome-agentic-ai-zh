@@ -5,6 +5,13 @@
 # 练习 4：多步骤推理任务
 
 对应 [Stage 3 — Tool Use & Agent 入门](../../../stages/03-tool-use-and-hello-agent.zh-Hans.md) 练习 4。
+> 🎓 **学习模式**：这份 `starter.py` 是**完整解答**、不是 TODO skeleton。建议用**主动模式**——`mv starter.py starter_reference.py`、看 signature 不看 body、自己重写一份 `starter.py`、跑 `python test.py` 验证；卡 20 分钟再回去对照 reference。完整方法论看 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
+
+> 📚 **想要 chapter-length 深入版？** 本 folder 的 starter 是 70-150 行 illustrative 版、聚焦 `核心 pattern + 两条 SDK path`，不是进阶深度教材。深度教材推荐：
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ 中文圈最完整、章节式 + 16 种 production 能力。**本练习对应 hello-agents 的 planning / multi-step workflow 章节**
+> - [Anthropic — Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)（什么时候该拆步骤、什么时候不要）
+> - 完整 references 见 [Stage 3 精选 Projects](../../../stages/03-tool-use-and-hello-agent.zh-Hans.md#-精选-projects)
+
 
 ## 为什么这题重要
 
@@ -84,7 +91,7 @@ python test_anthropic.py  # 验 Path B (Anthropic) starter_anthropic.py 逻辑
 预设用 `claude-haiku-4-5`（最便宜）。改成 sonnet：
 
 ```bash
-MODEL=claude-sonnet-4-6 python starter_anthropic.py
+MODEL=claude-sonnet-5 python starter_anthropic.py
 ```
 
 或 Ollama path 换更大 model：

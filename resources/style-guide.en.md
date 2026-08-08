@@ -50,6 +50,7 @@ Every project entry uses this structure:
 
 ### Required fields (GitHub repo entry)
 For entries that are real GitHub repos:
+
 - `Stars` (`★ Xk+` format, no thousands separator)
 - `License` (SPDX ID or annotated exception, see 5)
 - `Recommendation` (⭐ × N, see 2)
@@ -57,6 +58,7 @@ For entries that are real GitHub repos:
 
 ### Required fields (non-repo entry: article / course / video / protocol / documentation)
 Some entries are blogs, videos, official docs, or catalog hubs — not GitHub repos. For these:
+
 - `Recommendation` (required)
 - `What it teaches`, `Best for` (required)
 - `Format` (required, e.g. `Article` / `Video` / `Course` / `Curated list` / `Specification`)
@@ -87,6 +89,7 @@ Example: an `Anthropic — Building Effective Agents` blog entry uses `Format = 
 | ⭐ | Niche / advanced / for completeness | Most readers can skip |
 
 **Rules:**
+
 - A repo cited in different stages / branches **should have the same rating** (unless audience-specific reason, then note it explicitly)
 - Don't inflate stars to "look encouraging." Honesty > politeness
 - Commercial products (Cursor, LangSmith, etc.) follow the same scale
@@ -95,9 +98,33 @@ Example: an `Anthropic — Building Effective Agents` blog entry uses `Format = 
 
 ## 3. Banned words & alternatives
 
-This document is **Traditional Chinese (zh-TW, Taiwan)**. The Chinese-side guide enumerates the zh-Hans slips to avoid. For the English companion files, the rules are simpler:
+The catalog's canonical text is **Traditional Chinese (zh-TW, Taiwan)**, so two of the three tables below are about Chinese wording and apply when you write or edit the zh-TW pages: the vocabulary swaps and the English-in-Chinese sentence patterns. Their terms stay in Chinese because the terms *are* the data. The **overclaim** table in between applies to every locale, including this English one.
 
 > 📌 **Language tag convention (BCP 47 / W3C i18n)**: this repo uses `.zh-Hans.md` (not `.zh-CN.md`) for the Simplified Chinese mirror. `Hans` / `Hant` are [BCP 47 script subtags](https://www.w3.org/International/articles/language-tags/), decoupled from region — Simplified Chinese is also used in Singapore and Malaysia, not only mainland China, so `Hans` is more accurate than `CN`. The canonical `README.md` content is **zh-Hant-TW** (Traditional Chinese, Taiwan conventions), kept unsuffixed as GitHub's default landing page. Region distinctions can be added later as `zh-Hans-CN` / `zh-Hant-HK` etc. Thanks to [@xfq](https://github.com/xfq) (W3C i18n lead) for flagging this in [#9](https://github.com/WenyuChiou/awesome-agentic-ai-zh/issues/9).
+
+### Simplified → Traditional vocabulary swaps
+
+The terms are the data, so they stay in Chinese. Left column: the zh-Hans wording to avoid in canonical zh-TW pages. Right column: the zh-TW wording to use instead.
+
+| Avoid (zh-Hans) | Use instead (zh-TW) |
+|---|---|
+| 教程 | 教學 / 課程 / 導讀 |
+| 視頻 | 影片 |
+| 軟件 | 軟體 |
+| 文件 (meaning *file*) | 檔案 |
+| 文档 / 文件 (meaning *docs*) | 文件 / 文件 (this one stays) |
+| 代碼 | 程式碼 / 原始碼 |
+| 用戶 | 使用者 |
+| 網絡 | 網路 |
+| 接口 | 介面 |
+| 默認 | 預設 |
+| 函数 | 函式 |
+| 算法 | 演算法 |
+| 程序 (meaning *program*) | 程式 |
+| 質量 (meaning *quality*) | 品質 |
+| 信息 | 資訊 |
+| 數據 | 資料 |
+| 內存 | 記憶體 |
 
 ### Avoid overclaim phrases
 
@@ -109,6 +136,19 @@ This document is **Traditional Chinese (zh-TW, Taiwan)**. The Chinese-side guide
 | "the most urgent" / "the most important" | (just drop the modifier) |
 | "authoritative reference" (unless truly the official spec) | "important reference implementation" / "official template" |
 | "no problem" (re: legal/license) | "check the terms before use" / "verify the terms yourself" |
+
+### Banned English-in-Chinese sentence patterns
+
+Splicing an English verb or adjective into a Chinese sentence reads as untranslated draft text. Rewrite it in Chinese.
+
+| Avoid | Use instead |
+|---|---|
+| follow 條款 | 遵守條款 |
+| ready-made 教材 | 現成可改的教材 |
+| NotebookLM-like 工具 | 類 NotebookLM 的工具 / 類似 NotebookLM 的工具 |
+| 視覺化 node-based | 視覺化節點式 |
+| Anthropic host 的 server | Anthropic 維護的 server |
+| coding 流程 | 開發流程 / 程式開發流程 |
 
 ---
 
@@ -197,6 +237,7 @@ Description.
 
 ## ✅ Self-Check Before Stage N+1
 Can you:
+
 - [ ] ...
 - [ ] ...
 

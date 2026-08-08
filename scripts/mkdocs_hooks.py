@@ -35,12 +35,20 @@ import re
 # stop at the inner </div> / not match — update it then. Failure mode
 # is benign: the old (broken-on-site) switcher reappears, no build break.
 _SWITCHER = re.compile(r'<div align="right">.*?</div>\s*', re.DOTALL)
-_README_BASENAMES = {"README.md", "README.en.md", "README.zh-Hans.md"}
+# The root README is staged as `about.md` (see build-docs-tree.py), so the
+# switcher-strip now targets the renamed page.
+_ABOUT_BASENAMES = {"about.md", "about.en.md", "about.zh-Hans.md"}
+
+# Rewrite in-content links to the root README (now `about.md`) -> about, so
+# they resolve on the site. A leading `examples/` breaks the `(?:\.\./)*`
+# prefix match, so examples/.../README.md links are left untouched.
+_README_LINK = re.compile(r'(\]\((?:\.\./)*)README((?:\.en|\.zh-Hans)?\.md)')
 
 
 def on_page_markdown(markdown: str, *, page, config, files) -> str:
     src = (getattr(page.file, "src_path", "") or "").replace("\\", "/")
     basename = src.rsplit("/", 1)[-1]
-    if basename in _README_BASENAMES:
-        return _SWITCHER.sub("", markdown, count=1)
+    markdown = _README_LINK.sub(r"\1about\2", markdown)
+    if basename in _ABOUT_BASENAMES:
+        markdown = _SWITCHER.sub("", markdown, count=1)
     return markdown

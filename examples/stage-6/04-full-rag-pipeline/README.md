@@ -89,6 +89,7 @@ Answer:"""
 ```
 
 **3 個關鍵 instruction**：
+
 1. `based ONLY on context` — 防 hallucinate
 2. `if doesn't contain → say so` — 給 LLM 退路、不強答
 3. Context + Question 順序固定 — 模型訓練偏好這個 layout

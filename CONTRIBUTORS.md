@@ -68,6 +68,7 @@
 ## 🤖 AI 工具貢獻
 
 這個 repo 有相當部分的繁體中文翻譯、結構審查、license 驗證、跨檔一致性檢查由 AI 工具協助完成：
+
 - **Claude (Anthropic)** — 主要 curation、結構設計、zh-TW 翻譯、跨 phase planning
 - **Codex (OpenAI)** — 多輪審查（Phase 2-5 各一次 + cross-phase audit），抓出實質的 license 錯標、overclaim 用語、文件 drift 問題
 - **gh API** — 所有 entry 的 stars / license / pushed-at 都用 `gh api` 驗證過，避免幻覺

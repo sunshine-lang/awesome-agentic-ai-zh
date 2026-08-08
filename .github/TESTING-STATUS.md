@@ -2,7 +2,7 @@
 
 > 這份是給 maintainer / 第一個跑各個 build 的人看的。**誠實地說明哪些 code 真的跑過、哪些只是 syntax check、哪些完全沒測**。
 
-最後更新：2026-05-06
+最後更新：2026-08-04
 
 ---
 
@@ -11,10 +11,17 @@
 | 項目 | 狀態 | 證據 |
 |---|---|---|
 | `scripts/refresh-stars.py` | ✅ Verified | 在 main 上跑過 N 次，0 drift / 0 not-found 都有實際輸出 |
+| `scripts/pr-link-audit.py` | ✅ Verified | unit tests 綠 + offline `--diff-file` smoke；live `gh api` 正確 flag 了 archived LangServe（★/license/pushed 都對證過） |
+| `.github/workflows/pr-link-audit.yml` | ✅ Verified | PR #68（throwaway、已關）真 PR 實測：Action 觸發、首發 POST + 第 2 次 push sticky PATCH 更新（同一 comment id、無重複）、archived / stale(23mo) / no-license flag 全對、2 runs 都綠。fork PR 仍略過（read-only token、by design） |
 | `scripts/check-links.py --fast` | ✅ Verified | 跑過 120 GitHub URLs 全 OK |
 | `gh api` repo 元資料抓取 | ✅ Verified | 152 個 entry 的 stars / license / pushed 都對證過至少一次 |
 | Mermaid syntax | ✅ Verified | GitHub 上 render 看過正確（README hero） |
-| CI banned-words / overclaim grep | ✅ Verified | 用相同 grep 邏輯本地跑過，0 violations |
+| CI banned-words / overclaim grep | ✅ Verified | 用相同 grep 邏輯本地跑過，0 violations；並已在真 CI 上驗證——run 30870625764 抓到一個真實違規、修掉後 30871055350 轉綠 |
+| `.github/workflows/lint.yml` | ✅ Verified | ubuntu runner 上實跑：`pull_request` 15 次、`workflow_dispatch` 5 次、`schedule` 3 次、`push` 2 次。run 30870625764 實際攔下一個 overclaim 違規（真陽性），30871055350 / 30875518687 / 30892735021 / 30892855033 / 30915746076 全綠。**至今未觀察到與本地 git-bash 的 grep 行為差異**（同一 corpus 兩邊都綠，該次 overclaim 兩邊都抓到）——是觀察到一致，不是已證明等價。2026-08-04 起無 paths 過濾，每個 PR 與每次 push 到 main 都會跑 |
+| `.github/workflows/anchor-validator.yml` | ✅ Verified | ubuntu runner 上實跑：`pull_request` 12 次、`schedule` 3 次、`workflow_dispatch` 1 次，全綠。2026-08-04 起移除 paths 過濾並加上 `push: [main]`，每個 PR 與每次 push 到 main 都會跑（push 側尚未累積執行紀錄） |
+| `.github/workflows/stage-template-check.yml` | ✅ Verified | ubuntu runner 上實跑：`pull_request` 7 次、`workflow_dispatch` 3 次。run 25934104948（2026-05-15、sha d278caf）失敗過一次，但那是 **false positive**——stage 07.5 是 reading-map 章、依設計就沒有 REQUIRED sections（失敗當時的 sha d278caf 上 README 已標「（reading map）」「1 週（不寫 code）」），53e723d 把 `07.5-` 加進 `SKIP_STAGES` 之後 25934453808 轉綠。**所以這個 gate 至今沒攔下過真實的 template 違規**；其餘 9 次全綠。2026-08-04 起移除 paths 過濾並補上 `push: [main]` 與每月 cron——三個 gate 裡原本只有它連 schedule 都沒有（push / schedule 側尚未累積執行紀錄） |
+| `walkthroughs/…7-steps.md` Stage 1-6 的 Python（6 個 block）| ✅ Verified（2026-08-04） | 抽成檔案後在乾淨 venv（Python 3.14 + anthropic 0.120.2 / langgraph 1.2.10 / langchain-core 1.5.3 / chromadb 1.5.9）逐一執行，`Anthropic` 與 `requests` 以 mock 攔截（**未用 API key、未產生費用**）。抓到並修好 4 個缺陷：① Stage 6 的 memory 實測 `count=0`（空 DB 時提前 return，`store_paper` 從未被呼叫；加上 id 寫死 `"..."`，而 `add()` 遇重複 id 會靜默忽略）；② `compare_with_memory` 讀 `messages[-1]`，但那是 `reflect` 的判定訊息不是摘要——實測三篇論文存進去的文件**完全相同**（都是 `[Reviewer 判定: PASS]`）；③ 它回傳的 `comparison` 被 LangGraph 丟掉（`State` 沒宣告）；④ `import step2` 就送出一次真實 API 呼叫。修後實測：存進去的是各自的摘要、`count` 1→2→3、`comparison` 保留、被 import 的 4 個檔案 0 次呼叫。三語 27 個 block 現在都能 `ast.parse` |
+| `walkthroughs/…7-steps.md` Stage 7 的 Python（3 個 block）| ⚠️ 部分未跑 | **7.1 `eval_provider` ✅ 實跑**（`call_api()` 回傳 `{'output': …}`）；**7.2 `step7_observability` ⚠️ import 失敗**——langfuse 4.14.2 已把 `observe` 從 `langfuse.decorators` 移到 `langfuse`；**7.3 `main.py` ⚠️ 未跑**——venv 沒裝 `fastapi` / `uvicorn`。後兩者待修 |
 
 ---
 
@@ -24,9 +31,7 @@
 |---|---|---|
 | `scripts/build-pdf.sh` | ⚠️ Bash syntax OK | **沒實際跑過** pandoc + xelatex；沒驗證輸出的 PDF 真的能開、CJK 字型真的可用 |
 | `scripts/build-mdbook.sh` | ⚠️ Bash syntax OK | 跑過一次但 mdbook-mermaid 失敗（已 fix 但沒重跑驗證） |
-| `.github/workflows/lint.yml` | ⚠️ YAML valid | **沒在真 PR 上觸發過**——不知道 Linux runner 上 grep 行為跟本地 git-bash 是否一致 |
 | `.github/workflows/docs.yml` | ⚠️ YAML valid · 本機 mkdocs build 綠 | 統一 Pages workflow（mkdocs `/` + mdBook `/book/`，取代已刪除的 deploy-book.yml）。mdBook 子路徑 base-url 尚未在 CI 端到端驗證（首次 deploy 後需實測 `/book/` 資產） |
-| `walkthroughs/build-first-agent-in-7-steps.md` 的 Python 範例（~350 行）| ⚠️ 結構合理 | **完全沒實際跑過**——根據對 Anthropic SDK / LangGraph / Chroma / promptfoo 的理解寫出來，但沒從頭到尾 execute 一次。可能有：API 介面變動、套件版本相依、import path 微差 |
 | `book.toml` mdBook 設定 | ⚠️ TOML valid | 沒實際 build 過完整 site |
 
 ---
@@ -59,8 +64,8 @@
 老實說：
 
 - **Build 工具鏈成本**：pandoc + xelatex + Noto Sans CJK 一套裝下來要 1-2 GB + 1-2 小時。不在 launch-blocking 路徑上時不值得本地裝
-- **AI walkthrough 的 LangGraph / Chroma 等套件**：版本日新月異；今天測完明天可能就過期。所以選擇用「**對著官方 API 文件寫，註明可能要對現在版本調整**」的策略
-- **CI workflow**：在真 PR 上才會觸發；沒第一個外部 PR 之前是 false-positive 還是 fully working 都看不出來
+- ~~**AI walkthrough 的 LangGraph / Chroma 等套件**：版本日新月異…所以選擇用「對著官方 API 文件寫」的策略~~——**Stage 1-6 已不成立**（2026-08-04 實跑，見上表）。版本會過期這件事本身仍然成立：這次就抓到 `create_react_agent` 已被 LangGraph V1.0 標記棄用、`langfuse.decorators` 已移除
+- **CI workflow**：~~在真 PR 上才會觸發；沒第一個外部 PR 之前看不出來~~——**已不成立**（2026-08-04）。三個 gate（`lint` / `anchor-validator` / `stage-template-check`）都已在真實 PR 上跑過，且同日移除 paths 過濾、三個都補上 `push: [main]`，所以**每個 PR 與每次直接推 main 都會觸發**——後者是 2026-06-07 → 08-04 的 109 個 commit 裡的 95 個。`lint.yml` 的 push 側已有實際執行紀錄；另外兩個的 push trigger 是當天才加的，尚未累積紀錄
 
 這份 repo 是 **「ship-able skeleton」**——所有結構都對、所有 metadata 都驗證過、所有 prose 都過 review，但**第一次實際跑 build / deploy / walkthrough 還是會發現坑**。
 

@@ -40,6 +40,7 @@ CONTENT_DIRS = [
 
 # Root-level pages (plus their .en.md / .zh-Hans.md siblings, auto-found)
 ROOT_STEMS = [
+    "index",
     "README",
     "PROGRESS",
     "ROADMAP",
@@ -68,17 +69,23 @@ def main() -> int:
             copied_dirs += 1
 
     copied_files = 0
+    # The repo's GitHub README must NOT be staged as `README.md`: mkdocs
+    # special-cases that filename as a directory index, which collides with
+    # `index.md` (the landing) and resolves inconsistently per i18n locale.
+    # Stage it as `about.md`; mkdocs_hooks.py rewrites in-content
+    # `README.md` links to `about.md` so they still resolve on the site.
     for stem in ROOT_STEMS:
+        out_stem = {"README": "about"}.get(stem, stem)
         for suffix in (".md", ".en.md", ".zh-Hans.md"):
             f = REPO / f"{stem}{suffix}"
             if f.is_file():
-                shutil.copy2(f, DEST / f.name)
+                shutil.copy2(f, DEST / f"{out_stem}{suffix}")
                 copied_files += 1
 
     print(f"staged {copied_dirs} dirs + {copied_files} root pages -> {DEST.relative_to(REPO)}")
     # Sanity: home page must exist or mkdocs has no site index
-    if not (DEST / "README.md").is_file():
-        print("ERROR: README.md missing from staged tree", file=sys.stderr)
+    if not (DEST / "index.md").is_file():
+        print("ERROR: index.md missing from staged tree", file=sys.stderr)
         return 1
     return 0
 

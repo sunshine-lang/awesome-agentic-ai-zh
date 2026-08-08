@@ -26,9 +26,11 @@ before you tweet — X's card scraper caches aggressively:
       shows EN-lead description (paste URL into a draft tweet first, eyeball
       the card; if zh-TW-lead, the cache hasn't refreshed — wait ~1h or
       re-share via the Pages URL)
+
 - [ ] Your X bio matches the LinkedIn reframe (PhD, Civil & Environmental,
       Lehigh · agent-based modeling · LLM / AI agent). Identity coherence
       across platforms is the discovery multiplier on X
+
 - [ ] `banner.en.png` is uploaded as the tweet image (drag-attach, not URL
       auto-card — image attachment outperforms link card for first impression)
 
@@ -73,8 +75,10 @@ time window, doesn't compete with the EN push.
 
 - **A (EN)**: weekday 08:00–10:00 US Eastern (US AI Twitter morning;
   overlaps EU evening). Avoid Fri PM / weekends.
+
 - **C (CJK)**: weekday 20:00–22:00 Beijing time (CN evening; overlaps TW
   prime time).
+
 - Don't post both same day — collisions hurt both.
 
 ## First-reply (optional, post yourself ~5 min after main tweet)
@@ -95,11 +99,13 @@ A few things that aren't obvious from the README:
 
 - **Attach**: `resources/diagrams/banner.en.png` (the 2026-05-13 ChatGPT-
   rendered EN banner, already in repo).
+
 - **Link in tweet body**: `github.com/WenyuChiou/awesome-agentic-ai-zh`
   — GitHub URL beats Pages URL because the ★ count is the trust signal
   EN readers scan for. (Pages URL `wenyuchiou.github.io/awesome-agentic-ai-zh/en/`
   is a fallback if you want to land EN readers on an English doc page
   directly.)
+
 - **No hashtags** in the main tweet — the audience is already targeted
   by who follows you and who you quote-mention. Hashtags dilute the
   reach signal more than they add discovery on X today.
@@ -109,9 +115,11 @@ A few things that aren't obvious from the README:
 - Quote-RT one of your own older posts about agent stuff with the new
   URL, ~6h after main tweet, if first push got <20 likes (re-broadcast,
   don't ask for boost)
+
 - If a mid-tier AI account QTs you, reply with a *specific* follow-up
   (a stage they'd find useful for their audience), not a generic
   "thanks"
+
 - If someone says "is the English just machine-translated?" — point them
   to the CI lint config + the audit comment in the HN draft. Don't
   defensively re-explain in the main thread.
@@ -124,7 +132,9 @@ A few things that aren't obvious from the README:
 - ❌ Don't post the same content to LinkedIn the same day (cross-platform
   redundancy on the same hour smells like a launch campaign, not an
   individual sharing). Stagger 24-48h
+
 - ❌ Don't reuse the same tweet text after a flop — rewrite if going
   for a second push
+
 - ❌ Don't post C and A on the same day (different audiences, but
   appearing twice in the same feed reads as spam)

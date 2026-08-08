@@ -5,6 +5,13 @@
 # Exercise 2: Multi-Tool Selection
 
 Corresponds to [Stage 3 — Tool Use & Agent Intro](../../../stages/03-tool-use-and-hello-agent.en.md) Exercise 2.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
+
+> 📚 **Want the chapter-length version?** The starter in this folder is a 70-150 line illustrative build focused on `the core pattern + two SDK paths` — it is not in-depth teaching material. Recommended for depth:
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ the most complete Chinese-language course out there — chapter-based, covering 16 production capabilities. **this exercise maps to hello-agents' tool-calling / multi-tool dispatch chapter**
+> - [Anthropic Tool Use Cookbook](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) (complete notebooks: single tool → multi-tool → parallel)
+> - Full references in [Stage 3 Curated Projects](../../../stages/03-tool-use-and-hello-agent.en.md#-curated-projects)
+
 
 ## Why this matters
 
@@ -77,7 +84,7 @@ The most common failure in multi-tool design is descriptions that read like docu
 Default is `claude-haiku-4-5` (cheapest). Try Sonnet:
 
 ```bash
-MODEL=claude-sonnet-4-6 python starter_anthropic.py
+MODEL=claude-sonnet-5 python starter_anthropic.py
 ```
 
 Or on the Ollama path, swap to `qwen2.5:7b` (bigger, more stable, but slower):

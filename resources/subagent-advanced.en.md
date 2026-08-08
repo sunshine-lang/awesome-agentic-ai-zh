@@ -112,6 +112,7 @@ When you want to run 2+ subagents together, how should you compose them? The 3 p
 ### Pattern A — Parallel Isolation (most common and simplest)
 
 **When to use it**: 3 tasks are **independent** and do not need to communicate. Examples:
+
 - 4 files need the same audit (spawn 4 `general-purpose` subagents)
 - Run “code review” + “find related papers” + “write a changelog” as 3 independent tasks
 
@@ -126,6 +127,7 @@ When you want to run 2+ subagents together, how should you compose them? The 3 p
 ### Pattern B — Pipeline Chaining (multi-step collaboration)
 
 **When to use it**: The task needs a **step order**, and the previous step’s output is the next step’s input. Examples:
+
 - Multi-LLM workflow: Claude planner → Codex implementer → Gemini reviewer
 - Literature-research pipeline: splitter divides the topic → multiple researchers run sub-queries → reconciler merges the draft
 
@@ -142,6 +144,7 @@ When you want to run 2+ subagents together, how should you compose them? The 3 p
 **Why it exists**: In theory, “one subagent writes more subagents” sounds elegant.
 
 **Why it is not recommended**:
+
 1. **Context explosion risk**: a subagent writes a subagent that writes a subagent... and it gets out of control
 2. **No one audits the newly created agent**: it may create a dangerous tools allowlist
 3. **Anthropic’s official examples do not use this pattern**: the community has not developed a reliable pattern either
@@ -179,6 +182,7 @@ You wrote `.claude/agents/<name>.md`, but the result is not what you expected. H
 /agents
 ```
 **Expected**: The list includes the name you wrote. If it does **not**:
+
 - The file is in the wrong location (it should be in `~/.claude/agents/<name>.md` for global or `<repo>/.claude/agents/<name>.md` for project-level; **when names collide, project-level overrides global**)
 - YAML frontmatter syntax is invalid (for example, `---` is not wrapped correctly or the `name:` field is misspelled)
 - There is a name conflict (an agent with the same name was overridden)
@@ -193,6 +197,7 @@ Describe one scenario that should trigger your subagent (without explicitly nami
 ```
 
 **Claude did not dispatch your agent**: the description does not make Claude see “I should dispatch this.”
+
 - Missing the `PROACTIVELY` keyword → add it
 - Condition is too abstract → rewrite it as a concrete trigger
 - Overlaps with another agent’s description → write the **distinctive** part

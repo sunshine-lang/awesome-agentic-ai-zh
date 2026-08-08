@@ -93,6 +93,7 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 ## 🚪 進入條件
 
 你應該已經：
+
 - 完成 Stage 3（會寫 tool use、會呼叫 LLM API、看得懂 ReAct loop）—— **硬性技術前置**
 - 走過 Stage 4（agent frameworks）+ Stage 5（Claude Code 生態）—— curriculum 主線是 **3 → 4 → 5 → 6**（見 [README 學習地圖](../README.md#️-學習地圖兩條學習路徑)）；非硬性技術前置，但 RAG / memory 常跟 framework + Claude Code memory 機制搭配、照順序走過理解更完整，且 [Stage 7](07-multi-agent-production.md) 預期你已完成 4 + 5 + 6
 - 能跑 Python `pip install` 安裝 SDK（後面練習會用到 `chromadb`、`sentence-transformers` 等）
@@ -133,7 +134,7 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 - **資料預處理（ingest 一次）**：ingest → chunk → embed → store（index）。這一步是在建立可檢索的知識庫。
 - **檢索生成（每次 query）**：retrieve → generate。這一步是在使用者提問時，找出相關內容，再交給 LLM 生成回答。
 
-![RAG 流水線總覽](../resources/diagrams/rag-pipeline-overview.jpg)
+![RAG 流水線總覽](../resources/diagrams/rag-pipeline-overview.png)
 
 圖中的 RAG Fusion、query rewrite 等屬於進階檢索技巧。**第一次學 RAG 時，先理解主線流程即可**。
 
@@ -155,11 +156,14 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 
 > 📚 **想看更多 RAG 踩坑指南 + 解法**：[NirDiamant/RAG_Techniques](https://github.com/NirDiamant/RAG_Techniques) ★ 大型 production RAG cookbook、含 30+ 技巧 + Jupyter notebook 範例。
 
+> 📄 **RAG 真正常掛的兩個地方，別只顧 chunking**：(1) **解析（ingest）**——PDF→乾淨 markdown 是 garbage-in 的源頭：[docling-project/docling](https://github.com/docling-project/docling)（★ 64k+、MIT）、[opendatalab/MinerU](https://github.com/opendatalab/MinerU)（中文 / 科學 PDF 強，**AGPL** 注意授權）、[microsoft/markitdown](https://github.com/microsoft/markitdown)（★150k+、MIT）。(2) **選嵌入模型**——第一個檢索品質決策，別瞎挑：看 [MTEB leaderboard](https://huggingface.co/spaces/mteb/leaderboard)，中文 / 多語常用 [BGE-M3](https://github.com/FlagOpen/FlagEmbedding)（★12k、MIT）。
+
 跑完基本骨架後，跑 動手練習 1-4（embeddings / vector DB / chunking / 完整 pipeline）建立手感、再進下一節 進階 RAG 技巧。
 
 ## 🚀 進階 RAG 技巧（跑完基本 RAG 之後再看）
 
 下面六個 subsection 是 2024-2026 production RAG 最常加上的槓桿，按「加進 pipeline 哪一層」分組：
+
 - **Retrieve 後** —— GraphRAG / Contextual Retrieval / Hybrid Search & Reranking
 - **Retrieve 前**（query 改寫）—— Query Transformations
 - **Retrieve 期間**（control flow）—— Adaptive / Agentic RAG
@@ -179,16 +183,19 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 **Mental model**：vanilla RAG 把文件切成 chunk、靠 embedding 相似度撈片段——但**它不知道哪些 entity 是同一個東西、entity 之間有什麼關係**。GraphRAG 在 ingest 階段先用 LLM 把文件抽成 **(entity, relation, entity)** 三元組建知識圖譜，retrieve 時除了向量比對、還做 graph traversal 撈到「相關 entity 的相關 entity」。
 
 **何時用**：
+
 - 任務需要 **multi-hop reasoning**（A → B → C 才能回答）
 - 跨多份文件、entity 互相引用（公司財報、論文引用、調查報告、法律案例）
 - 問題形如「X 影響了什麼 Y、Y 又連到哪些 Z」——vanilla RAG 通常只撈到 X 那塊文件
 
 **何時不用**：
+
 - 文件之間沒有 entity-relation 連結（純 FAQ、產品手冊各自獨立）
 - 知識庫小（< 1k chunk）——vanilla RAG 已經夠
 - 預算緊——建 KG 的 token 成本可能是普通 RAG 的 10-50 倍
 
 **代表 framework**：
+
 - [**HKUDS/LightRAG**](https://github.com/HKUDS/LightRAG) ★ **35.1k** MIT EMNLP 2025 — 目前社群最熱的選擇、輕量、KG + vector hybrid、cost 比 Microsoft 版低
 - [**Microsoft GraphRAG**](https://github.com/microsoft/graphrag) — 原版 reference 實作、Apache-2.0、含 community detection
 - [**gusye1234/nano-graphrag**](https://github.com/gusye1234/nano-graphrag) — < 1000 行的最小實作、適合先讀懂原理
@@ -200,11 +207,13 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 **Mental model**：vanilla chunk 失去原文件 context——「Q3 revenue grew 15%」這個 chunk 抽出來、你不知道是**哪家公司**、**哪一年**的 Q3。Anthropic 2024 提出：**ingest 時用 LLM 為每個 chunk 寫一段 50-100 token 的 contextual header**（「This chunk is from ACME Corp 2024 Q3 earnings, discussing the cloud segment...」）拼到 chunk 前面再 embed。搭配 **prompt caching** 讓「整份文件 + 每個 chunk」這個 prompt 只計費一次、後面所有 chunk 共用 cache。
 
 **何時用**：
+
 - chunk 字面意思跟原文件主題距離遠（財報、研究報告、長 narrative 文件）
 - 你願意一次性付 ingest 成本、換 retrieve 精度
 - 已經在用 Claude / 想用 prompt caching（其他 model 也能跑、就是沒 cache 折扣）
 
 **何時不用**：
+
 - chunk 本身就是 self-contained（FAQ、產品介紹頁、定義條目）
 - 知識庫經常變動（每改一次就要重 ingest）
 - 預算極緊——即便 cache 折扣後、ingest 成本仍比 vanilla 高
@@ -212,6 +221,7 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 **為什麼省 90% cost**：Anthropic 報告 prompt caching 把「整份文件當 cached prefix」、每個 chunk 只送差異——比起每 chunk 都餵整份文件、成本降到約 1/10。但**這只省 ingest、不省 retrieve 階段**。
 
 **代表實作**：
+
 - [**Anthropic — Contextual Retrieval blog**](https://www.anthropic.com/news/contextual-retrieval) ⭐ — 官方說明 + benchmark（failed retrieval rate 從 5.7% 降到 1.9%）
 - [**Anthropic cookbook**](https://platform.claude.com/cookbook/capabilities-contextual-embeddings-guide) — 端到端 Jupyter notebook、含 prompt 模板
 
@@ -220,26 +230,31 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 ### 🎯 Hybrid Search & Reranking — production RAG 的兩個常見強化元件
 
 **Mental model**：
+
 - **Hybrid Search** = vector similarity（語意像）+ BM25 / keyword（字面像）並查、用 [RRF (Reciprocal Rank Fusion)](https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf) 之類融合分數。解決純 vector search「query 跟 chunk 同義但用詞不同沒撈到」+「人名 / 編號 / 罕用詞語意 embedding 太弱」的雙重盲點。
 - **Reranking** = 第一階段 retrieve **top-50**（recall 優先、寬鬆撈）→ 用 **cross-encoder reranker** 重新打分排成 **top-5**（precision 優先、精準篩）。cross-encoder（query + chunk 一起進 model）比 bi-encoder（query / chunk 分開 embed）精準很多、但太慢、所以只用在第二階段。
 
 **為什麼是「必加的強化元件」**：production RAG 評測幾乎一面倒——加 hybrid + reranker 後 recall@5 通常從 70% 上下提到 85-90%、邊際成本低、實作成熟。**這是 cost / benefit 最好的兩個改動**。
 
 **何時用**：
+
 - production RAG（不是 demo / 練習）
 - query 包含人名、產品編號、技術術語、罕見字（純 vector 容易漏）
 - 預算允許每 query 多 100-300ms latency
 
 **何時可以暫緩**：
+
 - 練習階段 / MVP（先把 vanilla RAG 跑通）
 - 預算極緊 / latency 極敏感（reranker 是額外一次 model call）
 
 **代表工具**：
+
 - **Hybrid search**：[Weaviate](https://github.com/weaviate/weaviate)（內建 BM25 + vector + RRF）/ [Qdrant](https://github.com/qdrant/qdrant)（支援 sparse + dense vector）/ pgvector + Postgres FTS
 - **Reranker**：[Cohere Rerank API](https://docs.cohere.com/docs/rerank-overview)（商業、最常用）/ [BGE Reranker](https://huggingface.co/BAAI/bge-reranker-large)(開源、HuggingFace、中文表現好) / [Jina Reranker](https://jina.ai/reranker)
 - **Framework 內建**：LlamaIndex 的 `SentenceTransformerRerank` / LangChain 的 `ContextualCompressionRetriever`
 
 **Paper / 入門**：
+
 - [**Pinecone — Rerankers and Two-Stage Retrieval**](https://www.pinecone.io/learn/series/rag/rerankers/) — reranker mental model 講最清楚
 - [**Anthropic — Contextual Retrieval**](https://www.anthropic.com/news/contextual-retrieval)（上面已列）— 同時示範 hybrid + reranker、有 benchmark
 
@@ -258,6 +273,7 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 **何時不用**：query 已經是長 + 結構化（RAG over code、user 直接 paste error stack trace）——改寫反而引入雜訊。
 
 **Paper / 實作**：
+
 - [**HyDE (Gao et al. 2022)**](https://arxiv.org/abs/2212.10496) — 原始 paper
 - [**RAG Fusion (Raudaschl 2023)**](https://github.com/Raudaschl/rag-fusion) — Multi-Query + RRF 的 reference 實作
 - LangChain 內建 `MultiQueryRetriever` / LlamaIndex `HyDEQueryTransform`
@@ -284,6 +300,7 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 **Mental model**：vanilla chunking 把文件切扁平 chunk——但**整本書的主旨不在任何單一 chunk 裡**。RAPTOR 把 chunk 遞迴聚類 + 摘要、建一棵**多層樹**：底層 = 原 chunk、中層 = 一群相關 chunk 的摘要、頂層 = 全文摘要。retrieve 時可選整棵樹搜尋、或選特定抽象層。
 
 **為什麼有用**：
+
 - **抽象 query** 撈得到（「這篇 paper 主要結論？」原 chunk 都沒這句、但頂層摘要有）
 - **細節 query** 也撈得到（底層 chunk 保留）
 - 跟 GraphRAG 不同——RAPTOR 是**樹**（hierarchical summarization）、GraphRAG 是**圖**（entity-relation）
@@ -292,6 +309,7 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 **何時不用**：chunk 之間獨立（FAQ）、知識庫經常變動（重建樹貴）。
 
 **Paper / 實作**：
+
 - [**RAPTOR (Sarthi et al. ICLR 2024)**](https://arxiv.org/abs/2401.18059) ⭐ — 原始 paper
 - [**parthsarthi03/raptor**](https://github.com/parthsarthi03/raptor) — 官方 reference 實作
 - LlamaIndex 內建 `RAPTOR pack`
@@ -301,11 +319,13 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 **Mental model**：傳統 RAG / Agent = 手寫 prompt + 手刻 chain。DSPy = **不寫 prompt**——你只定義「signature」（input → output 的型別）、再寫 program（chain 結構）；DSPy 自己用 LLM compile 出最佳 prompt + few-shot examples + retriever 設定。Stanford NLP group 2024 提出、Karpathy 推、目前 production 越用越多。
 
 **何時用**：
+
 - 你的 RAG 用了 6 個月、prompt 累積到難維護、想自動 optimize
 - 同一 program 要切換不同 LLM provider（DSPy 自動 recompile）
 - agent system 有多個 step、想跟蹤 trace / metrics
 
 **何時不用**：
+
 - 你只有一個 prompt、不需要 optimization
 - 第一次學 LLM、還沒摸過 prompting
 
@@ -324,6 +344,7 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 3. **🤖 Agentic RAG** — retrieval 從固定 pipeline 變 agent loop 內的 tool（agent 自己決定查幾次 / 怎麼查）。代表：A-RAG、Self-RAG（已上面 Self-improving）、SoK: Agentic RAG survey 2026。
 
 另外 **2 個值得追的方向**：
+
 - **🛡 RAG 安全** — corpus poisoning / prompt injection 進入 production 考量。代表：[RAGPart / RAGMask](https://arxiv.org/abs/2512.24268)。
 - **🔧 不再手寫 prompt** — 系統自動 search 出最佳 prompt + retriever 組合。代表：[**DSPy**](https://github.com/stanfordnlp/dspy)（Stanford「programming not prompting」典範、見上方 DSPy 段落）。
 
@@ -334,10 +355,10 @@ LLM 知道你的私有 / 領域資料、有 3 種主要做法。**本 stage 教 
 | **HippoRAG 2** | KG + Personalized PageRank、跨文件 multi-hop、海馬迴啟發 | [Gutiérrez et al. ICML 2025](https://arxiv.org/abs/2502.14802)、[OSU-NLP-Group/HippoRAG](https://github.com/OSU-NLP-Group/HippoRAG) ⭐ |
 | **ColPali** | PDF 圖像直接 embed、繞過 OCR、multimodal RAG 入門 | [Faysse et al. 2024](https://arxiv.org/abs/2407.01449) |
 | **A-RAG / SoK Agentic RAG** | retrieval 當 tool、agent 自己決策查幾次 | [Ayanami0730/arag](https://github.com/Ayanami0730/arag)、[SoK survey](https://arxiv.org/abs/2603.07379) ⭐ |
-| **DSPy** | 不寫 prompt、用 program + signature、auto-optimize | [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) ★ 34.4k |
-| **LightRAG** | MS GraphRAG 的 lightweight 替代、EMNLP 2025 | [HKUDS/LightRAG](https://github.com/HKUDS/LightRAG) ★ 35.1k（已在 GraphRAG 段落） |
+| **DSPy** | 不寫 prompt、用 program + signature、auto-optimize | [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) ★ 36k+ |
+| **LightRAG** | MS GraphRAG 的 lightweight 替代、EMNLP 2025 | [HKUDS/LightRAG](https://github.com/HKUDS/LightRAG) ★ 38k+（已在 GraphRAG 段落） |
 
-<details>
+<details markdown="1">
 <summary>📚 完整縱覽 — 其他 12 個值得知道的進階 RAG 技巧（展開看）</summary>
 
 | 技巧 | 一句話 | 年份 / Paper |
@@ -444,9 +465,11 @@ RAG 解決「從**外部知識庫** retrieve 相關片段」——但 agent 還�
 | [**mem0**](https://github.com/mem0ai/mem0) | 55.6k★ | Apache-2.0 | **Chatbot / 個人助理 user-level memory** | Auto fact extraction + forgetting + namespace、production-tested、最大社群 |
 | [**Letta**](https://github.com/letta-ai/letta)（前身 MemGPT）| 22.7k★ | Apache-2.0 | **長 session agent**（月為單位）| OS-style paging memory（working + archival 雙層）、persona stability、MemGPT paper origin |
 | [**Zep**](https://github.com/getzep/zep) | 4.6k★ | Apache-2.0 | **Temporal KG-based memory** | 把對話歷史建成 temporal KG、entity 之間有時間軸、適合需要 audit trail / time-aware reasoning 的 agent |
+| [**graphiti**](https://github.com/getzep/graphiti) | 27.5k★ | Apache-2.0 | **即時知識圖譜 agent 記憶** | 把 agent 過去的互動變成有時間軸的 knowledge graph、方便回頭查找；Zep 背後的引擎、可單獨使用 |
 | [**LangMem**](https://github.com/langchain-ai/langmem) | 1.4k★ | MIT | **LangChain-native memory** | LangChain 官方 memory lib、與 LangGraph 直接整合、適合已 commit LangChain stack |
 
 **怎麼挑**：
+
 - 寫 coding agent → **agentmemory**（MCP-native、跟 Stage 5 ecosystem 完美 align）
 - 做 chatbot / 個人助理 → **mem0**（最成熟、最大社群）
 - 做 long-running 跨月 agent → **Letta**（OS-paging 強項）
@@ -499,7 +522,7 @@ Memory research 2024-2026 集中在 **3 條主軸**：
 
 → 跑很久的 agent（週 / 月為單位）、上面 survey 必讀。
 
-<details>
+<details markdown="1">
 <summary>📚 完整縱覽 — 其他 8 個值得知道的 memory 作品（展開看）</summary>
 
 | 技巧 | 一句話 | 年份 / Paper |
@@ -531,7 +554,7 @@ Memory research 2024-2026 集中在 **3 條主軸**：
 - **語意切割（Semantic Chunking）**：依 embedding 或語意變化切，也就是當前區塊與前一個區塊的語意相似度出現差異。適合長文件，但成本與複雜度較高。
 - **混合策略（Hybrid）**：依照應用場景，思考不同文件結構該怎麼混搭切法。例如，一篇論文可能要保留章節、表格、公式與引用脈絡。
 
-![Chunking 策略流程](../resources/diagrams/chunking-strategies.jpg)
+![Chunking 策略流程](../resources/diagrams/chunking-strategies.png)
 
 > 📚 **經典教學**：[Greg Kamradt — 5 Levels of Text Splitting](https://github.com/FullStackRetrieval-com/RetrievalTutorials) ★ chunking 入門必看、從 character-based 一路講到 agentic chunking 五個層次、含 Jupyter notebook。
 
@@ -589,10 +612,12 @@ print(chunks[0])
 ### 📚 想動手 / 想深入
 
 **Paper**：
+
 - [**Reflexion (Shinn et al. 2023)**](https://arxiv.org/abs/2303.11366) ⭐ — **完整版** paper，Algorithm 1 寫出 memory buffer 怎麼用
 - [**Self-Refine (Madaan et al. 2023)**](https://arxiv.org/abs/2303.17651) — 對照 baseline，沒 episodic memory 的版本
 
 **Reference 實作**：
+
 - [**noahshinn/reflexion**](https://github.com/noahshinn/reflexion) — paper 第一作者的 reference 實作（含 episodic memory 完整流程）
 - [**LangChain — Reflexion**](https://langchain-ai.github.io/langgraph/tutorials/reflexion/reflexion/) — LangGraph 版本，跟本 stage 練習 4 RAG pipeline 直接接得起來
 - [**mem0**](https://github.com/mem0ai/mem0)（已在上面列）+ [**Letta**](https://github.com/letta-ai/letta)（已在上面列）— 可上線使用的 memory layer，可以直接當 Reflexion 的 episodic store
@@ -600,7 +625,7 @@ print(chunks[0])
 > 💡 **跟 Stage 3 反思的分工**：
 > - 想理解「反思 loop 怎麼運作、單次怎麼跑」→ Stage 3 反思
 > - 想理解「反思怎麼跨 session 累積、agent 怎麼從過去學教訓」→ 本節
-> - 想看 production agent 內怎麼用反思（Cursor / Claude Code）→ [Stage 5 5.6 Harness Internals](05-claude-code-ecosystem.md#56--claude-code-source-解剖reference-harness-implementation-track-b-必看)
+> - 想看 production agent 內怎麼用反思（Cursor / Claude Code）→ [Stage 5 5.7 Harness Internals](05-claude-code-ecosystem.md#57--claude-code-source-解剖reference-harness-implementation-track-b-必看)
 
 ## 🤔 進階 Reasoning / Reflection — 2024-2026 思潮 ⭐ 兩個 track 都看
 
@@ -622,14 +647,14 @@ Reflexion 是 **prompt-based reflection**——LLM 在 inference 時自己改自
 
 > 📺 **視覺學習**：[李宏毅 2025 第七講 — DeepSeek-R1 這類大型語言模型是如何進行「深度思考」(Reasoning) 的？](https://www.youtube.com/watch?v=bJFtcwLSNxI)（NTU 生成式AI時代下的機器學習 2025）
 
-OpenAI **o1**（2024-09）開啟、DeepSeek **R1**（2025-01）開源化、**DeepSeek-V4-Pro**（2026-04 preview、agent-focused 開源 reasoning）+ Claude Fable 5（2026-06、Mythos-class、Claude 目前能力最高且廣泛可用的層級、位階在 Opus class 之上）+ Claude Opus 4.8（2026-05、Opus class 旗艦 + Fable 5 的 safeguard fallback、Dynamic Workflows + parallel subagent）+ GPT-5.5（2026-04）+ Gemini 3.1 Pro（2026-02）為當前 frontier——把「step-by-step thinking + 自我糾錯」**訓練進 model 權重**、inference 時自動展開長 reasoning chain（thinking tokens）。**這是 2024-2026 LLM 最大典範轉移**、目前所有 frontier model 都走這路。下表只列**當前（2026-06）frontier**——歷史前身（o1 / R1 / Sonnet 4.5 / Gemini 2.5）省略、想看 lineage 看每家發布日列。
+OpenAI **o1**（2024-09）開啟、DeepSeek **R1**（2025-01）開源化、**DeepSeek-V4-Pro**（2026-04 preview、agent-focused 開源 reasoning）+ Claude Fable 5（2026-06、Mythos-class、位階在 Opus class 之上）+ Claude Opus 5（2026-07、Opus class 旗艦、Anthropic 官方建議的預設起點；前身 Opus 4.8 帶來 Dynamic Workflows + parallel subagent）+ GPT-5.5（2026-04）+ Gemini 3.1 Pro（2026-02）為當前 frontier（2026-06 後半 Gemini 3.5 Flash 登場；GPT-5.6 Sol / Terra / Luna 已於 2026-07 正式推出）——把「step-by-step thinking + 自我糾錯」**訓練進 model 權重**、inference 時自動展開長 reasoning chain（thinking tokens）。**這是 2024-2026 LLM 最大典範轉移**、目前所有 frontier model 都走這路。下表只列**當前（2026-07）frontier**——歷史前身（o1 / R1 / Sonnet 4.5 / Gemini 2.5）省略、想看 lineage 看每家發布日列。
 
 | Model | 來源 / 發布 | 特色 | 連結 |
 |---|---|---|---|
-| **GPT-5.5** | OpenAI 2026-04（前身：o1 2024-09 → o3 → GPT-5 2025-08 → 5.4 2026-03）| 閉源、reasoning + chat 合併、Thinking budget API、agent 能力強化 | [OpenAI](https://openai.com/) |
-| **Claude Fable 5** | Anthropic 2026-06（Mythos-class、位階在 Opus class 之上；同步發布 Claude Mythos 5 為解除部分 safeguard 的限量版本）| 閉源、Claude 目前能力最高且廣泛可用的層級、敏感查詢（cybersecurity / 生化 / distillation）會 fallback 到 Opus 4.8、官方 benchmark 數字尚未公布 | [Claude Fable 5 / Mythos 5](https://www.anthropic.com/news/claude-fable-5-mythos-5) |
-| **Claude Opus 4.8** | Anthropic 2026-05（前身：Sonnet 4.5 / Opus 4.5 / Opus 4.7、Dynamic Workflows 研究預覽）| 閉源、Opus class 旗艦 + Fable 5 的 safeguard fallback、可控 thinking budget（API 參數）、**SWE-bench / Terminal-bench 領先** | [Anthropic extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) |
-| **Gemini 3.1 Pro** | Google 2026-02（前身：Gemini 2.5 Thinking 2025、Gemini 3 2025-11）| 閉源、可看 thinking trace、**GPQA Diamond 94.3%**、價格 / 速度 / multimodal 領先 | [Gemini API](https://ai.google.dev/gemini-api/docs/thinking) |
+| **GPT-5.5** | OpenAI 2026-04（前身：o1 2024-09 → o3 → GPT-5 2025-08 → 5.4 2026-03）| 閉源、reasoning + chat 合併、Thinking budget API、agent 能力強化。**較新層級：GPT-5.6（Sol / Terra / Luna）、2026-07 正式推出、1.05M context** | [OpenAI](https://openai.com/) |
+| **Claude Fable 5** | Anthropic 2026-06（Mythos-class、位階在 Opus class 之上；同步發布 Claude Mythos 5 為解除部分 safeguard 的限量版本）| 閉源、Mythos-class（位階在 Opus class 之上）。曾於 2026-06-12 被美國出口管制暫停，**出口管制 2026-06-30 解除、[Fable 5 於 2026-07-01 全球恢復](https://www.anthropic.com/news/redeploying-fable-5)**（重新部署時加了新安全 classifier；Mythos 5 僅對核准的美國組織恢復）。官方 benchmark 數字始終未公布 | [Claude Fable 5 / Mythos 5](https://www.anthropic.com/news/claude-fable-5-mythos-5) |
+| **Claude Opus 5** | Anthropic 2026-07-24（前身：Opus 4.5 / Opus 4.7 / Opus 4.8；Dynamic Workflows 研究預覽隨 Opus 4.8 推出。Opus 4.8 仍可用、官方文件已移入 Legacy models）| 閉源、Opus class 旗艦（位階在 Fable 5 之下）、1M context、adaptive thinking、官方建議「複雜 agentic coding 與企業工作從 Opus 5 開始」；**SWE-bench / Terminal-bench 領先**是前身 Opus 4.8 的量測結果、Opus 5 目前無第三方複現數字 | [Anthropic extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) |
+| **Gemini 3.1 Pro** | Google 2026-02（前身：Gemini 2.5 Thinking 2025、Gemini 3 2025-11）| 閉源、可看 thinking trace、**GPQA Diamond 94.3%**、價格 / 速度 / multimodal 領先。**較新層級：Gemini 3.5 Flash、2026-06 已開放（3.5 Pro 開發中）** | [Gemini API](https://ai.google.dev/gemini-api/docs/thinking) |
 | **DeepSeek-V4 / V4-Pro / V4-Flash** | DeepSeek 2026-04 preview（前身：R1 2025-01 → V3.1）| 開源 **MIT license**、agent-focused 訓練、推理 + 工具使用 + 知識處理整合、R 系列 reasoning 已併入主線 | [HF DeepSeek-V4-Pro](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro)、[R1 paper（方法 baseline）](https://arxiv.org/abs/2501.12948)、[CNBC report](https://www.cnbc.com/2026/04/24/deepseek-v4-llm-preview-open-source-ai-competition-china.html) |
 | **QwQ-32B / QvQ-72B** | Alibaba Qwen 2024-11 ~ 2026 | 開源 **Apache 2.0**、32B 在小尺寸 reasoning 仍是不錯的選擇、QvQ 是視覺版本 | [QwQ blog](https://qwenlm.github.io/blog/qwq-32b-preview/) |
 
@@ -638,15 +663,15 @@ OpenAI **o1**（2024-09）開啟、DeepSeek **R1**（2025-01）開源化、**Dee
 | 你的情況 | 建議 |
 |---|---|
 | 用一般 chat model base、想加 reasoning | Path 1（prompt-based）—— ToT / Self-Consistency / CoVe |
-| 預算 / latency 允許、要最強 reasoning | Path 2 —— **Claude Fable 5 / GPT-5.5 / Opus 4.8 / Gemini 3.1 Pro / V4-Pro** 任挑一個 |
+| 預算 / latency 允許、要最強 reasoning | Path 2 —— **GPT-5.5 / Opus 5 / Gemini 3.5 Flash / Grok 4.5 / V4-Pro** 任挑一個（Claude Fable 5 屬 premium 高階層級、位階在 Opus class 之上）|
 | 想自己 fine-tune reasoning model | Path 2 —— 讀 R1 paper（方法 baseline）、從 R1-Distill / V4 開源權重起步 |
 | 想 on-device / 預算極緊 | **QwQ-32B**（Apache 2.0）或 R 系列 distill |
 | Multi-agent debate / critic 場景 | Path 1（CRITIC / debate）+ [Stage 7 multi-agent](07-multi-agent-production.md) |
 
 > 💡 **2025-2026 觀察**：
 > - reasoning model 把 Reflexion 那套吞進權重——但 **prompt-based reflection 沒被取代**：agent loop（控制反思時機 / 內容）+ multi-agent debate 還是必須的
-> - **2026 開源逼近閉源**——DeepSeek-V4-Pro（2026-04 preview、MIT license）把 R1 reasoning 併入主線、agent-focused 訓練、跟 GPT-5.5 / Gemini 3.1 Pro 差距持續縮小
-> - **agent capability 變主訴求**——V4 / Opus 4.8 都把 agent-as-product（SWE-bench / Terminal-bench / tool use）當 headline benchmark、單純 reasoning 已經不夠賣
+> - **2026 開源逼近閉源**——DeepSeek-V4-Pro（2026-04 preview、MIT license）把 R1 reasoning 併入主線、agent-focused 訓練、跟 GPT-5.5 / Gemini 3.5 Flash 差距持續縮小
+> - **agent capability 變主訴求**——V4 / Opus 5 都把 agent-as-product（SWE-bench / Terminal-bench / tool use）當 headline benchmark、單純 reasoning 已經不夠賣
 > - 兩條路會長期共存、production agent 兩個都用
 
 ## 📏 RAG / Memory Eval — 跑得起來 ≠ 跑得準
@@ -697,7 +722,7 @@ OpenAI **o1**（2024-09）開啟、DeepSeek **R1**（2025-01）開源化、**Dee
 | **第一次跑 RAG**（最快上手）| [Chroma](https://github.com/chroma-core/chroma) + [LlamaIndex](https://github.com/run-llama/llama_index) | local-first、零 ops、quickstart 友善。Stage 6 練習預設 |
 | **企業級 RAG framework**（LangChain / LlamaIndex 之外第 3 選擇）| [Haystack (deepset)](https://github.com/deepset-ai/haystack) ★ 25.2k Apache-2.0 | deepset 開源、production-oriented orchestration、enterprise NLP 場景成熟 |
 | **agent 長期記憶**（見 3 主流 memory layer）| [agentmemory](https://github.com/rohitg00/agentmemory) / [mem0](https://github.com/mem0ai/mem0) / [Letta](https://github.com/letta-ai/letta) / [Zep](https://github.com/getzep/zep) / [LangMem](https://github.com/langchain-ai/langmem) | 詳見上方 5 個主流 可上線使用的 memory layer 區塊 |
-| **RAG / Memory eval**（必裝、見 RAG Eval）| [ragas](https://github.com/explodinggradients/ragas) ★ 13.9k | RAG 評估標準工具、faithfulness / context recall / answer relevance 8+ metric |
+| **RAG / Memory eval**（必裝、見 RAG Eval）| [ragas](https://github.com/explodinggradients/ragas) ★ 15k+ | RAG 評估標準工具、faithfulness / context recall / answer relevance 8+ metric |
 | **production scale RAG**（百萬 doc）| [Qdrant](https://github.com/qdrant/qdrant) + LlamaIndex | Rust 寫的 vector DB、scale 大時比 Chroma 快 |
 | **已有 Postgres 的環境** | [pgvector](https://github.com/pgvector/pgvector) | Postgres 擴充、SQL + vector 一起、運維最簡 |
 | **企業級 RAG + Web UI** | [RAGFlow](https://github.com/infiniflow/ragflow) | document parsing 強（含 OCR / 表格 / layout）、企業場景、含 Web UI |
@@ -707,6 +732,7 @@ OpenAI **o1**（2024-09）開啟、DeepSeek **R1**（2025-01）開源化、**Dee
 | **跨主題 tutorial 集** | [ai-engineering-hub](https://github.com/patchy631/ai-engineering-hub) | RAG + agent 教學 collection、Jupyter notebook 形式 |
 
 **建議入手順序**：
+
 1. 第一個必裝：**Chroma + LlamaIndex**（跑 Stage 6 練習）
 2. agent 要記事：加 **mem0**（最簡單的 memory layer）
 3. 開始 production-scale：換成 **Qdrant** 或 **pgvector**
@@ -719,27 +745,29 @@ OpenAI **o1**（2024-09）開啟、DeepSeek **R1**（2025-01）開源化、**Dee
 | 分類 | Project | ⭐ | 適合誰 | 為什麼推薦 / 備註 |
 |---|---|---|---|---|
 | **RAG framework**<br>（完整流水線） | [LlamaIndex](https://github.com/run-llama/llama_index) | ⭐⭐⭐⭐⭐ | 以文件為主的應用 | 以 RAG 為核心、document loader / chunking / retrieval / query engine 一條龍。★ 49k+ |
-| | [infiniflow/ragflow](https://github.com/infiniflow/ragflow) | ⭐⭐⭐⭐⭐ | 要把 RAG 真的 ship 給非開發者用 | production 等級 RAG engine、深度文件理解（layout / 表格 / OCR）+ hybrid retrieval + agent loop + Web UI。★ 79k+、Apache-2.0 |
-| | [HKUDS/LightRAG](https://github.com/HKUDS/LightRAG) | ⭐⭐⭐⭐ | 想看研究級 graph + long-context memory 方法 | graph + vector hybrid retrieval + summarization-based memory、EMNLP 2025 paper-backed。★ 34k+、MIT。研究風格 codebase |
-| **Vector DB**<br>（local-first） | [Chroma](https://github.com/chroma-core/chroma) | ⭐⭐⭐⭐⭐ | 練習 2 / 4、最容易上手的 vector DB | 開源 embedding 資料庫、本機跑、in-memory / SQLite 後端、零 ops。★ 27k+、Apache-2.0。**安裝**：`pip install chromadb` |
-| **Vector DB**<br>（production scale） | [Qdrant](https://github.com/qdrant/qdrant) | ⭐⭐⭐⭐⭐ | Chroma 跟不上時、需要 production scale | Rust 寫的 vector DB、有雲端版跟自架版。★ 31k+ |
+| | [infiniflow/ragflow](https://github.com/infiniflow/ragflow) | ⭐⭐⭐⭐⭐ | 要把 RAG 真的 ship 給非開發者用 | production 等級 RAG engine、深度文件理解（layout / 表格 / OCR）+ hybrid retrieval + agent loop + Web UI。★ 86k+、Apache-2.0 |
+| | [HKUDS/LightRAG](https://github.com/HKUDS/LightRAG) | ⭐⭐⭐⭐ | 想看研究級 graph + long-context memory 方法 | graph + vector hybrid retrieval + summarization-based memory、EMNLP 2025 paper-backed。★ 38k+、MIT。研究風格 codebase |
+| **Vector DB**<br>（local-first） | [Chroma](https://github.com/chroma-core/chroma) | ⭐⭐⭐⭐⭐ | 練習 2 / 4、最容易上手的 vector DB | 開源 embedding 資料庫、本機跑、in-memory / SQLite 後端、零 ops。★ 28k+、Apache-2.0。**安裝**：`pip install chromadb` |
+| **Vector DB**<br>（production scale） | [Qdrant](https://github.com/qdrant/qdrant) | ⭐⭐⭐⭐⭐ | Chroma 跟不上時、需要 production scale | Rust 寫的 vector DB、有雲端版跟自架版。★ 33k+ |
 | **Vector DB**<br>（hybrid） | [Weaviate](https://github.com/weaviate/weaviate) | ⭐⭐⭐⭐ | production 部署 + schema 約束 | 內建模組（text2vec / generative / classification）、schema 驅動、內建 BM25 + vector hybrid。★ 16k+ |
-| **Vector DB**<br>（已有 Postgres） | [pgvector](https://github.com/pgvector/pgvector) | ⭐⭐⭐⭐ | 原本就在用 Postgres 的團隊 | Postgres 擴充、SQL + vector 同一個 DB、運維最簡。★ 21k+ |
-| **Memory framework**<br>（auto fact extraction） | [mem0ai/mem0](https://github.com/mem0ai/mem0) | ⭐⭐⭐⭐⭐ | 個人助理 / chatbot 需要 user-level memory | 自我精煉 memory 層、跨 session 儲存事實。★ 54k+ |
-| **Memory framework**<br>（OS-paging） | [Letta（前身 MemGPT）](https://github.com/letta-ai/letta) | ⭐⭐⭐⭐ | context 要跑很久的 agent（以月為單位） | 階層式 memory（working / archival）、OS-paging 概念。★ 22k+ |
+| **Vector DB**<br>（已有 Postgres） | [pgvector](https://github.com/pgvector/pgvector) | ⭐⭐⭐⭐ | 原本就在用 Postgres 的團隊 | Postgres 擴充、SQL + vector 同一個 DB、運維最簡。★ 22k+ |
+| **Vector DB**<br>（跑在 app 內） | [lancedb/lancedb](https://github.com/lancedb/lancedb) | ⭐⭐⭐⭐ | 想要 vector DB 直接內建、不想另跑 server | 直接跑在你 app 裡的 vector DB（不用另開 server）、能處理文字 + 圖片、關鍵字 + 向量一起搜。★ 11k+、Apache-2.0 |
+| **Memory framework**<br>（auto fact extraction） | [mem0ai/mem0](https://github.com/mem0ai/mem0) | ⭐⭐⭐⭐⭐ | 個人助理 / chatbot 需要 user-level memory | 自我精煉 memory 層、跨 session 儲存事實。★ 62k+ |
+| **Memory framework**<br>（OS-paging） | [Letta（前身 MemGPT）](https://github.com/letta-ai/letta) | ⭐⭐⭐⭐ | context 要跑很久的 agent（以月為單位） | 階層式 memory（working / archival）、OS-paging 概念。★ 24k+ |
 | **Memory（in-framework）** | [LangChain — Memory](https://python.langchain.com/docs/concepts/memory/) | ⭐⭐⭐ | 已用 LangChain | 4 種 memory 抽象（buffer / summary / vectorstore-backed / entity）|
 | **進階 RAG 技巧** | [Anthropic — Contextual Retrieval cookbook](https://platform.claude.com/cookbook/capabilities-contextual-embeddings-guide) | ⭐⭐⭐⭐⭐ | 跑完基本 RAG 想升級 | Claude 搭配 prompt caching 的 contextual chunking、含完整端到端範例 |
 | **中文 RAG 樣板** | [chatchat-space/Langchain-Chatchat](https://github.com/chatchat-space/Langchain-Chatchat) | ⭐⭐⭐⭐ | 中文知識庫 / RAG 應用 | 中文社群最廣泛使用、可離線部署、中文預設好、支援 ChatGLM / Qwen / Llama / Ollama。★ 38k+、Apache-2.0。⚠️ 最後更新 2025-11（邊緣）|
-| **教材合集** | [patchy631/ai-engineering-hub](https://github.com/patchy631/ai-engineering-hub) | ⭐⭐⭐⭐ | 想看「同概念在不同情境怎麼實作」 | 主題式 LLM / RAG / agent tutorial 集、Jupyter notebook、跨多個 stage 都用得上。★ 34k+、MIT |
-| **Production AI assistant**<br>（學 ship RAG 的 reference）| [onyx](https://github.com/onyx-dot-app/onyx)（前身 Danswer）| ⭐⭐⭐⭐⭐ | 想看「RAG-driven AI assistant 怎麼 production 化」 | 開源企業級 AI assistant、跨 LLM 支援、含完整 ingest / retrieval / chat / admin。★ 29.4k、active 維護 |
+| **教材合集** | [patchy631/ai-engineering-hub](https://github.com/patchy631/ai-engineering-hub) | ⭐⭐⭐⭐ | 想看「同概念在不同情境怎麼實作」 | 主題式 LLM / RAG / agent tutorial 集、Jupyter notebook、跨多個 stage 都用得上。★ 36k+、MIT |
+| **Production AI assistant**<br>（學 ship RAG 的 reference）| [onyx](https://github.com/onyx-dot-app/onyx)（前身 Danswer）| ⭐⭐⭐⭐⭐ | 想看「RAG-driven AI assistant 怎麼 production 化」 | 開源企業級 AI assistant、跨 LLM 支援、含完整 ingest / retrieval / chat / admin。★ 31k+、active 維護 |
 | **RAG cookbook**<br>（30+ 技巧範例）| [NirDiamant/RAG_Techniques](https://github.com/NirDiamant/RAG_Techniques) | ⭐⭐⭐⭐⭐ | 跑完基本 RAG、想看各種變體 | 大型 RAG 技巧 cookbook、含 Self-RAG / HyDE / Multi-Query / Adaptive 等 30+ Jupyter notebook 範例 |
-| **DSPy**<br>（programming not prompting）| [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) | ⭐⭐⭐⭐⭐ | 用 LLM 一段時間、想自動 optimize prompt + chain | Stanford NLP group、★ 34.4k MIT、Path 3 paradigm（詳見 進階 RAG DSPy） |
-| **RAG / Memory Eval**<br>（必裝）| [explodinggradients/ragas](https://github.com/explodinggradients/ragas) | ⭐⭐⭐⭐⭐ | 跑完 Stage 6 練習 4、想 measure retrieval 精度 | RAG eval 標準工具、8+ metric、reference-free + reference-based。★ 13.9k Apache-2.0 |
+| **DSPy**<br>（programming not prompting）| [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) | ⭐⭐⭐⭐⭐ | 用 LLM 一段時間、想自動 optimize prompt + chain | Stanford NLP group、★ 36k+ MIT、Path 3 paradigm（詳見 進階 RAG DSPy） |
+| **RAG / Memory Eval**<br>（必裝）| [explodinggradients/ragas](https://github.com/explodinggradients/ragas) | ⭐⭐⭐⭐⭐ | 跑完 Stage 6 練習 4、想 measure retrieval 精度 | RAG eval 標準工具、8+ metric、reference-free + reference-based。★ 15k+ Apache-2.0 |
 
 
 ## ✅ 進入 Stage 7 前的自我檢查
 
 你能不能：
+
 - [ ] 寫一條 50 行的 RAG 流水線（load → chunk → embed → store → query → answer）
 - [ ] 解釋為什麼天真的切塊在長文件上會失敗
 - [ ] 針對 API 文件、PDF、表格設計不同的 chunking 策略

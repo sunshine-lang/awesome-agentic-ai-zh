@@ -5,6 +5,7 @@
 這是一份**給你自己用**的打勾清單——不用提交、不用 PR、沒有人會檢查。複製一份(或 fork repo)勾你自己的進度,知道走到哪、下一站是哪。
 
 **怎麼用**:
+
 1. 每個 stage 的「學習目標」「進入條件」「自我檢查」都在該 stage 檔案裡——這份清單只是**總覽 + 入口**,不重複內容。
 2. 一個 stage 的 ✅ 條件 = 你能通過該 stage 結尾的「**自我檢查**」那一節。通過了才勾,勾完往下一站。
 3. 不用全部做完。先選一條軌道(Track A 或 B)+ 一條你的 audience branch 就夠開始。
@@ -17,8 +18,10 @@
 
 - [ ] **Stage 0 — 基礎準備** · [`stages/00-foundations.md`](stages/00-foundations.md)
   ✅ 過該 stage 的通過條件(Stage 0 是 prerequisite gateway,通過條件見 stage 內說明)
+
 - [ ] **Stage 1 — LLM 基礎** · [`stages/01-llm-basics.md`](stages/01-llm-basics.md)
   ✅ 過該 stage 的「自我檢查」
+
 - [ ] **Stage 2 — Prompt 設計** · [`stages/02-prompt-engineering.md`](stages/02-prompt-engineering.md)
   ✅ 過該 stage 的「自我檢查」
 

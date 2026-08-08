@@ -85,7 +85,7 @@ When the user mentions tool calling problems, ask **which of these 4 symptoms** 
 这个 skill **不**处理：
 
 - **LangChain / LangGraph / CrewAI / Pydantic AI** 等 framework 问题 → 路 Stage 4
-- **MCP server / client** 设计 → 路 [`resources/cookbook.md` 2 写你的第一个 MCP server](../../../../resources/cookbook.md)
+- **MCP server / client** 设计 → 路 [`resources/cookbook.zh-Hans.md` 2 写你的第一个 MCP server](../../../../resources/cookbook.zh-Hans.md)
 - **Production 监控 / observability / cost tracking** → 路 Stage 7
 - **Prompt engineering 一般技巧** → 路 Stage 2
 

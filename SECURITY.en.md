@@ -6,7 +6,7 @@ This repo is a **curated learning roadmap** (mainly Markdown learning materials 
 
 ## Supported Scope
 
-This project uses **rolling maintenance** and has no versioned releases. Only the latest state of the `main` branch will be fixed.
+This project uses **rolling maintenance**: the supported scope is the latest state of the `main` branch. Versioned tags (`vYYYY.MM.DD[-N]`, used for citation via [`CITATION.cff`](CITATION.cff)) are **content snapshots** and are not patched retroactively - reported issues are fixed on `main`, and no fix release is cut for an older tag.
 
 ## What Counts as a Security Issue
 

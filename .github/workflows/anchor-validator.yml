@@ -5,9 +5,21 @@ name: Anchor Validator
 # 因此把 anchor validate 升為 CI-level check。
 
 on:
+  # 刻意「不」加 paths 過濾。這是 blocking gate，將來可能被設成 required status check；
+  # 而 GitHub 對「required 但從未回報」的 check 是無限期等待，PR 會永遠卡在
+  # 「Expected — Waiting for status to be reported」。paths 過濾會讓整個 workflow 不觸發、
+  # 連 check 物件都不產生，正是那個死鎖。
+  # （job 層的 `if:` 不一樣——被 skip 的 job 仍然會回報一個 skipped 的 check，GitHub 視為
+  # 通過，所以那種 guard 是安全的。本檔沒有用到 job 層 `if:`。）
+  # 這個 filter（`**.md`）原本讓 239 / 473 個 tracked 檔案觸發不了任何一次執行
+  # （examples/ 114、非 .md 的 resources/ 77、scripts/ 31、.github/ 10、root 6、docs/ 1）。
+  # 這份 workflow 實測 6-10 秒（4 次觀測），省下的 CI 時間遠不值得這個風險。
   pull_request:
-    paths:
-      - '**.md'
+  # 也在 push 到 main 時跑。2026-06-07 → 2026-08-04 的 109 個 commit 只有 14 個經由 PR
+  # 進來（比對已 merge PR 的 merge-commit sha），其餘 95 個是直接推 main——沒有 push
+  # trigger 的話，這個 gate 在那條佔 87% 的路徑上等於不存在。lint.yml 同日先做了同樣的事。
+  push:
+    branches: [main]
   schedule:
     # 每月 1 號 UTC 04:00 跑（避開 lint.yml UTC 03:00）
     - cron: '0 4 1 * *'

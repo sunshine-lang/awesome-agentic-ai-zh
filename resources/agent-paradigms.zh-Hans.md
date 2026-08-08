@@ -5,7 +5,7 @@
 > [← 回主路线 README](../README.zh-Hans.md)
 
 > 📌 **这份是 mental model reference**。看完之后你会知道：“同样叫 agent、为什么 Claude Code、Hermes Agent、OpenClaw 用起来完全不同感受？”
-> 已经知道想用哪个 → [`resources/cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md)（7 CLI 并排比较）或 [`resources/cookbook.zh-Hans.md`](cookbook.zh-Hans.md)（step-by-step 部署）。
+> 已经知道想用哪个 → [`resources/cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md)（8 CLI 并排比较）或 [`resources/cookbook.zh-Hans.md`](cookbook.zh-Hans.md)（step-by-step 部署）。
 
 “Agent”一词被用得很泛。Cursor 是 agent、Claude Code 是 agent、Telegram 上跟你聊天的 Hermes 也是 agent、家里 Jetson 板子跑的 OpenClaw 也是 agent。但这 4 个东西用起来完全不同感受 —— 因为它们属于**不同 paradigm**。差别不在 LLM 是哪家、而在 **agent 跑在哪、你用什么界面跟它互动、需不需要联网**。
 
@@ -62,7 +62,7 @@
 **代表**:[Aider](https://aider.chat) / [OpenCode](https://github.com/sst/opencode) / [goose](https://block.github.io/goose) / [Hermes Agent](https://github.com/NousResearch/hermes-agent)*
 
 **Hero example**:
-你想用 DeepSeek-R1 写 code（比 Claude Opus 便宜 10×）。Aider 设 `--model deepseek/deepseek-reasoner` + `OPENROUTER_API_KEY` 就能跑、git-aware、commit message 自动写。
+你想用 DeepSeek-V4-Pro（前身 R1 reasoning lineage 已并入主线）写 code（比 Claude Opus 便宜约 10×）。Aider 设 `--model deepseek/deepseek-v4-pro` + `OPENROUTER_API_KEY` 就能跑、git-aware、commit message 自动写。
 
 **跟 Type 2 的差别**:Type 2 绑特定家、Type 3 你带 API key、任何 OpenAI-compatible endpoint 都行。
 
@@ -77,7 +77,7 @@
 
 ## Type 4: Cloud-deployed — 例:Hermes Agent
 
-**代表**:[Hermes Agent](https://github.com/NousResearch/hermes-agent)（Nous Research、★ 175k+、MIT）
+**代表**:[Hermes Agent](https://github.com/NousResearch/hermes-agent)（Nous Research、★ 224k+、MIT）
 
 **Hero example**:
 你坐在地铁、手机开 Telegram、对 Hermes bot 说“整理今天 arXiv ML 新 paper、给我 3 个 highlights、传回 Telegram”。Hermes agent 在你 $5 DigitalOcean VPS 上跑、收讯息、决定该用 GPT-5（找 paper）+ Claude Opus（写 summary）+ Gemini Flash（压缩成 3 条）、执行完传结果回 Telegram。整个过程你没碰 laptop。
@@ -95,6 +95,7 @@
 **特色**:deployment cost ~$5/月 VPS + API;中国圈 LLM 支持（GLM / Kimi）—— 国际服务中断时可以改用这些接力。
 
 **Trade-off**:
+
 - ⚠️ 自我学习技能是新功能、还没经过独立安全检验；用在会造成严重后果的任务（医疗 / 法律 / 金流）前先别开
 - 失去 IDE / terminal 的 file system 直接读写便利、变成 chat-first workflow
 - 需要会 self-host VPS（Linux / docker / systemd 基础）
@@ -124,6 +125,7 @@
 **特色**:一次硬件投资、之后 API 0 元;对应 NVIDIA 边缘硬件生态;Jetson Thor 跑 30B model 也 OK。
 
 **Trade-off**:
+
 - 模型受边缘 hardware 限制（Orin Nano 跑 7B 上限、Thor 才到 30B）
 - Setup 比 cloud 复杂（要会 NVIDIA Jetson 环境、JetPack、Docker、Ollama）
 - 没有 cloud-deployed 的 24/7 跨平台便利
@@ -145,6 +147,7 @@
 | **Claude Code 原生**（Stage 5.5） | 写 `.claude/agents/<name>.md`，主 session 用 Task tool invoke | Claude Code subagent + Claude Agent SDK |
 
 **差别在 runtime ownership**：
+
 - Framework path：你用 Python 写一支主程序（orchestrator）来调度，每个 sub-agent 都是这支程序里的对象
 - Claude path：Claude Code 自动建立新的子 agent，主 agent 只拿到子 agent 的最终结果、不用管它的内部过程（context 自动隔离、互不干扰）
 
@@ -161,6 +164,7 @@
 ![个人 power-user 多 type workflow](../resources/diagrams/power-user-multi-type-workflow.zh-Hans.png)
 
 **为什么这样搭**:
+
 - Type 2 处理 code（terminal 界面最自然）
 - Type 4 处理 routine + 跨平台（laptop 没开时也工作）
 - Type 5 处理隐私（不可上 cloud）
@@ -176,7 +180,7 @@
 ## 跟既有 stage / branch 的连结
 
 - **想学 Type 2 上手** → [Stage 5: Claude Code 生态](../stages/05-claude-code-ecosystem.zh-Hans.md)
-- **想看 7 CLI 详细并排比较**（Type 2 + Type 3）→ [`resources/cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md)
+- **想看 8 CLI 详细并排比较**（Type 2 + Type 3）→ [`resources/cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md)
 - **想看 IDE-coupled 对比**（Type 1）→ [`branches/for-developer.zh-Hans.md`](../branches/for-developer.zh-Hans.md)
 - **想 step-by-step 部署 Hermes** → [`resources/cookbook.zh-Hans.md` Recipe 6](cookbook.zh-Hans.md)（含 Hermes + Ollama walkthrough）
 - **想搞 Jetson + OpenClaw** → [Jetson AI Lab tutorial](https://www.jetson-ai-lab.com/tutorials/openclaw/) + [Seeed Studio wiki](https://wiki.seeedstudio.com/local_openclaw_on_recomputer_jetson/)

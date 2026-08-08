@@ -64,7 +64,7 @@ LLM 看到的不是“字”，是 **token**（次字单位）。中文 1 个字
 
 ### Context Window（上下文视窗）
 
-LLM 一次能“看”多少 token。**2026 frontier**：Claude Sonnet 4.6 / Opus 4.8 1M、GPT-5.5 ~400k、Gemini 3.1 Pro 2M。**不是越大越好**——超过某个长度后 LLM 会“在中间遗漏”（Lost in the Middle）。
+LLM 一次能“看”多少 token。**2026 frontier**：Claude Sonnet 5 / Opus 5 1M、GPT-5.6 1.05M、Gemini 3.5 Flash 1M（Pro 系列上看 2M）、xAI Grok 4.5 500K、Mistral Medium 3.5 256k。**不是越大越好**——超过某个长度后 LLM 会“在中间遗漏”（Lost in the Middle）。
 
 ### Prompt（提示词）
 
@@ -72,10 +72,13 @@ LLM 一次能“看”多少 token。**2026 frontier**：Claude Sonnet 4.6 / Opu
 
 📍 详细：[Stage 2](../stages/02-prompt-engineering.zh-Hans.md)
 
-### Few-shot / Zero-shot
+### Zero-shot / One-shot / Few-shot
 
-- **Zero-shot**：直接问问题不给范例。
-- **Few-shot**：给 2-5 个 input → output 的范例后再问。**Few-shot 通常显著提升准确度**，特别是格式要求严的任务。
+在 prompt 里放“几个示范例子”让 LLM 照着做——这三个词的差别只在**你给几个范例**：
+
+- **Zero-shot**（0 个范例）：直接问、不给任何范例。
+- **One-shot**（1 个范例）：先给 **1 个** input → output 范例再问。
+- **Few-shot**（少数几个）：给 **2-5 个** input → output 范例后再问。**Few-shot 通常显著提升准确度**，特别是格式要求严的任务。
 
 ### Chain-of-Thought（CoT，思维链）
 
@@ -107,6 +110,7 @@ LLM 一次能“看”多少 token。**2026 frontier**：Claude Sonnet 4.6 / Opu
 让 LLM 调用你定义好的 function（查 DB、算数学、开浏览器…）。LLM 回的不是文字而是 `{"function": "search", "args": {...}}`，你的程序去执行、把结果再丢回 LLM。
 
 **两个词概念相同，但 API schema 不一样**：
+
 - **Anthropic 的 "Tool Use"**：schema 用 `input_schema`（直接放 JSON Schema）
 - **OpenAI / Ollama 的 "Function Calling"**：外面再包一层 `{"type": "function", "function": {...}}`
 - LLM 内部接收到的 token 表达也不同，写跨厂商 SDK 时要记得对应好
@@ -215,7 +219,7 @@ Anthropic 2024 提的方法——chunk 加上“整份文件的脉络摘要”�
 
 ---
 
-## 4. Multi-Agent（多 agent）
+## 4. Multi-Agent
 
 ### Multi-Agent（多 agent）
 
@@ -233,7 +237,7 @@ Anthropic 2024 提的方法——chunk 加上“整份文件的脉络摘要”�
 
 ### A2A（Agent-to-Agent）Protocol
 
-Google 推的 agent 之间沟通协定，类似 MCP 但用于 agent ↔ agent，不是 agent ↔ tool。
+Google 发起、现由 Linux Foundation 治理的 agent 之间沟通协定，类似 MCP 但用于 agent ↔ agent（不是 agent ↔ tool）。2026 已达 **v1.0**（已有 150+ 组织采用，并加入身分验证、让一个 agent 能确认对方是不是真的它），是 MCP（agent↔tool）的姊妹标准。
 
 ---
 
@@ -241,14 +245,15 @@ Google 推的 agent 之间沟通协定，类似 MCP 但用于 agent ↔ agent，
 
 ### MCP（Model Context Protocol）
 
-Anthropic 在 2024 推出的开放协定，让任何 LLM host（Claude Code、Cursor、自写 agent）都能用同一套接口连接外部 tool server。把它想成“**LLM 的 USB 接口**”。
+Anthropic 在 2024 推出的开放协定，让任何 LLM host（Claude Code、Cursor、自写 agent）都能用同一套接口连接外部 tool server，2025-12 已捐给 Linux Foundation 旗下的 Agentic AI Foundation。把它想成“**LLM 的 USB 接口**”。
 
 **技术上标准化了 3 种 primitives**：
+
 - **Tools**：LLM 可调用的 function（read DB / search web / send email…）
 - **Resources**：LLM 可读取的数据（文件内容、API response、DB rows…）
 - **Prompts**：可复用的 prompt 模板（给用户在 host 内用 `/` 触发）
 
-**架构**：server / client 模式——tool server 跑在本地或远端，LLM host 当 client 连接。Server 通过 stdio / SSE / HTTP 三种 transport 之一暴露这些 primitives。
+**架构**：server / client 模式——tool server 跑在本地或远端，LLM host 当 client 连接。Server 通过两种 transport 之一暴露这些 primitives：**stdio**（本地 subprocess）与 **Streamable HTTP**（远端）；旧的 HTTP+SSE transport 已在 2025-03-26 spec revision 标为 deprecated。
 
 📍 详细：[Stage 5.2](../stages/05-claude-code-ecosystem.zh-Hans.md#52--mcpmodel-context-protocol-基础)
 
@@ -290,6 +295,12 @@ Claude Code 内以 `/` 开头的指令（`/help`、`/compact`、`/plan` 等）�
 
 写法：在 `.claude/settings.json` 里加 `"hooks"` 区块，指向 script 路径。
 
+### Deep Agent（深度 agent）
+
+“自带完整配备”的 agent 设计——不只会调用工具，还内建规划（待办清单）、长期记忆（文件系统）、子 agent 分工、可加载的 skills。对照：简单的 agent 只有 LLM + 几个工具。代表实作：LangChain 的 [deepagents](https://github.com/langchain-ai/deepagents)。
+
+---
+
 ### Subagent（子 agent）
 
 主 Claude Code session 之外，spawn 出来跑特定任务的 agent。有自己的 context window。例如“给我一个 code-reviewer subagent 看看 diff”。
@@ -316,6 +327,14 @@ Claude Code 内以 `/` 开头的指令（`/help`、`/compact`、`/plan` 等）�
 
 LLM 把 prompt 前缀 cache 起来，下次同前缀只算 cache hit 的便宜价（Anthropic 90% off、OpenAI 50% off）。Long context + 重复 query 的场景可以省很多钱。
 
+### Streaming（流式输出）
+
+LLM 边生边回（一个 token 一个 token），不是等全部生成完才丢整段回来。读者体验较好（像在打字）；技术上用 SSE 或 chunked transfer。**production 交互式应用几乎都开**。代价：客户端要能 handle partial response、ReAct 内 tool call 解析要等到 stream 结束。
+
+### Batch API（批量 API）
+
+把大量 LLM 请求打包送（不要求实时），24 小时内回。**Anthropic / OpenAI 通常打 5 折**。适合非交互场景：批量摘要、批量分类、eval 跑大量 test case、ETL pipeline。**交互式 chat 不能用**——延迟对用户体验来说太久。
+
 ### Token Cost / Inference Cost
 
 每次 LLM 调用的成本 = input tokens × input price + output tokens × output price。Agent 跑 ReAct loop 的成本可以累积很快——大 codebase grep 一次可能花 10 万 token。
@@ -323,6 +342,14 @@ LLM 把 prompt 前缀 cache 起来，下次同前缀只算 cache hit 的便宜�
 ### Guardrails
 
 防 LLM 做坏事的规则层——挡掉 prompt injection、PII 外流、有害输出等。NeMo Guardrails、Guardrails AI 等。
+
+### Prompt Injection（提示注入）
+
+把恶意指令藏在 LLM 会读到的内容里（网页、文档、工具返回），诱导它无视原任务、改做攻击者要的事。根因：LLM 分不清“指令”与“数据里夹带的指令”。防法：最小权限、隔离不可信内容、高风险动作人审。相关：lethal trifecta、Guardrails。
+
+### Lethal Trifecta（致命三角）
+
+Simon Willison 提出：agent 同时有（1）访问私密数据、（2）接触不可信内容、（3）对外通讯三种能力时，就可能被 prompt injection 操控去偷数据外传。防法是打断至少一环（常见：切断对外通讯或隔离不可信输入）。
 
 ---
 
@@ -354,7 +381,7 @@ LLM “自信地说错”——把不存在的 API 编出来、把错的数字�
 
 ### Frontier Model
 
-当下最顶的模型（**2026-06**：Claude Fable 5（Mythos-class，定位在 Opus 之上、目前最高能力的广泛可用 Claude 层级）；**2026-05**：GPT-5.5、Claude Opus 4.8（Opus-class 旗舰、也是 Fable 5 的 safeguard fallback）、Gemini 3.1 Pro、DeepSeek-V4-Pro 等）。一般智慧任务用 frontier；简单分类 / 翻译用便宜的小模型省钱。
+当下最顶的模型（**2026-07**：Claude **Opus 5**（2026-07-24、`claude-opus-5`、1M、$5/$25，官方 docs 建议的默认起点）、OpenAI **GPT-5.6**（Sol / Terra / Luna 三级、1.05M context、ChatGPT / Codex / API 都能用）；**2026-06 后半**：Claude Sonnet 5（速度×智慧的最佳平衡、接近 Opus 级但更便宜）、Google Gemini 3.5 Flash、xAI Grok 4.5（500K context）、Mistral Medium 3.5；**2026-06 前半**：Claude Fable 5（Mythos-class，定位在 Opus 之上）发布，2026-06-12 曾被美国出口管制暂停，但 **出口管制 2026-06-30 解除、[Fable 5 于 2026-07-01 全球恢复](https://www.anthropic.com/news/redeploying-fable-5)**（Mythos 5 仅对核准美国组织恢复）；**2026-05**：GPT-5.5、Claude Opus 4.8（当时的 Opus-class 旗舰，2026-07 由 Opus 5 接替、仍可用）、Gemini 3.1 Pro、DeepSeek-V4-Pro 等）。一般智慧任务用 frontier；简单分类 / 翻译用便宜的小模型省钱。
 
 ### Context Engineering
 
@@ -368,12 +395,26 @@ LLM “自信地说错”——把不存在的 API 编出来、把错的数字�
 工程 **模型外面的执行与控制层**——所有不是 model weights、也不是 prompt string 本身的工程元件：agent loop / tool registry / context manager / permissions / safety layer / memory layer / eval / observability / retry / circuit breaker 等。Simon Willison 2025：**coding agent = LLM + harness**。Addy Osmani：harness = 所有不是 model 本身的代码。[OpenAI 也在 2026-02 使用了 "Harness Engineering" 这个说法](https://openai.com/index/harness-engineering)。Claude Code、Cursor、OpenCode 等 CLI agent 都是 harness。**framework 把 LLM 包成 agent，harness 把 agent 包成可上线使用的产品**。
 
 对比：
+
 - **Framework**（Stage 4）规范 **API**：你调用的接口长什么样
 - **Harness**（本词）规范 **runtime**：怎么跑、怎么 recovery、怎么观测
 
 📍 学科级概念（**8 个核心元件** / prompt→context→harness 三层工程分工 / framework vs harness）：[Stage 7 Harness Engineering](../stages/07-multi-agent-production.zh-Hans.md)
-📍 Reference implementation case study（读 Claude Code source）：[Stage 5 5.6](../stages/05-claude-code-ecosystem.zh-Hans.md)
+📍 Reference implementation case study（读 Claude Code source）：[Stage 5 5.7](../stages/05-claude-code-ecosystem.zh-Hans.md)
 📍 延伸：[`anthropics/claude-agent-sdk-python`](https://github.com/anthropics/claude-agent-sdk-python)、[`ai-boost/awesome-harness-engineering`](https://github.com/ai-boost/awesome-harness-engineering)、[`ZhangHanDong/harness-engineering-from-cc-to-ai-coding`](https://github.com/ZhangHanDong/harness-engineering-from-cc-to-ai-coding)
+
+### Loop Engineering（循环工程）
+
+prompt engineering → context engineering → harness engineering 之后的第四层：设计 / 调校 agent 的“迭代循环”本身——目标、工具、context 管理、终止条件、错误处理，让长时间（数百步、跨 session）运行仍可靠、可控、不跑偏。相关：harness、Dynamic Workflows、ReAct。
+
+### Graph Engineering（图工程）
+
+把 agent 的执行流程设计成**显式的图**：node = 一个步骤（2026 起一个 node 里可以放一整个 agent run，不再只是一个 function），edge = 转移条件，node 之间传递一个有 schema、可 checkpoint、可 replay 的 state。**读到这个词要知道两件事**：
+
+- **这里的“图”是执行流程图（control / execution graph），不是 GraphRAG 那种知识图谱检索**——后者见 [Stage 6](../stages/06-memory-rag.zh-Hans.md)。两者常被混为一谈。
+- **这是 2026-07 才流行的新名字，不是新技术**。LangGraph 从 2023 就是这样运作，LangChain 官方也直言这不是新想法；Anthropic 称同类机制为 *dynamic workflows*、Google ADK 与 Microsoft Agent Framework 用 *graph-based workflow(s)*，三家官方文档都没有采用“graph engineering”这个说法。
+
+真正要学的东西在 [Stage 4 的 multi-agent pattern](../stages/04-agent-frameworks.zh-Hans.md) 和可以直接跑的 [`examples/stage-4/03-graph-workflow/`](../examples/stage-4/03-graph-workflow/README.zh-Hans.md)（`StateGraph` / conditional edge / checkpointer）。相关：harness、Loop Engineering、orchestration。
 
 ---
 
@@ -381,13 +422,13 @@ LLM “自信地说错”——把不存在的 API 编出来、把错的数字�
 
 ### Computer Use（屏幕级 agent）
 
-Agent 通过 **screenshot → vision → 算坐标 → 模拟键鼠** 操作真实桌面 app——不靠 API、直接像人类用屏幕。代表：Anthropic Claude Computer Use（Opus 4.8 / Sonnet 4.6）/ OpenAI Codex desktop / Google Gemini in Chrome。**2024-10 Anthropic 公开 beta 开启、2026 OSWorld 达 76.26% superhuman**。
+Agent 通过 **screenshot → vision → 算坐标 → 模拟键鼠** 操作真实桌面 app——不靠 API、直接像人类用屏幕。代表：Anthropic Claude Computer Use（Opus 5 / Sonnet 5）/ OpenAI Codex desktop / Google Gemini in Chrome。**2024-10 Anthropic 公开 beta 开启；OSWorld v1 2026-05 达 76.26% 后接近饱和，OSWorld 2.0（2026-06、long-horizon）把 SOTA 重设到 ~20%（Opus 4.8）**。
 
 📍 完整解说 + 4 强对比：[Stage 8 Computer Use](../stages/08-agent-interfaces.zh-Hans.md)
 
 ### Browser Use（web 级 agent）
 
-Agent 操作网页、主要用 **DOM-aware navigation**（直接 query CSS selector）+ 必要时 vision fallback。代表闭源：Atlas / Comet / Dia / Gemini in Chrome。代表 OSS：[browser-use](https://github.com/browser-use/browser-use)（★ 95k+）。
+Agent 操作网页、主要用 **DOM-aware navigation**（直接 query CSS selector）+ 必要时 vision fallback。代表闭源：Comet / Dia / Gemini in Chrome（Atlas 2026-08 停运）。代表 OSS：[browser-use](https://github.com/browser-use/browser-use)（★ 105k+）。
 
 📍 完整解说 + 5 强对比 + OSS 框架：[Stage 8 Browser Use](../stages/08-agent-interfaces.zh-Hans.md)
 
@@ -421,4 +462,5 @@ Google 写的“用户空间 kernel”、拦截 syscall 自己模拟、**不用 
 
 - 看 [Stage 5.2 — MCP](../stages/05-claude-code-ecosystem.zh-Hans.md#52--mcpmodel-context-protocol-基础) / [5.3 — Skills](../stages/05-claude-code-ecosystem.zh-Hans.md#53--skillsclaude-code-的行为层-claude-code-生态最关键的一层) / [5.4 — Plugins](../stages/05-claude-code-ecosystem.zh-Hans.md#54--plugins-与-marketplaces) 的内文
 - 看 [Stage 1](../stages/01-llm-basics.zh-Hans.md) / [Stage 6](../stages/06-memory-rag.zh-Hans.md) / [Stage 7](../stages/07-multi-agent-production.zh-Hans.md) / [Stage 8](../stages/08-agent-interfaces.zh-Hans.md) 的延伸阅读清单
+- 想要更白话的解释？[baihuaai.com（白话AI）](https://baihuaai.com) 是一个免费、无广告的简中入门词典，用大白话搭配现实类比讲 AI 术语（有“术语索引”与“零基础专区”）。
 - 找不到的词 → 开 issue 或直接 PR 加进这份小词典

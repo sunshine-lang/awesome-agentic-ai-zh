@@ -24,9 +24,9 @@
 
 ## 精选 Projects
 
-> **CLI agent 比较**：7 个主流 CLI agent（Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent）的并列比较见 [`resources/cli-agents-guide.zh-Hans.md`](../resources/cli-agents-guide.zh-Hans.md)。第一次接触 CLI agent 想要 step-by-step 入门 → [`tracks/cli/A1-cli-intro.zh-Hans.md`](../tracks/cli/A1-cli-intro.zh-Hans.md)（Track A 第一站）。
+> **CLI agent 比较**：8 个主流 CLI agent（Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build）的并列比较见 [`resources/cli-agents-guide.zh-Hans.md`](../resources/cli-agents-guide.zh-Hans.md)。第一次接触 CLI agent 想要 step-by-step 入门 → [`tracks/cli/A1-cli-intro.zh-Hans.md`](../tracks/cli/A1-cli-intro.zh-Hans.md)（Track A 第一站）。
 >
-> **MCP catalog**：要把 CLI 接到日常工具（GitHub、Linear、Atlassian、Postgres、Playwright、Figma 等）→ [`resources/mcp-skills-catalog.zh-Hans.md`](../resources/mcp-skills-catalog.zh-Hans.md)（62 个分类整理）。
+> **MCP catalog**：要把 CLI 接到日常工具（GitHub、Linear、Atlassian、Postgres、Playwright、Figma 等）→ [`resources/mcp-skills-catalog.zh-Hans.md`](../resources/mcp-skills-catalog.zh-Hans.md)（77+ 个分类整理）。
 >
 > 本页只列**跟开发者 workflow 直接相关**的工具入口。
 
@@ -36,25 +36,25 @@
 编辑器集成的 AI 结对编程工具。在 AI 编辑器类工具中采用度高，可作为比较其他 IDE agent 的基准。
 
 #### [Aider-AI/aider](https://github.com/Aider-AI/aider) ⭐⭐⭐⭐⭐
-★ 44k+ · Apache-2.0 — git-aware 的 CLI pair-programmer。直接编辑你 repo 中的文件，commit 都自动写好。**“git-native AI 编辑流程”的开源模板**。模型不限。
+★ 47k+ · Apache-2.0 — git-aware 的 CLI pair-programmer。直接编辑你 repo 中的文件，commit 都自动写好。**“git-native AI 编辑流程”的开源模板**。模型不限。
 
 #### [anthropics/claude-code](https://github.com/anthropics/claude-code) ⭐⭐⭐⭐⭐
-★ 120k+ — Anthropic 官方的 agentic coding 助理。有 Skills + plugin 生态系。
+★ 138k+ — Anthropic 官方的 agentic coding 助理。有 Skills + plugin 生态系。
 
 #### [cline/cline](https://github.com/cline/cline) ⭐⭐⭐⭐⭐
-★ 61k+ · Apache-2.0 — VS Code extension，autonomous in-IDE agent：tool use、browser、step-by-step approval。**VS Code 用户想 IDE-native agentic dev 的好选项**。
+★ 65k+ · Apache-2.0 — VS Code extension，autonomous in-IDE agent：tool use、browser、step-by-step approval。**VS Code 用户想 IDE-native agentic dev 的好选项**。
 
 #### [continuedev/continue](https://github.com/continuedev/continue) ⭐⭐⭐⭐
-★ 33k+ · Apache-2.0 — source-controlled AI checks，可以在 CI 强制执行。代表“**团队 / governance**”这条角度的 coding agent。
+★ 35k+ · Apache-2.0 — source-controlled AI checks，可以在 CI 强制执行。代表“**团队 / governance**”这条角度的 coding agent。
 
 #### [OpenHands (前身为 OpenDevin)](https://github.com/All-Hands-AI/OpenHands) ⭐⭐⭐⭐
-★ 72k+ · MIT — open source 的自主软件开发 agent。设计上比 Aider / Claude Code 更激进——agent 自己跑 sandbox、自己 commit，适合“整个 issue 丢给它解”场景。
+★ 81k+ · MIT — open source 的自主软件开发 agent。设计上比 Aider / Claude Code 更激进——agent 自己跑 sandbox、自己 commit，适合“整个 issue 丢给它解”场景。
 
 #### [block/goose](https://github.com/block/goose) ⭐⭐⭐⭐
-★ 43k+ · Apache-2.0 — 开源、可扩展的 AI agent，超出纯 code suggestion——能 install / execute / edit / test，搭配任何 LLM。同时支持多家 LLM provider 跟 MCP，提供 desktop app、CLI、API 三种接口。（repo 现指向 `aaif-goose/goose`。）
+★ 51k+ · Apache-2.0 — 开源、可扩展的 AI agent，超出纯 code suggestion——能 install / execute / edit / test，搭配任何 LLM。同时支持多家 LLM provider 跟 MCP，提供 desktop app、CLI、API 三种接口。（repo 现指向 `aaif-goose/goose`。）
 
-#### [RooCodeInc/Roo-Code](https://github.com/RooCodeInc/Roo-Code) ⭐⭐⭐⭐
-★ 23k+ · Apache-2.0 — VS Code 的 coding agent，采用“**多种专业模式**”的设计，跟 Cline 的单一 agent flow 不同。VS Code 用户想 multi-mode 替代方案的选择。
+#### [RooCodeInc/Roo-Code](https://github.com/RooCodeInc/Roo-Code) ⭐⭐⭐（⚠️ 已封存）
+★ 24k+ · Apache-2.0 — VS Code 的 coding agent，采用“**多种专业模式**”的设计，跟 Cline 的单一 agent flow 不同。**⚠️ repo 已于 2026-05 封存（read-only、不再维护）**——仍可用，但别预期新功能。
 
 ### Code Review
 
@@ -63,7 +63,7 @@
 
 ### 推荐工具
 
-- [**yamadashy/repomix**](https://github.com/yamadashy/repomix) ⭐⭐⭐⭐⭐ ★ 24k+ — **典型开发者用途：打包整个 codebase 给 reviewer / refactor agent**。输出单个 AI-friendly 文件（XML / Markdown / JSON），方便 Claude Code / Codex 做 code review / refactoring。技术细节（MCP server mode、tree-sitter 压缩、secretlint 过滤）见官方 README。**Track A 的必备 daily-driver 工具。**
+- [**yamadashy/repomix**](https://github.com/yamadashy/repomix) ⭐⭐⭐⭐⭐ ★ 27k+ — **典型开发者用途：打包整个 codebase 给 reviewer / refactor agent**。输出单个 AI-friendly 文件（XML / Markdown / JSON），方便 Claude Code / Codex 做 code review / refactoring。技术细节（MCP server mode、tree-sitter 压缩、secretlint 过滤）见官方 README。**Track A 的必备 daily-driver 工具。**
 
 ## 必练流程（按使用频率）
 
@@ -80,6 +80,7 @@
 ### 3 个具体 workflow recipe
 
 **1. AI 结对编程（每日节奏）**
+
 1. 开新 feature → `git checkout -b feature/xxx`
 2. 把任务丢给 Claude Code / Cursor，**先让它写 plan**（不直接写 code）
 3. Review plan、修正方向 → 才 approve 写 code
@@ -89,7 +90,7 @@
 **2. Aider git-native 流程（最像“跟 AI pair”）**
 ```bash
 # 进入 repo 后
-aider --model anthropic/claude-sonnet-4-20250514
+aider --model anthropic/claude-sonnet-5
 
 # 自然语言请求
 > 帮我把 utils.py 的 parse_date 加上时区参数，默认 UTC
@@ -163,4 +164,4 @@ jobs:
 - CI / pre-commit hook 集成 case study
 - **跨多人团队用 AI dev 的 governance pattern**——多 dev 共用 Skills、permission 设计、cost tracking
 
-请见 [CONTRIBUTING.md](../CONTRIBUTING.md)。
+请见 [CONTRIBUTING.zh-Hans.md](../CONTRIBUTING.zh-Hans.md)。

@@ -12,6 +12,7 @@
 **Why this target**: LangChain is the gateway agent framework for ~80% of zh-language developers. Our Stage 4 covers it; our §11 catalog now includes Langchain-Chatchat (★37k) and the Chinese LangChain getting-started guide (which **already lives in the same section** we're targeting — see below). Cross-link is natural.
 
 **Pitch angle**:
+
 - For `langchain-ai/langchain` itself: too big a target; aim instead at the **community awesome list** (`kyrolabs/awesome-langchain`).
 - For `kyrolabs/awesome-langchain`: we're a multilingual learning-order complement to their flat catalog.
 - **Target section confirmed (2026-05-26)**: `## Learn → ### Notebooks`. Precedent: `liaokongVFX/LangChain-Chinese-Getting-Started-Guide` already sits there. There is **no** "Tutorials & Learning Resources" section in the current README; do not propose one.
@@ -94,11 +95,14 @@ No expectation, just opening dialogue.
 - **First target**: kyrolabs/awesome-langchain (community awesome list, lower
   barrier to merge). **Section: `Learn → Notebooks`**, not "Tutorials" (no such
   section exists in the current README — verified 2026-05-26).
+
 - **Second target**: LangChain blog/docs (higher signal but harder to land)
 - Avoid pitching `langchain-ai/langchain` itself directly — too big, signal is
   drowned out
+
 - LangSmith / LangGraph teams are separate — different DevRel; don't pitch all
   three at once
+
 - **Stat snapshot is per-PR-day** — refresh `★`, `forks`, `unique visitors`,
   `clones` with `gh repo view --json stargazerCount,forkCount` + `gh api
   repos/.../traffic/views,clones` on the day you submit. Stale stats in a PR

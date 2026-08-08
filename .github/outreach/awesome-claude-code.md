@@ -3,7 +3,7 @@
 > **Status**: not contacted · **Channel**: GitHub **issue** (NOT PR — see note below)
 > **Primary lang**: en
 > **Last updated**: 2026-05-09
-> **Repo**: https://github.com/hesreallyhim/awesome-claude-code (★43k+)
+> **Repo**: https://github.com/hesreallyhim/awesome-claude-code (★ 47k+)
 
 > ⚠️ **REPO IS MID-REORG (verified 2026-05-09)** — their current README says
 > "The previous Table of Contents was no longer fit for purpose, so a new
@@ -47,7 +47,7 @@ Wanted to surface a proposal for when you're ready:
 I maintain [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh)
 — a trilingual (zh-TW canonical · zh-Hans · English) 8-stage learning roadmap
 for agentic AI. **Stage 5 is dedicated entirely to the Claude Code ecosystem**
-(MCP, Skills, Plugins, Hello-World walkthroughs, 62-entry integration catalog
+(MCP, Skills, Plugins, Hello-World walkthroughs, 77+ entry integration catalog
 by use case).
 
 awesome-claude-code is already in our `Related projects` section
@@ -77,7 +77,7 @@ trilingual translation discipline, CI lint on every PR.
 Hey @hesreallyhim — your awesome-claude-code list is already in our README's
 "Related projects". Built a complement: a trilingual (zh-TW / zh-Hans / en)
 8-stage learning roadmap, with Stage 5 dedicated to Claude Code (MCP, Skills,
-Plugins, walkthroughs, 62 integrations grouped by use case).
+Plugins, walkthroughs, 77+ integrations grouped by use case).
 
 ★525 in week 1, MIT licensed. If a reciprocal link in awesome-claude-code's
 Learning Resources section makes sense, just opened a PR
@@ -93,8 +93,10 @@ Learning Resources section makes sense, just opened a PR
 - **Repo status as of 2026-05-09**: README is a placeholder ("Update in
   progress"; TOC marked "I. TODO"). Maintainer @hesreallyhim is rebuilding
   the organizational system. **OPEN AN ISSUE, NOT A PR.**
+
 - The issue is a parking proposal — re-engage when the new TOC ships
 - @hesreallyhim historically responsive (~3 days); during reorg, expect slower
 - If they reply "the new TOC won't have a learning resources section" — thank
   them, drop it, move on. Don't push.
+
 - After they reply (positive or negative), update `.github/channel-partners.md`

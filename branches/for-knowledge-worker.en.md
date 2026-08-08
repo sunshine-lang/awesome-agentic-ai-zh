@@ -24,7 +24,7 @@ The table below splits a knowledge worker's day into 7 common scenarios. Most of
 
 ## Curated Projects
 
-> 💡 **Want to wire your AI agent to Notion / Gmail / Outlook / Slack / Excel / Lark?** Example: automatically turn Gmail messages into Notion todos. 62 commonly-used office integration tools are listed in [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) (grouped by use case). The section below stays focused on workflow / integration-platform-level tools.
+> 💡 **Want to wire your AI agent to Notion / Gmail / Outlook / Slack / Excel / Lark?** Example: automatically turn Gmail messages into Notion todos. 77+ commonly-used office integration tools are listed in [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) (grouped by use case). The section below stays focused on workflow / integration-platform-level tools.
 
 ### Workflow Tools
 
@@ -54,7 +54,7 @@ Brainstorming, planning, and decision-making skills.
 
 | Field | Value |
 |---|---|
-| Stars | ★ 34k+ |
+| Stars | ★ 36k+ |
 | License | AGPL-3.0 |
 
 **What it teaches**: Self-hosted "second brain" — chat with web + local docs, schedule automations, build custom agents.
@@ -69,7 +69,7 @@ Brainstorming, planning, and decision-making skills.
 
 | Field | Value |
 |---|---|
-| Stars | ★ 76k+ |
+| Stars | ★ 81k+ |
 | License | LobeHub Community License (Apache-2.0 base + commercial conditions) |
 
 **What it teaches**: Deployable multi-agent chat platform — plugin marketplace, knowledge bases, team collaboration. One representative option for self-hosted AI workspaces.
@@ -97,7 +97,7 @@ Brainstorming, planning, and decision-making skills.
 
 | Field | Value |
 |---|---|
-| Stars | ★ 60k+ |
+| Stars | ★ 64k+ |
 | License | MIT |
 
 **What it teaches**: All-in-one private RAG workspace — upload documents, build agents, MCP-compatible, on-device by default. **A self-hosted alternative to NotebookLM**.

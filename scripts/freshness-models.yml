@@ -10,12 +10,15 @@
 #   - 這些字眼出現代表上下文已經承認這是 historical reference、不算 stale
 
 current_frontier_models:
-  # 2026-05 frontier list (review quarterly)
+  # 2026-07 frontier list (review quarterly)
   anthropic:
-    - "Opus 4.8"
-    - "Sonnet 4.6"
+    - "Fable 5"      # Mythos-class, most capable widely released model
+    - "Opus 5"       # 2026-07-24, recommended Opus-class default
+    - "Opus 4.8"     # still available (docs list it under "Legacy models"), NOT deprecated
+    - "Sonnet 5"
     - "Haiku 4.5"
   openai:
+    - "GPT-5.6"
     - "GPT-5.5"
     - "GPT-5.4"
     - "GPT-5"
@@ -24,6 +27,8 @@ current_frontier_models:
     - "DeepSeek-V4-Pro"
     - "DeepSeek-V4-Flash"
   google:
+    - "Gemini 3.5 Flash"
+    - "Gemini 3.5 Pro"
     - "Gemini 3.1 Pro"
     - "Gemini 3"
   alibaba:
@@ -31,42 +36,61 @@ current_frontier_models:
     - "QvQ-72B"
 
 # Stale patterns — 偵測過時 model name without proper historical qualifier
+# NOTE: qualifier_terms include both English ('baseline') and the localized CJK
+# forms ('基線' / '基线') because mirror locales (.en.md / .zh-Hans.md) are now
+# scanned — a qualifier written as "baseline" in zh-TW/en often becomes "基线" in
+# the zh-Hans mirror, and the gate must recognize all three (2026-07 gap).
 stale_patterns:
   - pattern: 'Claude 3\.5 Sonnet'
-    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', 'predecessor', 'history']
+    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', '基線', '基线', 'predecessor', 'history']
     note: 'Pre-2026 Claude version (Claude 3.5 Sonnet was current circa 2024-Q4)'
 
   - pattern: 'Claude 3 Opus'
-    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline']
+    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', '基線', '基线']
     note: 'Pre-2025 Claude version'
 
   - pattern: 'gpt-4o|GPT-4o'
-    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', '對照', 'predecessor']
+    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', '基線', '基线', '對照', 'predecessor']
     note: 'Pre-GPT-5 OpenAI flagship (GPT-4o was current 2024-mid through 2025-summer)'
 
   - pattern: 'GPT-4(?!\.|o|\-|\d)'
-    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline']
+    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', '基線', '基线']
     note: 'Plain GPT-4 reference, likely stale'
 
   - pattern: 'Gemini 1\.5|Gemini 2\.0|Gemini 2\.5(?! Thinking)'
-    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', 'baseline']
+    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', 'baseline', '基線', '基线']
     note: 'Pre-Gemini 3 Google flagship'
 
-  - pattern: 'DeepSeek-R1(?!-Distill)'
-    qualifier_terms: ['前身', '歷史', 'lineage', '原始', 'baseline', 'paper', 'method']
-    note: '2025-01 DeepSeek reasoning model (superseded by R2 in 2026-03)'
+  - pattern: 'DeepSeek[- ]R1(?!-Distill)'  # [- ] catches both 'DeepSeek-R1' and space-form 'DeepSeek R1'
+    qualifier_terms: ['前身', '歷史', 'lineage', '原始', 'baseline', '基線', '基线', 'paper', 'method']
+    note: '2025-01 DeepSeek reasoning model (superseded by DeepSeek-V4, 2026-04; R2 was rumored but never shipped)'
 
   - pattern: 'DeepSeek-V3(?!\.)'
-    qualifier_terms: ['前身', '歷史', 'lineage', '舊版']
+    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', 'baseline', '基線', '基线']
     note: 'Pre-V4 DeepSeek base model'
 
   - pattern: 'o1-preview|o1-mini'
-    qualifier_terms: ['前身', '歷史', 'lineage', '原始', 'baseline']
+    qualifier_terms: ['前身', '歷史', 'lineage', '原始', 'baseline', '基線', '基线']
     note: 'Early OpenAI reasoning preview (Sep 2024)'
 
   - pattern: 'Opus 4\.7'
-    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', 'predecessor', 'history']
-    note: 'Opus 4.8 (May 2026) supersedes 4.7'
+    qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', '基線', '基线', 'predecessor', 'history']
+    note: 'Opus 4.8 (May 2026) supersedes 4.7. Opus 5 (2026-07-24) is now the recommended Opus-class default, but Opus 4.8 stays ACTIVE (not deprecated) and is deliberately NOT listed as a stale pattern'
+
+  # --- MCP Python SDK (added 2026-08 after the v2 breakage) -------------------
+  # The 2026-07-28 spec revision itself is invisible to a learner, but the SDK
+  # released the same day was NOT: `pip install mcp` started resolving to 2.x,
+  # and the repo's only runnable MCP tutorial died on the import line. These two
+  # patterns are what a reader would actually hit, so they are what we watch.
+  - pattern: 'from mcp\.server import Server|@app\.list_tools\(\)|@app\.call_tool\(\)'
+    qualifier_terms: ['v1', 'V1', '前身', '歷史', '历史', 'lineage', '舊版', '旧版',
+                      'legacy', 'migration', '遷移', '迁移', 'deprecated', '已失效']
+    note: 'MCP Python SDK v1 API. v2.0.0 (2026-07-28) moved the low-level Server handlers to constructor params; teach MCPServer + @app.tool() instead'
+
+  - pattern: 'pip install mcp(?![-"\w])'
+    qualifier_terms: ['裸寫', '裸写', 'bare', '會裝到', '会装到', 'gets you', '⚠️',
+                      'v1', '鎖版本', '锁版本', 'pin']
+    note: 'Unpinned MCP SDK install — v2.0.0 is a breaking change, so teach pip install "mcp>=2,<3" (quoting the bare form inside a warning is fine and is what the qualifier terms allow)'
 
 # Stale date-bound framing — 時間性過時用詞
 # 注意：用 \s* 而不是字面 space、因為中文常寫 "2025年" 沒空格

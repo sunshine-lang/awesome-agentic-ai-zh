@@ -69,7 +69,7 @@ tool-calling-tutor/
 │ └── sdk-diff.md # Anthropic vs OpenAI-compat 并排对照
 │ （以上每份都有 .en.md / .zh-Hans.md 翻译）
 ├── translations/
-│ ├── SKILL.en.md # SKILL.md 英文版（给英语使用者装）
+│ ├── SKILL.en.md # SKILL.md 英文版（给英语用户装）
 │ └── SKILL.zh-Hans.md # SKILL.md 简体版
 └── evals/
     └── evals.json # 5 个 test cases（promptfoo / 手动皆可）

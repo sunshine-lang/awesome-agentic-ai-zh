@@ -5,6 +5,13 @@
 # Exercise 2: Multi-Agent Role Allocation (CrewAI)
 
 Pairs with [Stage 4 — Agent Frameworks](../../../stages/04-agent-frameworks.en.md) Exercise 2.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
+
+> 📚 **Want the chapter-length version?** The starter in this folder is an illustrative build focused on the core pattern plus two SDK paths — it is not in-depth teaching material. Recommended for depth:
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ the most complete Chinese-language course out there — chapter by chapter, plus 16 production capabilities. **This exercise maps to hello-agents' multi-agent roles / Crew chapter**
+> - [CrewAI Examples repo](https://github.com/crewAIInc/crewAI-examples) (official sequential / hierarchical templates; ⚠️ archived 2026-04, still worth reading as reference)
+> - Full references in [Stage 4 Curated Projects](../../../stages/04-agent-frameworks.en.md#-curated-projects)
+
 
 ## Task
 
@@ -117,7 +124,7 @@ We use sequential (simplest, deterministic). Hierarchical lets a manager agent d
 ## Want smarter answers?
 
 ```bash
-MODEL=anthropic/claude-sonnet-4-6 python starter_anthropic.py  # higher quality
+MODEL=anthropic/claude-sonnet-5 python starter_anthropic.py  # higher quality
 MODEL=ollama/qwen2.5:7b python starter.py                       # larger local model
 ```
 

@@ -23,7 +23,7 @@ examples/
 └── ...
 ```
 
-短的练习（≤30 LOC）直接以 `<details>` 收摺塞在 stage 档内、不开资料夹。长的（>30 LOC）才开资料夹——避免 stage 档被 code block 撑爆。
+短的练习（≤30 LOC）直接以 `<details markdown="1">` 收折塞在 stage 档内、不开资料夹。长的（>30 LOC）才开资料夹——避免 stage 档被 code block 撑爆。
 
 ## 怎么跑任一个范例
 
@@ -67,16 +67,16 @@ if hasattr(sys.stdout, "reconfigure"):
 每个练习都同时提供 3 条路径：
 
 ### Path A（**默认、推荐**）— Ollama 本机
-- 预设 `starter.py` / 第一个 inline `<details>` 用本机 LLM
+- 预设 `starter.py` / 第一个 inline `<details markdown="1">` 用本机 LLM
 - 需 [Ollama](https://ollama.com)、按 stage pull 对应 model：
-  - **Stage 1 + 2**（纯 chat / prompt eng）：`ollama pull gemma4:e4b`（~7.5 GB、多模態、CPU 跑得動）
+  - **Stage 1 + 2**（纯 chat / prompt eng）：`ollama pull gemma4:e4b`（~7.5 GB、多模态、CPU 跑得动）
   - **Stage 3+**（tool use / agent）：`ollama pull qwen2.5:3b`（1.9 GB、tool-use 支持稳定）
 - 全程 $0、offline、隐私敏感资料 OK
 - SDK 用 `openai` package（OpenAI 兼容 API）、`base_url="http://localhost:11434/v1"`
 - 适合：所有读者（默认推这条）
 
 ### Path B（选择性）— Anthropic API（想看 cloud 高质量时）
-- 对照 `starter_anthropic.py`（folder）或第二个 inline `<details>` 区块
+- 对照 `starter_anthropic.py`（folder）或第二个 inline `<details markdown="1">` 区块
 - 需 `ANTHROPIC_API_KEY`、跑一轮约 $0.001（haiku）/ $0.004（sonnet）
 - 答案质量 / latency 都比本机 Ollama 强
 - 适合：production 要求高质量、需要 long-context、Stage 7 production tier
@@ -122,10 +122,12 @@ if hasattr(sys.stdout, "reconfigure"):
 
 | Model | 每 1M input | 每 1M output | Context | 主用途 |
 |---|---|---|---|---|
-| `claude-fable-5` | $10 | $50 | — | Mythos 级、能力最高、2026-06-09 GA；敏感查询回退至 Opus 4.8 |
+| `claude-fable-5` | $10 | $50 | 1M | Mythos 级（位阶在 Opus 之上）；2026-06-12 暂停、**2026-07-01 恢复**（出口管制解除）——目前最高阶的 Claude 层级 |
 | **`claude-haiku-4-5`** ⭐ | $1 | $5 | 200k | 最便宜、Stage 1-7 练习 cloud 对照都 OK |
-| **`claude-sonnet-4-6`** ⭐ | $3 | $15 | 1M | **production 默认**、Stage 5+ agent 开发 |
-| `claude-opus-4-8` | $5 | $25 | 1M | Opus 级旗舰、复杂推理 / 长 context refactor、Fable 5 的回退模型 |
+| **`claude-sonnet-5`** ⭐ | $3 | $15 | 1M | **production 默认**、Stage 5+ agent 开发 |
+| `claude-opus-5` | $5 | $25 | 1M | Opus 级旗舰（2026-07-24 推出、接替 Opus 4.8、同价）、复杂推理 / 长 context refactor |
+
+> 💰 **Sonnet 5 目前是优惠价**：[官方定价页](https://platform.claude.com/docs/en/about-claude/pricing) 标明 **2026-08-31 前为 $2 / $10**、2026-09-01 起才回到表中的 $3 / $15。下面的预算估算用的是回归后的标准价，所以现在实际跑会比估算便宜约三分之一。
 
 订阅替代：Claude Pro $20/月含 Sonnet 用量、Claude Max $100/月含 Opus。详细看 [resources/cli-agents-guide.zh-Hans.md](../resources/cli-agents-guide.zh-Hans.md)。
 
@@ -135,9 +137,9 @@ if hasattr(sys.stdout, "reconfigure"):
 
 | Provider | 主 model | 每 1M input | 每 1M output | OpenAI-compat? | 主卖点 |
 |---|---|---|---|---|---|
-| **DeepSeek** ⭐ | `deepseek-chat` (V3) | $0.27 | $1.10 | ✅ | 最便宜 cloud（比 haiku $1/$5 还便宜 4 倍）、中英文俱佳、含免费 web `chat.deepseek.com` |
-| DeepSeek R1 | `deepseek-reasoner` | $0.55 | $2.19 | ✅ | 推理模型（o1 级）、价格仍只是 OpenAI o1 的 1/30 |
-| **Moonshot Kimi** | `kimi-k2-turbo-preview` | $5-10 | $15-30 | ✅ | **1M token context**（卖点）、适合大文件 / 长对话。web 版 `kimi.com` 免费 |
+| **DeepSeek** ⭐ | `deepseek-v4-flash` | $0.14 | $0.28 | ✅ | 最便宜 cloud（比 haiku $1/$5 便宜约 7 倍）、中英文俱佳、含免费 web `chat.deepseek.com` |
+| DeepSeek V4-Pro | `deepseek-v4-pro` | $0.44 | $0.87 | ✅ | 更强推理、价格仍远低于同级 |
+| **Moonshot Kimi** | `kimi-k3` | 依阶梯 | 依阶梯 | ✅ | **1M token context**（卖点）、适合大文件 / 长对话；价格依 context 阶梯、见 platform。web 版 `kimi.com` 免费 |
 | **通义千问 Qwen** | `qwen-max` / `qwen-turbo` | $0.50-1.50 | $1.50-6 | ✅（DashScope）| 中文 native、**同 model 也能 Ollama 本机跑**（cloud + local 两条路径都通） |
 | **智谱 GLM** | `glm-4.5` / `glm-4-plus` | $0.30-2 | $1.50-9 | ✅ | 中国 native、有 free tier。web `chatglm.cn` 免费 |
 | **NVIDIA NIM** | Llama / Mistral / DeepSeek / Qwen 等 hosted | free tier 1000 credits | (同) | ✅ | **托管 10+ open model**、新账号送 credits、不必本机 GPU。`build.nvidia.com` |
@@ -147,11 +149,11 @@ if hasattr(sys.stdout, "reconfigure"):
 ```python
 # DeepSeek
 client = OpenAI(api_key=os.environ["DEEPSEEK_API_KEY"], base_url="https://api.deepseek.com/v1")
-r = client.chat.completions.create(model="deepseek-chat", messages=[...])
+r = client.chat.completions.create(model="deepseek-v4-flash", messages=[...])
 
 # Moonshot Kimi（中国 endpoint；海外用 .ai 结尾）
 client = OpenAI(api_key=os.environ["MOONSHOT_API_KEY"], base_url="https://api.moonshot.cn/v1")
-r = client.chat.completions.create(model="kimi-k2-turbo-preview", messages=[...])
+r = client.chat.completions.create(model="kimi-k3", messages=[...])
 
 # 通义千问 Qwen（Alibaba DashScope）
 client = OpenAI(api_key=os.environ["DASHSCOPE_API_KEY"],
@@ -172,7 +174,7 @@ r = client.chat.completions.create(model="meta/llama-3.3-70b-instruct", messages
 | 情境 | 选 | 理由 |
 |---|---|---|
 | 中国大陆、无 cloud 访问 | Ollama 本机 / DeepSeek API | 本机免费；DeepSeek 在中国有 endpoint |
-| 预算极敏感（< $1/月） | DeepSeek API | 比 haiku 便宜 4 倍、质量接近 |
+| 预算极敏感（< $1/月） | DeepSeek API | 比 haiku 便宜约 7 倍、质量接近 |
 | 大文件 / 长文档 RAG | Moonshot Kimi | 1M token context 卖点 |
 | 中文 native task（古文、中文搜索）| Qwen / GLM | 训练语料中文占比高 |
 | 想试 10+ open model 没 GPU | NVIDIA NIM | 一个 key 玩 Llama / Mixtral / Qwen / DeepSeek |
@@ -189,6 +191,24 @@ r = client.chat.completions.create(model="meta/llama-3.3-70b-instruct", messages
 | **混合：sonnet 为主 + opus 难题** | ~8 hr | $30-80 | 已是 production agent 开发者 |
 
 > 🎯 **新手默认**：先全本机跑、预算上限 $5。**Stage 7 production tier 才考虑 sonnet 升级**。
+
+### 怎么从 Ollama 换到 Anthropic？
+
+每个练习都有 `<details markdown="1">` Path B 区块或 `starter_anthropic.py`，改 3 行：
+
+```python
+# 从这个（Path A 默认）：
+from openai import OpenAI
+client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+r = client.chat.completions.create(model="gemma4:e4b", ...)
+
+# 换成这个（Path B、若有 ANTHROPIC_API_KEY）：
+import anthropic
+client = anthropic.Anthropic()
+r = client.messages.create(model="claude-haiku-4-5", ...)
+```
+
+主要差异：messages create 方法名、response shape（`choices[0].message.content` vs `content[0].text`）、tool spec wrap（OpenAI 多一层 `{"type": "function", "function": {...}}`）。详细对照表见 [`resources/cli-agents-guide.zh-Hans.md`](../resources/cli-agents-guide.zh-Hans.md)。
 
 ## 对应 stage 索引
 
@@ -208,6 +228,7 @@ r = client.chat.completions.create(model="meta/llama-3.3-70b-instruct", messages
 ## 贡献 / 报错
 
 跑不过、结果跟预期输出对不上、或想补一个新练习：
+
 - 开 issue 标 `examples` label
 - 或直接 PR、follow 本资料夹“设计原则”表格的规则
 

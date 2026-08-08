@@ -8,19 +8,21 @@
 
 # awesome-agentic-ai-zh
 
+### 🤖 AI Agent Learning Roadmap — from basic LLM concepts to building your own multi-agent systems
+
+<p><em><b>Learning roadmap + 240+ curated resources + simple illustrative cases</b><br/>A structured 8-stage path, from "what is an LLM, how are tokens counted" to multi-agent orchestration, Computer Use / Browser Use / Sandbox</em></p>
+
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat)](LICENSE)
+[![繁中](https://img.shields.io/badge/lang-繁體中文-red?style=flat)](README.md)
+[![简中](https://img.shields.io/badge/lang-简体中文-orange?style=flat)](README.zh-Hans.md)
+[![EN](https://img.shields.io/badge/lang-English-blue?style=flat)](README.en.md)
+![GitHub stars](https://img.shields.io/github/stars/WenyuChiou/awesome-agentic-ai-zh?style=flat&logo=github)
+![GitHub forks](https://img.shields.io/github/forks/WenyuChiou/awesome-agentic-ai-zh?style=flat&logo=github)
+[![Docs site](https://img.shields.io/badge/docs-Pages-2ea44f?style=flat)](https://wenyuchiou.github.io/awesome-agentic-ai-zh/)
+
 </div>
 
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![繁中](https://img.shields.io/badge/語言-繁體中文-red)](README.md)
-[![简中](https://img.shields.io/badge/語言-简体中文-orange)](README.zh-Hans.md)
-[![EN](https://img.shields.io/badge/lang-English-blue)](README.en.md)
-![GitHub stars](https://img.shields.io/github/stars/WenyuChiou/awesome-agentic-ai-zh?logo=github)
-![GitHub forks](https://img.shields.io/github/forks/WenyuChiou/awesome-agentic-ai-zh?logo=github)
-[![Docs site](https://img.shields.io/badge/docs-Pages-2ea44f)](https://wenyuchiou.github.io/awesome-agentic-ai-zh/)
-
 > **Trilingual — the English edition is fully maintained, not a thin machine translation** (only ~0.4% of English lines carry any CJK, almost all intentional bilingual term-mapping). zh-TW is the curation source of truth (new content lands there first); the English and 简中 editions track the same structure, with CI checking localization correctness and anchor integrity across all three.
-
-**Learning roadmap + 240+ curated resources + simple illustrative cases** — three pillars helping you go from "I don't know where to start" to "I can design multi-agent systems". Structured **8-stage** path from LLM fundamentals to multi-agent orchestration, Computer Use / Browser Use / Code Sandbox.
 
 ---
 
@@ -33,7 +35,7 @@ Concretely:
 | Pillar | What it does | Scale |
 |---|---|---|
 | **Learning roadmap** | Organizes scattered high-quality projects, tutorials, and required reading into **8 stages** (including Stage 5 + Stage 8 as two shared hubs) + 2 tracks + 5 specialized branches, from zero to advanced | 8 stages, 2 tracks |
-| **Resource curation** | Each stage curates **240+** projects (star rating, audience, what they teach, how to run) plus an MCP/Skill catalog covering the Chinese AI ecosystem (DeepSeek, Zhipu, Kimi, …) | 240+ projects, 65 MCP/Skill |
+| **Resource curation** | Each stage curates **240+** projects (star rating, audience, what they teach, how to run) plus an MCP/Skill catalog covering the Chinese AI ecosystem (DeepSeek, Zhipu, Kimi, …) | 240+ projects, 77 MCP/Skill |
 | **Simple illustrative cases** | Each stage ships 1-5 **foundational exercises** (70-150 line starter + dual-path Ollama/Anthropic SDK comparison + mock-based tests) | 23 exercise folders |
 
 After the main path, you go from "**LLM user**" to "**agent system builder**" — capable of designing multi-agent collaboration, writing your own MCP server, and shipping real agent systems.
@@ -44,12 +46,16 @@ After the main path, you go from "**LLM user**" to "**agent system builder**" �
 
 - [🎯 Why this exists](#-why-this-exists)
 - [📚 Quick Start](#-quick-start)
+  - [Read online](#read-online)
+  - [Local clone](#local-clone)
+  - [✨ What you get](#-what-you-get)
 - [🗺️ Learning Map (Two Tracks)](#️-learning-map-two-tracks)
 - [💡 How to Learn](#-how-to-learn)
 - [📚 Related Resources](#-related-resources)
 - [🤝 Contributing](#-contributing)
 - [🙏 Acknowledgments](#-acknowledgments)
 - [🎓 Citation](#-citation)
+- [☕ Support this project](#-support-this-project)
 - [License](#license)
 
 ---
@@ -107,10 +113,10 @@ The two tracks are **not mutually exclusive** — most people start with A to ge
 
 | Stage | Topic | Key Content | Time |
 |---|---|---|---|
-| **A1** | [CLI Agent Intro & Selection](tracks/cli/A1-cli-intro.en.md) | 7-CLI comparison · install · first run | 1 wk |
+| **A1** | [CLI Agent Intro & Selection](tracks/cli/A1-cli-intro.en.md) | 8-CLI comparison · install · first run | 1 wk |
 | **A2** | [CLI Workflow Patterns](tracks/cli/A2-cli-workflow.en.md) | CLAUDE.md · slash commands · multi-step decomposition | 1-2 wks |
 | **A3** | [Integration & Production](tracks/cli/A3-cli-production.en.md) | MCP-into-CLI · CI automation · cost / observability | 1-2 wks |
-| **+5** | [Stage 5 — Claude Code Ecosystem](stages/05-claude-code-ecosystem.en.md) (**Shared Hub**) | MCP · Skills · Plugins · Subagents; Track A reads 5.1-5.4 (5.5-5.6 optional) | 1-2 wks (Track A view) |
+| **+5** | [Stage 5 — Claude Code Ecosystem](stages/05-claude-code-ecosystem.en.md) (**Shared Hub**) | MCP · Skills · Plugins · Subagents; Track A reads 5.1-5.4 (5.5-5.7 optional) | 1-2 wks (Track A view) |
 | **+8** | [Stage 8 — Agent Interfaces](stages/08-agent-interfaces.en.md) (**Shared Hub**) | Computer Use · Browser Use · Code Sandbox; Track A reads Track A usage | 1-2 wks (Track A view) |
 
 > **Track A total time**: includes Stages 0-2 (shared foundations) + A1-A3 + **Stage 5 + Stage 8 (two shared hubs) ≈ 8-10 weeks**. Core reference: [`resources/cli-agents-guide.en.md`](resources/cli-agents-guide.en.md).
@@ -133,7 +139,7 @@ The two tracks are **not mutually exclusive** — most people start with A to ge
 > - **Stage 5** = Claude Code Ecosystem (MCP / Skills / Plugins / Subagents) — Track A learns MCP-into-CLI, Track B learns agent runtime structure
 > - **Stage 8** = Agent Interfaces (Computer Use / Browser / Sandbox, 2024-2026 frontier) — Track A learns "how to use" for task delegation, Track B learns "how to build" with embedded interfaces
 
-> 💡 **Want a concrete cross-stage example?** [Build Your First AI Agent in 7 Steps](walkthroughs/build-first-agent-in-7-steps.en.md) — same Paper Summary Bot traced from Stage 1 through Stage 7, ~350 lines of executable code (**Track B**)
+> 💡 **Want a concrete cross-stage example?** [Build Your First AI Agent in 7 Steps](walkthroughs/build-first-agent-in-7-steps.en.md) — same Paper Summary Bot traced from Stage 1 through Stage 7, ~300 lines of executable code (**Track B**)
 
 After the main path, pick one of 5 specialized branches. **Not sure which?**
 
@@ -212,6 +218,7 @@ Common quick links, grouped by **scenario**:
 |---|---|---|
 | Want to build Skill / MCP server / Word / Zotero / local LLM integration | [`resources/cookbook.en.md`](resources/cookbook.en.md) | 6 step-by-step recipes, 30-50 min each |
 | Want to use subagents but do not know who to dispatch, how to dispatch, or what work to dispatch | [`resources/subagent-cookbook.en.md`](resources/subagent-cookbook.en.md) | 15 copy-paste dispatch recipes |
+| Write your own subagent / compose several / debug a broken one (advanced) | [`resources/subagent-advanced.en.md`](resources/subagent-advanced.en.md) | 4 description-writing bugs + 3 composition patterns + 5 debug entry points |
 | Stuck on tool calling (LLM won't call / schema broken / ReAct won't stop) | [`examples/stage-5/tool-calling-tutor/`](examples/stage-5/tool-calling-tutor/) | Claude Code installable skill, 4-symptom diagnostic |
 | How to use the hands-on exercises correctly (active vs passive mode) | [`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md) | 5-10 min read, applies to every stage |
 
@@ -220,14 +227,14 @@ Common quick links, grouped by **scenario**:
 | Your situation | Where | Scope |
 |---|---|---|
 | Connect to Notion / Obsidian / Excel / GitHub / etc. | [`RESOURCES.en.md` daily-tool integrations](RESOURCES.en.md#daily-tool-integrations-mcp-servers--skills) | 7-8 highlights |
-| Full MCP server / Skill catalog (stars, categories) | [`resources/mcp-skills-catalog.en.md`](resources/mcp-skills-catalog.en.md) | 62 entries, 6 categories |
+| Full MCP server / Skill catalog (stars, categories) | [`resources/mcp-skills-catalog.en.md`](resources/mcp-skills-catalog.en.md) | 77+ entries, 16 categories |
 
 ### 🔬 Research / Production
 
 | Your situation | Where | What's there |
 |---|---|---|
 | Research workflow + multi-LLM delegation skill pair | [`RESOURCES.en.md` research workflow](RESOURCES.en.md#research-workflow-by-the-repo-maintainer) | Maintainer's own Claude Code research skill set |
-| CLI agent 7-way comparison + production combos | [`resources/cli-agents-guide.en.md`](resources/cli-agents-guide.en.md) | Track A's core reference, ~148 lines |
+| CLI agent 8-way comparison + production combos | [`resources/cli-agents-guide.en.md`](resources/cli-agents-guide.en.md) | Track A's core reference, ~148 lines |
 | Schema design rules (must-read for tool calling) | [`resources/schema-design-cheatsheet.en.md`](resources/schema-design-cheatsheet.en.md) | 5 golden rules + 5 anti-patterns |
 
 ---
@@ -243,10 +250,20 @@ This repo is an AI learning document — if you've also curated great resources,
 - 🌏 **Translations** — improve the English edition or translate to other languages
 - 🌱 **Become a Stage / Branch maintainer** — long-term review of a specific area, see [CONTRIBUTORS.md](CONTRIBUTORS.md)
 
-PR process and style rules: [CONTRIBUTING.md](CONTRIBUTING.md) + [resources/style-guide.en.md](resources/style-guide.en.md).
+PR process and style rules: [CONTRIBUTING.en.md](CONTRIBUTING.en.md) + [resources/style-guide.en.md](resources/style-guide.en.md).
+
+> 🤖 **New project links are auto-audited** — when a PR adds a new `github.com/owner/repo` link, a GitHub Action comments with its stars, license, archived status, and last-push, flagging archived / stale (>6 months) / unlicensed entries against the curation bar. Advisory only, never blocks — the maintainer decides what gets in (v1 runs on maintainer-branch PRs; fork PRs are skipped for now due to token scope).
 
 > 📅 **Want to see what shipped recently?** → [`CHANGELOG.md`](CHANGELOG.md) (last 14 days).
 > Internal phase rollout progress and launch checklist: [`.github/launch-checklist.md`](.github/launch-checklist.md) (maintainer-facing internal doc).
+
+---
+
+## 💬 Advisory / Contact
+
+A free, open (MIT) learning edition — use it freely.
+
+Currently focused on advisory work: teams or companies needing **prompt review / audit** or **AI agent workflow consulting** are welcome to reach out (PhD student, limited availability): 📧 [wenyuchiou12@gmail.com](mailto:wenyuchiou12@gmail.com)
 
 ---
 
@@ -296,9 +313,13 @@ If this learning roadmap helps your study or work, please cite:
 
 ---
 
-## 📈 Star History
+## ☕ Support this project
 
-[![Star History Chart](https://api.star-history.com/svg?repos=WenyuChiou/awesome-agentic-ai-zh&type=Date)](https://star-history.com/#WenyuChiou/awesome-agentic-ai-zh&Date)
+This learning map is free and open-source (MIT). If it helps you, a ⭐ Star means a lot — and if you'd like to support ongoing updates, you can buy the author a coffee:
+
+<a href="https://www.buymeacoffee.com/wenyuchiou" target="_blank" rel="noopener noreferrer"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="44"></a>
+
+Or use the **❤ Sponsor** button at the top of the repo. (GitHub Sponsors is under review and will be added once approved.)
 
 ---
 

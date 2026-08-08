@@ -47,7 +47,7 @@ for agentic AI:
 
 Each stage has time estimates, prerequisites, hands-on exercises, and 240+
 curated projects across the catalog. The catalog includes MCP servers, Skills,
-and integrations grouped by 14 use-case categories — including a section
+and integrations grouped by 16 use-case categories — including a section
 specifically for the Chinese-language ecosystem (Coze, Qwen-Agent, LangChain
 zh learning, etc.).
 
@@ -92,6 +92,8 @@ taken.
 - HF community page: huggingface.co/posts (treat like a discussion forum)
 - **Do not** tag random HF people; if pitching to maintainer, identify by past
   ML/agent work specifically
+
 - HF Learn: huggingface.co/learn — if our content ever gets featured, the
   HF Learn audience is exactly our target
+
 - For zh-Hans segment: HF has a 中文社群 page; can post there separately

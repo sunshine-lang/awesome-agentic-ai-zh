@@ -14,6 +14,7 @@
 ## 📌 學習目標
 
 走完這個階段後你會：
+
 - 寫出結構化 prompt（角色 + 任務 + 格式 + 範例）
 - 應用 few-shot prompting，並知道什麼時候有用
 - 在推理任務上使用 chain-of-thought（CoT）
@@ -23,19 +24,21 @@
 ## 🚪 進入條件
 
 你應該已經：
+
 - 會呼叫 LLM API（Stage 1）
 - 會解析 / 走訪 API 回應
 
 ## 📚 必修閱讀
 
-1. [**anthropics/prompt-eng-interactive-tutorial**](https://github.com/anthropics/prompt-eng-interactive-tutorial) ⭐⭐⭐⭐⭐ ★ 35k+ — **Anthropic 官方互動教學**、9 章 Jupyter notebook（basic / intermediate / advanced + appendix），含 playground 跟 answer key。用 Claude 3 Haiku（最便宜）跑得起來、**Stage 2 的 canonical 動手教材**。也是 [**anthropics/courses**](https://github.com/anthropics/courses) 5 course umbrella 的 module 2，想看更廣（含 API Fundamentals / Real World Prompting / Eval / Tool Use）直接看 umbrella
-2. [**anthropics/courses — Real World Prompting**](https://github.com/anthropics/courses) ⭐⭐⭐⭐ ★ 21k+ — 同 umbrella 的 module 3，**「真實情境下怎麼用 prompting」**：chatbot / legal / financial / coding 案例 walk-through。看完 #1 再來看 #2
+1. [**anthropics/prompt-eng-interactive-tutorial**](https://github.com/anthropics/prompt-eng-interactive-tutorial) ⭐⭐⭐⭐⭐ ★ 37k+ — **Anthropic 官方互動教學**、9 章 Jupyter notebook（basic / intermediate / advanced + appendix），含 playground 跟 answer key。用 Claude 3 Haiku（最便宜）跑得起來、**Stage 2 的 canonical 動手教材**。也是 [**anthropics/courses**](https://github.com/anthropics/courses) 5 course umbrella 的 module 2，想看更廣（含 API Fundamentals / Real World Prompting / Eval / Tool Use）直接看 umbrella
+2. [**anthropics/courses — Real World Prompting**](https://github.com/anthropics/courses) ⭐⭐⭐⭐ ★ 22k+ — 同 umbrella 的 module 3，**「真實情境下怎麼用 prompting」**：chatbot / legal / financial / coding 案例 walk-through。看完 #1 再來看 #2
 3. [**Anthropic Prompt Engineering Guide**](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) — 官方 docs、配合上面 #1 一起讀
 3. [**OpenAI Prompt Engineering**](https://platform.openai.com/docs/guides/prompt-engineering) — OpenAI 觀點
 4. [**dair-ai Prompt Engineering Guide**](https://www.promptingguide.ai/) — 學術風，深入
 5. [**Anthropic — Prompting Best Practices**](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/be-clear-and-direct) — 直接清楚
 
 **🎥 中文影片補充（強烈推薦）**：
+
 - [**李宏毅 — 生成式 AI 導論（2024 春台大課程）**](https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php) ⭐⭐⭐ — 中後段集數講 prompt engineering（few-shot、CoT、in-context learning）+ 對應 lab。中文圈最完整的 prompting 學術級教學。最新整合版見 [**GenAI-ML 2025 秋**](https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php)
 - [**李宏毅 — 機器學習 2025 春（含 prompt + LLM 章節）**](https://speech.ee.ntu.edu.tw/~hylee/ml/2025-spring.php) — 適合想看 ML 完整背景的人
 
@@ -50,7 +53,7 @@
 ### 練習 1：System Prompt
 同樣的 user message，三個不同的 system prompt。觀察人格 / 輸出格式怎麼變。
 
-<details open>
+<details markdown="1" open>
 <summary>📋 <b>起手碼 — Path A（本機 Ollama gemma4:e4b、預設）</b>（複製到 <code>practice_1.py</code>）</summary>
 
 ```python
@@ -114,7 +117,7 @@ print("💡 觀察：律師長、老師短、JSON 機器一定是 {...}")
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>📋 <b>起手碼 — Path B（Anthropic API、選擇性）</b>（複製到 <code>practice_1_anthropic.py</code>）</summary>
 
 ```python
@@ -148,6 +151,7 @@ print(f"\n✅ 練習 1 通過（Anthropic）")
 ```
 
 **主要差異**：
+
 - Anthropic: `system=...` 參數
 - Ollama / OpenAI-compatible: `messages=[{"role": "system", ...}, ...]`
 
@@ -156,9 +160,16 @@ print(f"\n✅ 練習 1 通過（Anthropic）")
 </details>
 
 ### 練習 2：Few-Shot
+
+**先搞懂這三個詞**——差別只在你給 LLM 看「幾個範例」：
+
+- **Zero-shot（0-shot）**：不給範例、直接問。
+- **One-shot（1-shot）**：先給 **1 個**「輸入 → 答案」範例再問。
+- **Few-shot（下面用的 3-shot 就是）**：給幾個（通常 2-5 個）範例再問——LLM 照著範例的格式跟判斷標準做，準確率通常明顯變高。
+
 挑一個分類任務。先用 0-shot 跑，再用 3-shot 跑。量一下準確率差多少。
 
-<details open>
+<details markdown="1" open>
 <summary>📋 <b>起手碼 — Path A（本機 Ollama gemma4:e4b、預設）</b>（複製到 <code>practice_2.py</code>）</summary>
 
 ```python
@@ -193,10 +204,13 @@ input: 這家店位於新北市三重區。
 output: 中立
 """
 
+# 兩種條件共用同一段「任務說明」；few-shot 只多加範例——這樣對比才乾淨，量到的是「範例」本身的效果，而不是「終於告訴模型要做什麼」。
+TASK = "把下面的句子分類成「正面 / 負面 / 中立」其中一個，只輸出這三個詞其中之一、不要多餘文字。\n\n"
+
 
 def classify(text: str, *, use_few_shot: bool) -> str:
     prefix = FEW_SHOT_EXAMPLES + "\n" if use_few_shot else ""
-    prompt = f"{prefix}input: {text}\noutput:"
+    prompt = f"{TASK}{prefix}input: {text}\noutput:"
     r = client.chat.completions.create(
         model="gemma4:e4b",
         max_tokens=10,
@@ -225,15 +239,17 @@ c3, _ = evaluate(use_few_shot=True)
 print(f"正確 {c3}/{n} = {c3/n:.0%}")
 
 # === 自我驗證 ===
-assert c3 >= c0, f"預期 3-shot 不比 0-shot 差、實際 {c3} < {c0}（小 model 樣本小、跑幾次比較）"
-print(f"\n✅ 練習 2 通過 — 0-shot {c0}/{n}、3-shot {c3}/{n}（本機 $0）")
-print("💡 觀察：'中立' 在 0-shot 容易被誤判成正面或負面、3-shot 後改善明顯")
-print("💡 小 model（gemma4:e4b）通常 0-shot 表現比 Claude 差更多、所以 few-shot 改善幅度更大")
+# 兩種條件都給了同樣的任務說明，所以這裡量的是「範例本身」帶來的差異。
+# few-shot 不保證每次都贏（看 model / 題目 / 抽樣），所以不硬性要求 c3 >= c0。
+assert n == 6 and 0 <= c0 <= n and 0 <= c3 <= n, "兩種條件都要各跑完 6 題"
+print(f"\n✅ 練習 2 通過 — 0-shot {c0}/{n}、3-shot {c3}/{n}；few-shot 淨提升 {c3 - c0} 題（可能為 0 甚至負，都算正常）（本機 $0）")
+print("💡 觀察：有了任務說明，0-shot 就有基本盤；few-shot 的價值在「釘住輸出格式」+ 示範模稜兩可案例（如 '中立'）的判準")
+print("💡 小 model（gemma4:e4b）對格式更敏感，所以 few-shot 的幫助通常比 Claude 明顯——但仍非保證，要跑了才知道")
 ```
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>📋 <b>起手碼 — Path B（Anthropic API、選擇性）</b>（複製到 <code>practice_2_anthropic.py</code>）</summary>
 
 ```python
@@ -247,10 +263,10 @@ def classify(text: str, *, use_few_shot: bool) -> str:
     msg = client.messages.create(
         model="claude-haiku-4-5",
         max_tokens=10,
-        messages=[{"role": "user", "content": f"{prefix}input: {text}\noutput:"}],
+        messages=[{"role": "user", "content": f"{TASK}{prefix}input: {text}\noutput:"}],
     )
     return msg.content[0].text.strip().splitlines()[0]
-# 其餘 TEST_SET / FEW_SHOT_EXAMPLES / evaluate() 跟 Path A 一樣
+# 其餘 TASK / TEST_SET / FEW_SHOT_EXAMPLES / evaluate() 跟 Path A 一樣
 ```
 
 **成本**：6 題 × 2 條件 = 12 次 ≈ $0.005。**Claude 通常 0-shot 已經有不錯準確率**、所以 few-shot 改善幅度比小 model 小。
@@ -259,11 +275,12 @@ def classify(text: str, *, use_few_shot: bool) -> str:
 
 ### 練習 3：CoT
 挑一個數學文字題，比較：
+
 - 純 prompt
 - 純 prompt + 「Let's think step by step」
 - 純 prompt + 一個展示 CoT 的範例
 
-<details open>
+<details markdown="1" open>
 <summary>📋 <b>起手碼 — Path A（本機 Ollama gemma4:e4b、預設）</b>（複製到 <code>practice_3.py</code>）</summary>
 
 ```python
@@ -324,7 +341,7 @@ print(f"💡 觀察小 model：A 純 prompt 通常答錯、B/C 加 CoT 後明顯
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>📋 <b>起手碼 — Path B（Anthropic API、選擇性）</b>（複製到 <code>practice_3_anthropic.py</code>）</summary>
 
 把 Path A 的 client + ask() 改成：
@@ -343,10 +360,12 @@ def ask(prompt: str) -> str:
 
 </details>
 
+> 🧠 **什麼時候別自己寫 CoT**：對 **reasoning-native 模型**（Claude Opus 4.x / 5、o 系列、Gemini thinking 等內建思考的模型），用它們的 extended thinking 通常比你手寫「Let's think step by step」更好；硬塞步驟反而可能干擾它本來的推理。手寫 CoT 仍適用於不具內建推理的一般 chat model。
+
 ### 練習 4：Iterative Refinement
 拿一個模糊的 prompt，refine 5 次。把每一輪記下來。觀察哪些改動會提升品質。
 
-<details open>
+<details markdown="1" open>
 <summary>📋 <b>起手碼 — Path A（本機 Ollama gemma4:e4b、預設）</b>（複製到 <code>practice_4.py</code>）— 這題沒有「對錯」、重點是觀察過程</summary>
 
 ```python
@@ -394,7 +413,7 @@ print("💡 用 gemma4:e4b 跑這題特別有感——小 model 對 prompt 質�
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>📋 <b>起手碼 — Path B（Anthropic API、選擇性）</b>（複製到 <code>practice_4_anthropic.py</code>）</summary>
 
 把 Path A 的 client + 迴圈內 `client.chat.completions.create(...)` 改成：
@@ -425,13 +444,15 @@ text = msg.content[0].text
 |---|---|---|---|---|
 | **學術 / 教學風 guide**<br>（先看這個） | [dair-ai/Prompt-Engineering-Guide](https://github.com/dair-ai/Prompt-Engineering-Guide) | ⭐⭐⭐⭐⭐ | 當參考書、需要某技巧再來查 | 從基礎到進階（CoT / ToT / ReAct / RAG）端到端，★ 74k+、MIT |
 | | [PromptingGuide.ai](https://www.promptingguide.ai/) | ⭐⭐⭐⭐ | 手機閱讀、想要可跑範例 | 跟 dair-ai GitHub 同樣內容、做成網站 + 可跑範例 |
-| | [NirDiamant/Prompt_Engineering](https://github.com/NirDiamant/Prompt_Engineering) | ⭐⭐⭐⭐ | 偏好「邊跑邊學」 | 22 種技巧（zero-shot → CoT → ReAct → constitutional）獨立 notebook，★ 7k+。比 dair-ai 更動手（⚠️ NOASSERTION 自訂條款、研究/非商用為主）|
+| | [NirDiamant/Prompt_Engineering](https://github.com/NirDiamant/Prompt_Engineering) | ⭐⭐⭐⭐ | 偏好「邊跑邊學」 | 22 種技巧、獨立 notebook，比 dair-ai 更動手，★ 7.7k+|
 | **官方 cookbook** | [Anthropic Cookbook — Prompt patterns](https://github.com/anthropics/claude-cookbooks) | ⭐⭐⭐⭐⭐ | Claude 進階 prompting（含 prompt caching / multimodal）| Stage 1 已介紹、本 stage 重點看 `misc/prompt_caching.ipynb` 跟 `multimodal/` |
 | | [GoogleCloudPlatform/generative-ai](https://github.com/GoogleCloudPlatform/generative-ai) | ⭐⭐⭐ | 用 Google 技術棧（PaLM / Gemini）| Google Cloud 的 prompting cookbook、跨廠商觀點 |
-| **靈感 collection**<br>（找模式、不要照抄）| [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts) | ⭐⭐⭐ | 卡關時找靈感 | 上百個「Act as a [角色]...」prompt，★ 162k+、CC0。**把模式拿出來改寫、不要照抄** |
-| **Production 管理**<br>（規模化）| [microsoft/prompt-engine](https://github.com/microsoft/prompt-engine) | ⭐⭐⭐ | production 要管很多 prompt 時 | TypeScript library、管理樣板 + 對話歷史 |
+| **靈感 collection**<br>（找模式、不要照抄）| [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts) | ⭐⭐⭐ | 卡關時找靈感 | 上百個「Act as a [角色]...」prompt，★ 166k+、CC0。**把模式拿出來改寫、不要照抄** |
+| **Production 管理**<br>（規模化）| [microsoft/prompt-engine](https://github.com/microsoft/prompt-engine) | ⭐⭐（⚠️ 已封存）| production 要管很多 prompt 時 | TypeScript library；⚠️ **2023 起無更新、repo 已封存**——找維護中的替代 |
 | | [microsoft/promptflow](https://github.com/microsoft/promptflow) | ⭐⭐⭐ | 團隊型應用、需要 eval | 視覺化 prompt 設計 + 評估工具，★ 11k+ |
-| | [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) ⭐ **Stage 2 → 3 橋** | ⭐⭐⭐⭐⭐ | 跑完 dair-ai 想規模化 prompt | 把 prompt 當 code 寫——define signature / module、用 compiler 自動最佳化，★ 34k+、MIT。**framework 非 tutorial、門檻較高、搭配 dspy.ai 官方 tutorial 讀** |
+| | [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) ⭐ **Stage 2 → 3 橋** | ⭐⭐⭐⭐⭐ | 跑完 dair-ai 想規模化 prompt | 把 prompt 當 code 寫，用 compiler 自動最佳化，★ 36k+、MIT |
+
+> **註**：dspy 是 framework 不是 tutorial、門檻較高，建議搭配 [dspy.ai](https://dspy.ai/) 官方 tutorial 讀；NirDiamant 用 NOASSERTION 自訂條款（偏研究 / 非商用）。
 
 > 💡 **建議閱讀路徑**：dair-ai guide 入手（理論） → Anthropic Cookbook 看 Claude 實作 → NirDiamant 邊跑邊學 → 進 production 時讀 dspy。
 
@@ -441,7 +462,7 @@ LLM-powered system 的工程實踐分成 **3 層 stack**（不是 1 次 call vs 
 
 - **Prompt Engineering**（本 stage）= 工程「**送進模型的那段字串**」
 - **Context Engineering**（Stage 6）= 工程「**每次 call 時、 context window 裡裝什麼資訊**」——把 RAG retrieve 結果、memory、tool definitions、對話 history 動態組裝
-- **Harness Engineering**（Stage 7）= 工程「**模型外面的 runtime / scaffolding**」——agent loop、retry、sandbox、observability、deployment 等所有非 LLM 程式碼
+- **Harness Engineering**（Stage 7）= 工程 **模型外面的執行與控制層**——agent loop、retry、sandbox、observability、deployment 等所有非 LLM 程式碼
 
 → 三層**正交**：一次 call 的 RAG app 也在做 context engineering（重點是組 context、不是 call 幾次）；50 次 call 但沒做 retrieval 的 chatbot 仍只在做 prompt engineering。
 
@@ -451,7 +472,7 @@ LLM-powered system 的工程實踐分成 **3 層 stack**（不是 1 次 call vs 
 |---|---|---|
 | **1. Prompt Engineering** | 送進 LLM 的字串本身（system prompt / few-shot / format） | **本 stage（Stage 2）** |
 | **2. Context Engineering** | context window 裡裝什麼資訊（RAG / memory / tool defs / history） | [Stage 6 — Memory · RAG · Context Engineering](06-memory-rag.md) |
-| **3. Harness Engineering** | LLM 外面的 runtime scaffolding（agent loop / retry / sandbox / observability） | [**Stage 7 Harness Engineering**](07-multi-agent-production.md#-harness-engineering--production-agent-runtime-的工程設計--本-stage-核心概念) ⭐ 完整對照表 |
+| **3. Harness Engineering** | LLM 外面的執行與控制層（agent loop / retry / sandbox / observability） | [**Stage 7 Harness Engineering**](07-multi-agent-production.md#-harness-engineering--production-agent-runtime-的工程設計--本-stage-核心概念) ⭐ 完整對照表 |
 
 > 💡 **Karpathy 2025-06**：「context engineering 是把對下一步有用的資訊**剛好填進** context window 的精細藝術」（it's about *what goes in the window*）。
 >
@@ -461,12 +482,13 @@ LLM-powered system 的工程實踐分成 **3 層 stack**（不是 1 次 call vs 
 
 延伸閱讀（不必修、未來想深挖時看）：
 
-- [`Meirtz/Awesome-Context-Engineering`](https://github.com/Meirtz/Awesome-Context-Engineering)（★ 3k+）——從 prompt engineering 一路推到 production agent 的 survey
-- [`Windy3f3f3f3f/how-claude-code-works`](https://github.com/Windy3f3f3f3f/how-claude-code-works)（★ 2.4k+）——Claude Code 內部解析，含 context engineering 章節
+- [`Meirtz/Awesome-Context-Engineering`](https://github.com/Meirtz/Awesome-Context-Engineering)（★ 3.3k+）——從 prompt engineering 一路推到 production agent 的 survey
+- [`Windy3f3f3f3f/how-claude-code-works`](https://github.com/Windy3f3f3f3f/how-claude-code-works)（★ 3.3k+）——Claude Code 內部解析，含 context engineering 章節
 
 ## ✅ 進 Stage 3 前的自我檢查
 
 你能不能：
+
 - [ ] 寫一個有 system message + user message + 3 個範例 message 的 prompt（few-shot）
 - [ ] 示範 CoT 在某個推理任務上提升準確率
 - [ ] 反覆 refine 一個 prompt 5 次，每一版都留下記錄

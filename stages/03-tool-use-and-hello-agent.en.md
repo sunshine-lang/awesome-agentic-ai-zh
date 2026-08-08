@@ -4,11 +4,11 @@
 
 ⏱️ **Estimated Time**: 2-3 weeks (approx. 10-20 hours)
 
-> 💡 Terminology-heavy (agent / tool use / function calling / ReAct / structured output) → See [`resources/glossary.md` 2](../resources/glossary.en.md#2-agents--tool-use).
-> 🗺️ **Before choosing Track A (CLI Power User) or Track B (Agent Builder)**, read [`resources/agent-paradigms.md`](../resources/agent-paradigms.md) — a panoramic view of 5 agent archetypes to help you choose your path.
+> 💡 Terminology-heavy (agent / tool use / function calling / ReAct / structured output) → See [`resources/glossary.en.md` 2](../resources/glossary.en.md#2-agents--tool-use).
+> 🗺️ **Before choosing Track A (CLI Power User) or Track B (Agent Builder)**, read [`resources/agent-paradigms.en.md`](../resources/agent-paradigms.en.md) — a panoramic view of 5 agent archetypes to help you choose your path.
 
 > 📋 **Chapter Structure**: [Opening Framing: The relationship between AI/LLM/Agent] → Learning Objectives → Prerequisites → Required Reading → [Optional · Concept Map] → Hands-on Exercises → Reflection (Concepts + Routing) → Curated Projects → Self-Check
-> 🔑 **Key Terms**: See [`resources/glossary.md` 2](../resources/glossary.en.md#2-agents--tool-use)
+> 🔑 **Key Terms**: See [`resources/glossary.en.md` 2](../resources/glossary.en.md#2-agents--tool-use)
 
 ## 🤖 Before We Start: AI / LLM / Agent — How Do They Differ?
 
@@ -56,13 +56,14 @@ After learning the 3 minimum components, the next layer is "**how the LLM thinks
 > 💡 **Extended Components** (infrastructure that makes agents stronger, but **not a criterion for "is it an agent?"**):
 > - **Memory / RAG** (agent can remember things across conversations) → Taught completely in **Stage 6**
 > - **Reflection / self-critique** (agent looks at its own answer, finds problems, and goes back to fix them) → Basic version in **Reflection of this stage** (concept + paper routing); advanced version with persistent memory in **Stage 6 Reflexion with Memory**
-> - **Production harness** (telemetry / safety / retry / orchestration) → **Stage 5 5.6**
+> - **Production harness** (telemetry / safety / retry / orchestration) → **Stage 5 5.7**
 >
 > These are all advanced patterns—Stage 3 teaches the minimum viable agent, and later stages teach how to make it stronger.
 
 ### 📚 In-Depth Introductory Resources (English / Video-first)
 
 **🇺🇸 English**:
+
 1. [**Andrej Karpathy — "Intro to Large Language Models"**](https://www.youtube.com/watch?v=zjkBMFhNj_g) ⭐⭐⭐ (1hr) — A visual intro to LLMs from scratch (ex-OpenAI / ex-Tesla AI Director, the most valued LLM intro video in the English-speaking world).
 2. [**Andrej Karpathy — "Let's build GPT from scratch"**](https://www.youtube.com/watch?v=kCc8FmEb1nY) ⭐⭐ (2hr) — For those who want to see inside an LLM down to the code level.
 3. [**3Blue1Brown — "But what is a Transformer?"**](https://www.youtube.com/watch?v=wjZofJX0v4M) ⭐⭐⭐ — A visual explanation of LLMs, the most recommended visual tutorial in the English-speaking world.
@@ -71,15 +72,17 @@ After learning the 3 minimum components, the next layer is "**how the LLM thinks
 6. [**Chip Huyen — "Agents"**](https://huyenchip.com/2025/01/07/agents.html) — A practitioner's perspective, a full chapter's worth of depth.
 
 **🀄 Chinese**:
+
 1. [**Hung-yi Lee — Introduction to Generative AI (Spring 2024 NTU Course)**](https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php) ⭐⭐⭐ — The highest quality academic-level introduction to AI / LLM / agents in the Chinese-speaking world. Each episode is 30-60 minutes, taught at National Taiwan University, with official page including slides + YouTube links. Covers both LLM and agent concepts. The latest integrated version can be found at [**GenAI-ML 2025 Fall**](https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php), and the main YouTube channel is [**@HungyiLeeNTU**](https://www.youtube.com/@HungyiLeeNTU).
 2. [**datawhalechina/hello-agents** Ch1 "First Look at Agents"](https://github.com/datawhalechina/hello-agents) ⭐ — The most complete text-based introduction to agents in Chinese.
 3. [**datawhalechina/hello-agents** Ch2 "The History of Agent Development"](https://github.com/datawhalechina/hello-agents) — The evolutionary path from BabyAGI → AutoGPT → Claude Code.
 4. [**3Blue1Brown Chinese Dubbed Version**](https://www.youtube.com/@3Blue1BrownCN) — Visual explanations of LLM / Transformer (in Chinese).
 
 **Optional / Advanced Reading**:
+
 - [**Simon Willison — "I think 'agent' may finally have a widely enough agreed upon definition"**](https://simonwillison.net/2025/Sep/18/agents/) — A working definition: "an agent runs tools in a loop to achieve a goal," including debates over different definitions from OpenAI and others (**for those with a foundational understanding**).
 - [**DeepLearning.AI Short Courses**](https://www.deeplearning.ai/short-courses/): "AI Agents in LangGraph" / "Multi AI Agent Systems with crewAI" / "Functions, Tools and Agents with LangChain" (**Most APIs are from 2023-2024**, focus on the concepts and cross-reference the official latest docs for code).
-- [**microsoft/ai-agents-for-beginners**](https://github.com/microsoft/ai-agents-for-beginners) — Microsoft's official 12-lesson intro to building AI agents (MIT, ★ 64k+). Structured, English, with code; a parallel beginner course, not a substitute for this stage's hands-on exercises.
+- [**microsoft/ai-agents-for-beginners**](https://github.com/microsoft/ai-agents-for-beginners) — Microsoft's official 12-lesson intro to building AI agents (MIT, ★ 70k+). Structured, English, with code; a parallel beginner course, not a substitute for this stage's hands-on exercises.
 - [**liyupi/ai-guide**](https://github.com/liyupi/ai-guide) — The largest AI resource **aggregator** repo in the Chinese-speaking world (not original educational material, suitable for broad exploration).
 
 > 📌 **Resource List Limit Rule**: This section is a router, not a tutorial. The main list has a combined limit of **10 items** (6 English + 4 Chinese). To add a new resource, **one must be removed first**. The optional reading section does not count towards the main list limit.
@@ -93,6 +96,7 @@ This is the most critical stop on the entire learning path. **You don't truly un
 ## 📌 Learning Objectives
 
 After completing this stage, you will be able to:
+
 - Explain why LLMs need tools (they are not omnipotent, and they can't do anything beyond text).
 - Define a tool schema and have an LLM call it.
 - Write a single-step ReAct agent from scratch (without any framework).
@@ -102,6 +106,7 @@ After completing this stage, you will be able to:
 ## 🚪 Entry Conditions
 
 You should already have:
+
 - Access to Claude / OpenAI / Gemini API (Stage 1).
 - A basic grasp of prompt engineering (Stage 2).
 - The ability to write a Python function that takes JSON in and returns JSON out.
@@ -109,7 +114,7 @@ You should already have:
 ## 📚 Required Reading
 
 1. [**Anthropic — Tool Use**](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview) — The official guide.
-2. [**anthropics/courses — Tool Use**](https://github.com/anthropics/courses) ⭐⭐⭐⭐⭐ ★ 21k+ — Anthropic's official 5-course umbrella; **module 5 "Tool Use" maps to this stage**. Jupyter notebook exercises covering multimodal prompts / streaming / tool implementation walkthrough.
+2. [**anthropics/courses — Tool Use**](https://github.com/anthropics/courses) ⭐⭐⭐⭐⭐ ★ 22k+ — Anthropic's official 5-course umbrella; **module 5 "Tool Use" maps to this stage**. Jupyter notebook exercises covering multimodal prompts / streaming / tool implementation walkthrough.
 3. [**ReAct: Synergizing Reasoning and Acting in Language Models**](https://arxiv.org/abs/2210.03629) — Yao et al. 2022, the foundational paper. Read at least the abstract and Section 3.
 4. [**OpenAI — Function Calling**](https://platform.openai.com/docs/guides/function-calling) — For reference on the function calling format.
 5. [**Build an agent from scratch**](https://shafiqulai.github.io/blogs/blog_3.html) — A narrative-style guide to building an agent from scratch.
@@ -118,18 +123,30 @@ You should already have:
 
 > 🦙 **This stage defaults to using Ollama qwen2.5:3b** (for cost reasons and stable tool-use support). Starting from Stage 3, with tool calling / ReAct loops, `gemma4:e4b` is insufficient; we switch to `qwen2.5:3b` (1.9 GB, install with `ollama pull qwen2.5:3b`). Each exercise has a Path A (Ollama, default) + Path B (Anthropic, optional, for when you want to see high-quality tool-use in the cloud).
 >
-> 💰 **Stage 3 Budget Estimate** (for all 6 exercises, with heavy tool use): **All local = $0**; **all haiku ≈ $0.50**; **all sonnet ≈ $1.50**. The ReAct loop exercise is about 4-6 tool calls × 5 exercises × 5 reps ≈ $0.80 on haiku. For the full budget, see [`examples/README.md#recommended-llms`](../examples/README.en.md#recommended-llm-list).
+> 💰 **Stage 3 Budget Estimate** (for all 6 exercises, with heavy tool use): **All local = $0**; **all haiku ≈ $0.50**; **all sonnet ≈ $1.50**. The ReAct loop exercise is about 4-6 tool calls × 5 exercises × 5 reps ≈ $0.80 on haiku. For the full budget, see [`examples/README.en.md#recommended-llms`](../examples/README.en.md#recommended-llm-list).
 >
-> For the full 3-way trade-off, see [`examples/README.md`](../examples/README.en.md#three-paths--default-is-ollama-cost-driven).
+> For the full 3-way trade-off, see [`examples/README.en.md`](../examples/README.en.md#three-paths--default-is-ollama-cost-driven).
 >
 > 🆘 **Stuck?** Tool calling has the steepest learning curve in the entire curriculum. Install the [`examples/stage-5/tool-calling-tutor/`](../examples/stage-5/tool-calling-tutor/) skill—when you prompt Claude Code with "Why isn't my LLM calling my tool?" or "What's wrong with my schema?", it will auto-load and walk you through a 4-symptom diagnostic process.
 >
 > 🪜 **This stage is the starting point for single-agent**: one LLM + ReAct loop. For **multi-agent concepts** (multiple agents collaborating), see [Stage 4 What is a multi-agent framework](04-agent-frameworks.en.md#-what-is-a-multi-agent-framework); for **Claude's native subagent mechanism** (`.claude/agents/` + Task tool, no framework needed), see [Stage 5.5](05-claude-code-ecosystem.en.md#55--subagents-claude-codes-native-multi-agent-mechanism--2025-new-feature).
 
+### ⚠️ Know the risk first: giving an agent tools = giving it an attack surface
+
+The moment you hand an LLM tools, you also hand it an attack surface. The clearest framing is Simon Willison's **lethal trifecta**: an agent is exploitable when it simultaneously has all three of —
+
+1. **access to private data** (your files / DB / API keys)
+2. **exposure to untrusted content** (web pages, emails, documents others send — any of which can hide instructions)
+3. **the ability to communicate externally** (make requests, send mail, write files)
+
+The root cause is that an LLM "follows instructions found in content" and can't reliably tell yours apart from ones smuggled inside untrusted data — that's **prompt injection**. This stage just builds the awareness; concrete defenses (isolate untrusted input, permission gates, least-tool sets, human review of high-risk actions) come in [Stage 8](08-agent-interfaces.en.md) and [Stage 5](05-claude-code-ecosystem.en.md). Glossary: [prompt injection / lethal trifecta](../resources/glossary.en.md).
+
+---
+
 ### Exercise 1: Function Calling (One Tool, One Call)
 Give Claude a tool (a fake weather API) and a question ("Is it raining in Taipei right now?"). See how Claude calls the tool, gets the result, and then answers you.
 
-<details open>
+<details markdown="1" open>
 <summary>📋 <b>Starter Code — Path A (Local Ollama qwen2.5:3b, default)</b> (copy to <code>practice_1.py</code>)</summary>
 
 ```python
@@ -192,7 +209,7 @@ tool_calls: [ChatCompletionMessageToolCall(id='call_xxx', function=Function(name
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>📋 <b>Starter Code — Path B (Anthropic API, optional)</b> (copy to <code>practice_1_anthropic.py</code>)</summary>
 
 ```python
@@ -231,6 +248,7 @@ print(f"✅ Exercise 1 Passed (Anthropic) — Claude chose get_weather with city
 ```
 
 **3 Key SDK Differences**:
+
 - **Schema wrap**: Anthropic is direct `tools=[{name, description, input_schema}]`; OpenAI/Ollama needs to be wrapped in `[{"type":"function", "function":{...}}]`
 - **Response path**: Anthropic gets it from `resp.content[i].type=="tool_use"`; OpenAI/Ollama from `resp.choices[0].message.tool_calls[i]`
 - **Args format**: Anthropic `.input` is a dict (auto-parsed); OpenAI/Ollama `.function.arguments` is a JSON string, requires `json.loads(...)`
@@ -242,7 +260,7 @@ print(f"✅ Exercise 1 Passed (Anthropic) — Claude chose get_weather with city
 ### Exercise 2: Multi-Tool Selection
 Give Claude three tools (search, calculator, calendar) and a task. See how Claude picks a tool, and pay attention to when it picks the wrong one.
 
-<details>
+<details markdown="1">
 <summary>📋 <b>Simplified Core Concept — Path A (Ollama)</b></summary>
 
 **NEW vs Exercise 1**: Tools go from 1 to 3. The LLM decides which to pick based on the `description` boundaries—the more the `description` is written like a "docstring for humans," the more likely it is to pick the wrong one.
@@ -281,10 +299,24 @@ print(f"LLM picked: {tc.function.name}, args: {json.loads(tc.function.arguments)
 
 → **Basic starter template** → [`examples/stage-3/02-multi-tool-selection/`](../examples/stage-3/02-multi-tool-selection/) (starter.py contains stubs + simple tests, illustrative, **not a chapter-length full tutorial**; for in-depth chapters, see the 📚 hello-agents callout at the start of the stage)
 
+### Structured Outputs (JSON mode) ⭐ function calling's twin
+
+Function calling is "**let the model decide whether to act**"; **structured output is "force the model to return a fixed-shape JSON"**. They are easy to confuse but serve different ends: the former lets an agent take action, the latter gives you machine-parseable data (filling forms, classification, extraction, eval scoring).
+
+**Three approaches (weak to strong)**:
+
+1. **Ask for JSON in the prompt**: simplest, but the model sometimes adds chatter or drifts from the format.
+2. **JSON mode / `response_format`**: the API guarantees valid JSON (but not that it matches your schema).
+3. **JSON-schema enforcement / constrained decoding**: locks the schema too, so the output always conforms (most reliable).
+
+> 💡 Why it matters: agent state, tool arguments, and eval scoring all depend on getting structured data back. This is the load-bearing reliability layer underneath tool calling.
+
+**Hands-on tools**: [jxnl/instructor](https://github.com/jxnl/instructor) (★ 13k+, use a Pydantic model as the schema, with auto-retry); [dottxt-ai/outlines](https://github.com/dottxt-ai/outlines) (★14k, constrained decoding, schema-locks even local LLMs). Stage 4's Pydantic AI is on the same path.
+
 ### Exercise 3: Implement ReAct from Scratch (No Framework)
 Write the Thought → Action → Observation loop in 50-80 lines of Python. No LangChain, no LangGraph, just a pure `while not done: thought; action; observation; ...`.
 
-<details>
+<details markdown="1">
 <summary>📋 <b>Simplified Core Concept — Path A (Ollama), the entirety of the ReAct loop is in these 13 lines</b></summary>
 
 **NEW vs Exercise 2**: Wrap the single call in a loop, `messages` keeps growing, and check for the presence of `tool_calls` to decide when to finish.
@@ -308,6 +340,7 @@ for step in range(5): # max_iter safety net
 ```
 
 **3 common pitfalls**:
+
 1. **Forgetting to add the assistant's response back to `messages`**—the LLM won't see what it said last turn and will loop forever.
 2. **The `tool` message is missing `tool_call_id`**—the LLM can't match which result corresponds to which call.
 3. **No `max_iter`**—if the tool results are poorly written, the LLM will call it infinitely; a safety net is a must.
@@ -321,7 +354,7 @@ for step in range(5): # max_iter safety net
 ### Exercise 4: Multi-Step Reasoning Task
 A task that requires 3-5 consecutive tool calls. For example: "Find the population of Taipei, divide it by the population of New York, then convert the ratio to a percentage." Each step uses a different tool.
 
-<details>
+<details markdown="1">
 <summary>📋 <b>Simplified Core Concept — Same loop as Exercise 3, just runs longer</b></summary>
 
 **NEW vs Exercise 3**: **Exactly the same loop**—just `TOOLS` is replaced with 4 tools (`lookup_population` / `divide` / `to_percentage` / `round_int`), and the problem naturally takes 4 tool calls to finish.
@@ -346,7 +379,7 @@ TOOL_IMPL = {
 ### Exercise 5: Error Handling
 Make a tool fail (network error, invalid input). See how the agent handles the error, whether it can recover, and add a retry mechanism.
 
-<details>
+<details markdown="1">
 <summary>📋 <b>Simplified Core Concept — a tool error is data, not an exception</b></summary>
 
 **NEW vs Exercise 4**: A tool error returns a **structured dict**, don't `raise`. The loop feeds the dict back to the LLM, and the model decides whether to retry, change the query, or give up.
@@ -382,14 +415,15 @@ messages.append({"role": "tool", "tool_call_id": tc.id,
 
 ### Exercise 6: Function Schema Design (Fixing a Bad Schema)
 **First, give the LLM a deliberately bad schema**—a vague `description` ("process data"), all parameters as `type: string`, no distinction between required/optional, and not using enums where they should be used. Observe how the LLM picks the wrong tool and passes the wrong parameters. Then, fix it item by item:
+
 - Write the `description` so the LLM knows at a glance when the tool is applicable (not a docstring for humans).
 - Use the correct types for parameters (number / boolean / enum / array), and list the required ones clearly.
 - Use enums to constrain ambiguous boundaries (e.g., `unit: "celsius" | "fahrenheit"` instead of `unit: string`).
 - Wrap the error return in `{"error": "...", "retry_hint": "..."}` so the LLM can recover.
 
-> 💡 For a detailed cheatsheet, see [`resources/schema-design-cheatsheet.md`](../resources/schema-design-cheatsheet.md)—5 golden rules + 5 common anti-patterns.
+> 💡 For a detailed cheatsheet, see [`resources/schema-design-cheatsheet.en.md`](../resources/schema-design-cheatsheet.en.md)—5 golden rules + 5 common anti-patterns.
 
-<details>
+<details markdown="1">
 <summary>📋 <b>Simplified Core Concept — bad vs good schema comparison</b></summary>
 
 **NEW vs Exercise 5**: Same tool (temperature conversion), two schema implementations. See the 4 differences.
@@ -419,6 +453,8 @@ messages.append({"role": "tool", "tool_call_id": tc.id,
 
 → **Basic starter template** → [`examples/stage-3/06-schema-design/`](../examples/stage-3/06-schema-design/) (includes a comparison of bad vs good schema versions; illustrative, **not a chapter-length full tutorial**—for in-depth chapters, see the 📚 hello-agents callout at the start of the stage)
 
+> 💡 **After hand-writing schemas, meet MCP**: the tool schemas you hand-wrote above already have a real-world standard — **MCP (Model Context Protocol)** standardizes "what a tool looks like and how to call it" into a cross-agent reusable protocol: write it once, and any MCP-capable agent (Claude Code / Cursor / …) can use it. Just remember the name here; [Stage 5.2](05-claude-code-ecosystem.en.md#52--mcp-model-context-protocol--foundation) covers it in depth.
+
 ## 🪞 Reflection (Reflexion / Self-Refine) — Concept + Routing
 
 > **This section is for concept + routing, not an exercise**. There is no verified working solution, no "Exercise N" label, no success criteria—in adherence with this repo's principle of "no exercises without verified answers, routing at most." Want to get your hands dirty? Read the papers / projects below directly.
@@ -441,15 +477,17 @@ messages.append({"role": "tool", "tool_call_id": tc.id,
 ### 📚 Want to get hands-on / go deeper? Read these directly
 
 **Papers**:
+
 - [**Reflexion (Shinn et al. 2023)**](https://arxiv.org/abs/2303.11366) ⭐ — The original paper, defines "verbal reinforcement learning."
 - [**Self-Refine (Madaan et al. 2023)**](https://arxiv.org/abs/2303.17651) — Single-agent self-critique, the academic definition of "basic reflection."
 
 **Reference Implementations**:
+
 - [**arunpshankar/react-from-scratch**](https://github.com/arunpshankar/react-from-scratch) — Already listed in the curated projects of this stage, includes a Reflection implementation you can read directly.
 - [**LangChain — Reflection Agents (blog)**](https://blog.langchain.dev/reflection-agents/) — A framework implementation reference + a complete working notebook.
 - [**datawhalechina/hello-agents**](https://github.com/datawhalechina/hello-agents) — The corresponding chapter (Self-reflection / Self-Refine section, a complete tutorial in Chinese).
 
-> 💡 **Want to see how reflection looks in a production agent?**: [Stage 5 5.6 Harness Internals](05-claude-code-ecosystem.en.md#56--dissecting-claude-code-source-reference-harness-implementation--a-must-read-for-track-b) dissects the Claude Code source where you can see it—the agent self-evaluates the patch after a tool call, goes back to fix problems, and commits after correction. **This is one of the core building blocks of modern production agents**.
+> 💡 **Want to see how reflection looks in a production agent?**: [Stage 5 5.7 Harness Internals](05-claude-code-ecosystem.en.md#57--dissecting-claude-code-source-reference-harness-implementation--a-must-read-for-track-b) dissects the Claude Code source where you can see it—the agent self-evaluates the patch after a tool call, goes back to fix problems, and commits after correction. **This is one of the core building blocks of modern production agents**.
 
 ## 🎯 Curated Projects
 
@@ -458,13 +496,13 @@ messages.append({"role": "tool", "tool_call_id": tc.id,
 | Category | Project | ⭐ | Who it's for | Why it's recommended / Notes |
 |---|---|---|---|---|
 | **Official Cookbooks**<br>(Start here) | [Anthropic — Tool Use Cookbook](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) | ⭐⭐⭐⭐⭐ | Getting started with Ex 1 / 2 | Single tool → multi-tool → parallel → structured output all in notebooks (key to see: `tool_use/customer_service_agent.ipynb`) |
-| | [Anthropic — Quickstarts](https://github.com/anthropics/claude-quickstarts) | ⭐⭐⭐⭐⭐ | After Ex 1/2, want to see "what a real app looks like" | 3 deploy-ready templates (financial / customer-support / computer-use), ★ 16k+. More canonical than community implementations. |
+| | [Anthropic — Quickstarts](https://github.com/anthropics/claude-quickstarts) | ⭐⭐⭐⭐⭐ | After Ex 1/2, want to see "what a real app looks like" | 3 deploy-ready templates (financial / customer-support / computer-use), ★ 17k+. More canonical than community implementations. |
 | | [Anthropic — Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) | ⭐⭐⭐⭐⭐ | After writing Ex 3, **must-read** before Stage 4 | Blog post: when to use agent vs workflow / common patterns / common pitfalls—Anthropic's official conceptual framework. |
 | **ReAct from Scratch**<br>(Understand the principles) | [pguso/ai-agents-from-scratch](https://github.com/pguso/ai-agents-from-scratch) | ⭐⭐⭐⭐⭐ | Exercise 3 (write ReAct from scratch) | Build from scratch with local Ollama, zero framework, good chapter structure. **The cleanest "no framework" reference implementation**. |
 | | [arunpshankar/react-from-scratch](https://github.com/arunpshankar/react-from-scratch) | ⭐⭐⭐⭐ | Ex 3 alternative (Gemini-preferred) + want to see reflection variants | ReAct + Reflection + Self-consistency, Gemini-optimized (⚠️ updates slowed after 2025-05, Apache-2.0). |
 | | [mattambrogi/agent-implementation](https://github.com/mattambrogi/agent-implementation) | ⭐⭐⭐ | For line-by-line comparison when stuck on Ex 3 | ~150 lines of the most minimal ReAct (⚠️ stagnant since 2024-01, kept as a teaching-toy reference). |
-| | [lsdefine/GenericAgent](https://github.com/lsdefine/GenericAgent) | ⭐⭐⭐⭐ | Ex 3/4, want to see a "minimal but complete" framework | Self-evolving framework, ~3K lines, ★ 12k+, supports Claude / Gemini / Kimi / MiniMax. Between a toy and LangGraph. |
-| **CodeAct Route**<br>(Agent writes code as action) | [HuggingFace Smolagents](https://github.com/huggingface/smolagents) | ⭐⭐⭐⭐ | Ex 5 alternative, local LLM experiments | ≤1000 LOC, representative of the CodeAct pattern, ★ 27k+. HF's stance: agents should be small. |
+| | [lsdefine/GenericAgent](https://github.com/lsdefine/GenericAgent) | ⭐⭐⭐⭐ | Ex 3/4, want to see a "minimal but complete" framework | Self-evolving framework, ~3K lines, ★ 13k+, supports Claude / Gemini / Kimi / MiniMax. Between a toy and LangGraph. |
+| **CodeAct Route**<br>(Agent writes code as action) | [HuggingFace Smolagents](https://github.com/huggingface/smolagents) | ⭐⭐⭐⭐ | Ex 5 alternative, local LLM experiments | ≤1000 LOC, representative of the CodeAct pattern, ★ 28k+. HF's stance: agents should be small. |
 | | [QuantaLogic/quantalogic](https://github.com/quantalogic/quantalogic) | ⭐⭐⭐ | After Ex 3, want to compare CodeAct vs JSON-tool | Another CodeAct route, agent writes Python code directly as action, Apache-2.0. |
 | **Chinese Chapter-based In-depth Material**<br>(Chapter-length) | [datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) ⭐ **Recommended for this stage** | ⭐⭐⭐⭐⭐ | Chinese readers who want structured teaching + full coverage | **16 capabilities** including tool use / ReAct / context engineering / sub-agents / circuit breaker / observability. The most complete chapter-based course in Chinese (CC BY-NC-SA, non-commercial). |
 | | [HelloAgents (jjyaoao)](https://github.com/jjyaoao/HelloAgents) | ⭐⭐⭐⭐⭐ | Chinese readers who want to run the code from the above material | The code repo for the above material, **please switch to the `learn_version` branch** to align with the chapters (`pip install hello-agents`, CC BY-NC-SA). |
@@ -475,12 +513,13 @@ messages.append({"role": "tool", "tool_call_id": tc.id,
 ## ✅ Self-Check Before Stage 4
 
 Can you:
+
 - [ ] Define a tool schema (name + description + JSON schema for input/output)?
 - [ ] Write a ReAct loop in under 100 lines of Python, without any framework?
 - [ ] Explain why an agent needs an "I'm done" exit condition?
 - [ ] Compare the CodeAct (code as action) and JSON-tool routes?
 - [ ] See which problems don't actually need an agent?
 
-If yes → Proceed to [Stage 4 — Agent Frameworks](04-agent-frameworks.md).
+If yes → Proceed to [Stage 4 — Agent Frameworks](04-agent-frameworks.en.md).
 
 If no → Run through Exercise 3 again, don't skip it. If you don't understand what the frameworks are abstracting away for you, the stuff in Stage 4 will look like black magic.

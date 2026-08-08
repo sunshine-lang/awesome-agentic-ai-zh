@@ -7,7 +7,7 @@
 > **Last updated**: 2026-05-09
 > **Decision-maker**: Datawhale 開源教學團隊 (open-source curriculum team)
 
-**Why this target**: Datawhale 是中國大陸最有影響力的 AI 教學社群之一；他們的 [`hello-agents`](https://github.com/datawhalechina/hello-agents) (★ 55k+) 在中文 agentic AI 圈子幾乎人人在用。我們的 Stage 5 cookbook 已經 cite 他們的 Extra05 / Extra08——cross-link 對雙方都加分。
+**Why this target**: Datawhale 是中國大陸最有影響力的 AI 教學社群之一；他們的 [`hello-agents`](https://github.com/datawhalechina/hello-agents) (★ 60k+) 在中文 agentic AI 圈子幾乎人人在用。我們的 Stage 5 cookbook 已經 cite 他們的 Extra05 / Extra08——cross-link 對雙方都加分。
 
 **Pitch angle (我們對他們)**: 我們的 7 階段三語學習地圖把 Hello-Agents 放在 Stage 5 / 6 的位置——讀完我們前 4 階段的 LLM 基礎、prompt、context engineering 之後再進 Hello-Agents 會吸收得更好。我們等於是他們的「pre-flight」入口。
 

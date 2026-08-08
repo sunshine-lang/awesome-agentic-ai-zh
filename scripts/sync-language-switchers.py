@@ -41,8 +41,14 @@ EXCLUDE_PATHS = {
     "branches/DESIGN.md",
     "stages/DESIGN.md",
     "CONTRIBUTORS.md",  # 名單性質，不一定有 zh-Hans 翻譯
+    # Landing pages: mkdocs-only (index.md is the site home; GitHub shows
+    # README.md, not index.md). They use Material's header language selector,
+    # so the GitHub-style inline switcher would be broken + ugly here.
+    "index.md",
+    "index.en.md",
+    "index.zh-Hans.md",
 }
-EXCLUDE_DIRS = {".github", "scripts", "book", ".ai", ".claude", "node_modules"}
+EXCLUDE_DIRS = {".github", "scripts", "book", ".ai", ".claude", "node_modules", "_build"}
 
 
 def find_paired_files() -> list[tuple[Path, Optional[Path], Optional[Path]]]:

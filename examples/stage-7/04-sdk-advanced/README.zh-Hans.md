@@ -5,6 +5,12 @@
 # 练习 4：SDK 进阶（streaming + prompt caching）
 
 对应 [Stage 7 — Multi-Agent & Production](../../../stages/07-multi-agent-production.zh-Hans.md) 练习 4。
+> 🎓 **学习模式**：这份 `starter.py` 是**完整解答**、不是 TODO skeleton。建议用**主动模式**——`mv starter.py starter_reference.py`、看 signature 不看 body、自己重写一份 `starter.py`、跑 `python test.py` 验证；卡 20 分钟再回去对照 reference。完整方法论看 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
+
+> 📚 **想要 chapter-length 深入版？** 本 folder 的 starter 是 illustrative 版、聚焦核心 pattern + 两条 SDK path，不是进阶深度教材。深度教材推荐：
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ 中文圈最完整、章节式 + 16 种 production 能力。**本练习对应 hello-agents 的进阶 SDK feature 章节**
+> - [Anthropic Prompt Caching docs](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) + [Anthropic Batch API](https://docs.anthropic.com/en/docs/build-with-claude/batch-processing)
+> - 完整 references 见 [Stage 7 精选 Projects](../../../stages/07-multi-agent-production.zh-Hans.md#-精选-projects范本--sdk--工具-collection)
 
 ## Production 两个必备 SDK feature
 
@@ -86,11 +92,13 @@ resp = client.messages.create(
 之后 5 分钟内：`cache_read_input_tokens=2000`（10% cost = 90% off）
 
 **何时用**：
+
 - Long system prompt 重复 call（聊天机器人）
 - Tool schema 重复（multi-tool agent）
 - Document context 重复问（RAG with same doc）
 
 **不用的时候**：
+
 - 每次 prompt 都不同
 - 5 分钟内 call 次数 < 1（cache 过期）
 

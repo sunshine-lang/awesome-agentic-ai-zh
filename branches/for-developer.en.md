@@ -24,9 +24,9 @@ The table below splits a developer's day into 7 common scenarios. Each has a dif
 
 ## Curated Projects
 
-> **CLI agent comparison**: 7 major CLI agents (Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent) compared side-by-side in [`resources/cli-agents-guide.en.md`](../resources/cli-agents-guide.en.md). New to CLI agents and want step-by-step onboarding → [`tracks/cli/A1-cli-intro.en.md`](../tracks/cli/A1-cli-intro.en.md) (Track A first stop).
+> **CLI agent comparison**: 8 major CLI agents (Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build) compared side-by-side in [`resources/cli-agents-guide.en.md`](../resources/cli-agents-guide.en.md). New to CLI agents and want step-by-step onboarding → [`tracks/cli/A1-cli-intro.en.md`](../tracks/cli/A1-cli-intro.en.md) (Track A first stop).
 >
-> **MCP catalog**: Looking for integrations to wire CLI into daily tools (GitHub, Linear, Atlassian, Postgres, Playwright, Figma…) → [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) (62 entries by category).
+> **MCP catalog**: Looking for integrations to wire CLI into daily tools (GitHub, Linear, Atlassian, Postgres, Playwright, Figma…) → [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) (77+ entries by category).
 >
 > This page only lists tool entry points directly relevant to developer workflows.
 
@@ -36,25 +36,25 @@ The table below splits a developer's day into 7 common scenarios. Each has a dif
 Editor-integrated AI pair-programming tool. Widely adopted in AI editor tools and a useful baseline for comparing other IDE agents.
 
 #### [Aider-AI/aider](https://github.com/Aider-AI/aider) ⭐⭐⭐⭐⭐
-★ 44k+ · Apache-2.0 — git-aware CLI pair-programmer. Edits files in your repo directly and writes commits for you. **The open-source reference for "git-native AI editing."** Model-agnostic.
+★ 47k+ · Apache-2.0 — git-aware CLI pair-programmer. Edits files in your repo directly and writes commits for you. **The open-source reference for "git-native AI editing."** Model-agnostic.
 
 #### [anthropics/claude-code](https://github.com/anthropics/claude-code) ⭐⭐⭐⭐⭐
-★ 120k+ — Anthropic's official agentic coding assistant. Skills + plugins ecosystem.
+★ 138k+ — Anthropic's official agentic coding assistant. Skills + plugins ecosystem.
 
 #### [cline/cline](https://github.com/cline/cline) ⭐⭐⭐⭐⭐
-★ 61k+ · Apache-2.0 — VS Code extension, autonomous in-IDE agent: tool use, browser, step-by-step approval. **The first pick for VS Code users wanting IDE-native agentic dev.**
+★ 65k+ · Apache-2.0 — VS Code extension, autonomous in-IDE agent: tool use, browser, step-by-step approval. **The first pick for VS Code users wanting IDE-native agentic dev.**
 
 #### [continuedev/continue](https://github.com/continuedev/continue) ⭐⭐⭐⭐
-★ 33k+ · Apache-2.0 — source-controlled AI checks, enforceable in CI. Represents the **team / governance** angle on coding agents.
+★ 35k+ · Apache-2.0 — source-controlled AI checks, enforceable in CI. Represents the **team / governance** angle on coding agents.
 
 #### [OpenHands (formerly OpenDevin)](https://github.com/All-Hands-AI/OpenHands) ⭐⭐⭐⭐
-★ 72k+ · MIT — open-source autonomous software development agent. More aggressive design than Aider / Claude Code — agent runs in its own sandbox and commits autonomously. Best for "throw a whole issue at it" scenarios.
+★ 81k+ · MIT — open-source autonomous software development agent. More aggressive design than Aider / Claude Code — agent runs in its own sandbox and commits autonomously. Best for "throw a whole issue at it" scenarios.
 
 #### [block/goose](https://github.com/block/goose) ⭐⭐⭐⭐
-★ 43k+ · Apache-2.0 — Open-source, extensible AI agent that goes beyond code suggestions — install / execute / edit / test, with any LLM. Supports multiple LLM providers and MCP, ships as desktop app, CLI, and API. (Repo now resolves to `aaif-goose/goose`.)
+★ 51k+ · Apache-2.0 — Open-source, extensible AI agent that goes beyond code suggestions — install / execute / edit / test, with any LLM. Supports multiple LLM providers and MCP, ships as desktop app, CLI, and API. (Repo now resolves to `aaif-goose/goose`.)
 
-#### [RooCodeInc/Roo-Code](https://github.com/RooCodeInc/Roo-Code) ⭐⭐⭐⭐
-★ 23k+ · Apache-2.0 — VS Code coding agent with a "**team of specialized modes**" model. Different from Cline's single-agent flow.
+#### [RooCodeInc/Roo-Code](https://github.com/RooCodeInc/Roo-Code) ⭐⭐⭐ (⚠️ archived)
+★ 24k+ · Apache-2.0 — VS Code coding agent with a "**team of specialized modes**" model. Different from Cline's single-agent flow. **⚠️ Repo archived 2026-05 (read-only, no longer maintained)** — still usable, but don't expect new features.
 
 ### Code Review
 
@@ -63,7 +63,7 @@ Editor-integrated AI pair-programming tool. Widely adopted in AI editor tools an
 
 ### Recommended Tools
 
-- [**yamadashy/repomix**](https://github.com/yamadashy/repomix) ⭐⭐⭐⭐⭐ ★ 24k+ — **Typical developer use case: package the whole codebase for a reviewer / refactor agent**. Outputs a single AI-friendly file (XML / Markdown / JSON) for Claude Code / Codex code review / refactoring. See the official README for technical details such as MCP server mode, tree-sitter compression, and secretlint filtering. **A must-have, daily-driver-grade tool for Track A.**
+- [**yamadashy/repomix**](https://github.com/yamadashy/repomix) ⭐⭐⭐⭐⭐ ★ 27k+ — **Typical developer use case: package the whole codebase for a reviewer / refactor agent**. Outputs a single AI-friendly file (XML / Markdown / JSON) for Claude Code / Codex code review / refactoring. See the official README for technical details such as MCP server mode, tree-sitter compression, and secretlint filtering. **A must-have, daily-driver-grade tool for Track A.**
 
 ## Workflows to Master (by frequency)
 
@@ -80,6 +80,7 @@ Editor-integrated AI pair-programming tool. Widely adopted in AI editor tools an
 ### 3 Concrete Workflow Recipes
 
 **1. AI Pair Programming (daily cadence)**
+
 1. Start a feature → `git checkout -b feature/xxx`
 2. Hand the task to Claude Code / Cursor — **make it write a plan first** (don't dive into code)
 3. Review the plan, course-correct → only then approve coding
@@ -89,7 +90,7 @@ Editor-integrated AI pair-programming tool. Widely adopted in AI editor tools an
 **2. Aider Git-Native Flow (closest "pair with AI" experience)**
 ```bash
 # Inside the repo
-aider --model anthropic/claude-sonnet-4-20250514
+aider --model anthropic/claude-sonnet-5
 
 # Natural-language ask
 > Add a timezone parameter to parse_date in utils.py, default UTC
@@ -163,4 +164,4 @@ Contributions especially welcome:
 - CI / pre-commit hook integration case studies
 - **Multi-developer team governance** — sharing Skills across devs, permission design, cost tracking
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md).
+See [CONTRIBUTING.en.md](../CONTRIBUTING.en.md).

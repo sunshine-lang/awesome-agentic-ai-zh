@@ -103,6 +103,7 @@
 除了交一次性 PR，也歡迎擔任**特定 stage 或 branch 的長期維護者**——負責定期 review、處理該領域的 issue、把關該領域的 PR。
 
 自薦流程：
+
 1. 開一個 issue，標題 `[maintainer] Stage N — your-handle` 或 `[maintainer] for-X branch — your-handle`
 2. 講清楚你願意 commit 多久（建議至少一季 = 3 個月）
 3. 簡述你在這個領域的背景

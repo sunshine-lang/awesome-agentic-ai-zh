@@ -21,7 +21,7 @@
 | Interface | 操作对象 | 工作原理 | 代表工具 |
 |---|---|---|---|
 | **🖱 Computer Use**（screen-level）| 任何桌面应用（Excel / SAP / Photoshop / 无 API 的软件）| 截图 → 视觉模型分析 → 计算坐标 → 模拟键鼠 | Anthropic Claude Computer Use / OpenAI Codex desktop / Gemini in Chrome |
-| **🌐 Browser Use**（web-level）| 任何网页 | DOM 感知导航 + 必要时视觉回退 | Atlas / Comet / browser-use（开源，86k 星）|
+| **🌐 Browser Use**（web-level）| 任何网页 | DOM 感知导航 + 必要时视觉回退 | Comet / browser-use（开源，86k 星）/ ChatGPT Agent Mode |
 | **📦 Code Sandbox**（isolated exec）| 智能体生成的代码在隔离环境中运行 | microVM / 容器 / 用户空间内核 | E2B / Daytona / Modal / Vercel Sandbox / OpenAI Agents SDK（2026 年 4 月内置）|
 
 ### 与之前阶段的区别（避免概念混淆）
@@ -43,7 +43,7 @@
 - **2024-10 之前**：智能体只能与有 API 的世界互动（调用 OpenAI / GitHub / Slack API，返回文本）
 - **2024-10**：Anthropic Computer Use beta → **智能体第一次能操作真实屏幕**
 - **2025-2026**：OpenAI（Atlas + Codex desktop）/ Google（Gemini in Chrome）全线入场 → 主流化
-- **2026-05**：OSWorld benchmark 达到 **76.26%**（超越人类基线 72.36%）→ 从研究好奇心变为生产现实
+- **2026-05**：OSWorld **v1** benchmark 达到 **76.26%**（超越人类基线 72.36%）→ 从研究好奇心变为生产现实（注意：v1 随后接近饱和，2026-06 的 **OSWorld 2.0** long-horizon 版把 SOTA 重设到约 20%，见下方 benchmark 规范段）
 
 **没有本阶段的课程缺陷**：学完 Stage 7 你以为就结束了，实际上智能体只能与 API 对话，**不能操作没有 API 的软件 / 真实网页 / 运行代码**——遇到安全问题（如 Comet 注入 / 亚马逊禁令，见[安全](#-2026-安全性--风险重点)）也得不到预警。
 
@@ -63,7 +63,7 @@
 - 区分 3 层 agent interface（Computer Use / Browser Use / Sandbox）及其与 Tool / MCP / Harness 的关系。
 - 阐述 Computer Use / Browser Use 的**心智模型**（截图 → 视觉 → 坐标 vs DOM 感知）。
 - 解释 microVM / 容器 / Firecracker / gVisor / 冷启动等隔离技术术语。
-- 了解 2026-05 OSWorld / WebArena SOTA 数据，并能解读 reward-hacking 警告。
+- 知道怎么读 OSWorld / WebArena SOTA 数据（含 v1→2.0 饱和落差），并能解读 reward-hacking 警告。
 - **Track A**：在日常 CLI 工作流中接入 Computer Use + browser MCP + Codex background mode。
 - **Track B**：在自己的智能体中使用 browser-use / E2B 嵌入环境互动和沙箱隔离。
 - 设计 4 个安全模式（审批门 / 沙箱 / 人工介入 / 输出过滤器）以防注入攻击。
@@ -83,7 +83,7 @@
 ## 📚 必修阅读
 
 1. [**Anthropic — Introducing Computer Use**](https://www.anthropic.com/news/3-5-models-and-computer-use) — Computer Use 的原始发布，必读以了解其工作原理。
-2. [**Anthropic — Claude Opus 4.8 Release Notes**](https://docs.anthropic.com/en/release-notes/overview) — Opus 4.8（2026 年 5 月）引入 Dynamic Workflows + parallel subagent harness，为 Opus 级旗舰。**2026 年 6 月 9 日 Anthropic 再推 Claude Fable 5（`claude-fable-5`，Mythos-class、定位在 Opus 级之上的最高能力且广泛可用层）**——同步发布的 Claude Mythos 5（`claude-mythos-5`）是解除部分 safeguard 的限量版；敏感查询（网络安全 / 生化 / distillation）会回退到 Opus 4.8。
+2. [**Anthropic — Claude Release Notes（模型总览）**](https://docs.anthropic.com/en/release-notes/overview) — Claude Opus 5（`claude-opus-5`，2026-07-24）是目前建议的默认模型，官方文档说复杂 agentic coding 与企业工作“从 Claude Opus 5 开始”。其上还有 Mythos-class 的 Claude Fable 5（`claude-fable-5`）——Anthropic 目前公开发布中能力最强的模型，留给需要最高能力的工作；Mythos 5（`claude-mythos-5`）规格相同但仅限邀请。Opus 4.8（2026 年 5 月，Dynamic Workflows + parallel subagent harness 随它推出）仍可用，但官方文档已把它移到 Legacy models 区。
 3. [**OpenAI — The next evolution of the Agents SDK**](https://openai.com/index/the-next-evolution-of-the-agents-sdk/) ⭐ **2026-04** — 内置沙箱和 harness 抽象，是生产级编码智能体架构的里程碑。
 4. [**OpenAI — Computer-Using Agent (CUA)**](https://openai.com/index/computer-using-agent/) — OpenAI 版本的 Computer Use，包含 WebArena / OSWorld 数据。
 5. [**browser-use docs**](https://docs.browser-use.com/) — 开源 web agent 排名第一（86k+ 星），5 行 Python 即可上手。
@@ -111,11 +111,13 @@
 ```
 
 **为什么是这个范式（而非 Tool Use）**：
+
 - 大多数软件**没有 API，只有 GUI**——SAP / Excel / Photoshop / 任何传统桌面应用，要让智能体使用就只能在屏幕层面。
 - API 集成（Stage 3 Tool Use）需要等待厂商开放接口，有时根本等不到。
 - 屏幕级是**最后一公里**——“智能体能做人类在电脑上做的任何事”。
 
 **为什么 2026 年才可行**：
+
 - **视觉模型进步**：Claude 4.x / GPT-5.x 全是多模态，看屏幕识别元素的准确度大幅提升。
 - **OS 级训练数据**：[OSWorld dataset (NeurIPS 2024)](https://github.com/xlang-ai/OSWorld) 发布了 369 个跨 OS 的真实任务，让前沿实验室有数据可训。
 - **Anthropic Computer Use beta（2024-10）开启了商业竞争**——OpenAI / Google 跟进，benchmark 一路飙升。
@@ -124,11 +126,11 @@
 
 | 厂商 | 产品 | 2026 状态 | OSWorld | 强项 |
 |---|---|---|---|---|
-| **Anthropic** | [Claude Fable 5（2026-06-09、Mythos-class）/ Opus 4.8 / Sonnet 4.6 Computer Use](https://www.anthropic.com/news/3-5-models-and-computer-use) | GA，跨 macOS / Linux / Windows（Docker）| **72.7%**（Opus 4.6 基线，接近人类 72%；Opus 4.7 / 4.8 后续及 Fable 5 的 Computer Use 专项数据未公布）| 推理 + 代码智能体，Stage 5/7 主场；Fable 5 为最高能力且广泛可用层、Opus 4.8 为其 safeguard 回退 |
-| **OpenAI** | [Codex desktop](https://openai.com/index/codex-for-almost-everything/)（2026 年 4 月）| GA，**background mode** 不抢占光标，in-app browser，90+ 插件 | CUA 38.1% | 与 ChatGPT + Atlas 合并成 **Desktop Superapp** |
+| **Anthropic** | [Opus 5 / Sonnet 5 Computer Use](https://www.anthropic.com/news/3-5-models-and-computer-use) | GA，跨 macOS / Linux / Windows（Docker）| **72.7%**（Opus 4.6 基线，接近人类 72%；Opus 4.7 / 4.8 / 5 后续的 Computer Use 专项数据均未公布）| 推理 + 代码智能体，Stage 5/7 主场。Opus 5（2026-07-24）为 Opus 级旗舰；Mythos-class 的 Fable 5（2026-06-09）2026-06-12 暂停、2026-07-01 已恢复 |
+| **OpenAI** | [Codex desktop](https://openai.com/index/codex-for-almost-everything/)（2026 年 4 月）| GA，**background mode** 不抢占光标，in-app browser，90+ 插件 | CUA 38.1% | 独立桌面 coding agent、跨 app workflow；agentic 浏览已并入 ChatGPT 桌面 app（Atlas 2026-08 停运后并入）|
 | **OpenAI** | [Computer-Using Agent (CUA)](https://openai.com/index/computer-using-agent/) | API | 38.1% / WebArena 58.1% | API-first，可整合到自己的技术栈 |
 | **Google** | [Gemini in Chrome](https://gemini.google/overview/gemini-in-chrome/)（Gemini 3）| GA + Android | — | **Auto Browse** + **Chrome Skills**，Chrome Enterprise Premium $6/用户/月 |
-| **OpenAI Operator** | （**2025-08 停运**）| ❌ 不可用 | — | CAPTCHA / JS / session 处理不稳定，被 Atlas 取代 |
+| **OpenAI Operator** | （**2025-08 停运**）| ❌ 不可用 | — | CAPTCHA / JS / session 处理不稳定，被 Atlas 取代（Atlas 亦于 2026-08 停运）|
 
 → 详细现状见 [Agentic Browser Landscape 2026](https://nohacks.co/blog/agentic-browser-landscape-2026)、[OSWorld leaderboard](https://os-world.github.io/)
 
@@ -140,16 +142,20 @@
 |---|---|---|
 | Human baseline | **72.36%** | — |
 | Claude Opus 4.6（Anthropic）| **72.7%** | 持平 |
-| 2026-05 SOTA（最强模型）| **76.26%** | **超越人类** |
+| OSWorld v1 2026-05 SOTA | **76.26%** | **超越人类**（v1，见下方）|
 | OpenAI CUA | 38.1% | -34% |
 | 大多数其他模型 | 30-50% | -22% ~ -42% |
 
+> **⚠️ 2026-06 更新（OSWorld 2.0）**：上表是 OSWorld **v1** 的数字。v1 随后被前沿模型逼近饱和，“superhuman” 只在 v1 的短任务（多为 1-2 个 app）成立。[OSWorld 2.0](https://osworld-v2.xlang.ai/)（2026-06、arXiv 2606.29537）改用 108 个 long-horizon workflow（每个约 318 次 tool call，v1 只约 30），当时最强的 Claude Opus 4.8（max thinking）也只到 **20.6%**（500 步预算）、GPT-5.5 约 14%、137 分钟以上的任务没有任何模型破 10%。SOTA 从“76% superhuman”掉到“20% 真实长任务”，正是本段 benchmark 规范要你警惕的落差。
+
 **为什么比 SWE-bench 难**：
+
 - **更开放的任务**：SWE-bench 有明确的测试来判断通过/失败；OSWorld 任务规范模糊（例如“帮我把 csv 变成图”）。
 - **跨多个 OS**：覆盖 Ubuntu / Windows / macOS。
 - **跨应用链**：常需要打开 3-4 个应用（Excel → Chrome → Slack）。
 
 **为什么真实能力 ≠ 数据**（呼应 [Stage 7 reward-hacking 警告](07-multi-agent-production.zh-Hans.md#-agent-benchmark-landscape怎么看不要只看排行榜---reward-hacking-警告)）：
+
 - OSWorld 也在 [UC Berkeley 2026-04 reward-hacking 报告](https://rdi.berkeley.edu/blog/trustworthy-benchmarks-cont/) 名单上，被证明可被 hack 到 100%。
 - **看数据的规范**：不要只看排行榜顶部，你自己的用例的 hold-out 测试才是基准真相。
 
@@ -157,9 +163,9 @@
 
 | OS | Anthropic | OpenAI | Google |
 |---|---|---|---|
-| **macOS** | ✅ GA | ✅ Atlas + Codex desktop GA | Chrome 内 |
+| **macOS** | ✅ GA | ✅ Codex desktop GA（Atlas 已停运）| Chrome 内 |
 | **Linux** | ✅ Docker | ⚠ 较受限 | Chrome 内 |
-| **Windows** | ✅ Docker | 🔜 native preview / Atlas Win 即将推出 | Chrome 内 |
+| **Windows** | ✅ Docker | 🔜 native preview（Atlas 未出 Windows 版）| Chrome 内 |
 | **Mobile** | — | — | ✅ Gemini in Chrome on Android |
 
 ## 🌐 Browser Use — web 级智能体
@@ -174,12 +180,15 @@
 | **Screen-pixel + vision**（无 DOM，看截图）| 与 Computer Use 相同，截图 → 视觉 → 坐标 | iframe / Canvas / Shadow DOM / 反自动化网站 |
 
 **为什么 DOM 感知比截图更精确**：
+
 - 直接抓取 `<input name="username">` 元素，**无需视觉模型解析像素**。
 - 速度快 10-100 倍（不运行视觉模型）。
 - 不会误点（元素有确切的边界框）。
 - **缺点**：在 JS 动态渲染 / Shadow DOM / Canvas / iframe 内部 DOM 不暴露时失效。
 
 **结论 — 生产级浏览器智能体模式**：**DOM-first + 截图回退**——先尝试 DOM，抓不到再用视觉。browser-use / Atlas / Comet 都采用这种模式。
+
+> 🌐 **浏览器 agent 的第三种模态：accessibility tree**：除了 DOM-aware 跟 screen-pixel（看截图点坐标），2026 production 主流是读**无障碍树**——比 pixel 稳、比原始 DOM 省 token。要实际接，[microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp)（★ 35k+、Apache-2.0、走 accessibility tree）是 Track A 直接挂 Claude Code 就能用的浏览器 MCP。
 
 ### 迷你术语词典（就地解释）
 
@@ -195,9 +204,9 @@
 
 | 浏览器 | 来源 | 平台 | Agent Mode | 风险 / 注意事项 |
 |---|---|---|---|---|
-| **Atlas** | OpenAI（2025-10）| macOS GA，Win 🔜 | ✅（Plus / Pro / Business）| — |
+| **Atlas** ⚠️ | OpenAI（2025-10，**停运 2026-08**）| 仅 macOS（未出 Windows）| 功能并入 ChatGPT app | — |
 | **Comet** | Perplexity | iOS / Android / Win / Mac | ✅ research 最强 | ⚠ 2026 年 Brave 发现可被恶意网页注入；2026-03 联邦禁令禁止访问 Amazon。 |
-| **Dia** | The Browser Company（被 Atlassian 以 6.1 亿美元收购）| macOS | ❌（**不走 agent mode**，聚焦性能）| — |
+| **Dia** | [The Browser Company（被 Atlassian 以 6.1 亿美元收购）](https://efficient.app/compare/dia-vs-comet)| macOS | ❌（**不走 agent mode**，聚焦性能）| — |
 | **Gemini in Chrome** | Google（Gemini 3）| Chrome 全平台 + Android | ✅ **Auto Browse** + **Chrome Skills** | Enterprise Premium $6/用户/月 |
 | **Operator** | OpenAI | — | ❌ **2025-08 停运** | CAPTCHA / JS / session 处理不稳定。 |
 
@@ -208,10 +217,11 @@
 | 框架 | 状态 | 强项 |
 |---|---|---|
 | [**browser-use**](https://github.com/browser-use/browser-use) ⭐ | **86k+ 星，MIT** | 2026 年最火的开源软件，Python，5 行上手，支持 OpenAI / Claude / Gemini / Ollama。 |
-| [**Microsoft OmniParser v2**](https://github.com/microsoft/OmniParser) | 2026 年更新，Apache 2.0 | 基于视觉的 GUI 解析，延迟改善 60%，使用 ScreenSpot Pro 准确率达 39.6%。同一仓库包含 **OmniTool**（Windows 11 VM 控制，可搭配 GPT-5.5 / Claude Opus 4.8 / DeepSeek-V4-Pro / Qwen 2.5VL / Claude Computer Use）。 |
+| [**Microsoft OmniParser v2**](https://github.com/microsoft/OmniParser) | 2026 年更新，Apache 2.0 | 基于视觉的 GUI 解析，延迟改善 60%，使用 ScreenSpot Pro 准确率达 39.6%。同一仓库包含 **OmniTool**（Windows 11 VM 控制，可搭配 GPT-5.5 / Claude Opus 5 / DeepSeek-V4-Pro / Qwen 2.5VL / Claude Computer Use）。 |
 | **Playwright + LLM**（DIY）| — | 不是专门的框架，但 Playwright 是 web 自动化的标准，加上 LLM 包装器即可使用。 |
 
 **为什么 browser-use 这么火（86k 星）**：
+
 - DOM-first 范式**对 web 来说比截图+视觉更精确**，速度也更快。
 - LLM 厂商无关（不绑定 Claude / GPT）。
 - 5 行 Python 上手，入门门槛低。
@@ -229,11 +239,13 @@
 ### 为什么智能体必须使用沙箱
 
 **威胁模型**：智能体写代码 → 在哪里运行？
+
 - ❌ **主机（最坏情况）**：智能体可能 `rm -rf /` / 连接互联网泄露数据 / 读取 `.ssh/id_rsa` / 安装恶意软件。
 - ⚠ **同一用户隔离进程（中等）**：能阻止部分攻击，但文件系统 / 网络仍然开放。
 - ✅ **隔离沙箱（必要）**：独立的文件系统 / 进程 / 网络，出事可直接丢弃。
 
 **为什么 2026 年才正式成为生产要求**：
+
 - **2026-04 OpenAI Agents SDK 更新**：[内置支持 7 个沙箱提供商](https://openai.com/index/the-next-evolution-of-the-agents-sdk/)（Blaxel / Cloudflare / Daytona / E2B / Modal / Runloop / Vercel）。
 - 之前都依赖 [Claude Code](05-claude-code-ecosystem.zh-Hans.md) / [Cursor](https://www.cursor.com) 的审批门来阻止——但生产级智能体**无人值守，必须使用沙箱**。
 
@@ -253,6 +265,7 @@
 | **GPU passthrough** | VM / microVM 访问主机 GPU 的技术（**只有 Modal 支持**）。| — | — | 在沙箱内运行推理 / 微调 |
 
 **核心要点**：
+
 - **Container** = 快 + 隔离弱（共享内核）
 - **VM** = 慢 + 隔离强（独立内核）
 - **microVM** = 兼顾（快 < 100ms + 独立内核）→ **大多数智能体沙箱选择 microVM**
@@ -279,6 +292,7 @@
 - **2026-04 之后**：**架构上合理**——SDK 内置 harness 抽象层 + 沙箱抽象层 + Codex 文件系统工具。
 
 **3 个关键新功能**：
+
 1. **Native harness** — 智能体循环 / 模型调用 / 工具路由 / 切换 / 审批 / 追踪 / 恢复全在 SDK 层。
 2. **Native sandbox execution** — 可自带沙箱，或使用内置的 7 个提供商（Blaxel / Cloudflare / Daytona / E2B / Modal / Runloop / Vercel）。
 3. **Codex filesystem tools** — 智能体写文件 / 读文件 / 运行命令都有 SDK 级 API。
@@ -294,7 +308,7 @@
 **为何选择 MCP 路线**：你已熟悉 Claude Code（[Stage 5](05-claude-code-ecosystem.zh-Hans.md)），新功能可通过 MCP 接入，无需更换工具。
 
 - **Computer-use MCP**（社区有多个实现版本）：在 `.mcp.json` 中添加服务器后，就能在 Claude Code 内调用“截图 → 查看 → 操作”。
-- **Browser MCP**：如 [Playwright MCP](https://github.com/modelcontextprotocol/servers) 等，Claude Code 可打开浏览器运行 web 任务。
+- **Browser MCP**：如 [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) 等，Claude Code 可打开浏览器运行 web 任务。
 
 ### 2. 使用 Codex desktop 在后台运行
 
@@ -303,18 +317,19 @@
 - 适合：“分析 Q3 财报，整理成幻灯片，发到 Slack”这种**长时间且无需盯着看**的任务。
 - 与 Claude Code 互补：用 Claude Code 做代码任务，用 Codex desktop 做跨应用工作流。
 
-### 3. 使用 Atlas / Comet / Gemini in Chrome 运行 web 任务
+### 3. 使用 Comet / Gemini in Chrome / ChatGPT Agent Mode 运行 web 任务
 
 | 场景 | 推荐 | 理由 |
 |---|---|---|
 | 研究 / 跨页面综合 | **Comet** | 针对研究优化，有引用支持。 |
-| ChatGPT 用户 / Agent Mode | **Atlas** | Plus/Pro/Business 内置。 |
+| ChatGPT 用户 / Agent Mode | **ChatGPT 桌面 app**（Agent Mode）| Plus/Pro/Business 内置（Atlas 2026-08 停运后并入）。 |
 | Chrome / Google 生态系统 | **Gemini in Chrome** | Auto Browse + Skills，企业级 DLP。 |
 | **避免**：Comet 运行电子商务 / 银行任务 | — | ⚠ 2026-03 联邦禁令（详见[安全](#-2026-安全性--风险重点)）。|
 
 ### 跨应用工作流示例
 
 “**帮我把 Q3 的 csv 文件做成图表，存到 Slack 的 #finance 频道**”：
+
 1. Claude Code（接入 Computer-use MCP）打开 Excel。
 2. 加载 csv，使用图表向导生成图表。
 3. 截图。
@@ -337,7 +352,7 @@ from langchain_openai import ChatOpenAI
 
 agent = Agent(
     task="Search Hacker News for top AI agent posts this week and summarize",
-    llm=ChatOpenAI(model="gpt-5.5"), # 也可换成 Claude Opus 4.8 / Gemini 3.1 Pro / DeepSeek-V4-Pro
+    llm=ChatOpenAI(model="gpt-5.5"), # 也可换成 Claude Opus 5 / Gemini 3.5 Flash / DeepSeek-V4-Pro
 )
 result = await agent.run()
 ```
@@ -376,6 +391,7 @@ agent = Agent(
 ### 4. GUI 智能体训练数据
 
 如果你想**训练自己的 Computer Use 模型**（少数人会做）：
+
 - [**OSWorld dataset**](https://github.com/xlang-ai/OSWorld) — 369 个跨 OS 任务，包含截图和基准操作。
 - [**WebArena**](https://github.com/web-arena-x/webarena) — web 导航 benchmark。
 - [**Mind2Web**](https://github.com/OSU-NLP-Group/Mind2Web) — 真实世界的 web 任务。
@@ -389,11 +405,13 @@ agent = Agent(
 ### 案例 1 — Comet 被 Brave 发现可被网页注入
 
 **攻击原理**（[Brave Research 2026](https://brave.com/blog/comet-prompt-injection)）：
+
 - Comet 智能体查看网页 → 网页中隐藏恶意 prompt（如在 HTML 注释中）。
 - LLM 解析网页时将恶意 prompt 当作指令执行。
 - 结果：智能体被劫持，操作用户 Gmail / 银行 / 账户。
 
 **为何这是新的攻击面**：
+
 - 传统 SQL 注入攻击路径：**用户输入 → 服务器**（在服务器端过滤即可阻止）。
 - 通过 web 内容的 Prompt injection：**web 内容 → LLM 上下文**（在 LLM 上下文中难以区分指令与内容）。
 - **防御方式完全不同**——无法套用 SQL 注入那套方法。
@@ -403,6 +421,7 @@ agent = Agent(
 2026 年 3 月，美国联邦法官对 Comet 下达初步禁令，**禁止该智能体访问 Amazon 账户**——理由是 Comet 在 Amazon 账户上的操作不稳定，且涉及未经授权的商业活动。
 
 **为何这是法律风险信号**：
+
 - 智能体操作他人账户可能违反该平台的 ToS。
 - 大型电子商务 / 银行平台可能采取法律行动阻止智能体。
 - 生产级智能体部署前**必须检查目标平台的 ToS**。
@@ -442,7 +461,7 @@ agent = Agent(
 | **桌面后台工作流** | [OpenAI Codex desktop](https://openai.com/index/codex-for-almost-everything/)（2026 年 4 月）| 不抢占光标，可并行 |
 | **第一个 web 智能体**（开源） | [browser-use](https://github.com/browser-use/browser-use) ⭐ | 86k+ 星，5 行 Python，LLM 厂商无关 |
 | **GUI 解析研究**（开源）| [Microsoft OmniParser v2](https://github.com/microsoft/OmniParser) | 基于视觉，延迟改善 60% |
-| **主力 AI 浏览器**（消费 / 研究）| [Comet](https://comet.perplexity.ai/)（研究）/ [Atlas](https://openai.com/index/introducing-chatgpt-atlas/)（ChatGPT 用户）| 各家智能体模式强项不同 |
+| **主力 AI 浏览器**（消费 / 研究）| [Comet](https://comet.perplexity.ai/)（研究）/ ChatGPT Agent Mode（ChatGPT 用户；Atlas 2026-08 停运）| 各家智能体模式强项不同 |
 | **企业 / Chrome 生态系统** | [Gemini in Chrome](https://gemini.google/overview/gemini-in-chrome/) | Auto Browse + Skills + DLP |
 | **第一个沙箱**（智能体 Python）| [E2B](https://github.com/e2b-dev/E2B) | Firecracker microVM，对 Python REPL 友好 |
 | **延迟敏感的沙箱** | [Daytona](https://www.daytona.io/) | < 90ms 冷启动 |
@@ -451,6 +470,7 @@ agent = Agent(
 | **Claude 智能体原生路线** | [claude-agent-sdk-python](https://github.com/anthropics/claude-agent-sdk-python) | Stage 7 已介绍，Anthropic 早于 OpenAI 抽象出 harness |
 
 **建议上手顺序**：
+
 1. **Track A 入门**：使用 Claude Computer Use Docker quickstart 跑通第一个跨应用任务（30 分钟）
 2. **Track B 入门**：使用 browser-use 编写 web 智能体（10 分钟）
 3. 添加沙箱隔离：接入 E2B 或 Daytona
@@ -459,7 +479,7 @@ agent = Agent(
 
 ## 🎯 精选项目（模板 / SDK / 工具合集）
 
-按用途分类，15 个项目一表搞定。
+按用途分类，17 个项目一表搞定。
 
 | 分类 | Project | ⭐ | 适合谁 | 为什么推荐 / 备注 |
 |---|---|---|---|---|
@@ -468,13 +488,15 @@ agent = Agent(
 | | [anthropics/claude-agent-sdk-python](https://github.com/anthropics/claude-agent-sdk-python) | ⭐⭐⭐⭐⭐ | 使用 Claude 编写生产级智能体 | Anthropic 的智能体 SDK，早于 OpenAI，与 Claude Code 同一运行时 |
 | **Browser Use OSS** | [browser-use/browser-use](https://github.com/browser-use/browser-use) ⭐ | ⭐⭐⭐⭐⭐ | 开源 web 智能体第一名 | 86k+ 星，MIT，LLM 厂商无关 |
 | | [microsoft/OmniParser](https://github.com/microsoft/OmniParser) | ⭐⭐⭐⭐ | 基于视觉的 GUI 解析 | v2 延迟改善 60%，Apache 2.0，含 OmniTool（Windows VM 控制）|
-| **AI 浏览器**（闭源 / 消费）| [Atlas](https://openai.com/index/introducing-chatgpt-atlas/) | ⭐⭐⭐⭐ | ChatGPT 用户 + Agent Mode | OpenAI 出品，macOS GA |
+| **Computer Use Agent Stack** | [bytedance/UI-TARS-desktop](https://github.com/bytedance/UI-TARS-desktop) | ⭐⭐⭐⭐ | 在桌面跑开源 computer-use agent | ByteDance 开源的"computer use"agent、会看屏幕、操作你的桌面，36k+ 星，Apache-2.0 |
+| | [trycua/cua](https://github.com/trycua/cua) | ⭐⭐⭐⭐ | 打造 / sandbox computer-use agent | 打造"computer use"agent 的开源工具箱：安全 sandbox、SDK、测试，跨 macOS / Linux / Windows，18k+ 星，MIT |
+| **AI 浏览器**（闭源 / 消费）| [Atlas](https://openai.com/index/introducing-chatgpt-atlas/)（⚠️ 停运 2026-08）| ⭐⭐⭐ | ChatGPT 用户 + Agent Mode | OpenAI 出品，功能已并入 ChatGPT 桌面 app |
 | | [Comet](https://comet.perplexity.ai/) | ⭐⭐⭐⭐ | 面向研究的智能体浏览器 | Perplexity 出品，全平台，有引用支持。⚠ Brave 注入 + Amazon 禁令 |
 | | [Dia](https://www.diabrowser.com/) | ⭐⭐⭐ | 想要 AI 浏览器但**不要** agent mode | Browser Company 出品（被 Atlassian 以 6.1 亿美元收购），聚焦性能 |
 | **Sandbox**（microVM）| [e2b-dev/E2B](https://github.com/e2b-dev/E2B) | ⭐⭐⭐⭐⭐ | 智能体运行 Python 循环 | Firecracker microVM，模板最多，Apache 2.0 |
 | **Sandbox**（容器，快）| [Daytona](https://www.daytona.io/) | ⭐⭐⭐⭐ | 延迟敏感 | < 90ms 冷启动，Docker 生态 |
 | **Sandbox**（GPU）| [Modal](https://modal.com/) | ⭐⭐⭐⭐ | 在沙箱内运行推理 / 微调 | 唯一支持 GPU 的沙箱，serverless |
-| **Benchmark dataset** | [xlang-ai/OSWorld](https://github.com/xlang-ai/OSWorld) | ⭐⭐⭐⭐⭐ | 想训练 / 评估 Computer Use 智能体 | NeurIPS 2024，369 个跨 OS 任务，SOTA 76.26% |
+| **Benchmark dataset** | [xlang-ai/OSWorld](https://github.com/xlang-ai/OSWorld) | ⭐⭐⭐⭐⭐ | 想训练 / 评估 Computer Use 智能体 | NeurIPS 2024，369 个跨 OS 任务；后继 [OSWorld 2.0](https://osworld-v2.xlang.ai/)（2026-06、108 个 long-horizon workflow）SOTA 仅约 20% |
 | | [web-arena-x/webarena](https://github.com/web-arena-x/webarena) | ⭐⭐⭐⭐ | 评估 web 智能体 | 自托管的真实网站，OpenAI CUA 58.1% |
 | | [OSU-NLP-Group/Mind2Web](https://github.com/OSU-NLP-Group/Mind2Web) | ⭐⭐⭐⭐ | 真实世界 web 任务数据集 | 137 个网站 / 2350 个任务 |
 | **Visual web agent** | [illuin-tech/colpali](https://github.com/illuin-tech/colpali) | ⭐⭐⭐⭐ | 针对 PDF / 文档的视觉 RAG | 直接嵌入页面图像，绕过 OCR，NeurIPS 2024 |
@@ -491,7 +513,7 @@ agent = Agent(
 - [ ] 使用 browser-use 在 5 行 Python 内编写一个 web 智能体（练习 2）
 - [ ] 使用 E2B 运行智能体生成的代码，并体会与主机直接运行的差别（练习 3）
 - [ ] 解释为何通过 web 内容的 prompt injection 是新的攻击面，以及 4 个防护模式各防御什么
-- [ ] 解释 OSWorld 76.26% SOTA 数据背后的 reward-hacking 规范（为何不能盲目相信）
+- [ ] 解释 OSWorld v1 76.26% → 2.0 约 20% 落差背后的 reward-hacking / 饱和规范（为何不能盲目相信 SOTA 数据）
 
 如果都可以 → 你已完成课程主干。选择一个[特化分支](../README.zh-Hans.md#-学习地图两条学习路径)，或继续看下一节 下一个前沿。
 
@@ -502,7 +524,7 @@ agent = Agent(
 ### Voice agents（语音界面）
 
 - [**Vapi**](https://vapi.ai/) / [**Retell**](https://www.retellai.com/) — 商业语音智能体平台
-- [**LiveKit Agents**](https://github.com/livekit/agents) — 开源，★ 10k+
+- [**LiveKit Agents**](https://github.com/livekit/agents) — 开源，★ 11k+
 - [**OpenAI Realtime API**](https://platform.openai.com/docs/guides/realtime) — 直接构建 speech-to-speech 智能体
 
 ### VLA（Vision-Language-Action）机器人

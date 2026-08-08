@@ -41,5 +41,5 @@ labels: suggestion
 ```
 
 ## 其他資訊
-- [ ] 我已經讀過 [`resources/style-guide.md`](../resources/style-guide.md)
+- [ ] 我已經讀過 [`resources/style-guide.md`](../../resources/style-guide.md)
 - [ ] 我確認這個 project 不是 self-promotion（如果是，請標註利益關係）

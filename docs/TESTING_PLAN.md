@@ -25,6 +25,7 @@
 Recognized late in the session: every `starter.py` is a **complete solution**, not a TODO skeleton. A learner who clones and runs `python test.py` passes without writing any code.
 
 v1 fix (doc-only, no code rename):
+
 - `docs/HOW_TO_USE.md` — full active-vs-passive learning method (~200 lines, zh-TW)
 - 22 exercise READMEs — 🎓 callout pointing to `mv starter.py starter_reference.py` shortcut + link to HOW_TO_USE
 - Main README × 3 langs — surface the meta-instruction at the top-level
@@ -37,11 +38,14 @@ Shipped in commits [`d598e37`](https://github.com/WenyuChiou/awesome-agentic-ai-
 
 2. **tool-calling-tutor skill** not live-tested in Claude Code — only structural validation (YAML frontmatter parse + JSON evals validate). Manual install test: `cp -r examples/stage-5/tool-calling-tutor/{SKILL.md,references,evals} ~/.claude/skills/tool-calling-tutor/`, restart Claude Code, prompt 「為什麼 LLM 不呼叫我的 tool」.
 
-3. **starter.py = complete solution pedagogy gap** — flagged in `docs/HOW_TO_USE.md`. v2 would split into `starter_template.py` (TODO) + `starter_reference.py` (solution); v1 is doc-only meta-instruction.
+3. ~~**Walkthrough Python never executed**~~ — **PARTIALLY RESOLVED 2026-08-04**. 7 of the 9 python blocks (302 lines) of `walkthroughs/build-first-agent-in-7-steps.md` were extracted to the filenames the doc names and executed in a clean venv on Python 3.14, with `Anthropic` and `requests` mocked (no API key, no spend): Stage 1-6 (6 blocks) plus Stage 7.1 `eval_provider`. **Four** real defects were found and fixed in all three locales, plus two zh-Hans blocks that did not even parse (`
+` expanded into real newlines, so Stage 1 and `reflect` raised `unterminated f-string literal` — a Simplified-Chinese reader's very first script crashed): Stage 6's vector memory stored nothing at all (empty-DB early return meant `store_paper` was never reached, compounded by a hardcoded `"..."` id that `collection.add()` silently ignores); `compare_with_memory`'s `comparison` was dropped because `State` never declared it; and `import step2_paper_summary` issued a billed API call at module level, which every later stage inherited. Post-fix, measured: memory count goes 1→2→3, `comparison` survives in state, and the four imported modules make 0 API calls; and Stage 6 now stores each paper's own summary rather than three byte-identical `[Reviewer verdict: PASS]` strings — the `compare` node read `messages[-1]`, which is `reflect`'s verdict, not the summary. **Still open**: 7.2 `step7_observability` fails to import (langfuse 4.x moved `observe` from `langfuse.decorators` to `langfuse`), 7.3 `main.py` was never run (no fastapi/uvicorn in the venv), and end-to-end output quality against a live key is untested.
 
-4. **Trilingual mirror of 🎓 callout incomplete** — v1 only added the 學習模式 callout to zh-TW READMEs. en + zh-Hans exercise READMEs still need the same callout. Low priority since most learners use zh-TW.
+4. **starter.py = complete solution pedagogy gap** — flagged in `docs/HOW_TO_USE.md`. v2 would split into `starter_template.py` (TODO) + `starter_reference.py` (solution); v1 is doc-only meta-instruction.
 
-5. **Pilot exercise drift** (pre-session, still open) — `examples/stage-3/03-react-from-scratch/README.en.md` + `.zh-Hans.md` are pre-dual-path; the zh-TW canonical is current. Stage 3 polish pass should fix.
+5. ~~**Trilingual mirror of 🎓 callout incomplete**~~ — **RESOLVED 2026-08-02**. The 🎓 callout and the 📚 deeper-material block are now in the `.en.md` + `.zh-Hans.md` mirrors of **21 of the 22** exercise READMEs (202 blockquote lines). The 22nd, `examples/stage-1/04-cross-provider`, is **not a callout gap** — it is the only example folder with **no mirror files at all**, so it needs a full trilingual translation first, not a callout port. A blocking CI gate (`scripts/check-mirror-parity.py`) now stops this class of gap reappearing.
+
+6. ~~**Pilot exercise drift**~~ — **RESOLVED 2026-08-02**. `examples/stage-3/03-react-from-scratch/README.en.md` + `.zh-Hans.md` were missing the entire free local Path A (Ollama) and ran the Ollama script under the Anthropic heading; both now match the dual-path canonical.
 
 ## 🔵 Stage 5 + Track A — current coverage
 
@@ -56,6 +60,7 @@ Shipped in commits [`d598e37`](https://github.com/WenyuChiou/awesome-agentic-ai-
 | `tracks/cli/A3-cli-production.md` | 134 | CLI-9 MCP server 接 CLI / CLI-10 GitHub Actions / CLI-11 cost tracking / CLI-12 plugin 跨 team 分享 |
 
 **No `examples/track-a/` folder built — and this is intentional**. CLI exercises are:
+
 - Bash commands (`ollama pull`, `claude` install, MCP-server install)
 - Markdown authoring (CLAUDE.md, slash command `.md` files, SKILL.md)
 - YAML / JSON config (GitHub Actions `.yml`, `plugin.json`, `marketplace.json`)
@@ -63,7 +68,7 @@ Shipped in commits [`d598e37`](https://github.com/WenyuChiou/awesome-agentic-ai-
 
 What learners do for Track A: follow each numbered exercise in the outline doc, on their own real repo (their work codebase, not a sample). The `tracks/cli/A*.md` files contain success criteria for self-check.
 
-**Core reference**: [`resources/cli-agents-guide.md`](../resources/cli-agents-guide.md) (148 lines) — 7-CLI comparison + decision rubric + common pitfalls.
+**Core reference**: [`resources/cli-agents-guide.md`](../resources/cli-agents-guide.md) (148 lines) — 8-CLI comparison + decision rubric + common pitfalls.
 
 **Potential v2** (not committed): could ship `examples/track-a/` containing sample CLAUDE.md / `.claude/commands/review.md` / sample GHA workflow yml. Low priority — current outline is self-contained.
 
@@ -83,6 +88,7 @@ For v2, sub-stages 5.1 / 5.2 / 5.4 could ship sample artifacts (sample `CLAUDE.m
 ## v2 path (deferred)
 
 Per `docs/HOW_TO_USE.md` "給維護者：v2 path":
+
 - Split each `starter.py` → `starter_template.py` (TODO skeleton) + `starter_reference.py` (solution)
 - Make `test.py` behavioral (input → output contract) instead of implementation-bound
 - ~20 folders × 3 file changes = ~60 file changes

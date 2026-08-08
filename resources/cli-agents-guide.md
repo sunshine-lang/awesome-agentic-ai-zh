@@ -9,23 +9,24 @@
 > 想先理解「為什麼有的 agent 在 terminal、有的在 Telegram、有的在 Jetson」這層 mental model → 看 [`resources/agent-paradigms.md`](agent-paradigms.md)（5 種 agent 型態）。
 > 已經在用、想決定 / 比較 / 升級 → 留在這份。
 
-跨 5 個 branch + Track A 共用的參考——**Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent 之間怎麼挑？** Track A（A1-A3）的 CLI workflow 設計、5 條 branch 內的 CLI 引用都連到這份；每個 branch 都會用到 CLI agent，但沒有一個 branch 真的「擁有」這份比較，所以放在 `resources/`。
+跨 5 個 branch + Track A 共用的參考——**Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build 之間怎麼挑？** Track A（A1-A3）的 CLI workflow 設計、5 條 branch 內的 CLI 引用都連到這份；每個 branch 都會用到 CLI agent，但沒有一個 branch 真的「擁有」這份比較，所以放在 `resources/`。
 
 ---
 
-## 📋 7 個主流 CLI agent
+## 📋 8 個主流 CLI agent
 
-只列在 terminal 跑的（IDE-based 如 Cursor / Cline / Continue 不在這份；那些放在 [for-developer](../branches/for-developer.md)）。前 6 個數字 `gh api` 驗證於 2026-05-06；Hermes Agent 驗證於 2026-05-10。
+只列在 terminal 跑的（IDE-based 如 Cursor / Cline / Continue 不在這份；那些放在 [for-developer](../branches/for-developer.md)）。前 6 個數字 `gh api` 驗證於 2026-05-06；Hermes Agent 驗證於 2026-05-10；Grok Build 驗證於 2026-07-16（⚠️ 2026-07-14 才開源、非常新，數字與功能都還在快速變動）。
 
 | 工具 | 提供者 | License | 主推 LLM | 認證 / 計費 | Stars |
 |---|---|---|---|---|---|
-| [Claude Code](https://github.com/anthropics/claude-code) | Anthropic（官方） | NOASSERTION | Claude | Claude 訂閱 **或** Anthropic Console API key | ★ 120k+ |
-| [Codex](https://github.com/openai/codex) | OpenAI（官方） | Apache-2.0 | GPT 系列 | ChatGPT 帳號登入 **或** OpenAI API key | ★ 89k+ |
-| [OpenCode](https://github.com/sst/opencode) | 社群（repo 已遷至 `anomalyco/opencode`） | MIT | 任意（多 provider） | BYO API key 或 OpenCode Zen 內建 hosted | ★ 171k+ |
+| [Claude Code](https://github.com/anthropics/claude-code) | Anthropic（官方） | NOASSERTION | Claude | Claude 訂閱 **或** Anthropic Console API key | ★ 140k+ |
+| [Codex](https://github.com/openai/codex) | OpenAI（官方） | Apache-2.0 | GPT 系列 | ChatGPT 帳號登入 **或** OpenAI API key | ★ 100k+ |
+| [OpenCode](https://github.com/sst/opencode) | 社群（repo 已遷至 `anomalyco/opencode`） | MIT | 任意（多 provider） | BYO API key 或 OpenCode Zen 內建 hosted | ★ 190k+ |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Google（官方） | Apache-2.0 | Gemini | 免費額度寬，超出收費 | ★ 103k+ |
-| [goose](https://github.com/block/goose) | Agentic AI Foundation（repo 已遷至 `aaif-goose/goose`） | Apache-2.0 | 15+ provider（含 Ollama） | BYO API key 或既有 Claude / ChatGPT / Gemini 訂閱（ACP） | ★ 47k+ |
-| [Aider](https://github.com/Aider-AI/aider) | Aider-AI（社群） | Apache-2.0 | 任意 | BYO API key | ★ 44k+ |
-| [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Nous Research | MIT | 200+ via OpenRouter / NVIDIA NIM / 智譜 GLM / Kimi / 小米 MiMo / MiniMax / HF / OpenAI | BYO API key（多 provider） | ★ 175k+ |
+| [goose](https://github.com/block/goose) | Agentic AI Foundation（repo 已遷至 `aaif-goose/goose`） | Apache-2.0 | 15+ provider（含 Ollama） | BYO API key 或既有 Claude / ChatGPT / Gemini 訂閱（ACP） | ★ 51k+ |
+| [Aider](https://github.com/Aider-AI/aider) | Aider-AI（社群） | Apache-2.0 | 任意 | BYO API key | ★ 47k+ |
+| [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Nous Research | MIT | 200+ via OpenRouter / NVIDIA NIM / 智譜 GLM / Kimi / 小米 MiMo / MiniMax / HF / OpenAI | BYO API key（多 provider） | ★ 224k+ |
+| [Grok Build](https://github.com/xai-org/grok-build) | SpaceXAI（xAI，官方） | Apache-2.0 | Grok | 首次啟動開瀏覽器完成登入 | ★ 23k+ |
 
 ---
 
@@ -54,6 +55,7 @@
 
 ### 想跑在 cloud VM、用 Telegram / Slack 等多平台跟它聊 + 用中國大陸 LLM
 **首推**：Hermes Agent。差異化在三件事：
+
 - **不綁 laptop**——agent 跑在 $5 VPS / Modal serverless，你從 Telegram / Discord / Slack / WhatsApp / Signal 任一個介面對話
 - **多 LLM 中性**——支援 GLM / Kimi / 小米 MiMo / MiniMax，剛好對應 11 中文圈生態
 - **內建 self-improving skill loop + cron 排程**——agent 跟你互動久了會自動生成 skill，跨 session 持續優化
@@ -143,6 +145,6 @@
 
 ## 維護備註
 
-- 7 個 CLI 的 stars / license / pushed_at 由 `weekly-catalog-refresh` CI 每週自動更新（手動可跑 `python scripts/refresh-stars.py`）
-- CLI 工具市場變化快——新工具出現要評估是否加入這份比較（門檻：> 30k stars + 維護中 + 真的 CLI 不是 IDE）
+- 8 個 CLI 的 stars / license / pushed_at 由 `weekly-catalog-refresh` CI 每週自動更新（手動可跑 `python scripts/refresh-stars.py`）
+- CLI 工具市場變化快——新工具出現要評估是否加入這份比較（門檻：> 30k stars + 維護中 + 真的 CLI 不是 IDE；官方大廠或極新的 CLI 可破例、如 Grok Build）
 - 比較表格的「強項 / 弱項」欄位刻意沒填——避免產生主觀 bias，讓 use case section 跟讀者自己的判斷做這件事

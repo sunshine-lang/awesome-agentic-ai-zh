@@ -16,15 +16,15 @@ Research days break into stages, and AI plays a different role at each stage. Us
 | **Close reading** | You lose the thread halfway through a PDF / miss the claim | Extract claims, figures, citations, and notes | Zotero + zotero-gpt → zotero-skills |
 | **Research design** | The RQ is fuzzy, or the method choice is unclear | Clarifying dialogue and trade-off mapping | Claude.ai chat → ai-research-skills |
 | **Experiments / coding** | Boilerplate repeats and plotting eats time | Write / edit code and batch refactor | Claude Code → codex-delegate |
-| **Manuscript writing** | Drafts stall or sentences do not land | Outline → paragraphs → polishing | Claude.ai → gemini-delegate (long drafts) |
+| **Manuscript writing** | Drafts stall or sentences do not land | Outline → paragraphs → polishing | Claude.ai → Gemini CLI (long drafts) |
 | **Revision / submission** | Journal requirements are easy to miss | banned-word / figure-text / submission checklist | academic-writing-skills |
-| **Cross-paper synthesis** | Five papers need to talk to each other and context explodes | Read 1M tokens at once and organize the synthesis | gemini-delegate |
+| **Cross-paper synthesis** | Five papers need to talk to each other and context explodes | Read 1M tokens at once and organize the synthesis | Gemini CLI |
 
 > 💡 **Computational vs non-programming researchers**: the recommended tools run from light to heavy. Non-programming researchers can usually stop at the **first** tool in each row; computational researchers should move right only when they need automation.
 
 ## Curated Projects
 
-> 💡 **Want to wire Claude Code into NotebookLM, Obsidian, Notion, Excel, PDF, Excalidraw, and other research tools?** 62 integrations in [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) (grouped by use case). The section below keeps research-specific tools and marketplaces.
+> 💡 **Want to wire Claude Code into NotebookLM, Obsidian, Notion, Excel, PDF, Excalidraw, and other research tools?** 77+ integrations in [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) (grouped by use case). The section below keeps research-specific tools and marketplaces.
 
 ### Research Workflow Marketplaces
 
@@ -40,7 +40,7 @@ Claude Code infrastructure for PhD researchers — skills, agents, hooks, rules 
 
 | Field | Value |
 |---|---|
-| Stars | ★ 8k+ |
+| Stars | ★ 8.9k+ |
 | License | Apache-2.0 |
 
 **What it teaches**: PDF Q&A designed for **citation-grounded Q&A** — every answer includes sentence-level citations to reduce hallucination risk. Actual accuracy depends on document type; use the official benchmarks / papers as the reference.
@@ -53,7 +53,7 @@ Claude Code infrastructure for PhD researchers — skills, agents, hooks, rules 
 
 | Field | Value |
 |---|---|
-| Stars | ★ 27k+ |
+| Stars | ★ 28k+ |
 | License | Apache-2.0 |
 
 **What it teaches**: Autonomous deep-research agent — planner + multi-source crawl + report synthesis. Give it a research topic, get a markdown / PDF brief out.
@@ -68,7 +68,7 @@ Claude Code infrastructure for PhD researchers — skills, agents, hooks, rules 
 
 | Field | Value |
 |---|---|
-| Stars | ★ 28k+ |
+| Stars | ★ 30k+ |
 | License | MIT |
 
 **What it teaches**: Multi-perspective outline-then-write pipeline — plain-language version: (1) simulate different perspectives asking questions, (2) organize those questions into an outline, then (3) generate a Wikipedia-style draft. From Stanford OVAL.
@@ -120,8 +120,8 @@ Some research tasks only need Claude (dialogue, design, review). Others waste Cl
 |---|---|---|---|
 | Research design / hypothesis discussion | "Should this RQ use logistic vs survival?" | Claude.ai chat | Collaborative dialogue and context memory |
 | Writing / editing code | "Add logging to 50 simulation scripts" | codex-delegate | Fast mechanical edits without burning Claude tokens |
-| Long-form drafting (Chinese / English) | "Draft an 8-page paper section" | gemini-delegate | 1M context and strong long-form prose |
-| Second opinion | "Ask Gemini to review my discussion section" | gemini-delegate | LLM-vs-LLM comparison makes Claude's own biases easier to spot |
+| Long-form drafting (Chinese / English) | "Draft an 8-page paper section" | Gemini CLI | 1M context and strong long-form prose |
+| Second opinion | "Ask Gemini to review my discussion section" | Gemini CLI | LLM-vs-LLM comparison makes Claude's own biases easier to spot |
 | Pre-submission audit | "Run banned-word + figure-text checklist" | academic-writing-skills | Structured audit instead of ad hoc LLM judgment |
 
 #### Maintainer's 6 self-used research skills
@@ -135,7 +135,7 @@ Some research tasks only need Claude (dialogue, design, review). Others waste Cl
 | **[zotero-skills](https://github.com/WenyuChiou/zotero-skills)** ⭐⭐⭐⭐ | Reference management | Zotero CLI skill for search / add / classify / tag; complements zotero-gpt, which chats inside Zotero while this operates from outside |
 | **[academic-writing-skills](https://github.com/WenyuChiou/academic-writing-skills)** ⭐⭐⭐ | Pre-submission | banned-word audit, figure-text coupling, and submission checklist; per-paper journal_format / style_overrides customization |
 | **[codex-delegate](https://github.com/WenyuChiou/codex-delegate)** ⭐⭐⭐⭐⭐ | Coding | Standard Claude planner + Codex executor skill for batch refactor / boilerplate / migration work |
-| **[gemini-delegate-skill](https://github.com/WenyuChiou/gemini-delegate-skill)** ⭐⭐⭐⭐ | Long drafts / synthesis | Claude planner + Gemini for 1M-context long-form writing / CJK / second opinions |
+| **[gemini-delegate-skill](https://github.com/WenyuChiou/gemini-delegate-skill)** ⭐⭐⭐ (⚠️ archived) | Long drafts / synthesis | Claude planner + Gemini for 1M-context long-form writing / CJK / second opinions. **⚠️ Repo archived 2026-07** — the workflow still works directly via [Gemini CLI](https://github.com/google-gemini/gemini-cli) |
 
 ---
 
@@ -145,7 +145,7 @@ Some research tasks only need Claude (dialogue, design, review). Others waste Cl
 
 | Field | Value |
 |---|---|
-| Stars | ★ 11k+ |
+| Stars | ★ 12k+ |
 | License | MIT |
 
 **What it teaches**: Open-source Deep Research — supports both single-agent and supervisor + multi-researcher architectures (the multi-agent path currently lives in `src/legacy/`), parallel search, citation-grounded report synthesis. A solid reference for "LLM agent that auto-produces a cited brief."
@@ -160,7 +160,7 @@ Some research tasks only need Claude (dialogue, design, review). Others waste Cl
 
 | Field | Value |
 |---|---|
-| Stars | ★ 6k+ |
+| Stars | ★ 6.9k+ |
 | License | The AI Scientist Source Code License (source-available, non-commercial + manuscript-disclosure clause) |
 
 **What it teaches**: End-to-end multi-agent science loop: ideate → code → experiment → write → peer-review. Sakana AI's research implementation of "AI writes a full ML paper."
@@ -186,11 +186,11 @@ The biggest mistake researchers make with AI is opening ChatGPT only when they g
 |---|---|---|---|---|
 | **Daily** | Literature inbox triage | (1) Put yesterday's papers into paper-qa<br>(2) Extract claims + a 4-5 line summary<br>(3) Move notes into Zotero / Obsidian | paper-qa + zotero-gpt | All researchers |
 | **Daily** | Writing sprint (25 min) | (1) Give one paragraph to Claude.ai<br>(2) Run banned-word + figure-text audit<br>(3) Merge the revision into the main draft | Claude.ai + academic-writing-skills | Paper-writing stage |
-| **Weekly** | Cross-paper synthesis | (1) Feed 5-10 PDFs to Gemini<br>(2) Ask where the papers disagree<br>(3) Turn the answer into a 1-page brief | gemini-delegate (1M context) | Computational researchers |
+| **Weekly** | Cross-paper synthesis | (1) Feed 5-10 PDFs to Gemini<br>(2) Ask where the papers disagree<br>(3) Turn the answer into a 1-page brief | Gemini CLI (1M context) | Computational researchers |
 | **Weekly** | Zotero cleanup | (1) Mark unread / read<br>(2) Retag items<br>(3) Pull out PDFs that should be archived | zotero-skills or zotero-gpt | All researchers |
 | **Monthly** | Research progress brief | (1) Pull recent notes from Obsidian + Zotero + NotebookLM<br>(2) Summarize 5 progress points<br>(3) Send to your advisor | research-hub | People using all 3 tools |
 | **Per paper** | Final pre-submission audit | (1) banned-word audit<br>(2) figure-text coupling check<br>(3) submission checklist | academic-writing-skills | Final week before submission |
-| **Per paper** | Multi-agent peer review | (1) Claude reviews logic / argument<br>(2) Codex checks code / table numbers<br>(3) Gemini reviews prose / clarity | codex-delegate + gemini-delegate | Pre-submission second opinion |
+| **Per paper** | Multi-agent peer review | (1) Claude reviews logic / argument<br>(2) Codex checks code / table numbers<br>(3) Gemini reviews prose / clarity | codex-delegate + Gemini CLI | Pre-submission second opinion |
 
 > 💡 **Starter playbook**: run the daily inbox triage and writing sprint for one month first. Add advanced workflows only after the habit sticks.
 
@@ -203,6 +203,6 @@ Researchers do not need to install Claude Code on day one. This is the recommend
 | **Tier 0** | Claude.ai web + NotebookLM | Non-programming researchers, humanities / social sciences, clinical research | 0 (browser skills are enough) |
 | **Tier 1** | Claude Desktop + Zotero MCP / Obsidian MCP | Researchers already using Zotero / Obsidian | Half-day setup |
 | **Tier 2** | Claude Code + ai-research-skills | Computational researchers who mostly write / edit code | 1-2 days to get started |
-| **Tier 3** | Claude Code + codex-delegate + gemini-delegate + research-hub | People building a multi-LLM research pipeline across multiple tools | 1 week setup + ongoing tuning |
+| **Tier 3** | Claude Code + codex-delegate + Gemini CLI + research-hub | People building a multi-LLM research pipeline across multiple tools | 1 week setup + ongoing tuning |
 
 **Most researchers can stop at Tier 1-2**. Tier 3 is worth it only when you have a lot of repeated workflows, such as running the same paper synthesis every week.

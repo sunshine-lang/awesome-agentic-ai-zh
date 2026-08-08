@@ -50,6 +50,7 @@ diff starter.py starter_reference.py
 ```
 
 **重點**：
+
 - **看 signature、不看 body**。imports / TOOLS_SPEC / function names + arg types 可以看；裡面怎麼實作要自己想。
 - **卡 20 分鐘是健康的**。卡 1 小時也健康。卡 3 小時就回去看 reference、然後**默寫一遍**。
 - **test 通過 ≠ 學會**。test 通過代表 logic 對；學會代表你**講得出**為什麼這 13 行 ReAct loop 必要、為什麼 `tool_call_id` 要配對、為什麼要 `max_iter`。
@@ -66,6 +67,7 @@ python test.py        # 確認跑得起來
 ```
 
 **何時用**：
+
 - 你**之前寫過 ReAct loop**、現在只是想看本 curriculum 是怎麼寫的、做 cross-reference
 - 你在**找 pitfall reference**（譬如 production 出 bug、想看 curriculum 提過沒）
 - 你是**講課老師**、要快速看完整套教材然後挑題目給學生
@@ -77,6 +79,7 @@ python test.py        # 確認跑得起來
 短答：**v1 階段、為了快速 ship 完整可跑版本**。
 
 長答：完整 starter.py 有 3 個好處（給維護者）：
+
 1. **test 直接 pass**——確認 framework 整合沒漏東西
 2. **不會 outdated**——隨 framework 升級可以馬上 fix（不必同步維護 template）
 3. **新手 onboard 快**——把 repo clone 下來就能跑、降低裝環境 friction

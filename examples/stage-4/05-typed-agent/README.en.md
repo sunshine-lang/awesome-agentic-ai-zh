@@ -5,6 +5,13 @@
 # Exercise 5: Type-Safe Agent (Pydantic AI structured output)
 
 Pairs with [Stage 4 — Agent Frameworks](../../../stages/04-agent-frameworks.en.md) Exercise 5.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
+
+> 📚 **Want the chapter-length version?** The starter in this folder is an illustrative build focused on the core pattern plus two SDK paths — it is not in-depth teaching material. Recommended for depth:
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ the most complete Chinese-language course out there — chapter by chapter, plus 16 production capabilities. **This exercise maps to hello-agents' structured output / type-safe chapter**
+> - [Pydantic AI official docs](https://ai.pydantic.dev/) + [Instructor library](https://github.com/instructor-ai/instructor) (another route to typed output)
+> - Full references in [Stage 4 Curated Projects](../../../stages/04-agent-frameworks.en.md#-curated-projects)
+
 
 ## Task
 
@@ -127,7 +134,7 @@ When Pydantic AI sees a ValidationError, it appends the error message back into 
 ## Want smarter answers?
 
 ```bash
-MODEL=claude-sonnet-4-6 python starter_anthropic.py    # highest one-shot rate
+MODEL=claude-sonnet-5 python starter_anthropic.py    # highest one-shot rate
 MODEL=qwen2.5:7b python starter.py                      # larger local model
 ```
 

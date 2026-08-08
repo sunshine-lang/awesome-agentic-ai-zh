@@ -82,6 +82,7 @@ agent / Skills / cookbook 仓库我应该收进来，请告诉我；或者直接
 - **同 Zhipu 邏輯**：邀請式而非推銷式
 - Moonshot 的開源相對少（主要是 paper + weights），如果真的沒合適 repo，**不
   要硬 fit**——可以先放著，等他們釋出 agent SDK 再收
+
 - Moonshot 開發者社群入口：Discord / 知乎 / 飛書群（Kimi 開發者群）
 - 不要與 Zhipu outreach 同日發送——避免「同一個人到處撒網」感
 - 監測：如果 Moonshot 後續釋出 `MoonshotAI/Kimi-Agent` 或類似——優先收進 §11

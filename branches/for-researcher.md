@@ -16,15 +16,15 @@
 | **文獻精讀** | PDF 翻一半就忘 / 抓不到 claim | 抓 claim、figure、citation、做筆記 | Zotero + zotero-gpt → zotero-skills |
 | **研究設計** | RQ 模糊、不知選哪個 method | 對話釐清、列出 trade-off | Claude.ai 對話 → ai-research-skills |
 | **實驗 / 寫程式** | 重複 boilerplate、寫 plot 浪費時間 | 寫 / 改 code、batch refactor | Claude Code → codex-delegate |
-| **論文撰寫** | 草稿卡關、句子不通 | 大綱 → 段落 → 潤色 | Claude.ai → gemini-delegate（長稿） |
+| **論文撰寫** | 草稿卡關、句子不通 | 大綱 → 段落 → 潤色 | Claude.ai → Gemini CLI（長稿） |
 | **改稿 / 投稿** | 期刊規範一堆、容易漏 | banned-word / figure-text / submission checklist | academic-writing-skills |
-| **跨 paper synthesis** | 5 篇 paper 互相對話、context 爆 | 1M token 一次讀完 + 整理 | gemini-delegate |
+| **跨 paper synthesis** | 5 篇 paper 互相對話、context 爆 | 1M token 一次讀完 + 整理 | Gemini CLI |
 
 > 💡 **計算型 vs 非程式背景**：表中「推薦工具」由輕到重——非程式背景研究者先停在每行**第一個**就夠了；計算型研究者要自動化才往後挑。
 
 ## 精選 Projects
 
-> 💡 **想把 Claude Code 接到 NotebookLM、Obsidian、Notion、Excel、PDF、Excalidraw 等研究常用工具？** 62 個整合在 [`resources/mcp-skills-catalog.md`](../resources/mcp-skills-catalog.md)（按使用情境分類）。下面這節保留「研究專屬」的工具與 marketplace。
+> 💡 **想把 Claude Code 接到 NotebookLM、Obsidian、Notion、Excel、PDF、Excalidraw 等研究常用工具？** 77+ 個整合在 [`resources/mcp-skills-catalog.md`](../resources/mcp-skills-catalog.md)（按使用情境分類）。下面這節保留「研究專屬」的工具與 marketplace。
 
 ### 研究流程 Marketplace
 
@@ -40,7 +40,7 @@
 
 | 欄位 | 內容 |
 |---|---|
-| Stars | ★ 8k+ |
+| Stars | ★ 8.9k+ |
 | License | Apache-2.0 |
 
 **教什麼**：對 PDF 文件以 **citation-grounded Q&A** 為設計目標——每個答案附句子層級的引用、減少幻覺風險。實際準確率依文件類型而異、評測結果以官方 benchmark / paper 為準。
@@ -53,7 +53,7 @@
 
 | 欄位 | 內容 |
 |---|---|
-| Stars | ★ 27k+ |
+| Stars | ★ 28k+ |
 | License | Apache-2.0 |
 
 **教什麼**：自主 deep-research agent——planner + multi-source crawl + report 合成。給定一個研究主題，自動產出 markdown / PDF brief。
@@ -68,7 +68,7 @@
 
 | 欄位 | 內容 |
 |---|---|
-| Stars | ★ 28k+ |
+| Stars | ★ 30k+ |
 | License | MIT |
 
 **教什麼**：multi-perspective outline-then-write pipeline——**白話三步**：(1) 先模擬不同觀點提出問題、(2) 把問題整理成大綱、(3) 最後生成 Wikipedia-style 草稿。Stanford OVAL 出品。
@@ -120,8 +120,8 @@
 |---|---|---|---|
 | 研究設計 / 假設討論 | 「這個 RQ 該用 logistic vs survival？」 | Claude.ai 對話 | 對話協作、context memory |
 | 寫 / 改 code | 「50 個 simulation script 都加 logging」 | codex-delegate | 機械式編輯快、不燒 Claude token |
-| 寫長稿（中英文） | 「draft 一個 8 頁 paper section」 | gemini-delegate | 1M context、長 prose 強項 |
-| Second opinion | 「請 Gemini 看我的 discussion 段落」 | gemini-delegate | LLM-vs-LLM 對照、容易看出 Claude 自身偏誤 |
+| 寫長稿（中英文） | 「draft 一個 8 頁 paper section」 | Gemini CLI | 1M context、長 prose 強項 |
+| Second opinion | 「請 Gemini 看我的 discussion 段落」 | Gemini CLI | LLM-vs-LLM 對照、容易看出 Claude 自身偏誤 |
 | 投稿前 audit | 「跑 banned-word + figure-text checklist」 | academic-writing-skills | structured audit、不靠 LLM 即興判斷 |
 
 #### 維護者自用的 6 個研究 skill
@@ -135,7 +135,7 @@
 | **[zotero-skills](https://github.com/WenyuChiou/zotero-skills)** ⭐⭐⭐⭐ | 文獻管理 | Zotero CLI skill（搜 / 加 / 分類 / 標記）——跟 zotero-gpt 互補（後者在 Zotero 裡 chat、這份從外部操作） |
 | **[academic-writing-skills](https://github.com/WenyuChiou/academic-writing-skills)** ⭐⭐⭐ | 投稿前 | banned-word audit、figure-text coupling、submission checklist；per-paper 可自訂 journal_format / style_overrides |
 | **[codex-delegate](https://github.com/WenyuChiou/codex-delegate)** ⭐⭐⭐⭐⭐ | 寫程式 | Claude planner + Codex executor 的標準 skill——batch refactor / boilerplate / migration |
-| **[gemini-delegate-skill](https://github.com/WenyuChiou/gemini-delegate-skill)** ⭐⭐⭐⭐ | 長稿 / synthesis | Claude planner + Gemini 寫 1M context 長文 / CJK / second-opinion |
+| **[gemini-delegate-skill](https://github.com/WenyuChiou/gemini-delegate-skill)** ⭐⭐⭐（⚠️ 已封存） | 長稿 / synthesis | Claude planner + Gemini 寫 1M context 長文 / CJK / second-opinion。**⚠️ repo 已封存 2026-07**——workflow 仍可直接用 [Gemini CLI](https://github.com/google-gemini/gemini-cli) 做 |
 
 ---
 
@@ -145,7 +145,7 @@
 
 | 欄位 | 內容 |
 |---|---|
-| Stars | ★ 11k+ |
+| Stars | ★ 12k+ |
 | License | MIT |
 
 **教什麼**：開源版的 Deep Research——支援單 agent 跟 supervisor + multi-researcher 兩種架構（multi-agent 那條目前在 `src/legacy/`）、平行搜尋、再合成成有引用的 report。是學「LLM agent 怎麼自動產出有引用 brief」的好參考。
@@ -160,7 +160,7 @@
 
 | 欄位 | 內容 |
 |---|---|
-| Stars | ★ 6k+ |
+| Stars | ★ 6.9k+ |
 | License | The AI Scientist Source Code License（source-available，非商用 + 有 manuscript-disclosure 條款） |
 
 **教什麼**：端到端的 multi-agent 科學研究 loop：構想 → 寫程式 → 跑實驗 → 寫 paper → 互審。Sakana AI 的「AI 寫整篇 ML paper」研究實作。
@@ -186,11 +186,11 @@
 |---|---|---|---|---|
 | **每天** | 文獻 inbox 分流 | (1) 把昨天看到的 paper 丟 paper-qa<br>(2) 抓 claim + 4-5 行 summary<br>(3) 進 Zotero / Obsidian | paper-qa + zotero-gpt | 全研究者 |
 | **每天** | 寫作 sprint（25 min） | (1) 寫一段給 Claude.ai<br>(2) 跑 banned-word + figure-text audit<br>(3) 改完進 main draft | Claude.ai + academic-writing-skills | 寫 paper 階段 |
-| **每週** | 跨 paper synthesis | (1) 把 5-10 篇 PDF 餵 Gemini<br>(2) 問「這幾篇 disagree 在哪」<br>(3) 寫成 1 頁 brief | gemini-delegate（1M context） | 計算型 |
+| **每週** | 跨 paper synthesis | (1) 把 5-10 篇 PDF 餵 Gemini<br>(2) 問「這幾篇 disagree 在哪」<br>(3) 寫成 1 頁 brief | Gemini CLI（1M context） | 計算型 |
 | **每週** | Zotero 整理 | (1) 標未讀 / 已讀<br>(2) 重 tag<br>(3) 抓出該歸檔的 PDF | zotero-skills 或 zotero-gpt | 全研究者 |
 | **每月** | 研究進度 brief | (1) 從 Obsidian + Zotero + NotebookLM 抓近期筆記<br>(2) 整理出 5 個進度點<br>(3) 送指導教授 | research-hub | 同時用 3 工具的人 |
 | **Per paper** | 投稿前 final audit | (1) banned-word audit<br>(2) figure-text coupling check<br>(3) submission checklist | academic-writing-skills | 投稿前 1 週 |
-| **Per paper** | Multi-agent peer review | (1) Claude 看 logic / argument<br>(2) Codex 看 code / table 數字<br>(3) Gemini 看 prose / clarity | codex-delegate + gemini-delegate | 投稿前 second-opinion |
+| **Per paper** | Multi-agent peer review | (1) Claude 看 logic / argument<br>(2) Codex 看 code / table 數字<br>(3) Gemini 看 prose / clarity | codex-delegate + Gemini CLI | 投稿前 second-opinion |
 
 > 💡 **新手起手式**：先做「每天 inbox 分流」+「寫作 sprint」兩條一個月、習慣後再加進階流程。一次裝太多會養不起來。
 
@@ -203,6 +203,6 @@
 | **Tier 0** | Claude.ai 網頁版 + NotebookLM | 非程式背景、人文社科、臨床研究 | 0（會用瀏覽器就行） |
 | **Tier 1** | Claude Desktop + Zotero MCP / Obsidian MCP | 已有 Zotero / Obsidian 習慣的研究者 | 半天裝好 |
 | **Tier 2** | Claude Code + ai-research-skills | 計算型研究者、寫 / 改程式為主 | 1-2 天上手 |
-| **Tier 3** | Claude Code + codex-delegate + gemini-delegate + research-hub | 想跑 multi-LLM 研究 pipeline、跨多工具整合 | 1 週 setup + 持續調 |
+| **Tier 3** | Claude Code + codex-delegate + Gemini CLI + research-hub | 想跑 multi-LLM 研究 pipeline、跨多工具整合 | 1 週 setup + 持續調 |
 
 **多數研究者停在 Tier 1-2 就夠了**——Tier 3 是有大量重複流程（譬如每週跑同樣的 paper synthesis）才值得。

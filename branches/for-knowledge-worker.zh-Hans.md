@@ -24,7 +24,7 @@
 
 ## 精选 Projects
 
-> 💡 **想把 AI agent 接到 Notion / Gmail / Outlook / Slack / Excel / 飞书？**（例：把 Gmail 来信自动整理成 Notion 待办）62 个常用办公集成工具表见 [`resources/mcp-skills-catalog.zh-Hans.md`](../resources/mcp-skills-catalog.zh-Hans.md)（按使用场景分类）。下面这节保留 workflow / 集成平台级的工具。
+> 💡 **想把 AI agent 接到 Notion / Gmail / Outlook / Slack / Excel / 飞书？**（例：把 Gmail 来信自动整理成 Notion 待办）77+ 个常用办公集成工具表见 [`resources/mcp-skills-catalog.zh-Hans.md`](../resources/mcp-skills-catalog.zh-Hans.md)（按使用场景分类）。下面这节保留 workflow / 集成平台级的工具。
 
 ### 工作流工具
 
@@ -54,7 +54,7 @@
 
 | 栏位 | 内容 |
 |---|---|
-| Stars | ★ 34k+ |
+| Stars | ★ 36k+ |
 | License | AGPL-3.0 |
 
 **教什么**：自架的“第二大脑”——可以跟 web + 本地文件对话、排程自动化、自定义 agent。
@@ -69,7 +69,7 @@
 
 | 栏位 | 内容 |
 |---|---|
-| Stars | ★ 76k+ |
+| Stars | ★ 81k+ |
 | License | LobeHub Community License（基于 Apache-2.0 + 商用附加条款） |
 
 **教什么**：可部署的多 agent 聊天平台——含 plugin marketplace、知识库、团队协作。可自架的 AI workspace 代表选项之一。
@@ -97,7 +97,7 @@
 
 | 栏位 | 内容 |
 |---|---|
-| Stars | ★ 60k+ |
+| Stars | ★ 64k+ |
 | License | MIT |
 
 **教什么**：all-in-one 的私有 RAG 工作平台——上传文件、建 agent、相容 MCP、预设 on-device。**NotebookLM 的私有 self-hosted 替代方案**。

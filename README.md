@@ -33,7 +33,7 @@
 | 核心 | 做什麼 | 規模 |
 |---|---|---|
 | **學習路線圖** | 把網路散落的高品質專案、教材、必修閱讀，按**從零開始、循序漸進**整理成 **8 個階段**（含 Stage 5 + Stage 8 兩個共用 hub）+ 2 條學習路線 + 5 條延伸路徑 | 8 stages、2 tracks |
-| **資源 curation** | 每階段精選 **240+** 個 project（含星等、適合誰、教什麼、怎麼跑），加上中文 AI 生態(DeepSeek / Zhipu / Kimi 等)MCP / Skill 完整 catalog | 240+ projects、65 MCP/Skill |
+| **資源 curation** | 每階段精選 **240+** 個 project（含星等、適合誰、教什麼、怎麼跑），加上中文 AI 生態(DeepSeek / Zhipu / Kimi 等)MCP / Skill 完整 catalog | 240+ projects、77 MCP/Skill |
 | **簡單 illustrative 案例** | 每階段附 1-5 個**基礎練習**（70-150 行 starter + dual-path Ollama/Anthropic SDK 對照 + mock-based test） | 23 個練習 folder |
 
 走完整條路線，你會從「**LLM 使用者**」進階到「**agent 系統建構者**」——能看懂 framework 在做什麼、能設計多 agent 協作、能寫自己的 MCP server。
@@ -55,6 +55,7 @@
 - [🤝 如何貢獻](#-如何貢獻)
 - [🙏 致謝](#-致謝)
 - [🎓 引用](#-引用)
+- [☕ 支持這個專案](#-支持這個專案)
 - [License](#license)
 
 ---
@@ -112,10 +113,10 @@ cd awesome-agentic-ai-zh
 
 | Stage | 主題 | 關鍵內容 | 預估時程 |
 |---|---|---|---|
-| **A1** | [選一個 CLI Agent，開始用它做事（CLI Agent Intro & Selection）](tracks/cli/A1-cli-intro.md) | 7 主流 CLI 比較 · 安裝 · 第一次跑 | 1 週 |
+| **A1** | [選一個 CLI Agent，開始用它做事（CLI Agent Intro & Selection）](tracks/cli/A1-cli-intro.md) | 8 主流 CLI 比較 · 安裝 · 第一次跑 | 1 週 |
 | **A2** | [建立可重複使用的 CLI 工作流程（CLI Workflow Patterns）](tracks/cli/A2-cli-workflow.md) | CLAUDE.md · slash command · 多步驟拆解 | 1-2 週 |
 | **A3** | [把 CLI Agent 接進真實工作流程（Integration & Production）](tracks/cli/A3-cli-production.md) | MCP 接 CLI · CI 自動化 · cost / observability | 1-2 週 |
-| **+5** | [Stage 5 — Claude Code 生態](stages/05-claude-code-ecosystem.md)（**共用 hub**） | MCP · Skills · Plugins · Subagents、Track A 必看 5.1-5.4 / 選讀 5.5-5.6 | 1-2 週（Track A 視角）|
+| **+5** | [Stage 5 — Claude Code 生態](stages/05-claude-code-ecosystem.md)（**共用 hub**） | MCP · Skills · Plugins · Subagents、Track A 必看 5.1-5.4 / 選讀 5.5-5.7 | 1-2 週（Track A 視角）|
 | **+8** | [Stage 8 — Agent Interfaces](stages/08-agent-interfaces.md)（**共用 hub**）| Computer Use · Browser Use · Code Sandbox、Track A 視角看 Track A 怎麼用 | 1-2 週（Track A 視角）|
 
 > **Track A 預估總時程**：含 Stage 0-2（共用基礎）+ A1-A3 + **Stage 5 + Stage 8（兩個共用 hub）= 約 8-10 週**。核心參考：[`resources/cli-agents-guide.md`](resources/cli-agents-guide.md)。
@@ -140,7 +141,7 @@ cd awesome-agentic-ai-zh
 >
 > 兩個 hub 出現在兩條 track 內、視角不同、學的深度也不同（內文有 Track A / Track B 分視角段）。
 
-> 💡 **想看跨 stage 的完整範例？** [7 步打造你的第一個 AI Agent](walkthroughs/build-first-agent-in-7-steps.md) — 同一個 Paper Summary Bot 從 Stage 1 一路寫到 Stage 7，~350 行真實程式碼（**Track B 適用**）
+> 💡 **想看跨 stage 的完整範例？** [7 步打造你的第一個 AI Agent](walkthroughs/build-first-agent-in-7-steps.md) — 同一個 Paper Summary Bot 從 Stage 1 一路寫到 Stage 7，~300 行真實程式碼（**Track B 適用**）
 
 走完主幹後，依你的身分挑一條延伸路線繼續走。**不確定挑哪條？**
 
@@ -178,7 +179,7 @@ cd awesome-agentic-ai-zh
 
 > 🔭 **三層概念進化**：**prompt engineering**（Stage 2、單一 prompt 怎麼寫）→ **context engineering**（Stage 3 之後、怎麼動態組 system prompt + memory + retrieved chunks + tool schema）→ **harness engineering**（Stage 7、agent loop / eval / observability / deploy 整套包成 production system）。3 個術語對應 3 個 phase、不必另外找資源。詳見 [`stages/02-prompt-engineering.md#-進階context-engineering不是-prompt-engineering-了`](stages/02-prompt-engineering.md) 跟 [`stages/07-multi-agent-production.md`](stages/07-multi-agent-production.md) 必修閱讀 5+6。
 
-走完主幹（14-19 週）後，依你的身分（研究員 / 開發者 / 老師 / 知識工作者 / 日常使用者）挑一條延伸路線繼續走。
+走完主幹（Track B 16-22 週 / Track A 8-10 週）後，依你的身分（研究員 / 開發者 / 老師 / 知識工作者 / 日常使用者）挑一條延伸路線繼續走。
 
 最重要的一句話：**不要跳過 動手練習**。每個 stage 的 動手練習都是「不動手就學不會」的東西，光讀過去後面會卡住。
 
@@ -226,14 +227,14 @@ cd awesome-agentic-ai-zh
 | 你的狀況 | 去哪 | 規模 |
 |---|---|---|
 | 接 Notion / Obsidian / Excel / GitHub 等工具 | [`RESOURCES.md` 接日常工具](RESOURCES.md#接日常工具常用-mcp-server--skill) | 7-8 個 highlight |
-| 完整 MCP server / Skill 目錄（含星等、分類） | [`resources/mcp-skills-catalog.md`](resources/mcp-skills-catalog.md) | 62 條、6 大分類 |
+| 完整 MCP server / Skill 目錄（含星等、分類） | [`resources/mcp-skills-catalog.md`](resources/mcp-skills-catalog.md) | 77+ 條、16 大分類 |
 
 ### 🔬 研究 / production 級
 
 | 你的狀況 | 去哪 | 內容 |
 |---|---|---|
 | 研究 workflow + multi-LLM delegation skill | [`RESOURCES.md` 研究工作流](RESOURCES.md#研究工作流本-repo-維護者出品) | 本 repo 維護者出品的 Claude Code 研究 skill 對 |
-| CLI agent 7 家對照 + production 搭配 | [`resources/cli-agents-guide.md`](resources/cli-agents-guide.md) | Track A 的核心參考、148 行 |
+| CLI agent 8 家對照 + production 搭配 | [`resources/cli-agents-guide.md`](resources/cli-agents-guide.md) | Track A 的核心參考、148 行 |
 | Schema 設計規則（tool calling 必看） | [`resources/schema-design-cheatsheet.md`](resources/schema-design-cheatsheet.md) | 5 條黃金規則 + 5 個 anti-pattern |
 
 ---
@@ -251,8 +252,18 @@ cd awesome-agentic-ai-zh
 
 PR 流程跟 style 規範請看 [CONTRIBUTING.md](CONTRIBUTING.md) 跟 [resources/style-guide.md](resources/style-guide.md)。
 
+> 🤖 **新增 project 的連結會自動過審核** — PR 一加新的 `github.com/owner/repo` 連結，一個 GitHub Action 會留言貼出它的 star 數、license、是否封存、最後更新，並對照策展標準標出已封存 / 停更（>6 個月）/ 無 license 的項目。純資訊、不擋 PR，收不收仍由 maintainer 決定（目前只在 maintainer 開的 branch 上跑，fork PR 因 token 限制暫略）。
+
 > 📅 **想看最近 ship 了什麼** → [`CHANGELOG.md`](CHANGELOG.md)（最近 14 天）。
 > Maintainer 內部進度與 launch checklist 放在 [`.github/launch-checklist.md`](.github/launch-checklist.md)（內部文件）。
+
+---
+
+## 💬 顧問 / 聯絡
+
+公開學習版（MIT），歡迎自由取用。
+
+目前以顧問為主：團隊或公司若需 **prompt review / audit** 或 **AI agent workflow 諮詢**，歡迎來信（博士生、時間有限）：📧 [wenyuchiou12@gmail.com](mailto:wenyuchiou12@gmail.com)
 
 ---
 
@@ -302,9 +313,13 @@ PR 流程跟 style 規範請看 [CONTRIBUTING.md](CONTRIBUTING.md) 跟 [resource
 
 ---
 
-## 📈 Star History
+## ☕ 支持這個專案
 
-[![Star History Chart](https://api.star-history.com/svg?repos=WenyuChiou/awesome-agentic-ai-zh&type=Date)](https://star-history.com/#WenyuChiou/awesome-agentic-ai-zh&Date)
+這份學習地圖是免費、開源（MIT）。如果它對你有幫助，除了給個 ⭐ Star，也歡迎請作者喝杯咖啡、支持它持續更新：
+
+<a href="https://www.buymeacoffee.com/wenyuchiou" target="_blank" rel="noopener noreferrer"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="44"></a>
+
+或直接點 repo 右上角的 **❤ Sponsor** 按鈕。（GitHub Sponsors 審核中，通過後會一併加上。）
 
 ---
 

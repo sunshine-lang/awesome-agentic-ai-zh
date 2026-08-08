@@ -15,7 +15,7 @@
 
 完成這一節後你會：
 
-- 知道 7 個主流 CLI agent（Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent）的差別
+- 知道 8 個主流 CLI agent（Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build）的差別
 - 依自己的場景挑出第一個 CLI 工具
 - 完成安裝 + 認證 + 第一個真正的任務（不是 hello world）
 - 知道什麼時候該換 / 加第二個 CLI
@@ -23,6 +23,7 @@
 ## 🚪 進入條件
 
 你應該已經：
+
 - 跑過 Stage 0 的 練習：CLI（會用命令列）
 - 有 Claude / OpenAI / Google 任一個帳號（不一定是付費）
 - 對 prompt 寫法基本上手（Stage 2）
@@ -30,8 +31,8 @@
 ## 📚 必修閱讀
 
 1. [**`resources/agent-paradigms.md`**](../../resources/agent-paradigms.md) ⭐ — 5 種 agent 型態的全景圖；先讀這份知道 CLI agent 在整個 agent 生態中的位置（Type 2 + Type 3）
-2. [**`resources/cli-agents-guide.md`**](../../resources/cli-agents-guide.md) ⭐ — 本軌的核心參考。7 個主流 CLI agent 並列比較、依 use case 推薦、實用搭配
-3. [**Anthropic — Claude Code Quickstart**](https://docs.anthropic.com/en/docs/claude-code/quickstart) — 官方安裝指南
+2. [**`resources/cli-agents-guide.md`**](../../resources/cli-agents-guide.md) ⭐ — 本軌的核心參考。8 個主流 CLI agent 並列比較、依 use case 推薦、實用搭配
+3. [**Anthropic — Claude Code Quickstart**](https://code.claude.com/docs/en/quickstart) — 官方安裝指南
 4. [**OpenAI — Codex Quickstart**](https://github.com/openai/codex/blob/main/README.md) — Codex 安裝跟認證流程
 
 ## 🛠 動手練習（基礎 illustrative 練習）
@@ -62,17 +63,18 @@
 
 ## 🎯 精選 Projects
 
-按用途分 2 類、9 個項目一張表搞定。**挑入口看「適合誰」、想深入細節（強弱項、推薦場景、實用搭配）→ [`resources/cli-agents-guide.md`](../../resources/cli-agents-guide.md)**。
+按用途分 2 類、10 個項目一張表搞定。**挑入口看「適合誰」、想深入細節（強弱項、推薦場景、實用搭配）→ [`resources/cli-agents-guide.md`](../../resources/cli-agents-guide.md)**。
 
 | 分類 | Project | ⭐ | 適合誰 | 為什麼推薦 / 備註 |
 |---|---|---|---|---|
-| **7 個主流 CLI agent** | [anthropics/claude-code](https://github.com/anthropics/claude-code) | ⭐⭐⭐⭐⭐ | **推薦作為第一個 CLI agent** | 內建 SKILL / plugin 生態、CLAUDE.md prompt 系統、最完整的中文社群資源（★ 120k+） |
-| | [openai/codex](https://github.com/openai/codex) | ⭐⭐⭐⭐⭐ | 已訂 ChatGPT Plus / Pro 的人 | 用同一帳號就能在終端機跑（★ 89k+） |
-| | [sst/opencode](https://github.com/sst/opencode) | ⭐⭐⭐⭐⭐ | 要 self-host / 不想 vendor lock-in | 開源、不綁 LLM provider、社群迭代最快（★ 171k+） |
+| **8 個主流 CLI agent** | [anthropics/claude-code](https://github.com/anthropics/claude-code) | ⭐⭐⭐⭐⭐ | **推薦作為第一個 CLI agent** | 內建 SKILL / plugin 生態、CLAUDE.md prompt 系統、最完整的中文社群資源（★ 140k+） |
+| | [openai/codex](https://github.com/openai/codex) | ⭐⭐⭐⭐⭐ | 已訂 ChatGPT Plus / Pro 的人 | 用同一帳號就能在終端機跑（★ 100k+） |
+| | [sst/opencode](https://github.com/sst/opencode) | ⭐⭐⭐⭐⭐ | 要 self-host / 不想 vendor lock-in | 開源、不綁 LLM provider、社群迭代最快（★ 190k+） |
 | | [google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli) | ⭐⭐⭐⭐ | 處理大 codebase / 大 PDF | 1M token 長 context（★ 103k+） |
-| | [block/goose](https://github.com/block/goose) | ⭐⭐⭐⭐ | 想用既有 Claude/ChatGPT/Gemini 訂閱 + Ollama 本機 | 15+ provider 支援（含 Ollama），★ 47k+。**已遷至 `aaif-goose/goose`（AAIF / Linux Foundation）** |
-| | [Aider-AI/aider](https://github.com/Aider-AI/aider) | ⭐⭐⭐⭐⭐ | 要寫 code、想要 git 流程乾淨 | git-native、自動 commit / branch（★ 44k+） |
+| | [block/goose](https://github.com/block/goose) | ⭐⭐⭐⭐ | 想用既有 Claude/ChatGPT/Gemini 訂閱 + Ollama 本機 | 15+ provider 支援（含 Ollama），★ 51k+。**已遷至 `aaif-goose/goose`（AAIF / Linux Foundation）** |
+| | [Aider-AI/aider](https://github.com/Aider-AI/aider) | ⭐⭐⭐⭐⭐ | 要寫 code、想要 git 流程乾淨 | git-native、自動 commit / branch（★ 47k+） |
 | | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | ⭐⭐⭐⭐⭐ | 想要 cloud-deployed agent（Telegram / Discord / Slack 介面）+ 中文 LLM 生態 | 自動演化型 agent、200+ provider routing、含 GLM / Kimi / 小米 MiMo / MiniMax、內建 cron + skill 自動演化迴圈（★ 數據截至 2026-05；以官方 GitHub 為準）。⚠️ 自動演化 skill 是實驗性功能、缺第三方獨立審計、production 用前請自行驗證安全性與維護狀態、先在低風險場景試 |
+| | [xai-org/grok-build](https://github.com/xai-org/grok-build) | ⭐⭐⭐ | 已在用 Grok / X 生態、想嘗鮮的人 | SpaceXAI（xAI）官方 TUI coding agent、Rust、支援 headless / ACP 編輯器嵌入（★ 23k+）。⚠️ 2026-07-14 才開源、非常新——先觀察、不建議當第一個 CLI agent |
 | **進階：互補工具**<br>（不是 CLI、但常搭配） | [LM Studio](https://lmstudio.ai/) | ⭐⭐⭐ | Windows / Mac 不想學 command line、想跑本機 LLM | 非開源 desktop app、拖拉介面跑本地 LLM |
 | | [Ollama](https://github.com/ollama/ollama) | ⭐⭐⭐⭐⭐ | 想本機跑 LLM 給 CLI agent 用 | 本地 LLM runner、跟 OpenCode / goose 搭配（★ 170k+）。詳見 [Stage 1 — Local LLM 執行](../../stages/01-llm-basics.md#-精選-projects) |
 
@@ -81,7 +83,8 @@
 ## ✅ 進 A2 前的自我檢查
 
 你能不能：
-- [ ] 講得出 7 個主流 CLI 的核心差別（不查表就答得出 3-4 個）
+
+- [ ] 講得出 8 個主流 CLI 的核心差別（不查表就答得出 3-4 個）
 - [ ] 你已經選定一個主用 CLI，並有 working setup（裝好、認證好、跑過至少 5 個非 hello-world 任務）
 - [ ] 寫過你自己的 `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`
 - [ ] 至少跑過第二個 CLI 一次，知道兩個的風格差異
@@ -93,6 +96,7 @@
 ## 💡 給 Track A 學習者的提醒
 
 CLI agent 跟 web 版（Claude.ai / ChatGPT）的差別不是「一樣的東西換介面」——CLI 能讀寫你電腦上的檔案、執行 shell 指令、改 git。這個能力差異**先了解再用**：
+
 - 第一週：每個任務都加 `--dry-run` 或先 review 計畫再執行
 - 不要直接讓 CLI 對 production codebase 做 commit
 - 重要資料（key、合約、病歷）放在 `.cursorignore` / `.claudeignore` 排除

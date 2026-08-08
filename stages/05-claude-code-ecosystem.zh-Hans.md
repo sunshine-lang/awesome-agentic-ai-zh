@@ -16,9 +16,16 @@
 
 > 🗺️ **Claude Code 属于哪种 agent 型态**？→ [`resources/agent-paradigms.zh-Hans.md`](../resources/agent-paradigms.zh-Hans.md) Type 1（IDE-coupled）+ Type 2（Terminal pair-programmer）；想看完整 5 种 paradigm 对照也从这份开始。
 
+> 🧭 **Claude Code 只是 agent 的其中一种形态**（往下读前先有个全局感）：Claude Code 是给**工程师**的**终端** agent——活在命令行、处理代码。Anthropic 另外还有 **Claude Cowork**：给**非工程师**（研究、分析、运营）的**桌面 app**——给它一个目标、它会跨你的文件跟应用程序把事情做完、交回成品。OpenAI 这两种形态也都有。Stage 5 接下来专讲 Claude Code，这张表只是让你知道它在整张地图的位置。
+
+| 形态 | 它帮你做什么 | Anthropic | OpenAI |
+|---|---|---|---|
+| **终端 · 给工程师** | 读 / 改 / 跑你的代码 | Claude Code | Codex CLI |
+| **App · 给所有人** | 跨你的文件、应用程序、网页把一件事做完 | Claude Cowork | ChatGPT agent |
+
 > ⚠️ **想用本地 LLM？这个 stage 不是那条路线。** Claude Code 需要 Anthropic API / OAuth，不能直接改接 Ollama 或本地 endpoint。离线、隐私数据或不想用 API 额度时，请看 [`resources/cookbook.zh-Hans.md` Recipe 6](../resources/cookbook.zh-Hans.md#6-本地-llm--cli-agent-快速-walkthrough)，用 OpenCode / goose / Aider / Hermes 这类支持 BYO LLM 的 CLI agent。
 
-> 📋 **本章组成**：6 个子章（5.1 基础 / 5.2 MCP / 5.3 Skills / 5.4 Plugins / 5.5 Subagents / 5.6 Claude Code Source 解剖），每个子章都有“学习目标 → 必修阅读 → 动手练习 → 精选 Projects” → 章末 自我检查。**注意**：Harness Engineering（Agent 执行系统设计）的**学科级概念**会在 [Stage 7](07-multi-agent-production.zh-Hans.md) 系统整理；本章 5.6 把 Claude Code 当作案例，观察一个成熟 agent 工具如何处理工具、记忆、配置、权限与执行流程。
+> 📋 **本章组成**：7 个子章（5.1 基础 / 5.2 MCP / 5.3 Skills / 5.4 Plugins / 5.5 Subagents / 5.6 Dynamic Workflows / 5.7 Claude Code Source 解剖），每个子章都有“学习目标 → 必修阅读 → 动手练习 → 精选 Projects” → 章末 自我检查。**注意**：Harness Engineering（白话：model 外面的"运行外壳"——怎么给它工具、记忆、权限，怎么跑每一轮）的**学科级概念**会在 [Stage 7](07-multi-agent-production.zh-Hans.md) 系统整理；本章 5.7 把 Claude Code 当作案例，观察一个成熟 agent 工具如何处理工具、记忆、配置、权限与执行流程。
 > 🔑 **关键名词**：见 [`resources/glossary.zh-Hans.md` 5](../resources/glossary.zh-Hans.md#5-claude-code-生态)。
 
 ## Stack 一览
@@ -28,6 +35,7 @@
 ![Claude Code Ecosystem Stack](../resources/diagrams/stage5-stack.zh-Hans.png)
 
 每一层各自加上一种能力：
+
 - **API + SDK**：用程序访问 LLM
 - **Tool Use**：让 LLM 调用你定义的 function
 - **MCP**：标准化协议，让任何 LLM host 都能使用任何 tool server
@@ -47,9 +55,9 @@
 
 ---
 
-## 🗺️ 7-Layer Architecture Map（先看这张图、再读 5.1-5.6）
+## 🗺️ 7-Layer Architecture Map（先看这张图、再读 5.1-5.7）
 
-> 📋 **这节是什么**：把 Claude Code 的 7 个 primitive（MCP / Skills / Plugins / Subagents / Hooks / Slash commands / CLI）对应到 **7 个架构层 + 3 个工程学 discipline**——进 5.1-5.6 之前先看一次，知道接下来在学什么层；学完回头看，就是 synthesis。**分层是教学选择，不是 absolute 真理**。
+> 📋 **这节是什么**：把 Claude Code 的 7 个 primitive（MCP / Skills / Plugins / Subagents / Hooks / Slash commands / CLI）对应到 **7 个架构层 + 3 个工程学 discipline**——进 5.1-5.7 之前先看一次，知道接下来在学什么层；学完回头看，就是 synthesis。**分层是教学选择，不是 absolute 真理**。
 
 ![Claude Code 7-Layer Architecture Map](../resources/diagrams/claude-architecture-map.zh-Hans.png)
 
@@ -63,7 +71,7 @@
 | **L6 Workflow** | 固定可复用流程模板 | **Skills**（SKILL.md）+ Slash commands + **Plugins**（打包 Skills / hooks / commands、属 packaging）| Prompt Engineering | [Stage 5.3](#53--skillsclaude-code-的行为层-claude-code-生态最关键的一层) / [5.4](#54--plugins-与-marketplaces) |
 | **L5 Coordination** | 多 agent 分工合作 | **Subagents** + Agent team + Background | Harness Engineering | [Stage 5.5](#55--subagentsclaude-code-原生-multi-agent-机制-2025-新功能) |
 | **L4 Memory / Context** | 跨对话 / 跨 session 记事情 | History / `/compact` / Memory hooks | Context Engineering | [Stage 6](06-memory-rag.zh-Hans.md) |
-| **L3 Control Plane** | tool 执行前 / 后拦截 / validation / 阻挡 | **Hooks**（PreToolUse / PostToolUse 等）| Harness Engineering | [Stage 5.1 hooks 段](#51--claude-code-基础) |
+| **L3 Control Plane**（"守门员"层） | tool 执行前 / 后拦截 / validation / 阻挡 | **Hooks**（PreToolUse / PostToolUse 等）| Harness Engineering | [Stage 5.1 hooks 段](#51--claude-code-基础) |
 | **L2 Tool Use** | LLM 调用外部 function 的 protocol | Anthropic Tool Use（`input_schema`）| Tool design | [Stage 3](03-tool-use-and-hello-agent.zh-Hans.md) |
 | **L2.5 Tool Provider** | 把外部 API 包成 tool 给 Layer 2 用 | **MCP servers**（Notion / Gmail / Slack）| Context Engineering + Tool | [Stage 5.2](#52--mcpmodel-context-protocol-基础) |
 | **L1 Foundation** | LLM 本体（system prompt 直接送达这一层）| Anthropic API | Prompt Engineering | [Stage 1](01-llm-basics.zh-Hans.md) + [Stage 2](02-prompt-engineering.zh-Hans.md) |
@@ -76,18 +84,18 @@ Prompt / Context / Harness 是**不同层的 discipline**——学会其中一�
 |---|---|---|---|
 | **Prompt Engineering** | L1 + L6 | "送进 LLM 的字符串怎么设计" | [Stage 2](02-prompt-engineering.zh-Hans.md) |
 | **Context Engineering** | L4 + L2.5 | "context window 装什么信息" | [Stage 6](06-memory-rag.zh-Hans.md) |
-| **Harness Engineering** | L3 + L5 + L7 | "LLM 外面的 runtime scaffolding" | [Stage 7 §Harness Engineering](07-multi-agent-production.zh-Hans.md#-harness-engineering--production-agent-runtime-的工程设计--本-stage-核心概念) |
+| **Harness Engineering** | L3 + L5 + L7 | "LLM 外面的'运行外壳'——给它工具、记忆、控制流程的那层设置" | [Stage 7 §Harness Engineering](07-multi-agent-production.zh-Hans.md#-harness-engineering--production-agent-runtime-的工程设计--本-stage-核心概念) |
 
 > 💡 **MCP 的特殊位置**：MCP 严格说是 **Context Engineering**（feed context source）+ **Tool design**（协议规范）跨层东西，不纯归任一 discipline——所以图里用 Layer 2.5 标明。
 
 ### 跨 CLI vendor mini-comparison（2026-05 snapshot）
 
-只有 Claude Code 有**完整 7-layer stack**；其他 CLI 大多停在 single-agent + 简化版：
+Claude Code 的 **7-layer stack 最完整**；Codex CLI / Gemini CLI 在 2026 已补上 subagents + hooks，其余各层仍以 Claude Code 最齐：
 
 | 层 | Claude Code | OpenAI Codex | Gemini CLI |
 |---|---|---|---|
-| L5 Coordination（multi-agent）| ✅ Subagents | ❌ single-agent | ❌ |
-| L3 Control Plane（Hooks）| ✅ Hooks | ❌ | ❌ |
+| L5 Coordination（multi-agent）| ✅ Subagents | ✅ Subagents | ✅ Subagents |
+| L3 Control Plane（Hooks）| ✅ Hooks | ✅ Hooks | ✅ Hooks |
 | L2.5 Tool Provider（MCP）| ✅ | ✅（已支持 MCP）| ✅（需手动装 MCP server）|
 | L6 Workflow（Skills）| ✅ SKILL.md | AGENTS.md（context only）| GEMINI.md（context only）|
 
@@ -110,11 +118,12 @@ Prompt / Context / Harness 是**不同层的 discipline**——学会其中一�
 | **Claude Agent SDK** | 你的 Python / TS 环境 | 完整 agent runtime + tool use + 多 session | 写 production agent system |
 | **Claude Code**（**本节**） | 你的 terminal | **完整 OS-level agent**（file / shell / git / subprocess）+ skill / plugin / subagent 生态 | **日常工作主力工具** |
 
-进 5.2-5.6 之前你会在这节学到 **4 个 Claude Code 核心结构**：CLAUDE.md（记忆层）/ slash commands（控制层）/ `~/.claude/` 目录（设置层）/ settings.json（行为层）。
+进 5.2-5.7 之前你会在这节学到 **4 个 Claude Code 核心结构**：CLAUDE.md（记忆层）/ slash commands（控制层）/ `~/.claude/` 目录（设置层）/ settings.json（行为层）。
 
 ### 学习目标
 
 完成本节后你会：
+
 - 讲得出 Claude Code 跟 claude.ai / API / SDK 各自的角色（**“为什么用 CLI 不用 web”**）
 - 安装 Claude Code、配置认证、跑第一个有 file access 的 session
 - 用 8-10 个常用 slash command 控制 Claude Code 行为
@@ -122,10 +131,10 @@ Prompt / Context / Harness 是**不同层的 discipline**——学会其中一�
 - 认得 `~/.claude/` 目录结构（skills / agents / plugins / settings.json 各放哪）
 
 ### 必修阅读
-1. [**Anthropic — Claude Code Quickstart**](https://docs.claude.com/en/docs/claude-code/quickstart) — 官方安装指南
-2. [**Anthropic — CLAUDE.md best practices**](https://docs.claude.com/en/docs/claude-code/memory) — 怎么写项目 memory
-3. [**Anthropic — Slash Commands**](https://docs.claude.com/en/docs/claude-code/slash-commands) — 官方完整 slash command 列表
-4. [**Anthropic — Settings**](https://docs.claude.com/en/docs/claude-code/settings) — `settings.json` 完整 schema + env var
+1. [**Anthropic — Claude Code Quickstart**](https://code.claude.com/docs/en/quickstart) — 官方安装指南
+2. [**Anthropic — CLAUDE.md best practices**](https://code.claude.com/docs/en/memory) — 怎么写项目 memory
+3. [**Anthropic — Slash Commands**](https://code.claude.com/docs/en/slash-commands) — 官方完整 slash command 列表
+4. [**Anthropic — Settings**](https://code.claude.com/docs/en/settings) — `settings.json` 完整 schema + env var
 5. [**KimYx0207/Claude-Code-x-OpenClaw-Guide-Zh**](https://github.com/KimYx0207/Claude-Code-x-OpenClaw-Guide-Zh) — 简中入门指南
 
 > 🛠️ **要写好 CLAUDE.md？** 先看 [Stage 7.5 核心 Harness Engineering 原则（多 source 整理）](07.5-advanced-agentic-concepts.zh-Hans.md#-跨概念-harness-engineering-原则多-source-整理) 建概念、再用下面 2 个 prompt 动手。
@@ -182,7 +191,7 @@ Prompt / Context / Harness 是**不同层的 discipline**——学会其中一�
 | `/resume` | 恢复前次 session | 接续昨天工作 |
 | `/bg` | 把当前 session 背景化（移到 agent view）| 想同时跑多任务、见 5.5 |
 
-完整列表见上方 [Slash Commands 官方文件](https://docs.claude.com/en/docs/claude-code/slash-commands)。
+完整列表见上方 [Slash Commands 官方文件](https://code.claude.com/docs/en/slash-commands)。
 
 ### `~/.claude/` 目录结构（先有 mental map）
 
@@ -220,9 +229,30 @@ Prompt / Context / Harness 是**不同层的 discipline**——学会其中一�
 | Project | ⭐ | 适合谁 | 为什么推荐 / 备注 |
 |---|---|---|---|
 | [anthropics/claude-code](https://github.com/anthropics/claude-code) ⭐ 官方 | ⭐⭐⭐⭐⭐ | 追踪新版本 / 看 release notes / 回报 bug | Claude Code 官方 repo、issues + releases + inline 范例 |
-| [Anthropic — Claude Code 官方文档](https://docs.claude.com/en/docs/claude-code/overview) | ⭐⭐⭐⭐⭐ | 任何 reference 查询 | **真正的 canonical reference**——上面 5 条必修阅读都从这里来 |
+| [Anthropic — Claude Code 官方文档](https://code.claude.com/docs/en/overview) | ⭐⭐⭐⭐⭐ | 任何 reference 查询 | **真正的 canonical reference**——上面 5 条必修阅读都从这里来 |
 | [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | ⭐⭐⭐⭐ | 想看社区有什么（slash commands / skills / hooks 范例）| 较广泛的资源清单（目前正在重整）|
 | [KimYx0207/Claude-Code-x-OpenClaw-Guide-Zh](https://github.com/KimYx0207/Claude-Code-x-OpenClaw-Guide-Zh) | ⭐⭐⭐⭐ | 中文读者要逐步教学 | 简中入门导读 |
+
+### Hooks（L3 控制层）⭐ 把规则写成程序、自动拦截
+
+MCP / Skills 是“给 agent 更多能力”；**Hooks 则是反过来：在 agent 的生命周期事件上挂你自己的 script，做检查、拦截、注入**。这是 Claude Code 的控制层（架构图的 L3）。
+
+**怎么运作**：在 `settings.json` 的 `hooks` 里设置“某事件发生时跑哪个 command”。常用事件（2026 已扩到 ~28 个，先记核心几个）：
+
+| 事件 | 触发时机 | 典型用途 |
+|---|---|---|
+| `PreToolUse` | 工具调用前 | 挡危险指令、权限 gate |
+| `PostToolUse` | 工具调用后 | 自动 format / lint / 跑测试 |
+| `UserPromptSubmit` | 你发送 prompt 时 | 注入 context、挡掉某些输入 |
+| `Stop` / `SubagentStop` | （子）agent 想停时 | 强制它继续、或做收尾检查 |
+| `SessionStart` / `SessionEnd` | session 开始 / 结束 | 加载状态、写 log |
+| `PreCompact` | context 压缩前 | 保护重要内容 |
+
+**关键语义**：hook **返回 exit code 2 = 阻挡**：Claude 会把 stderr 当错误信息读回去（例如 `PreToolUse` 返回 2 就挡下那个工具调用、`UserPromptSubmit` 返回 2 就挡下 prompt）。这就是“用程序强制规则”的机制。
+
+> ⚠️ **安全**：hook 是在你机器上跑的 shell command，别乱装别人的 hook，也别在 hook 里跑未经检查的输入。
+>
+> 完整事件清单 + JSON 进阶用法见官方文档：[Claude Code Hooks](https://code.claude.com/docs/en/hooks)。
 
 ---
 
@@ -231,6 +261,10 @@ Prompt / Context / Harness 是**不同层的 discipline**——学会其中一�
 ### MCP 是什么（先定位）
 
 **MCP = “**让 LLM 用任何外部工具 / 数据**”的开放协议**。在 MCP 之前每个 LLM 厂商都得自己定义 tool 规格、每个工具供应商都得为每个 LLM 写一份接法。MCP 把这层**标准化**——写一次 MCP server、Claude / Codex / Cursor / 任何支持 MCP 的 host 都能用。
+
+> 📈 **规模参考**（Anthropic 2026-07 [官方数字](https://claude.com/blog/bringing-mcp-2026-07-28-to-claude)）：MCP 的 SDK 月下载量已超过 **4 亿**（今年约成长 4 倍），Claude 的 connectors 目录收录 **950+ 个 MCP server**。
+
+> 🧩 **核心之外还有 extension（选读）**：2026-07-28 那版规格把“核心协议”跟“[extension](https://modelcontextprotocol.io/extensions/overview)”正式分开。官方 extension 目前有 [Tasks](https://modelcontextprotocol.io/extensions/tasks/overview)（长时间任务的异步执行、可轮询）、[Apps](https://modelcontextprotocol.io/extensions/apps/overview)（在对话里直接显示图表 / 表单等交互 UI）跟 Skills over MCP。**初学阶段不用学这些**——你写 `@app.tool()` 打不到它们。真正该记住的只有一条**不会过期**的规则：**extension 一律默认关闭、要双方明确支持才生效**，所以看到教程叫你用某个 extension，先确认你的 client 有支持，否则会静默退回核心行为。官方 extension 用 `io.modelcontextprotocol/` 前缀、放在 MCP 组织下 `ext-` 开头的 repo；`experimental-ext-` 开头的则还在孵化、随时可能改。
 
 **MCP 三个抽象**：
 
@@ -259,8 +293,9 @@ Prompt / Context / Harness 是**不同层的 discipline**——学会其中一�
 
 ### 必修阅读
 1. [**Anthropic — Introducing MCP**](https://www.anthropic.com/news/model-context-protocol) — 最初发表，概念总览
-2. [**MCP Specification**](https://modelcontextprotocol.io/specification) — 实际的协议规格
+2. [**MCP Specification**](https://modelcontextprotocol.io/specification) — 实际的协议规格。MCP 规格用日期版号（`YYYY-MM-DD`）发布修订版、目前是 **2026-07-28**，所以读任何 MCP 文档前先确认自己看的是哪一版
 3. [**Complete Guide to MCP in 2026**](https://dev.to/x4nent/complete-guide-to-mcp-model-context-protocol-in-2026-architecture-implementation-and-4a11) — 实践导读
+4. [**Microsoft — MCP for Beginners**](https://github.com/microsoft/mcp-for-beginners) — 官方循序渐进 MCP 学习课纲（概念、安装、动手 lab；免费、GitHub 上）。★ 16k+
 
 ### 动手练习
 - **练习：MCP client** — 安装 `modelcontextprotocol/servers/filesystem`，从 Claude Desktop 连上去。看着 Claude 读你的文件。
@@ -270,18 +305,20 @@ Prompt / Context / Harness 是**不同层的 discipline**——学会其中一�
 ### 精选 Projects（spec / SDK / 范本参考）
 
 > 💡 **找日常工具的 MCP（Notion / Obsidian / Excel / Postgres / Playwright / Figma 等）？**
-> 看 [`resources/mcp-skills-catalog.zh-Hans.md`](../resources/mcp-skills-catalog.zh-Hans.md)——按 14 个分类整理 62 个常用 MCP server / Skill，每个都附 stars / license / 适合谁。下表保留的是“**写自己 MCP server 时的 reference**”性质的官方 server / SDK。
+> 看 [`resources/mcp-skills-catalog.zh-Hans.md`](../resources/mcp-skills-catalog.zh-Hans.md)——按 16 个分类整理 77+ 个常用 MCP server / Skill，每个都附 stars / license / 适合谁。下表保留的是“**写自己 MCP server 时的 reference**”性质的官方 server / SDK。
 
 | Project | ⭐ | 适合谁 | 为什么推荐 / 备注 |
 |---|---|---|---|
-| [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) ⭐ 官方 | ⭐⭐⭐⭐⭐ | 练习 1 接 server、之后当参考 | 20+ 官方 MCP server（filesystem / git / github / sqlite / time / fetch / memory / sequential-thinking），★ 85k+、MIT、TS+Python。**读 `everything` 跟 `filesystem` source 理解协议运作**。安装：`npx -y @modelcontextprotocol/server-filesystem /path` 或 `pip install mcp-server-fetch` |
-| [modelcontextprotocol/python-sdk](https://github.com/modelcontextprotocol/python-sdk) | ⭐⭐⭐⭐⭐ | 练习 2 写自己 MCP server | 官方 Python SDK、`pip install mcp` 即装、MIT。跟着官方 quickstart 跑 |
+| [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) ⭐ 官方 | ⭐⭐⭐⭐⭐ | 练习 1 接 server、之后当参考 | 7 个官方 reference MCP server（everything / fetch / filesystem / git / memory / sequentialthinking / time；github 跟 sqlite 已移到 `servers-archived`），★ 89k+、授权转换中（新代码 Apache-2.0、文档 CC-BY-4.0、未同意转授权的旧贡献仍为 MIT）、TS+Python。官方 README 讲明这些是 **reference implementation、不是 production-ready**——要实际部署的 server 去官方 Registry 找（目前仍是 preview）。**读 `everything` 跟 `filesystem` source 理解协议运作**。安装：`npx -y @modelcontextprotocol/server-filesystem /path` 或 `pip install mcp-server-fetch` |
+| [modelcontextprotocol/python-sdk](https://github.com/modelcontextprotocol/python-sdk) | ⭐⭐⭐⭐⭐ | 练习 2 写自己 MCP server | 官方 Python SDK、`pip install "mcp>=2,<3"`（**一定要锁版本**：v2.0.0 于 2026-07-28 是破坏性改版）、MIT。跟着官方 quickstart 跑 |
 | [modelcontextprotocol/typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) | ⭐⭐⭐⭐ | 喜欢 TS 的人 | Python SDK 的 TypeScript 版、MIT |
 | [wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-servers) ⭐ 目录 | ⭐⭐⭐⭐⭐ | 自己写前先找有没有现成的 | 150+ 社区 MCP server 目录，按 search / code / cloud / communication / finance 分类。投稿走 mcpservers.org |
 | [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) | ⭐⭐⭐⭐ | 跟 wong2 交叉比对 | 另一份 MCP server 目录、组织方式不同、通常更新更实时 |
 | [github/github-mcp-server](https://github.com/github/github-mcp-server) | ⭐⭐⭐⭐ | 想看实际上线的 MCP server source | GitHub 官方维护、真正 production 在跑的范例 |
-| [21st-dev/magic-mcp](https://github.com/21st-dev/magic-mcp) | ⭐⭐⭐ | 做完练习 2 找灵感 | 会生成 UI 组件的非平凡 MCP server、★ 4.8k+、NOASSERTION。**看 MCP 不只能做数据抓取** |
-| [yamadashy/repomix](https://github.com/yamadashy/repomix) | ⭐⭐⭐⭐⭐ | 喂整个 codebase 给 LLM | ★ 24k+、MIT。把 repo 打包成单个 AI-friendly 文件，带 MCP server mode + tree-sitter 压缩（约 70% token 节省）+ secretlint 过滤敏感信息。**Claude Code / Codex 的 daily-driver 工具。** |
+| [21st-dev/magic-mcp](https://github.com/21st-dev/magic-mcp) | ⭐⭐⭐ | 做完练习 2 找灵感 | 会生成 UI 组件的非平凡 MCP server、★ 5.6k+、NOASSERTION。**看 MCP 不只能做数据抓取** |
+| [yamadashy/repomix](https://github.com/yamadashy/repomix) | ⭐⭐⭐⭐⭐ | 喂整个 codebase 给 LLM | ★ 27k+、MIT。把 repo 打包成单个 AI-friendly 文件，带 MCP server mode + tree-sitter 压缩（约 70% token 节省）+ secretlint 过滤敏感信息。**Claude Code / Codex 的 daily-driver 工具。** |
+
+> 🔭 **MCP 在 2026：从“知道是什么”到“会用生态”**：(1) **官方 Registry**（registry.modelcontextprotocol.io、**仍在 preview**）——发现 / 发布 MCP server 的中央目录；(2) **FastMCP**（[PrefectHQ/fastmcp](https://github.com/PrefectHQ/fastmcp)、★27k、Apache-2.0）——用 `@mcp.tool` 几行写出 server，比 low-level SDK 省事（注意：这是**独立的第三方包**，跟官方 SDK 内部那个在 v2 改名为 `MCPServer` 的 class 不是同一个东西）；(3) ⚠️ **MCP 安全**：tool 返回的内容是**不可信输入**（tool poisoning、confused-deputy），别把没检查过的第三方 server 接上有权限的 agent。
 
 ---
 
@@ -365,7 +402,7 @@ Skill = **一个 markdown 文件**（`.claude/skills/<name>/SKILL.md`），告�
 - `references/`、`scripts/`、`evals/` 子目录的用途
 
 ### 必修阅读
-1. [**Anthropic — Claude Skills 文档**](https://docs.claude.com/en/docs/claude-code/skills)
+1. [**Anthropic — Claude Skills 文档**](https://code.claude.com/docs/en/skills)
 2. **几份范例 SKILL.md**——从 `anthropics/claude-code` 或社区 marketplace 拿
 3. [**Hello-Agents — Extra08 如何写出好的 Skill**](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra08-如何写出好的Skill.md) — 中文最完整的 Skill 最佳实践
 4. [**Hello-Agents — Extra05 Agent Skills 与 MCP 对比解读**](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra05-AgentSkills解读.md) — Skills vs MCP 概念对比
@@ -390,15 +427,18 @@ Skill = **一个 markdown 文件**（`.claude/skills/<name>/SKILL.md`），告�
 | **📄 Office docs 处理** | `pdf` / `docx` / `xlsx` / `pptx` | anthropics/skills | 读写 PDF / Word / Excel / PowerPoint。**必装 set**——任何 office workflow 必备 |
 | **🔧 Code review** | `code-reviewer` / `code-review-excellence` | claude-plugins-official | staged diff 安全 / 风格 / 测试 review |
 | **🐛 Debug** | `debugger` / `systematic-debugging` | claude-plugins-official | 系统化 root cause 分析、避免 quick fix |
+| **🔐 安全审计** | `security-audit` | [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill) | Cloudflare 官方开源：六阶段管线（侦察 → 漏洞搜猎 → 对抗式验证 → 报告 → 结构化输出 → 独立复验）派多个并行 agent 找真正可利用的漏洞，是 Cloudflare 自家漏洞挖掘 harness 的起点。`npx skills add` 安装（MIT） |
 | **🎓 学术写作** | `academic-writing-skills` | community | findings-first / mechanism / banned word audit |
 | **🔌 MCP 整合 / 写 server** | `mcp-builder` / `mcp-integration` | claude-plugins-official | 写 MCP server 跟整合既有 server 的脚手架 |
 | **💻 frontend / fullstack** | `frontend-developer` / `fullstack-developer` | claude-plugins-official | React 组件 / 全栈架构辅助 |
 | **📊 数据分析** | `data-analyst` / `visualization-expert` | community | SQL / pandas / chart 选型 |
 | **⚙ 权限 / 设置整理** | `update-config` / `fewer-permission-prompts` | claude-plugins-official | hooks / permissions / env var 管理 |
 | **🔁 自我改进** | `self-improving-agent` | community | 捕捉 learning / error / correction、agent 持续改进 |
+| **🚀 从想法到上线 agent** | `launch-your-agent` | [anthropics/launch-your-agent](https://github.com/anthropics/launch-your-agent) | Anthropic 官方教学 skill：访谈你要做什么 → 界定 v0 → 在你自己的账号上线一个 Claude Managed Agent → 用你自己的完成标准评分、迭代 → 会重复跑的就排程。⚠️ 自述 reference implementation、不维护也不收 PR（Apache-2.0） |
 | **🌐 通用 / fallback** | `general-purpose` | Claude Code 内建 | 复杂开放任务、未涵盖情境的 default 入口 |
 
 **建议入手顺序**：
+
 1. **第一个必装**：`skill-vetter`（装其他 skill 前先用它检查）
 2. **第二批必装**：`skill-creator` + `find-skills`（写 / 找 skill 用）
 3. **依工作领域**：Office workflow 加 `pdf`/`docx`/`xlsx`、开发加 `code-reviewer`/`debugger`、学术写作加 `academic-writing-skills`
@@ -411,13 +451,13 @@ Skill = **一个 markdown 文件**（`.claude/skills/<name>/SKILL.md`），告�
 
 | Project | ⭐ | 适合谁 | 为什么推荐 / 备注 |
 |---|---|---|---|
-| [anthropics/skills](https://github.com/anthropics/skills) ⭐ 官方 spec | ⭐⭐⭐⭐⭐ | 写自己 SKILL.md 前先读 | Anthropic 官方 Skills repo：`spec/`（frontmatter 标准）+ `template/` 起手范本 + `skills/` 含 pdf / docx / xlsx / pptx / skill-creator / skill-vetter 等 reference 实现。★ 144k+。**SKILL.md 结构范本参考**。Agent Skills 更广义标准另见 [agentskills.io](https://agentskills.io) |
+| [anthropics/skills](https://github.com/anthropics/skills) ⭐ 官方 spec | ⭐⭐⭐⭐⭐ | 写自己 SKILL.md 前先读 | Anthropic 官方 Skills repo：`spec/`（frontmatter 标准）+ `template/` 起手范本 + `skills/` 含 pdf / docx / xlsx / pptx / skill-creator / skill-vetter 等 reference 实现。★ 165k+。**SKILL.md 结构范本参考**。Agent Skills 更广义标准另见 [agentskills.io](https://agentskills.io) |
 | [anthropics/claude-code](https://github.com/anthropics/claude-code) | ⭐⭐⭐⭐ | 追踪新功能、看 release notes | Claude Code 主 repo、含 issues / releases / inline skill 范例。本 stage 学 Skill 重点看上一个 repo、这个排第二 |
-| [mattpocock/skills](https://github.com/mattpocock/skills) | ⭐⭐⭐⭐ | 想看“真实工程师日常 SKILL.md” | Matt Pocock（TypeScript 社区知名教学者）公开自己工作真正在用的 `.claude/` 目录。每个 SKILL.md **10-50 行极短**、不过度工程化。**对照 over-engineered 200 行 skill 特别有参考价值**（★ 120k+、MIT）|
+| [mattpocock/skills](https://github.com/mattpocock/skills) | ⭐⭐⭐⭐ | 想看“真实工程师日常 SKILL.md” | Matt Pocock（TypeScript 社区知名教学者）公开自己工作真正在用的 `.claude/` 目录。每个 SKILL.md **10-50 行极短**、不过度工程化。**对照 over-engineered 200 行 skill 特别有参考价值**（★ 198k+、MIT）|
 | [obra/superpowers](https://github.com/obra/superpowers) | ⭐⭐⭐⭐ | power user setup、学进阶写法 | 20+ 实战 skill（TDD、debugging、合作模式）+ `/brainstorm` / `/write-plan` / `/execute-plan` 命令 + skills-search tool |
-| [wshobson/agents](https://github.com/wshobson/agents) | ⭐⭐⭐⭐ | 中阶：学 skill + subagent 组合 | 把 skills + subagents 组合做 multi-agent 编排。**从单一 SKILL.md 进化到 agent-as-skill 组合 pattern** 的范例（★ 35k+、MIT） |
+| [wshobson/agents](https://github.com/wshobson/agents) | ⭐⭐⭐⭐ | 中阶：学 skill + subagent 组合 | 把 skills + subagents 组合做 multi-agent 编排。**从单一 SKILL.md 进化到 agent-as-skill 组合 pattern** 的范例（★ 38k+、MIT） |
 | [travisvn/awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills) | ⭐⭐⭐⭐ | 自己写前先找有没有现成的 | 社区 Claude Skills 精选目录 |
-| [VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills) | ⭐⭐⭐ | 跨工具视角 | 1000+ agent skill、相容 Claude Code / Codex / Gemini CLI / Cursor（★ 24k+、MIT）|
+| [VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills) | ⭐⭐⭐ | 跨工具视角 | 1000+ agent skill、相容 Claude Code / Codex / Gemini CLI / Cursor（★ 29k+、MIT）|
 | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | ⭐⭐⭐ | 找特定领域 skill 范例 | 232+ Claude Code skill、跨 engineering / marketing / product / compliance |
 
 ---
@@ -450,7 +490,7 @@ Plugin
 - 发布自己的 marketplace
 
 ### 必修阅读
-1. [**Anthropic — Plugins 文档**](https://docs.claude.com/en/docs/claude-code/plugins)
+1. [**Anthropic — Plugins 文档**](https://code.claude.com/docs/en/plugins)
 2. **读下面 2-3 个 marketplace 的 `plugin.json` 与 `marketplace.json`**
 
 ### 动手练习
@@ -481,6 +521,7 @@ Plugin
 | **community 广度** | （挑感兴趣的 skill） | [rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/awesome-claude-code-toolkit) | 社区最大 agents / skills / hooks / templates 目录 |
 
 **建议入手顺序**：
+
 1. 开发者必装（5 个）：`code-review` + `pr-review-toolkit` + `commit-commands` + `feature-dev` + 一个你语言的 `*-lsp`
 2. 按工作领域加 bundle：工程团队装 `engineering`、财务装 `finance`、其他类似
 3. 想写自己的 skill / plugin → 装 `skill-creator` + `plugin-dev`
@@ -492,21 +533,21 @@ Plugin
 
 | Marketplace | ⭐ | 适合谁 | 为什么推荐 / 备注 |
 |---|---|---|---|
-| [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | ⭐⭐⭐⭐⭐ | 写自己的 marketplace 前的官方范本 | 35 internal plugins + 15 external、`.claude-plugin/marketplace.json` 标准 schema、`plugins/` 含 plugin 本体 + `external_plugins/` 引用外部 repo。**marketplace.json 该长什么样直接看这个**（★ 27k+） |
+| [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | ⭐⭐⭐⭐⭐ | 写自己的 marketplace 前的官方范本 | 35 internal plugins + 15 external、`.claude-plugin/marketplace.json` 标准 schema、`plugins/` 含 plugin 本体 + `external_plugins/` 引用外部 repo。**marketplace.json 该长什么样直接看这个**（★ 32k+） |
 | [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) | ⭐⭐⭐⭐⭐ | 想看“多 vertical bundle”型 marketplace | **18 个领域 plugin bundle**（finance / engineering / sales / legal / marketing / HR / customer-support / data / design / operations / product / productivity / bio-research / enterprise-search / pdf-viewer / small-business / cowork-plugin-management / partner-built）。Anthropic 自家 knowledge worker 场景范本 |
-| [obra/superpowers-marketplace](https://github.com/obra/superpowers-marketplace) | ⭐⭐⭐⭐ | 想做“我策展、别人写”型 marketplace | **最简 marketplace template**——repo 只有 `marketplace.json` + README、plugin 本体放外部 repo。curator-only pattern 最小范本（★ 1k+、MIT）|
-| [trailofbits/skills-curated](https://github.com/trailofbits/skills-curated) | ⭐⭐⭐ | 在意供应链安全的 reviewer / 团队 | Trail of Bits 维护的 **security-vetted** marketplace、每个 skill 都经审查、README 写清楚标准。**示范 marketplace 不只是清单、也是信任机制**（★ 431、CC-BY-SA-4.0）|
+| [obra/superpowers-marketplace](https://github.com/obra/superpowers-marketplace) | ⭐⭐⭐⭐ | 想做“我策展、别人写”型 marketplace | **最简 marketplace template**——repo 只有 `marketplace.json` + README、plugin 本体放外部 repo。curator-only pattern 最小范本（★ 1.2k+、MIT）|
+| [trailofbits/skills-curated](https://github.com/trailofbits/skills-curated) | ⭐⭐⭐ | 在意供应链安全的 reviewer / 团队 | Trail of Bits 维护的 **security-vetted** marketplace、每个 skill 都经审查、README 写清楚标准。**示范 marketplace 不只是清单、也是信任机制**（★ 475、CC-BY-SA-4.0）|
 | [rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/awesome-claude-code-toolkit) | ⭐⭐⭐ | 想逛社区有什么 | 社区最大 Claude Code agents / skills / hooks / templates 目录。涵盖 use case 广 |
-| [anthropics/life-sciences](https://github.com/anthropics/life-sciences) | ⭐⭐⭐ | 要做特定领域 marketplace（医疗、金融、法律、教育等） | Anthropic 自家**领域特化 marketplace** 范例（生物 / 健康科学）、展示 `marketplace.json` 为单一 vertical 量身设计。**payload 偏生科 MCP server、marketplace.json 结构才是学习重点**（★ 420）|
-| [anthropics/claude-for-legal](https://github.com/anthropics/claude-for-legal) | ⭐⭐⭐⭐ | 想看完整 vertical plugin suite（skills + agents + MCP + scheduled agents） | **Anthropic 官方法律 vertical 参考**（★ 7.9k+、Apache-2.0）——10 个法律 plugin（commercial / corporate / litigation / privacy / employment / IP / law-student）+ 100+ skills + 20+ MCP connectors + scheduled agents + subagent delegation。**你不需要懂法律**——这是学“**怎样设计 vertical plugin suite**”最好的教材：system prompt pattern、accountability surface，以及 `orchestrate.py` event loop。 |
+| [anthropics/life-sciences](https://github.com/anthropics/life-sciences) | ⭐⭐⭐ | 要做特定领域 marketplace（医疗、金融、法律、教育等） | Anthropic 自家**领域特化 marketplace** 范例（生物 / 健康科学）、展示 `marketplace.json` 为单一 vertical 量身设计。**payload 偏生科 MCP server、marketplace.json 结构才是学习重点**（★ 562）|
+| [anthropics/claude-for-legal](https://github.com/anthropics/claude-for-legal) | ⭐⭐⭐⭐ | 想看完整 vertical plugin suite（skills + agents + MCP + scheduled agents） | **Anthropic 官方法律 vertical 参考**（★ 8.7k+、Apache-2.0）——10 个法律 plugin（commercial / corporate / litigation / privacy / employment / IP / law-student）+ 100+ skills + 20+ MCP connectors + scheduled agents + subagent delegation。**你不需要懂法律**——这是学“**怎样设计 vertical plugin suite**”最好的教材：system prompt pattern、accountability surface，以及 `orchestrate.py` event loop。 |
 
-> 💡 **“如何发布自己的 marketplace”walkthrough**：目前最可靠的是 [Anthropic 官方 plugin 文档](https://docs.claude.com/en/docs/claude-code/plugins)。社区有好的博客 / repo？欢迎开 PR 补上。
+> 💡 **“如何发布自己的 marketplace”walkthrough**：目前最可靠的是 [Anthropic 官方 plugin 文档](https://code.claude.com/docs/en/plugins)。社区有好的博客 / repo？欢迎开 PR 补上。
 
 ---
 
 ## 5.5 — Subagents（Claude Code 原生 multi-agent 机制）⭐ 2025 新功能
 
-到这里为止你学了 MCP（工具层）/ Skills（行为层）/ Plugins（散布层）。**Subagents 是 orchestration 层**——让主 Claude session spawn 出有独立 context 的子 agent、跑特定任务、回报结果。
+到这里为止你学了 MCP（工具层）/ Skills（行为层）/ Plugins（散布层）。**Subagents 是 orchestration 层**（orchestration = 调度一群 agent：分工，再把结果合起来）——让主 Claude session spawn 出有独立 context 的子 agent、跑特定任务、回报结果。
 
 ![Subagent 的 4 个生命周期：从 .md 文件到执行结果](../resources/diagrams/subagent-4-stage-flow.zh-Hans.png)
 
@@ -525,25 +566,25 @@ Plugin
 
 ### 各家 CLI / SDK 的 multi-agent 机制现状（2025 后段）
 
-很多人以为 multi-agent CLI 是 Anthropic / OpenAI / Google 三家标配——但实际上目前只有 **Claude Code 有完整 native multi-agent stack**。Codex CLI / Gemini CLI / Cursor 都还是 single-agent，要 multi-agent 得自己用 SDK 或 framework 写。
+multi-agent CLI 一度是 Claude Code 独有——2026 年 Codex CLI 与 Gemini CLI 都已加入**原生 subagents + hooks**（Cursor 仍是单一 agent）。Claude Code 仍是最成熟、最完整的 native multi-agent stack。
 
 | 平台 | Subagent | Agent team | Background agent | 机制 |
 |---|:---:|:---:|:---:|---|
-| **Claude Code**（CLI） | ✅ | ✅ | ✅ | `.claude/agents/<name>.md` + Task tool（subagent）+ [agent teams](https://docs.claude.com/en/docs/claude-code/agent-teams) + [agent view / background](https://docs.claude.com/en/docs/claude-code/agent-view) |
-| **OpenAI Codex CLI** | ❌ | ❌ | ❌ | `AGENTS.md` 只是 **single-agent context file**（类似 CLAUDE.md），**不是 subagent 系统** |
-| **Google Gemini CLI** | ❌ | ❌ | ❌ | `GEMINI.md` 只是 context；无 subagent / multi-agent feature |
+| **Claude Code**（CLI） | ✅ | ✅ | ✅ | `.claude/agents/<name>.md` + Task tool（subagent）+ [agent teams](https://code.claude.com/docs/en/agent-teams) + [agent view / background](https://code.claude.com/docs/en/agent-view) |
+| **OpenAI Codex CLI** | ✅ | ⚠️ | ✅ | [Subagents](https://developers.openai.com/codex/subagents) GA（≤6 平行）+ [hooks](https://developers.openai.com/codex/hooks)（2026）；cloud / background mode。`AGENTS.md` 仍是 context file |
+| **Google Gemini CLI** | ✅ | ⚠️ | ⚠️ | [Subagents](https://geminicli.com/docs/core/subagents/)（2026-04）+ [hooks](https://geminicli.com/docs/hooks/)；`@name` 显式派遣、可平行。`GEMINI.md` 仍是 context |
 | **Cursor**（IDE-coupled） | ❌ | ❌ | ❌ | 单一 Cursor Agent；queued messages 是 sequential、非 parallel |
 | **OpenAI Agents SDK**<br>（programmatic、非 CLI） | ⚠️ Handoffs + agents-as-tools | ❌ | ❌ | 纯 Python SDK、不是 CLI；handoff pattern 接近 Claude subagent 但要写 code |
 | **Framework path**<br>（Stage 4） | LangGraph / CrewAI / AutoGen | ✅ 自己 wire | 部分 | 跨 LLM provider、Python orchestration、见 [Stage 4](04-agent-frameworks.zh-Hans.md) |
 
 **现状解读**：
 
-- 想用 **CLI** 玩 multi-agent → 目前只有 Claude Code 有 native 支持（**本节主题**）
+- 想用 **CLI** 玩 multi-agent → Claude Code / Codex CLI / Gemini CLI 现都有 native subagents；Claude Code 最成熟（**本节主题**）
 - 想 **跨 provider / 跨 LLM** → 走 Stage 4 framework path
 - 想 **OpenAI 生态 + 多 agent** → 用 OpenAI Agents SDK 写 handoff pattern（programmatic、非 CLI）
-- 想 **完全自己控** → 走 [Stage 5.6 Harness Internals](#56--claude-code-source-解剖reference-harness-implementation-track-b-必看)（读 SDK source、自己 wire 多 agent）
+- 想 **完全自己控** → 走 [Stage 5.7 Harness Internals](#57--claude-code-source-解剖reference-harness-implementation-track-b-必看)（读 SDK source、自己 wire 多 agent）
 
-→ 本节剩下内容都聚焦在 **Claude Code subagent**。其他平台的进展请追踪各家 changelog（Codex / Gemini / Cursor 都还在 single-agent + MCP 阶段、可能 2026 后段才会跟进）。
+→ 本节剩下内容都聚焦在 **Claude Code subagent**。Codex / Gemini CLI 已在 2026 加入原生 subagents（见上表）、Cursor 仍是单一 agent；其余进展追各家 changelog。
 
 ### 怎么派遣 Claude Code 的 3 种 multi-agent 机制（具体 syntax）
 
@@ -677,7 +718,10 @@ Plugin
 > 📌 **1 句话判断**：任务 **≥ 5 分钟** + **可以用一个 brief 写死**（不需要来回对话）+ **结果一次回来够用**（不需要逐步 feedback）→ 用 subagent；否则自己跑。
 
 
-<details>
+
+> 📋 **准备自己写 subagent / 组合多个 / debug 跑坏的？** → [`resources/subagent-advanced.zh-Hans.md`](../resources/subagent-advanced.zh-Hans.md)（description 写法 4 个 bug 对照、composition 3 种 pattern、debug 5 切点）
+
+<details markdown="1">
 <summary>👉 具体 subagent 文件范例（最简单入门）</summary>
 
 `.claude/agents/code-reviewer.md`：
@@ -704,9 +748,9 @@ You are a senior code reviewer. When invoked:
 </details>
 
 > 📚 **官方完整文档**：
-> - [Subagent spec](https://docs.claude.com/en/docs/claude-code/sub-agents)（frontmatter 字段、project vs user scope、Task tool 界面）
-> - [Agent team 完整指南](https://docs.claude.com/en/docs/claude-code/agent-teams)（display modes、task list、subagent-as-teammate 进阶）
-> - [Agent view / background](https://docs.claude.com/en/docs/claude-code/agent-view)（v2.1.139+、quick start + dispatch 流程）
+> - [Subagent spec](https://code.claude.com/docs/en/sub-agents)（frontmatter 字段、project vs user scope、Task tool 界面）
+> - [Agent team 完整指南](https://code.claude.com/docs/en/agent-teams)（display modes、task list、subagent-as-teammate 进阶）
+> - [Agent view / background](https://code.claude.com/docs/en/agent-view)（v2.1.139+、quick start + dispatch 流程）
 
 ### 学习目标
 
@@ -717,7 +761,7 @@ You are a senior code reviewer. When invoked:
 
 ### 必修阅读
 
-1. [**Anthropic — Claude Code Subagents 官方文档**](https://docs.claude.com/en/docs/claude-code/sub-agents) ⭐ — `.claude/agents/` 结构、Task tool 界面、最佳实践
+1. [**Anthropic — Claude Code Subagents 官方文档**](https://code.claude.com/docs/en/sub-agents) ⭐ — `.claude/agents/` 结构、Task tool 界面、最佳实践
 2. [**Anthropic — Building Effective Agents orchestrator-workers**](https://www.anthropic.com/engineering/building-effective-agents) — Anthropic 自己对 orchestrator pattern 的看法（理论 + 实例）
 3. [**Anthropic Cookbook — `customer_service_agent`**](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) — canonical multi-agent orchestration 范例（chapter-length 深度教材；notebook 在 `tool_use/customer_service_agent.ipynb`）
 
@@ -743,20 +787,49 @@ You are a senior code reviewer. When invoked:
 > 💡 **Subagent 虽然强、不要无脑用**：每个 subagent invoke 都是一个新的 Claude inference call、有 token cost + latency。**简单 query 用 skill（行为 prompt）即可、不必 spawn subagent**。Subagent 的甜蜜点是：(1) 任务 context 大、会吃光主 session 的 window（譬如 read 整个 codebase），(2) 任务跟主 session 逻辑独立、隔离 context 有助 main flow，(3) 多 subagent 平行（research / write / critic）能省 wall-clock 时间。
 
 > 🔗 **相关进阶机制**（Claude Code 官方、本 stage 不深入讲）：
-> - **[Agent teams](https://docs.claude.com/en/docs/claude-code/agent-teams)** — 多 sessions 之间互相沟通（reviewer agent ↔ implementer agent 来回交流）
-> - **[Background agents / agent view](https://docs.claude.com/en/docs/claude-code/agent-view)** — 多 session 背景跑、单一界面监控（一次 spawn N 个 PR review 同时跑）
+> - **[Agent teams](https://code.claude.com/docs/en/agent-teams)** — 多 sessions 之间互相沟通（reviewer agent ↔ implementer agent 来回交流）
+> - **[Background agents / agent view](https://code.claude.com/docs/en/agent-view)** — 多 session 背景跑、单一界面监控（一次 spawn N 个 PR review 同时跑）
 >
 > Subagent 是这两个的进入点——本节学完之后想扩展再看官方文档。
 
 ---
 
-## 5.6 — Claude Code Source 解剖（reference harness implementation）⭐ Track B 必看
+## 5.6 — Dynamic Workflows（让 Claude 自己写出 workflow）⭐ Opus 4.8+ 新机制
+
+> **本节定位**：5.5 教你**手动**派 subagent；本节更上一层——**让 Claude 自己生成一份 workflow 脚本、再自己执行**。这是 Opus 4.8 起的新机制（research preview 出身），新版 Claude Code 内置。本节只把它放进生态地图、讲清楚跟 5.5 的分工；**机制 / 实例 / quality pattern 的完整版在 [Stage 7.5 — Dynamic Workflows 深入](07.5-advanced-agentic-concepts.zh-Hans.md#-dynamic-workflowsopus-48-当-agent-自己写出-workflow)**。
+
+### 跟 5.5 Subagents 的差别
+
+| | 5.5 Subagents | 5.6 Dynamic Workflows |
+|---|---|---|
+| 步骤谁决定 | 你手动派、一次一个 | Claude 自己写出多步骤脚本 |
+| 控制流 | model 即兴决定下一步 | 脚本里是**确定性**的 loop / 并行 fan-out / 验证阶段 |
+| 适合 | 少数几个并行子任务 | 大型、要穷举或多阶段验证（migration、audit、跨文件 review）|
+| 关系 | — | DW **建在 subagent 之上**：workflow 脚本去 orchestrate 一群 subagent |
+
+### 什么时候用、什么时候别用
+
+- **用**：要穷举 + 对抗式验证（找完所有 bug、每个 finding 再派独立 agent 反驳）、一次性大迁移、跨多文件同样转换的 pipeline。
+- **别用**：只是想叫一两个 agent 并行做点事 → 留在 5.5 就好；小任务直接一条 prompt 更省。
+- ⚠️ DW 会 spawn 大量 agent、吃 token，不是万灵丹。“何时值得、怎么写不会爆”见下方 7.5 深入。
+
+### 📚 必修阅读
+
+1. [**Anthropic — Claude Opus 4.8**](https://www.anthropic.com/news/claude-opus-4-8) — Dynamic Workflows 首次发布的官方说明
+2. **[Stage 7.5 — Dynamic Workflows 深入](07.5-advanced-agentic-concepts.zh-Hans.md#-dynamic-workflowsopus-48-当-agent-自己写出-workflow)** ⭐ — 机制、quality pattern（adversarial verify / loop-until-dry / judge panel）、何时用的完整版
+
+> 本节无 examples（概念 + 入口节点）；想动手照 7.5 的 pattern 写。
+
+---
+
+## 5.7 — Claude Code Source 解剖（reference harness implementation）⭐ Track B 必看
 
 > **本节定位**：本节**不是** harness engineering 的 discipline 概念教学——discipline 级的定义 / **8 元件** / prompt→context→harness 三层 lineage 是 **[Stage 7 Harness Engineering](07-multi-agent-production.zh-Hans.md#-harness-engineering--production-agent-runtime-的工程设计--本-stage-核心概念)** 在讲。**本节是 case study**——拿 Claude Code（一个被广泛使用的 reference harness）的 source code 来解剖、把 Stage 7 列的 8 个元件**中前 6 个 runtime-internal 元件**（Eval / Cost-Latency 两个是 cross-cutting、不在 source 主 loop）**在实现里找到对应位置**。
 
 ### 学习目标
 
 完成本节后你会：
+
 - 看得懂 `claude-agent-sdk-python` source 的 main loop（不是逐行、是抓得到主干）
 - 在 source 里标出 [Stage 7 列的 8 个 harness 元件](07-multi-agent-production.zh-Hans.md#-harness-engineering--production-agent-runtime-的工程设计--本-stage-核心概念)**中**前 6 个 runtime-internal 元件（agent loop / tool registry / context manager / safety layer / retry / telemetry）各自的 file:line。Stage 7 列的第 7 个 Eval 是外挂、第 8 个 Cost / Latency 是 cross-cutting、不在 source 主 loop 内、不在本练习范围
 - 讲得出 Claude Code 的 agent loop 跟 Stage 3 练习 3 from-scratch ReAct 差在哪——上线部署的 agent 多了哪些东西
@@ -767,7 +840,7 @@ You are a senior code reviewer. When invoked:
 
 1. [**Anthropic — Building Effective Agents**](https://www.anthropic.com/engineering/building-effective-agents) ⭐ — orchestrator / worker / handoff / reflection 等 pattern 的 canonical reference
 2. [**anthropics/claude-agent-sdk-python**](https://github.com/anthropics/claude-agent-sdk-python) — Claude Code 官方 Python SDK 的 source；**重点 file：`src/claude_agent_sdk/_internal/client.py`**（main loop 在这）+ `query.py`（单回合 API）
-3. [**ai-boost/awesome-harness-engineering**](https://github.com/ai-boost/awesome-harness-engineering) ⭐（★ 1.7k+） — community curation：harness pattern / eval / memory / observability 整合
+3. [**ai-boost/awesome-harness-engineering**](https://github.com/ai-boost/awesome-harness-engineering) ⭐（★ 3.4k+） — community curation：harness pattern / eval / memory / observability 整合
 4. [**ZhangHanDong/harness-engineering-from-cc-to-ai-coding**](https://github.com/ZhangHanDong/harness-engineering-from-cc-to-ai-coding) — 中文圈最完整的 Claude Code 内部解读
 
 ### 🛠 动手练习 — 解剖 agent loop（阅读题，非写 code）
@@ -775,6 +848,7 @@ You are a senior code reviewer. When invoked:
 这节**不是写 code 练习，是阅读练习**——production harness 不是抄 200 行范例能学的，是抄完还看不懂为什么这样写，所以本练习要求你开 source、自己 trace。
 
 **步骤**：
+
 1. **clone**：`git clone https://github.com/anthropics/claude-agent-sdk-python`
 2. **定位 agent loop**：找出 `_internal/client.py` 里实际发出 LLM call、收 tool_use response、dispatch 给 tool runner 的核心 loop。提示：找 `async def` 跟 `tool_use_id` 关键词
 3. **标出前 6 个 runtime-internal harness 元件**在 source 里的位置（文件名 + 行号）——对应 [Stage 7 列的 8 元件](07-multi-agent-production.zh-Hans.md#-harness-engineering--production-agent-runtime-的工程设计--本-stage-核心概念)的前 6 个（第 7 个 Eval 外挂 / 第 8 个 Cost-Latency cross-cutting 不在 source 主 loop）：
@@ -798,16 +872,16 @@ You are a senior code reviewer. When invoked:
 |---|---|---|---|
 | [anthropics/claude-agent-sdk-python](https://github.com/anthropics/claude-agent-sdk-python) | ⭐⭐⭐⭐⭐ | 所有 Track B 学习者、想搞清楚“Claude Code 内部怎么跑” | **canonical Python harness、本节练习就是读这个 repo**。后面 Stage 7 deploy 也会 import |
 | [ZhangHanDong/harness-engineering-from-cc-to-ai-coding](https://github.com/ZhangHanDong/harness-engineering-from-cc-to-ai-coding) | ⭐⭐⭐⭐ | 中文 reader 想看“为什么 Claude Code 这样设计” | 中文圈最完整 CC 内部解读（harness 概念 → CC 实现 → 跟其他 AI coding tool 对比）。**配合 SDK source 互补看**——一个告诉你“怎么做”、一个告诉你“为什么这么做” |
-| [ai-boost/awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | ⭐⭐⭐⭐ | 5.6 读完想扩大视野 | community curation：30+ harness / eval / memory / observability / MCP project（★ 1.7k+）。**广度资源库、非教程**——挑感兴趣的 sub-topic 钻进去 |
+| [ai-boost/awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | ⭐⭐⭐⭐ | 5.7 读完想扩大视野 | community curation：30+ harness / eval / memory / observability / MCP project（★ 3.4k+）。**广度资源库、非教程**——挑感兴趣的 sub-topic 钻进去 |
 | [wshobson/agents](https://github.com/wshobson/agents) | ⭐⭐⭐⭐ | 写完 5.5 自己的 subagent 后想看实际在用的范本 | 50+ subagent definition 的 ergonomic 设计（description / tool list / system prompt 分层）。**读 source 比读文件学得多**。在 5.5 已介绍、本节 cross-ref |
 
 > 💡 **本节跟 Stage 7 的差别**：本节学“Claude Code 这个 harness 怎么跑”（具体 reference）；Stage 7 学“production harness 一般要有什么”（抽象 pattern）。**先具体后抽象**、看完本节再进 Stage 7 会轻松很多。
 
 ---
 
-## 5.7 — SDK：把 Claude Code 拆开来自己组 ⭐ Track B 可选、production 才需要
+## 5.8 — SDK：把 Claude Code 拆开来自己组 ⭐ Track B 可选、production 才需要
 
-> 🎯 **这节是给谁看的**：99% 的人读完 5.1-5.6 已经够用，**只在你想做 CLI 做不到的事**才往下走。Stage 5.6 叫你读 SDK source 是为了理解 harness 内部；这节是为了让你**会用 SDK** 包成自己的服务。
+> 🎯 **这节是给谁看的**：99% 的人读完 5.1-5.7 已经够用，**只在你想做 CLI 做不到的事**才往下走。Stage 5.7 叫你读 SDK source 是为了理解 harness 内部；这节是为了让你**会用 SDK** 包成自己的服务。
 
 ### 1 个比喻把 SDK / CLI / `CLAUDE.md` 分清楚
 
@@ -826,6 +900,7 @@ You are a senior code reviewer. When invoked:
 ### 什么时候才需要爬到第 3 层
 
 具体场景（不抽象）：
+
 - **嵌进你已有的 web app / 后端** —— 用户不开 terminal，就不能用 CLI
 - **cron / scheduler 自动触发** —— 没有人在 session 里点 enter，CLI 交互模式不适用
 - **公司内部包一层** —— 加 auth、audit log、限额、自定 prompt template，让 CLI 的能力以受控方式对外
@@ -869,7 +944,7 @@ async for msg in query(prompt="用 git status 看当前状态"):
 
 ### 接下来
 
-- **看代码**：回 5.6，读 `claude-agent-sdk-python` 的 `_internal/client.py` —— 你现在会用 SDK 了，读那边的 main loop 会看懂更多
+- **看代码**：回 5.7，读 `claude-agent-sdk-python` 的 `_internal/client.py` —— 你现在会用 SDK 了，读那边的 main loop 会看懂更多
 - **动手练 SDK 进阶**：Stage 7 练习 4（streaming + prompt caching）；Stage 7 练习 5（FastAPI + Docker production deploy）
 - **如果你发现你其实不需要 SDK**：那很好 —— 回 5.1-5.4，把 CLI + 自定这层用透，通常已经比写 SDK 划算
 
@@ -880,13 +955,14 @@ async for msg in query(prompt="用 git status 看当前状态"):
 ## ✅ 进入 Stage 6 前的自我检查
 
 你能不能：
+
 - [ ] 安装 Claude Code 并使用 5 个不同的 slash command
 - [ ] 在同一个 Claude session 里接 2 个 MCP server
 - [ ] 用 Python 写自己的 MCP server，提供 1 个能用的 tool
 - [ ] 写一份能在特定触发词自动加载的 `SKILL.md`
 - [ ] 把 skill 打包成 plugin，再用 `marketplace.json` 发布
 - [ ] **写过 `.claude/agents/` 自定义 subagent 并从 Task tool invoke 过**
-- [ ] **读过 `claude-agent-sdk-python` 的 main loop、能在 source 里标出 [Stage 7 列的 8 个 harness 元件](07-multi-agent-production.zh-Hans.md#-harness-engineering--production-agent-runtime-的工程设计--本-stage-核心概念) 的前 6 个 runtime-internal 元件**位置（5.6 练习）
+- [ ] **读过 `claude-agent-sdk-python` 的 main loop、能在 source 里标出 [Stage 7 列的 8 个 harness 元件](07-multi-agent-production.zh-Hans.md#-harness-engineering--production-agent-runtime-的工程设计--本-stage-核心概念) 的前 6 个 runtime-internal 元件**位置（5.7 练习）
 - [ ] 从角色分工说出 MCP / Skills / Plugins / Subagents / SDK 各自的位置
 
 如果都可以 → 前往 [Stage 6 — Memory & RAG](06-memory-rag.zh-Hans.md)。

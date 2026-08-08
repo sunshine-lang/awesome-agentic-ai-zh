@@ -9,23 +9,24 @@
 > First want to understand "why does one agent live in a terminal, another in Telegram, another on a Jetson board?" mental model → see [`resources/agent-paradigms.en.md`](agent-paradigms.en.md) (5 agent paradigms).
 > Already using one, want to decide / compare / upgrade → stay here.
 
-A cross-branch reference shared by Track A (A1-A3) + all 5 specialized branches: **how to choose between Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent?** Every branch references CLI agents but no single branch "owns" this comparison, so it lives in `resources/`.
+A cross-branch reference shared by Track A (A1-A3) + all 5 specialized branches: **how to choose between Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build?** Every branch references CLI agents but no single branch "owns" this comparison, so it lives in `resources/`.
 
 ---
 
-## 📋 7 Major Terminal CLI Agents
+## 📋 8 Major Terminal CLI Agents
 
-Only terminal-based CLI agents are included. IDE-based agents (Cursor / Cline / Continue) live in [for-developer](../branches/for-developer.en.md). The first 6 numbers verified via `gh api` on 2026-05-06; Hermes Agent verified on 2026-05-10.
+Only terminal-based CLI agents are included. IDE-based agents (Cursor / Cline / Continue) live in [for-developer](../branches/for-developer.en.md). The first 6 numbers verified via `gh api` on 2026-05-06; Hermes Agent verified on 2026-05-10; Grok Build verified on 2026-07-16 (⚠️ open-sourced 2026-07-14, very new; numbers and features are still moving fast).
 
 | Tool | Provider | License | Primary LLM | Auth / Pricing | Stars |
 |---|---|---|---|---|---|
-| [Claude Code](https://github.com/anthropics/claude-code) | Anthropic (official) | NOASSERTION | Claude | Claude subscription **OR** Anthropic Console API key | ★ 120k+ |
-| [Codex](https://github.com/openai/codex) | OpenAI (official) | Apache-2.0 | GPT family | ChatGPT account sign-in **OR** OpenAI API key | ★ 89k+ |
-| [OpenCode](https://github.com/sst/opencode) | community (repo now at `anomalyco/opencode`) | MIT | Any (multi-provider) | BYO API key, or built-in OpenCode Zen hosted | ★ 171k+ |
+| [Claude Code](https://github.com/anthropics/claude-code) | Anthropic (official) | NOASSERTION | Claude | Claude subscription **OR** Anthropic Console API key | ★ 140k+ |
+| [Codex](https://github.com/openai/codex) | OpenAI (official) | Apache-2.0 | GPT family | ChatGPT account sign-in **OR** OpenAI API key | ★ 100k+ |
+| [OpenCode](https://github.com/sst/opencode) | community (repo now at `anomalyco/opencode`) | MIT | Any (multi-provider) | BYO API key, or built-in OpenCode Zen hosted | ★ 190k+ |
 | [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Google (official) | Apache-2.0 | Gemini | Generous free tier, paid above quota | ★ 103k+ |
-| [goose](https://github.com/block/goose) | Agentic AI Foundation (repo now at `aaif-goose/goose`) | Apache-2.0 | 15+ providers (incl. Ollama) | BYO API key, or existing Claude / ChatGPT / Gemini subscription via ACP | ★ 47k+ |
-| [Aider](https://github.com/Aider-AI/aider) | Aider-AI (community) | Apache-2.0 | Any | BYO API key | ★ 44k+ |
-| [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Nous Research | MIT | 200+ via OpenRouter / NVIDIA NIM / Zhipu GLM / Kimi / Xiaomi MiMo / MiniMax / HF / OpenAI | BYO API key (multi-provider) | ★ 175k+ |
+| [goose](https://github.com/block/goose) | Agentic AI Foundation (repo now at `aaif-goose/goose`) | Apache-2.0 | 15+ providers (incl. Ollama) | BYO API key, or existing Claude / ChatGPT / Gemini subscription via ACP | ★ 51k+ |
+| [Aider](https://github.com/Aider-AI/aider) | Aider-AI (community) | Apache-2.0 | Any | BYO API key | ★ 47k+ |
+| [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Nous Research | MIT | 200+ via OpenRouter / NVIDIA NIM / Zhipu GLM / Kimi / Xiaomi MiMo / MiniMax / HF / OpenAI | BYO API key (multi-provider) | ★ 224k+ |
+| [Grok Build](https://github.com/xai-org/grok-build) | SpaceXAI (xAI, official) | Apache-2.0 | Grok | Browser sign-in on first launch | ★ 23k+ |
 
 ---
 
@@ -54,6 +55,7 @@ Only terminal-based CLI agents are included. IDE-based agents (Cursor / Cline / 
 
 ### Want it running on a cloud VM, talking to it via Telegram / Slack / Discord, with mainland China LLMs as primary
 **Top pick**: Hermes Agent. Three differentiators:
+
 - **Decoupled from your laptop** — agent runs on a $5 VPS / Modal serverless / Vercel Sandbox; you message it from Telegram / Discord / Slack / WhatsApp / Signal
 - **Model-neutral** — supports GLM / Kimi / Xiaomi MiMo / MiniMax, matching the 11 Chinese-ecosystem catalog entries
 - **Built-in self-improving skill loop + cron scheduler** — agent autonomously generates skills from interaction, refines them across sessions, runs scheduled jobs unattended
@@ -125,7 +127,7 @@ Three common combinations; pick one that fits:
 - **LLM endpoint** can be Ollama (`http://localhost:11434/v1`), or swapped to providers such as z.ai GLM / Kimi
 - **Chat entrypoint** can be Telegram / Slack / Discord; Hermes routes platform messages into the agent workflow
 - **When you want zero Anthropic / OpenAI dependency**, this setup fits offline, privacy-sensitive, and low-cost repeat experiments
-- Step-by-step walkthrough: [`resources/cookbook.md` Recipe 6](cookbook.en.md#6-local-llm--cli-agent-quick-walkthrough)
+- Step-by-step walkthrough: [`resources/cookbook.en.md` Recipe 6](cookbook.en.md#6-local-llm--cli-agent-quick-walkthrough)
 
 ---
 
@@ -143,6 +145,6 @@ Different audiences have different CLI needs:
 
 ## Maintenance Notes
 
-- 7 CLI tools' stars / license / pushed_at auto-refreshed weekly by the `weekly-catalog-refresh` CI (manual run: `python scripts/refresh-stars.py`)
-- The CLI market moves fast — new tools require evaluation before inclusion (bar: 30k+ stars, actively maintained, true CLI not IDE)
+- 8 CLI tools' stars / license / pushed_at auto-refreshed weekly by the `weekly-catalog-refresh` CI (manual run: `python scripts/refresh-stars.py`)
+- The CLI market moves fast — new tools require evaluation before inclusion (bar: 30k+ stars, actively maintained, true CLI not IDE; an official-vendor or very-new CLI can be an exception, e.g. Grok Build)
 - The comparison table deliberately leaves out "strengths / weaknesses" columns — avoiding subjective bias and letting the use-case section + readers' own judgment do that work

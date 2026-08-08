@@ -5,6 +5,13 @@
 # Exercise 3: ReAct from Scratch (no framework)
 
 Corresponds to [Stage 3 — Tool Use & Agent Intro](../../../stages/03-tool-use-and-hello-agent.en.md) Exercise 3.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
+
+> 📚 **Want the chapter-length version?** The starter in this folder is a 70-150 line illustrative build focused on `the core pattern + two SDK paths` — it is not in-depth teaching material. Recommended for depth:
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ the most complete Chinese-language course out there — chapter-based, covering 16 production capabilities. **this exercise maps to hello-agents' ReAct chapter (paired with the [`learn_version` branch](https://github.com/jjyaoao/HelloAgents/tree/learn_version))**
+> - [The original ReAct paper](https://arxiv.org/abs/2210.03629) (Yao et al. 2022, Section 3) + [pguso/ai-agents-from-scratch](https://github.com/pguso/ai-agents-from-scratch) (from-scratch implementation on a local LLM)
+> - Full references in [Stage 3 Curated Projects](../../../stages/03-tool-use-and-hello-agent.en.md#-curated-projects)
+
 
 ## Why write it from scratch
 
@@ -18,6 +25,7 @@ while not done:
 ```
 
 LangGraph / CrewAI hide this loop from you. **Writing it once yourself** is what teaches you:
+
 - Why the `messages` array keeps growing
 - How `tool_use_id` pairs with `tool_result`
 - Why `stop_reason` is `tool_use` vs `end_turn`
@@ -25,15 +33,30 @@ LangGraph / CrewAI hide this loop from you. **Writing it once yourself** is what
 
 All of that is covered in 70 lines of Python.
 
-## How to run
+## How to run — two paths
+
+### Path A (default, free, local)
+
+```bash
+pip install -r requirements.txt
+ollama pull qwen2.5:3b
+ollama serve
+python starter.py
+```
+
+Budget: **$0**. A 4-6 round ReAct loop on local qwen2.5:3b takes ~30-120s (CPU slower, GPU faster).
+
+### Path B (Anthropic, cloud-quality comparison)
 
 ```bash
 pip install -r requirements.txt
 export ANTHROPIC_API_KEY=sk-ant-...
-python starter.py
+python starter_anthropic.py
 ```
 
-Expected:
+Budget: ~**$0.001** per run (claude-haiku-4-5). 5-15x faster than local, with steadier answer quality.
+
+Expected output (Path A, local):
 
 ```
 ❓ Question: Divide 'Taipei population' by 'NYC population', 4 decimal places.
@@ -54,8 +77,11 @@ Expected:
 ## Validate the logic without spending API credits
 
 ```bash
-python test.py
+python test.py            # validates Path A (Ollama) starter.py logic
+python test_anthropic.py  # validates Path B (Anthropic) starter_anthropic.py logic
 ```
+
+Both test suites use `unittest.mock`, no real API call, $0/run. Path A uses the OpenAI-compat response shape; Path B uses Anthropic content blocks.
 
 `test.py` uses `unittest.mock.MagicMock` to replace the Anthropic client and feed canned responses, validating your loop logic. Expected:
 
@@ -92,7 +118,7 @@ python test.py
 Default model is `claude-haiku-4-5` (cheapest). Switch to Sonnet:
 
 ```bash
-MODEL=claude-sonnet-4-6 python starter.py
+MODEL=claude-sonnet-5 python starter.py
 ```
 
 Or change `MODEL = ...` in `starter.py`.

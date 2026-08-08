@@ -5,6 +5,7 @@
 # Exercise 5: Error Handling + Retry Wrapper
 
 Corresponds to [Stage 1 — LLM Basics](../../../stages/01-llm-basics.en.md) Exercise 5.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
 
 ## Why this matters
 

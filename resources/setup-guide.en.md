@@ -18,7 +18,7 @@ Open a browser, type the URL — done. **Best place to start if it's your first 
 | Service | URL | Notes |
 |---|---|---|
 | **Claude** | https://claude.ai | Anthropic. Free tier has daily limits; Pro is $20/mo |
-| **ChatGPT** | https://chatgpt.com | OpenAI. Free GPT-5 (basic); Plus $20/mo |
+| **ChatGPT** | https://chatgpt.com | OpenAI. Free GPT-5.5 Instant (rate-limited); Plus $20/mo unlocks Thinking/Pro |
 | **Gemini** | https://gemini.google.com | Google. Generous free tier, integrates Google apps |
 | **Le Chat** | https://chat.mistral.ai | Mistral (EU open-source LLM lab). Free, privacy-focused |
 
@@ -43,7 +43,7 @@ Lives inside a code editor — you write code normally, AI suggests / edits / an
 | **Windsurf** | https://codeium.com/windsurf | Standalone IDE (by Codeium) |
 | **Cline** | https://cline.bot | VS Code extension (agentic style) |
 | **Continue** | https://continue.dev | VS Code / JetBrains extension (open-source) |
-| **Roo Code** | https://github.com/RooCodeInc/Roo-Code | VS Code extension (Cline fork, active community) |
+| **Roo Code** | https://github.com/RooCodeInc/Roo-Code | VS Code extension (Cline fork); ⚠️ **repo archived 2026-05 (read-only)** |
 | **Zed** | https://zed.dev | Standalone editor with built-in AI assistant |
 | **GitHub Copilot** | https://github.com/features/copilot | Multi-IDE extension (VS Code / JetBrains / etc.) |
 
@@ -55,7 +55,7 @@ Agents that live in your terminal — you give one prompt (e.g. "refactor this m
 
 | CLI Agent | Install / Docs | Primary LLM |
 |---|---|---|
-| **Claude Code** | https://docs.anthropic.com/en/docs/claude-code/quickstart | Claude |
+| **Claude Code** | https://code.claude.com/docs/en/quickstart | Claude |
 | **Codex CLI** | https://github.com/openai/codex | GPT family |
 | **Gemini CLI** | https://github.com/google-gemini/gemini-cli | Gemini |
 | **OpenCode** | https://github.com/sst/opencode | Any (multi-provider) |
@@ -63,7 +63,7 @@ Agents that live in your terminal — you give one prompt (e.g. "refactor this m
 | **Aider** | https://aider.chat | Any (git-native) |
 | **Hermes Agent** | https://github.com/NousResearch/hermes-agent | 200+ (model-neutral) |
 
-→ Full 7-CLI comparison → [`cli-agents-guide.en.md`](cli-agents-guide.en.md)
+→ Full 8-CLI comparison → [`cli-agents-guide.en.md`](cli-agents-guide.en.md)
 → Detailed Claude Code first install → [D](#d--install-claude-code-for-the-first-time-about-10-minutes-needed-for-stage-5--for-developer) below
 
 > 💡 **IDE vs CLI — how to pick?** Want AI alongside you while you code → IDE. Want to give one prompt and let the agent run a multi-step task → CLI. Many people use both.
@@ -97,23 +97,28 @@ Want to script with Python, run batch jobs, integrate LLMs into your own app/aut
 
 - **OpenAI**: https://platform.openai.com/api-keys
   ChatGPT Plus and API access are separate; Plus subscribers still need an API key.
+
 - **Google AI Studio**: https://aistudio.google.com/
   Useful for trying the Gemini API. Free quota depends on region and account state.
+
 - **NVIDIA NIM**: https://build.nvidia.com/
-  **Hosts many open-source models (Llama / Mistral / DeepSeek-R1 / Qwen / Gemma etc.), OpenAI-compatible API, new accounts get 1000 free credits**. Great when you want to try several open models without local GPU. `base_url=https://integrate.api.nvidia.com/v1`.
+  **Hosts many open-source models (Llama / Mistral / DeepSeek / Qwen / Gemma etc.), OpenAI-compatible API, new accounts get 1000 free credits**. Great when you want to try several open models without local GPU. `base_url=https://integrate.api.nvidia.com/v1`.
 
 #### Chinese / Chinese-language cloud (region-friendly, very cheap)
 
 > If you're in mainland China and Anthropic / OpenAI are inaccessible, or you want to test Chinese-native models, start here. **All these APIs are OpenAI-compatible** — just change `base_url` and model name to run the same exercises.
 
 - **DeepSeek**: https://platform.deepseek.com/
-  Free web at https://chat.deepseek.com (includes the R1 reasoning model). API is extremely cheap (**$0.27 input / $1.10 output per 1M tokens — about 4× cheaper than haiku**). Strong code and reasoning.
-  `base_url=https://api.deepseek.com/v1`, `model=deepseek-chat` or `deepseek-reasoner`.
+  Free web at https://chat.deepseek.com (with a deep-thinking mode). API is extremely cheap (**$0.14 input / $0.28 output per 1M tokens — about 7× cheaper than haiku**). Strong code and reasoning.
+  `base_url=https://api.deepseek.com/v1`, `model=deepseek-v4-flash` or `deepseek-v4-pro`.
+
 - **Moonshot Kimi**: https://platform.moonshot.cn/ (China) / https://platform.moonshot.ai/ (international)
   Free web at https://kimi.com. Selling point: **1M-token context window** (great for large files / long conversations). API ~$5-15 per 1M input, tiered by context size.
-  `base_url=https://api.moonshot.cn/v1` (CN) / `https://api.moonshot.ai/v1` (intl), e.g. `model=kimi-k2-turbo-preview`.
+  `base_url=https://api.moonshot.cn/v1` (CN) / `https://api.moonshot.ai/v1` (intl), e.g. `model=kimi-k3`.
+
 - **Qwen (Alibaba)**: https://dashscope.console.aliyun.com/
   Free web at https://chat.qwen.ai. API via Alibaba Cloud DashScope with an **OpenAI-compatible endpoint** ([docs](https://help.aliyun.com/zh/dashscope/developer-reference/compatibility-of-openai-with-dashscope/)). **The same Qwen models also run locally via Ollama** (`ollama pull qwen2.5:3b`) — cloud and local paths both work.
+
 - **GLM (ZhipuAI)**: https://open.bigmodel.cn/ (China) / https://z.ai/ (intl)
   Free web at https://chatglm.cn. Has GLM-4.5 and GLM-4-Plus. Free tier available; students can apply for extra credit.
 
@@ -193,7 +198,7 @@ load_dotenv()
 client = Anthropic() # Automatically reads ANTHROPIC_API_KEY
 
 msg = client.messages.create(
-    model="claude-sonnet-4-6",
+    model="claude-sonnet-5",
     max_tokens=100,
     messages=[{"role": "user", "content": "Hello, who are you?"}],
 )

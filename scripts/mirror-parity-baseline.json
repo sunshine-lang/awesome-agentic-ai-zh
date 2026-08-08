@@ -1,0 +1,58 @@
+{
+  "_comment": "Accepted mirror-vs-canonical structural deficits. This is a RATCHET baseline: check-mirror-parity.py fails when a deficit grows or appears somewhere new, never when one shrinks. Regenerate with `python scripts/check-mirror-parity.py --update-baseline` ONLY after genuinely closing a gap — never to silence a new one.",
+  "deficits": {
+    "README.md": {
+      "en": {
+        "blockquote": 1,
+        "h3": 1
+      },
+      "zh-Hans": {
+        "h2": 1
+      }
+    },
+    "RESOURCES.md": {
+      "en": {
+        "blockquote": 1
+      },
+      "zh-Hans": {
+        "blockquote": 1
+      }
+    },
+    "resources/glossary.md": {
+      "zh-Hans": {
+        "h3": 2
+      }
+    },
+    "resources/style-guide.md": {
+      "en": {
+        "h3": 1
+      }
+    },
+    "stages/00-foundations.md": {
+      "en": {
+        "blockquote": 2
+      },
+      "zh-Hans": {
+        "blockquote": 2
+      }
+    },
+    "stages/01-llm-basics.md": {
+      "en": {
+        "blockquote": 2
+      },
+      "zh-Hans": {
+        "blockquote": 1
+      }
+    },
+    "stages/05-claude-code-ecosystem.md": {
+      "en": {
+        "blockquote": 1
+      },
+      "zh-Hans": {
+        "blockquote": 1
+      }
+    }
+  },
+  "total_deficit": 17,
+  "trios": 67
+}

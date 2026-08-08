@@ -35,7 +35,7 @@ Each stage **adds one capability** to the same agent. By the end it's a multi-LL
 | 6 | Add RAG memory: compare with past papers | ~60 lines |
 | 7 | Add eval, observability, deploy | ~100 lines |
 
-**Total**: ~350 lines of Python + structured config = a concrete example you watch grow from zero to production.
+**Total**: ~300 lines of Python + structured config = a concrete example you watch grow from zero to production.
 
 ---
 
@@ -76,7 +76,7 @@ from anthropic import Anthropic
 client = Anthropic()
 
 response = client.messages.create(
-    model="claude-sonnet-4-6",
+    model="claude-sonnet-5",
     max_tokens=500,
     messages=[{
         "role": "user",
@@ -117,14 +117,17 @@ Format requirements:
 
 PAPER_TEXT = """[Paste paper abstract here]"""
 
-response = client.messages.create(
-    model="claude-sonnet-4-6",
-    max_tokens=800,
-    system=SYSTEM_PROMPT,
-    messages=[{"role": "user", "content": PAPER_TEXT}]
-)
-
-print(response.content[0].text)
+# Run it (guarded by __main__: later stages import this file just to get
+#   SYSTEM_PROMPT, and without the guard the import alone fires a real,
+#   billed API call against the placeholder text)
+if __name__ == "__main__":
+    response = client.messages.create(
+        model="claude-sonnet-5",
+        max_tokens=800,
+        system=SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": PAPER_TEXT}]
+    )
+    print(response.content[0].text)
 ```
 
 **What you learn**: system prompt vs user message split, explicit format constraints, anti-hallucination via "say not stated."
@@ -168,7 +171,7 @@ def run_agent(user_query: str):
     
     while True:
         response = client.messages.create(
-            model="claude-sonnet-4-6",
+            model="claude-sonnet-5",
             max_tokens=2000,
             tools=TOOLS,
             messages=messages,
@@ -193,8 +196,10 @@ def run_agent(user_query: str):
                 }]
             })
 
-# Run
-print(run_agent("Summarize this paper: https://arxiv.org/abs/2210.03629"))
+# Run it (same guard: Stage 7's eval_provider and step7 both import
+#   run_agent, and without it every import runs a full agent turn)
+if __name__ == "__main__":
+    print(run_agent("Summarize this paper: https://arxiv.org/abs/2210.03629"))
 ```
 
 **What you learn**: tool schema syntax, ReAct loop mechanics, `stop_reason` for termination, `tool_result` round-trip.
@@ -231,7 +236,7 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
     revisions: int  # bound the loop
 
-llm = ChatAnthropic(model="claude-sonnet-4-6")
+llm = ChatAnthropic(model="claude-sonnet-5")
 react_agent = create_react_agent(llm, tools=[fetch_arxiv])
 
 MAX_REVISIONS = 2
@@ -272,12 +277,14 @@ graph.add_conditional_edges("reflect", should_continue, {"agent": "agent", END: 
 graph.set_entry_point("agent")
 app = graph.compile()
 
-# Run
-result = app.invoke({
-    "messages": [HumanMessage(content="Summarize https://arxiv.org/abs/2210.03629")],
-    "revisions": 0,
-})
-print(result["messages"][-1].content)
+# Run it (same guard: Stage 6 imports State / react_agent / reflect from here)
+if __name__ == "__main__":
+    result = app.invoke({
+        "messages": [HumanMessage(content="Summarize https://arxiv.org/abs/2210.03629")],
+        "revisions": 0,
+    })
+    # Same trap: messages[-1] is the reviewer verdict; the summary is the last AI message
+    print(next(m.content for m in reversed(result["messages"]) if m.type == "ai"))
 ```
 
 **What you learn**: what the framework abstracts (while loop, message structure, tool registration), how to define conditional branches with proper termination, how the reflection pattern lets an agent self-correct within a bounded number of rounds (no infinite loop).
@@ -353,7 +360,7 @@ import chromadb
 from chromadb.utils import embedding_functions
 from langchain_anthropic import ChatAnthropic
 
-llm = ChatAnthropic(model="claude-sonnet-4-6")
+llm = ChatAnthropic(model="claude-sonnet-5")
 
 # Local vector DB
 chroma = chromadb.PersistentClient(path="./paper_memory")
@@ -364,8 +371,9 @@ collection = chroma.get_or_create_collection(
 )
 
 def store_paper(arxiv_id: str, summary: str):
-    """Store summary in vector DB."""
-    collection.add(
+    """Store the summary in the vector DB. upsert, not add: re-running the same
+    paper should overwrite it rather than be silently ignored."""
+    collection.upsert(
         documents=[summary],
         ids=[arxiv_id],
         metadatas=[{"arxiv_id": arxiv_id}],
@@ -381,11 +389,17 @@ def find_similar(query_summary: str, top_k: int = 3) -> list[dict]:
 
 # Modify Stage 4's agent — add a compare_with_memory step:
 def compare_with_memory(state):
-    new_summary = state["messages"][-1].content
+    # This node runs after reflect, so messages[-1] is reflect's "[Reviewer verdict: …]"
+    # message, not the summary. Walk back to the last AI message for the agent output.
+    new_summary = next(m.content for m in reversed(state["messages"]) if m.type == "ai")
     similar = find_similar(new_summary, top_k=3)
     
     if not similar:
-        return {"comparison": "(no related papers in DB)"}
+        # Store first, then return. On the first paper the DB is empty, so an
+        # early return here means store_paper is never reached and the memory
+        # stays empty forever.
+        store_paper(arxiv_id=state["arxiv_id"], summary=new_summary)
+        return {"comparison": "(no related papers in DB yet — this is the first one)"}
     
     compare_prompt = f"""New paper summary: {new_summary}
     
@@ -397,7 +411,7 @@ List 2-3 unique contributions of the new paper not covered above."""
     response = llm.invoke(compare_prompt)
     
     # Store new paper in memory
-    store_paper(arxiv_id="...", summary=new_summary)
+    store_paper(arxiv_id=state["arxiv_id"], summary=new_summary)
     
     return {"comparison": response.content}
 ```
@@ -408,8 +422,16 @@ Wire `compare_with_memory` into the Stage 4 graph:
 # step6_memory.py (continued)
 from step4_langgraph import State, react_agent, reflect, should_continue, MAX_REVISIONS
 from langgraph.graph import StateGraph, END
+from langchain_core.messages import HumanMessage
 
-graph = StateGraph(State)
+# State only declares messages / revisions, and LangGraph drops any key it
+# does not know about. compare_with_memory returns `comparison`, so that key
+# needs a slot in the schema — otherwise the LLM call is billed and discarded.
+class MemoryState(State):
+    arxiv_id: str      # key used to store into the vector DB; don't hardcode it
+    comparison: str    # output of compare_with_memory
+
+graph = StateGraph(MemoryState)
 graph.add_node("agent", react_agent)
 graph.add_node("reflect", reflect)
 graph.add_node("compare", compare_with_memory)  # the new node
@@ -418,6 +440,15 @@ graph.add_conditional_edges("reflect", should_continue, {"agent": "agent", END: 
 graph.add_edge("compare", END)
 graph.set_entry_point("agent")
 app_with_memory = graph.compile()
+
+# Run it (arxiv_id is required: store_paper uses it as the vector-DB key)
+if __name__ == "__main__":
+    result = app_with_memory.invoke({
+        "messages": [HumanMessage(content="Summarize https://arxiv.org/abs/2210.03629")],
+        "revisions": 0,
+        "arxiv_id": "2210.03629",
+    })
+    print(result["comparison"])   # read comparison, not messages[-1]
 ```
 
 **What you learn**: how to use a vector DB, embeddings + similarity queries, taking an agent from "stateless" to "stateful," persistent storage design, and how to extend a graph with a new node without rewriting earlier logic.
@@ -567,7 +598,7 @@ docker run -p 8000:8000 \
 - [ ] Add RAG memory to make the agent stateful (Stage 6)
 - [ ] Write evals + connect observability + deploy (Stage 7)
 
-**This example is ~350 lines of Python** — more than a typical framework example, but every line is something you'll actually use.
+**This example is ~300 lines of Python** — more than a typical framework example, but every line is something you'll actually use.
 
 ---
 

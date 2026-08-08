@@ -50,6 +50,7 @@ PR 之前請先讀完本文。專案維護者也會用這份指南做 review。
 
 ### 必填欄位（GitHub repo entry）
 對「真實 GitHub repo」的 entry：
+
 - `Stars`（★ Xk+ 格式，無千位逗號）
 - `License`（SPDX ID 或標註例外，見 5）
 - `推薦度`（⭐ × N，見 2）
@@ -57,6 +58,7 @@ PR 之前請先讀完本文。專案維護者也會用這份指南做 review。
 
 ### 必填欄位（非 repo entry：article / course / video / protocol / documentation）
 某些 entry 不是 GitHub repo 而是文章、影片、官方文件、catalog hub。對這類：
+
 - `推薦度`（必填）
 - `教什麼`、`適合誰`（必填）
 - `形式`（必填，標明是 `文章` / `影片` / `課程` / `精選清單` / `規格文件` 等）
@@ -87,6 +89,7 @@ PR 之前請先讀完本文。專案維護者也會用這份指南做 review。
 | ⭐ | 利基 / 進階 / 為了完整性 | 多數讀者可跳 |
 
 **準則**：
+
 - 同一個 repo 出現在不同 stage / branch 時，**星等應一致**（除非有明確 audience-specific 理由，且註明在備註）
 - 不要因為「想要看起來推薦」就給高星等。誠實 > 客氣
 - 商業產品（Cursor、LangSmith 等）也照同一套標準
@@ -232,6 +235,7 @@ PR 之前請先讀完本文。專案維護者也會用這份指南做 review。
 
 ## ✅ 進 Stage N+1 前的自我檢查
 你能不能：
+
 - [ ] ...
 - [ ] ...
 

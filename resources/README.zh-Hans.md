@@ -13,8 +13,8 @@
 | 文件 | 角色 | 什么时候看 | 行数 |
 |---|---|---|---|
 | [`glossary.zh-Hans.md`](glossary.zh-Hans.md) | **30 秒查词典** | 看 stage 内容时遇到 LLM / RAG / token / agent / vector DB / streaming / batch API 不知道什么意思 | ~210 |
-| [`cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md) | **7 个 CLI agent 比较** | 第一次选 CLI agent（Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent）不知道挑哪个 | ~134 |
-| [`mcp-skills-catalog.zh-Hans.md`](mcp-skills-catalog.zh-Hans.md) | **62 个集成 catalog** | 想把 Claude Code 接 Notion / Obsidian / Excel / Postgres / Slack / 等实际工具 | ~775 |
+| [`cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md) | **8 个 CLI agent 比较** | 第一次选 CLI agent（Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build）不知道挑哪个 | ~134 |
+| [`mcp-skills-catalog.zh-Hans.md`](mcp-skills-catalog.zh-Hans.md) | **77+ 个集成 catalog** | 想把 Claude Code 接 Notion / Obsidian / Excel / Postgres / Slack / 等实际工具 | ~775 |
 | [`schema-design-cheatsheet.zh-Hans.md`](schema-design-cheatsheet.zh-Hans.md) | **function schema 设计 5 规则 + 5 anti-pattern** | 写 tool schema / MCP server schema / function calling，发现 LLM 选错 tool / 传错参数 | ~159 |
 | [`cookbook.zh-Hans.md`](cookbook.zh-Hans.md) | **6 个 step-by-step recipe** | 想 30-50 分钟做出第一个 Skill / MCP server / 接 Office / 接 NotebookLM / 接 Zotero / 接本机 LLM | ~620 |
 | [`setup-guide.zh-Hans.md`](setup-guide.zh-Hans.md) | **从零开始的 setup 指南** | 完全没有 dev 背景、第一次申请 API key / 装 Python / 用 Claude Code | ~400 |
@@ -40,7 +40,7 @@
 
 ### 🔌 我要把 Claude Code 接 X 工具（Notion / Excel / Postgres 等）
 
-→ [`mcp-skills-catalog.zh-Hans.md`](mcp-skills-catalog.zh-Hans.md)（62 个集成分 14 类）
+→ [`mcp-skills-catalog.zh-Hans.md`](mcp-skills-catalog.zh-Hans.md)（77+ 个集成分 16 类）
 
 ### 🍳 我想动手写第一个 Skill / MCP server / 接 Word 等
 
@@ -56,18 +56,18 @@
 
 ### 🤝 我想送 PR / 翻译 / 加新 entry
 
-→ [`style-guide.zh-Hans.md`](style-guide.zh-Hans.md) + [`../CONTRIBUTING.md`](../CONTRIBUTING.md)
+→ [`style-guide.zh-Hans.md`](style-guide.zh-Hans.md) + [`../CONTRIBUTING.zh-Hans.md`](../CONTRIBUTING.zh-Hans.md)
 
 ---
 
 ## 重复 / 重叠？
 
-只在有助于导航时保留少量重叠，各文件角色仍然分开：
+刻意避免重复。每份 reference 跟主路线 / 其他 reference 的关系：
 
-- **glossary** 是“30 秒查”，stage 内容是“3-5 分钟读”，cookbook 是“30-50 分钟做”。
-- **schema-design-cheatsheet** 跟 cookbook 2 有交集，但 cheatsheet 讲 schema 规则，cookbook 讲怎么把 server 跑起来。
-- **cli-agents-guide** 是比较 reference；**mcp-skills-catalog** 是工具集成目录。
-- **setup-guide** 给从零开始的人；Stage 0 默认你已经准备好进入学习路线。
+- **glossary** 是“30 秒查”，stage 内容是“3-5 分钟读”，cookbook 是“30-50 分钟做”——三层深度，不重叠。
+- **schema-design-cheatsheet** 跟 cookbook 2（写 MCP server）有交集——cheatsheet 讲“**写 schema 的规则**”，cookbook 讲“**怎么把 server 跑起来**”。看哪个取决于你卡在哪。
+- **cli-agents-guide** 是 reference table；catalog 是 plug-in tools——两个层级不同。
+- **跟 [Hello-Agents](https://github.com/datawhalechina/hello-agents) 的关系**：Hello-Agents 是中文圈最完整的 agent 教材，深度高。我们走的是“**roadmap + curated catalog + 动手 recipe**”的角度，不取代它。Stage 5.3 / cookbook 1 都明确 cross-ref Hello-Agents Extra08“如何写出好的 Skill”当深度补充。
 
 ---
 
@@ -95,6 +95,8 @@
 
 近期考虑过但没加的：
 
-- `cost-calculator-guide.md`：cross-provider 计价。现在 Stage 1 有提到，等需求明显再开。
+- `cost-calculator-guide.md`：cross-provider 计价。现在 [Stage 1](../stages/01-llm-basics.zh-Hans.md) 有提到，等需求明显再开。
 - `troubleshooting-guide.md`：常见错误 runbook。现有资料够应付，等社群反馈多了再开。
-- `prompt-patterns-guide.md`：CoT / few-shot 模板库。现在 Stage 2 有基础内容，深度版等社群 PR。
+- `prompt-patterns-guide.md`：CoT / few-shot 模板库。现在 [Stage 2](../stages/02-prompt-engineering.zh-Hans.md) 有基础内容，深度版等社群 PR。
+
+社群想加可以开 issue 讨论。

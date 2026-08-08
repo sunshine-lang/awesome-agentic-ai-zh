@@ -46,7 +46,7 @@
 
 ### 新行為
 
-- LLM 正確 trigger tool 機率：60%（從 ~70% 提升、但 args 仍錯）
+- LLM 正確 trigger tool 機率：60%（從 ~30% 提升、但 args 仍錯）
 - 仍然挑錯 unit 格式
 
 **這一步搞定「LLM 願不願意呼叫」、但 args 還沒固定。**

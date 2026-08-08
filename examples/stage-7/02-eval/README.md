@@ -20,6 +20,7 @@
 5 個 case 涵蓋：
 1-2. **Math**（deterministic 答案）
 3-4. **Geography**（factual recall）
+
 5. **Grounding test**（fake word「flrgglemerk」、agent 應該說 "don't know"、不該 hallucinate）
 
 兩種 evaluator：
@@ -84,6 +85,7 @@ def run_eval(cases, agent_fn, eval_fn):
 ```
 
 **3 個關鍵**：
+
 1. **`id` 必要**：方便定位是哪一題 regress
 2. **`expected_substring` 而非 full match**：LLM 答案有 variability、用 substring 才穩
 3. **Eval function 跟 agent 分離**：可以換不同 evaluator 對同一份 cases

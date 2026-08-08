@@ -64,7 +64,7 @@ LLM 看到的不是「字」，是 **token**（次字單位）。中文 1 個字
 
 ### Context Window（上下文視窗）
 
-LLM 一次能「看」多少 token。**2026 frontier**：Claude Sonnet 4.6 / Opus 4.8 1M、GPT-5.5 ~400k、Gemini 3.1 Pro 2M。**不是越大越好**——超過某個長度後 LLM 會「在中間遺漏」（Lost in the Middle）。
+LLM 一次能「看」多少 token。**2026 frontier**：Claude Sonnet 5 / Opus 5 1M、GPT-5.6 1.05M、Gemini 3.5 Flash 1M（Pro 系列上看 2M）、xAI Grok 4.5 500K、Mistral Medium 3.5 256k。**不是越大越好**——超過某個長度後 LLM 會「在中間遺漏」（Lost in the Middle）。
 
 ### Prompt（提示詞）
 
@@ -72,10 +72,13 @@ LLM 一次能「看」多少 token。**2026 frontier**：Claude Sonnet 4.6 / Opu
 
 📍 詳細：[Stage 2](../stages/02-prompt-engineering.md)
 
-### Few-shot / Zero-shot
+### Zero-shot / One-shot / Few-shot
 
-- **Zero-shot**：直接問問題不給範例。
-- **Few-shot**：給 2-5 個 input → output 的範例後再問。**Few-shot 通常顯著提升準確度**，特別是格式要求嚴的任務。
+在 prompt 裡放「幾個示範例子」讓 LLM 照著做——這三個詞的差別只在**你給幾個範例**：
+
+- **Zero-shot**（0 個範例）：直接問、不給任何範例。
+- **One-shot**（1 個範例）：先給 **1 個** input → output 範例再問。
+- **Few-shot**（少數幾個）：給 **2-5 個** input → output 範例後再問。**Few-shot 通常顯著提升準確度**，特別是格式要求嚴的任務。
 
 ### Chain-of-Thought（CoT，思維鏈）
 
@@ -107,6 +110,7 @@ LLM 一次能「看」多少 token。**2026 frontier**：Claude Sonnet 4.6 / Opu
 讓 LLM 呼叫你定義好的 function（查 DB、算數學、開瀏覽器…）。LLM 回的不是文字而是 `{"function": "search", "args": {...}}`、你的程式去執行、把結果再丟回 LLM。
 
 **兩個詞概念相同、API schema 不一樣**：
+
 - **Anthropic「Tool Use」**：schema 用 `input_schema`（JSON Schema 直接放）
 - **OpenAI / Ollama「Function Calling」**：包一層 `{"type": "function", "function": {...}}` 外層
 - LLM 內部接收的 token 表達不同、寫 SDK 跨家時要記得對應好
@@ -233,7 +237,7 @@ Anthropic 2024 提的方法——chunk 加上「整份文件的脈絡摘要」�
 
 ### A2A（Agent-to-Agent）Protocol
 
-Google 推的 agent 之間溝通協定，類似 MCP 但用於 agent ↔ agent，不是 agent ↔ tool。
+Google 發起、現由 Linux Foundation 治理的 agent 之間溝通協定，類似 MCP 但用於 agent ↔ agent（不是 agent ↔ tool）。2026 已達 **v1.0**（已有 150+ 組織採用，並加入身分驗證、讓一個 agent 能確認對方是不是真的它），是 MCP（agent↔tool）的姊妹標準。
 
 ---
 
@@ -241,14 +245,15 @@ Google 推的 agent 之間溝通協定，類似 MCP 但用於 agent ↔ agent，
 
 ### MCP（Model Context Protocol）
 
-Anthropic 2024 推的開放協定、讓任何 LLM host（Claude Code、Cursor、自寫 agent）用同一套介面接外部 tool server。把它想成「**LLM 的 USB 接口**」。
+Anthropic 2024 推的開放協定、讓任何 LLM host（Claude Code、Cursor、自寫 agent）用同一套介面接外部 tool server，2025-12 已捐給 Linux Foundation 旗下的 Agentic AI Foundation。把它想成「**LLM 的 USB 接口**」。
 
 **技術上標準化 3 種 primitives**：
+
 - **Tools**：LLM 可呼叫的 function（read DB / search web / send email…）
 - **Resources**：LLM 可讀取的資料（檔案內容、API response、DB rows…）
 - **Prompts**：可複用的 prompt 模板（給 user 在 host 內 `/` 觸發）
 
-**架構**：server / client 模式——tool server 跑在本機或遠端、LLM host 當 client 連接。Server 用 stdio / SSE / HTTP 三種 transport 之一暴露 primitives。
+**架構**：server / client 模式——tool server 跑在本機或遠端、LLM host 當 client 連接。Server 用兩種 transport 之一暴露 primitives：**stdio**（本機 subprocess）與 **Streamable HTTP**（遠端）；舊的 HTTP+SSE transport 已在 2025-03-26 spec revision 標為 deprecated。
 
 📍 詳細：[Stage 5.2](../stages/05-claude-code-ecosystem.md#52--mcpmodel-context-protocol-基礎)
 
@@ -289,6 +294,12 @@ Claude Code 內以 `/` 開頭的指令（`/help`、`/compact`、`/plan` 等）�
 | `PostCompact` | compact 後 | 確認哪些 context 被壓縮 |
 
 寫法：`.claude/settings.json` 加 `"hooks"` 區塊、指 script 路徑。
+
+### Deep Agent（深度 agent）
+
+「自帶完整配備」的 agent 設計——不只會呼叫工具，還內建規劃（待辦清單）、長期記憶（檔案系統）、子 agent 分工、可載入的 skills。對照：陽春 agent 只有 LLM + 幾個工具。代表實作：LangChain 的 [deepagents](https://github.com/langchain-ai/deepagents)。
+
+---
 
 ### Subagent（子 agent）
 
@@ -332,6 +343,14 @@ LLM 邊生邊回（一個 token 一個 token），不是等全部生完才丟整
 
 防 LLM 做壞事的規則層——擋掉 prompt injection、PII 外流、有害輸出等。NeMo Guardrails、Guardrails AI 等。
 
+### Prompt Injection（提示注入）
+
+把惡意指令藏在 LLM 會讀到的內容裡（網頁、文件、工具回傳），誘導它無視原任務、改做攻擊者要的事。根因：LLM 分不清「指令」與「資料裡夾帶的指令」。防法：最小權限、隔離不可信內容、高風險動作人審。相關：lethal trifecta、Guardrails。
+
+### Lethal Trifecta（致命三角）
+
+Simon Willison 提出：agent 同時有（1）存取私密資料、（2）接觸不可信內容、（3）對外通訊三種能力時，就可能被 prompt injection 操控去偷資料外傳。防法是打斷至少一環（常見：切斷對外通訊或隔離不可信輸入）。
+
 ---
 
 ## 7. 用詞 / Buzzword
@@ -362,7 +381,7 @@ LLM 「自信地說錯」——把不存在的 API 編出來、把錯的數字�
 
 ### Frontier Model
 
-當下最頂的模型（**2026-06**：Claude Fable 5（Mythos-class，定位在 Opus 之上、目前最高能力的廣泛可用 Claude 層級）；**2026-05**：GPT-5.5、Claude Opus 4.8（Opus-class 旗艦、亦為 Fable 5 的 safeguard fallback）、Gemini 3.1 Pro、DeepSeek-V4-Pro 等）。一般智慧任務用 frontier；簡單分類 / 翻譯用便宜的小模型省錢。
+當下最頂的模型（**2026-07**：Claude **Opus 5**（2026-07-24、`claude-opus-5`、1M、$5/$25，官方 docs 建議的預設起點）、OpenAI **GPT-5.6**（Sol / Terra / Luna 三級、1.05M context、ChatGPT / Codex / API 皆可用）；**2026-06 後半**：Claude Sonnet 5（速度×智慧的最佳平衡、接近 Opus 級但更便宜）、Google Gemini 3.5 Flash、xAI Grok 4.5（500K context）、Mistral Medium 3.5；**2026-06 前半**：Claude Fable 5（Mythos-class，定位在 Opus 之上）發布，2026-06-12 曾被美國出口管制暫停，但 **出口管制 2026-06-30 解除、[Fable 5 於 2026-07-01 全球恢復](https://www.anthropic.com/news/redeploying-fable-5)**（Mythos 5 僅對核准美國組織恢復）；**2026-05**：GPT-5.5、Claude Opus 4.8（當時的 Opus-class 旗艦，2026-07 由 Opus 5 接替、仍可用）、Gemini 3.1 Pro、DeepSeek-V4-Pro 等）。一般智慧任務用 frontier；簡單分類 / 翻譯用便宜的小模型省錢。
 
 ### Context Engineering
 
@@ -376,12 +395,26 @@ LLM 「自信地說錯」——把不存在的 API 編出來、把錯的數字�
 工程「**模型外圍的執行與控制層**」——所有不是 model weights、也不是 prompt string 本身的工程元件：agent loop / tool registry / context manager / permissions / safety layer / memory layer / eval / observability / retry / circuit breaker 等。Simon Willison 2025：「**coding agent = LLM + harness**」、Addy Osmani：「harness = 所有不是 model 本身的程式碼」。[OpenAI 2026-02 也使用 "Harness Engineering" 這個說法](https://openai.com/index/harness-engineering)。Claude Code、Cursor、OpenCode 等 CLI agent 都是 harness。**framework 把 LLM 包成 agent、harness 把 agent 包成可上線使用的產品**。
 
 對比：
+
 - **Framework**（Stage 4）規範 **API**：你呼叫的介面長什麼樣
 - **Harness**（本詞）規範 **runtime**：怎麼跑、怎麼 recovery、怎麼觀測
 
 📍 **學科級概念**（**8 個核心元件** / prompt→context→harness 三層工程分工 / framework vs harness）：[Stage 7 Harness Engineering](../stages/07-multi-agent-production.md#-harness-engineering--production-agent-runtime-的工程設計--本-stage-核心概念)
-📍 **Reference implementation case study**（讀 Claude Code source）：[Stage 5 5.6](../stages/05-claude-code-ecosystem.md#56--claude-code-source-解剖reference-harness-implementation-track-b-必看)
+📍 **Reference implementation case study**（讀 Claude Code source）：[Stage 5 5.7](../stages/05-claude-code-ecosystem.md#57--claude-code-source-解剖reference-harness-implementation-track-b-必看)
 📍 延伸：[`anthropics/claude-agent-sdk-python`](https://github.com/anthropics/claude-agent-sdk-python)、[`ai-boost/awesome-harness-engineering`](https://github.com/ai-boost/awesome-harness-engineering)、[`ZhangHanDong/harness-engineering-from-cc-to-ai-coding`](https://github.com/ZhangHanDong/harness-engineering-from-cc-to-ai-coding)
+
+### Loop Engineering（迴圈工程）
+
+prompt engineering → context engineering → harness engineering 之後的第四層：設計 / 調校 agent 的「迭代迴圈」本身——目標、工具、context 管理、終止條件、錯誤處理，讓長時間（數百步、跨 session）運行仍可靠、可控、不跑偏。相關：harness、Dynamic Workflows、ReAct。
+
+### Graph Engineering（圖工程）
+
+把 agent 的執行流程設計成**顯式的圖**：node = 一個步驟（2026 起一個 node 裡可以塞一整個 agent run，不再只是一個 function），edge = 轉移條件，node 之間傳遞一個有 schema、可 checkpoint、可 replay 的 state。**讀到這個詞要知道兩件事**：
+
+- **這裡的「圖」是執行流程圖（control / execution graph），不是 GraphRAG 那種知識圖譜檢索**——後者見 [Stage 6](../stages/06-memory-rag.md)。兩者常被混為一談。
+- **這是 2026-07 才流行的新名字，不是新技術**。LangGraph 從 2023 就是這樣運作，LangChain 官方也直言這不是新想法；Anthropic 稱同類機制為 *dynamic workflows*、Google ADK 與 Microsoft Agent Framework 用 *graph-based workflow(s)*，三家官方文件都沒有採用「graph engineering」這個說法。
+
+真正要學的東西在 [Stage 4 的 multi-agent pattern](../stages/04-agent-frameworks.md) 跟可以直接跑的 [`examples/stage-4/03-graph-workflow/`](../examples/stage-4/03-graph-workflow/README.md)（`StateGraph` / conditional edge / checkpointer）。相關：harness、Loop Engineering、orchestration。
 
 ---
 
@@ -389,13 +422,13 @@ LLM 「自信地說錯」——把不存在的 API 編出來、把錯的數字�
 
 ### Computer Use（螢幕級 agent）
 
-Agent 透過 **screenshot → vision → 算座標 → 模擬鍵鼠** 操作真實桌面 app——不靠 API、直接像人類用螢幕。代表：Anthropic Claude Computer Use（Opus 4.8 / Sonnet 4.6）/ OpenAI Codex desktop / Google Gemini in Chrome。**2024-10 Anthropic 公開 beta 開啟、2026 OSWorld 達 76.26% superhuman**。
+Agent 透過 **screenshot → vision → 算座標 → 模擬鍵鼠** 操作真實桌面 app——不靠 API、直接像人類用螢幕。代表：Anthropic Claude Computer Use（Opus 5 / Sonnet 5）/ OpenAI Codex desktop / Google Gemini in Chrome。**2024-10 Anthropic 公開 beta 開啟；OSWorld v1 2026-05 達 76.26% 後接近飽和，OSWorld 2.0（2026-06、long-horizon）把 SOTA 重設到 ~20%（Opus 4.8）**。
 
 📍 完整解說 + 4 強對比：[Stage 8 Computer Use](../stages/08-agent-interfaces.md#-computer-use--螢幕級-agent)
 
 ### Browser Use（web 級 agent）
 
-Agent 操作網頁、主要用 **DOM-aware navigation**（直接 query CSS selector）+ 必要時 vision fallback。代表閉源：Atlas / Comet / Dia / Gemini in Chrome。代表 OSS：[browser-use](https://github.com/browser-use/browser-use)（★ 95k+）。
+Agent 操作網頁、主要用 **DOM-aware navigation**（直接 query CSS selector）+ 必要時 vision fallback。代表閉源：Comet / Dia / Gemini in Chrome（Atlas 2026-08 停運）。代表 OSS：[browser-use](https://github.com/browser-use/browser-use)（★ 105k+）。
 
 📍 完整解說 + 5 強對比 + OSS 框架：[Stage 8 Browser Use](../stages/08-agent-interfaces.md#-browser-use--web-級-agent)
 
@@ -429,4 +462,5 @@ Google 寫的「用戶空間 kernel」、攔截 syscall 自己模擬、**不用 
 
 - 看 [Stage 5.2 — MCP](../stages/05-claude-code-ecosystem.md#52--mcpmodel-context-protocol-基礎) / [5.3 — Skills](../stages/05-claude-code-ecosystem.md#53--skillsclaude-code-的行為層-claude-code-生態最關鍵的一層) / [5.4 — Plugins](../stages/05-claude-code-ecosystem.md#54--plugins-與-marketplaces) 的內文
 - 看 [Stage 1](../stages/01-llm-basics.md) / [Stage 6](../stages/06-memory-rag.md) / [Stage 7](../stages/07-multi-agent-production.md) / [Stage 8](../stages/08-agent-interfaces.md) 的延伸閱讀清單
+- 想要更白話的解釋？[baihuaai.com（白话AI）](https://baihuaai.com) 是一個免費、無廣告的简中入門辭典，用大白話搭配現實類比講 AI 術語（有「术语索引」與「零基础专区」）。
 - 找不到的詞 → 開 issue 或直接 PR 加進這份小辭典

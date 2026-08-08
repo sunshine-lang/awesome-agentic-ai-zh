@@ -18,7 +18,7 @@
 | 服務 | 網址 | 備註 |
 |---|---|---|
 | **Claude** | https://claude.ai | Anthropic 官方。免費 tier 每天額度有限，付費版 $20/月 |
-| **ChatGPT** | https://chatgpt.com | OpenAI 官方。免費可用 GPT-5（基本款），付費 $20/月升 Plus |
+| **ChatGPT** | https://chatgpt.com | OpenAI 官方。免費可用 GPT-5.5 Instant（有用量限制），付費 $20/月升 Plus 解鎖 Thinking/Pro |
 | **Gemini** | https://gemini.google.com | Google 官方。免費 tier 寬鬆，整合 Google 服務 |
 | **Le Chat** | https://chat.mistral.ai | Mistral（歐洲開源 LLM）。免費、隱私導向 |
 
@@ -43,7 +43,7 @@
 | **Windsurf** | https://codeium.com/windsurf | 獨立 IDE（Codeium 出） |
 | **Cline** | https://cline.bot | VS Code extension（agentic 風格） |
 | **Continue** | https://continue.dev | VS Code / JetBrains extension（開源） |
-| **Roo Code** | https://github.com/RooCodeInc/Roo-Code | VS Code extension（Cline fork，社群活躍） |
+| **Roo Code** | https://github.com/RooCodeInc/Roo-Code | VS Code extension（Cline fork）；⚠️ **repo 已封存 2026-05（read-only）** |
 | **Zed** | https://zed.dev | 獨立 editor，內建 AI assistant |
 | **GitHub Copilot** | https://github.com/features/copilot | VS Code / JetBrains 等多 IDE extension |
 
@@ -55,7 +55,7 @@
 
 | CLI Agent | 安裝 / 文件 | 主要 LLM |
 |---|---|---|
-| **Claude Code** | https://docs.anthropic.com/en/docs/claude-code/quickstart | Claude |
+| **Claude Code** | https://code.claude.com/docs/en/quickstart | Claude |
 | **Codex CLI** | https://github.com/openai/codex | GPT 系列 |
 | **Gemini CLI** | https://github.com/google-gemini/gemini-cli | Gemini |
 | **OpenCode** | https://github.com/sst/opencode | 任意（多 provider） |
@@ -63,7 +63,7 @@
 | **Aider** | https://aider.chat | 任意（git-native） |
 | **Hermes Agent** | https://github.com/NousResearch/hermes-agent | 200+（model-neutral） |
 
-→ 想看 7 個 CLI 完整比較 → [`cli-agents-guide.md`](cli-agents-guide.md)
+→ 想看 8 個 CLI 完整比較 → [`cli-agents-guide.md`](cli-agents-guide.md)
 → Claude Code 第一次裝的詳細步驟 → 本指南 [D](#d--第一次裝-claude-code約-10-分鐘stage-5--for-developer-會用到)
 
 > 💡 **IDE-based 跟 CLI agent 怎麼選？** 邊寫 code 邊要 AI 幫忙 → IDE；下單一 prompt 讓 agent 自己跑完一整個任務 → CLI。兩個可以並用。
@@ -97,23 +97,28 @@
 
 - **OpenAI**：https://platform.openai.com/api-keys
   ChatGPT Plus 和 API key 是兩件事；訂閱 Plus 仍要另外申請 API key。
+
 - **Google AI Studio**：https://aistudio.google.com/
   適合先試 Gemini API，免費額度會依地區和帳號狀態不同。
+
 - **NVIDIA NIM**：https://build.nvidia.com/
-  **托管多個開源 model（Llama / Mistral / DeepSeek-R1 + R2 lineage / Qwen / Gemma 等）、OpenAI-compatible API、新帳號送 1000 credits**。適合「想試多個 open-source model 但沒 GPU」的情境。`base_url=https://integrate.api.nvidia.com/v1`。
+  **托管多個開源 model（Llama / Mistral / DeepSeek / Qwen / Gemma 等）、OpenAI-compatible API、新帳號送 1000 credits**。適合「想試多個 open-source model 但沒 GPU」的情境。`base_url=https://integrate.api.nvidia.com/v1`。
 
 #### 中國 / 中文場景（地區友善、價格極便宜）
 
 > 中國大陸使用者連 Anthropic / OpenAI 有困難、或想試中文 native 模型，從這邊開始。**這些 API 都 OpenAI-compatible**、改 `base_url` 跟 model name 就能跑同一份練習。
 
 - **DeepSeek**：https://platform.deepseek.com/
-  web 版 https://chat.deepseek.com 完全免費（含 R1 推理模型）。API 價格極便宜（**$0.27 input / $1.10 output per 1M token**、比 haiku 便宜 4 倍）。Code / 推理都很強。
-  `base_url=https://api.deepseek.com/v1`、`model=deepseek-chat` 或 `deepseek-reasoner`。
+  web 版 https://chat.deepseek.com 完全免費（含深度思考模式）。API 價格極便宜（**$0.14 input / $0.28 output per 1M token**、比 haiku 便宜約 7 倍）。Code / 推理都很強。
+  `base_url=https://api.deepseek.com/v1`、`model=deepseek-v4-flash` 或 `deepseek-v4-pro`。
+
 - **Moonshot Kimi**：https://platform.moonshot.cn/ (中國)、https://platform.moonshot.ai/ (海外)
   web 版 https://kimi.com 免費、**1M token context** 是賣點（很大檔案 / 長對話）。API 約 $5-15/1M input、按 context size 階梯計費。
-  `base_url=https://api.moonshot.cn/v1` (中國) / `https://api.moonshot.ai/v1` (海外)、`model=kimi-k2-turbo-preview` 等。
+  `base_url=https://api.moonshot.cn/v1` (中國) / `https://api.moonshot.ai/v1` (海外)、`model=kimi-k3` 等。
+
 - **通義千問 Qwen（Alibaba）**：https://dashscope.console.aliyun.com/
   web 版 https://chat.qwen.ai 免費。API 走 Alibaba Cloud DashScope、有 **OpenAI-compatible endpoint**（[文件](https://help.aliyun.com/zh/dashscope/developer-reference/compatibility-of-openai-with-dashscope/)）。**同樣的 Qwen 模型也能用 Ollama 在本機跑**（`ollama pull qwen2.5:3b`）——cloud 跟 local 兩條路徑都通。
+
 - **智譜 GLM（ZhipuAI）**：https://open.bigmodel.cn/ (中國) / https://z.ai/ (海外)
   web 版 https://chatglm.cn 免費、有 GLM-4.5、GLM-4-Plus。API 有 free tier、學生申請可額外領 credit。
 
@@ -193,7 +198,7 @@ load_dotenv()
 client = Anthropic() # 自動讀取 ANTHROPIC_API_KEY
 
 msg = client.messages.create(
-    model="claude-sonnet-4-6",
+    model="claude-sonnet-5",
     max_tokens=100,
     messages=[{"role": "user", "content": "Hello, who are you?"}],
 )

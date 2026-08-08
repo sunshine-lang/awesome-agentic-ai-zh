@@ -5,6 +5,12 @@
 # Exercise 5: Long-term Memory (remember across turns)
 
 Pairs with [Stage 6 — Memory & RAG](../../../stages/06-memory-rag.en.md) Exercise 5.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
+
+> 📚 **Want the chapter-length version?** The starter in this folder is an illustrative build focused on the core pattern plus two SDK paths — it is not in-depth teaching material. Recommended for depth:
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ The most complete chapter-based course in Chinese — 16 production capabilities. **This exercise maps to hello-agents' long-term memory chapter**
+> - [mem0](https://github.com/mem0ai/mem0) (auto fact extraction + forgetting) + [Letta / MemGPT](https://github.com/letta-ai/letta) (two-tier memory pattern)
+> - Full references in [Stage 6 Curated Projects](../../../stages/06-memory-rag.en.md#-featured-projects-templates--specs--example-collections)
 
 ## Task
 
@@ -86,6 +92,14 @@ This demo uses a heuristic: user says "I + verb..." → store. Production is mor
 3. **Past decisions**: how the agent handled some situation before
 4. **Negative feedback**: "don't suggest X" must persist
 5. **LLM-extracted**: each turn, use an LLM to extract facts (mem0 / Letta / MemGPT all do this)
+
+## What to watch on each path
+
+| Observation | Anthropic Claude haiku | Ollama qwen2.5:3b |
+|---|---|---|
+| Weaving memory into the answer | Natural (cites the memory) | Sometimes ignores memory, falls back on a generic answer |
+| Not forcing it when no memory is relevant | Follows the rule | Looser |
+| Integrating multiple memories | Good | Medium |
 
 ## Common pitfalls
 

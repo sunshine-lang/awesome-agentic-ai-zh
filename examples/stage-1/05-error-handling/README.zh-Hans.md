@@ -5,6 +5,7 @@
 # 练习 5：Error Handling + Retry wrapper
 
 对应 [Stage 1 — LLM 基础](../../../stages/01-llm-basics.zh-Hans.md) 练习 5。
+> 🎓 **学习模式**：这份 `starter.py` 是**完整解答**、不是 TODO skeleton。建议用**主动模式**——`mv starter.py starter_reference.py`、看 signature 不看 body、自己重写一份 `starter.py`、跑 `python test.py` 验证；卡 20 分钟再回去对照 reference。完整方法论看 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
 
 ## 为什么这题重要
 

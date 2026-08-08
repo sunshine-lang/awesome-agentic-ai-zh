@@ -5,6 +5,7 @@
 This is a checklist **for your own use**. You do not need to submit it, open a PR, or have anyone inspect it. Copy it (or fork the repo), tick your own progress, and see where you are and what comes next.
 
 **How to use it**:
+
 1. Each stage's "Learning goals", "Entry requirements", and "Self-check" live in that stage file. This checklist is only an **overview + entry point** and does not repeat the content.
 2. A stage's ✅ condition = you can pass the "**Self-check**" section at the end of that stage. Tick it only after passing, then move to the next stop.
 3. You do not need to finish everything. Pick one track (Track A or B) + one audience branch to get started.
@@ -17,8 +18,10 @@ This is a checklist **for your own use**. You do not need to submit it, open a P
 
 - [ ] **Stage 0 — Foundations** · [`stages/00-foundations.en.md`](stages/00-foundations.en.md)
   ✅ Pass this stage's completion criteria (Stage 0 is a prerequisite gateway; see the stage file for the criteria)
+
 - [ ] **Stage 1 — LLM Basics** · [`stages/01-llm-basics.en.md`](stages/01-llm-basics.en.md)
   ✅ Pass this stage's "Self-check"
+
 - [ ] **Stage 2 — Prompt Design** · [`stages/02-prompt-engineering.en.md`](stages/02-prompt-engineering.en.md)
   ✅ Pass this stage's "Self-check"
 

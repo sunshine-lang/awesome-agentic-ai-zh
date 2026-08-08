@@ -2,7 +2,7 @@
 
 > [繁體中文](./cookbook.md) | **简体中文** | [English](./cookbook.en.md)
 
-> Stage 5（Claude Code 生态）跟 [`mcp-skills-catalog.md`](mcp-skills-catalog.zh-Hans.md) 讲“概念”跟“有哪些工具”。这份 cookbook 补中间缺的：“**怎么动手做出来**”。每个 recipe 是一份 step-by-step + sample code + 常见 pitfall，~30-50 分钟做完一个。
+> Stage 5（Claude Code 生态）跟 [`mcp-skills-catalog.zh-Hans.md`](mcp-skills-catalog.zh-Hans.md) 讲“概念”跟“有哪些工具”。这份 cookbook 补中间缺的：“**怎么动手做出来**”。每个 recipe 是一份 step-by-step + sample code + 常见 pitfall，~30-50 分钟做完一个。
 >
 > 不是 reference 也不是 tutorial——是 recipe，挑你需要的那道煮就好。
 
@@ -28,6 +28,7 @@
 ### 为什么
 
 写 Skill 跟“在 prompt 里加几段 instruction”差别在于：
+
 - Skill 是 **per-domain** 的，不会污染所有 conversation
 - 可以打包跨 project / team 共用
 - Claude 自己决定何时加载（看 description match 不 match）
@@ -159,8 +160,11 @@ from mypackage import foo",
 #### Step 1：安装官方 SDK
 
 ```bash
-pip install mcp
+pip install "mcp>=2,<3"
 ```
+
+> ⚠️ **一定要锁版本**。官方 Python SDK 于 **2026-07-28 发布 v2.0.0**，是破坏性改版（`FastMCP` 改名 `MCPServer`、低阶 `Server` 的 handler 从 decorator 改成构造函数参数）。裸写 `pip install mcp` 会装到 2.x，**网上 2025 年写的 v1 教程会在 import 那行就失败**。
+> 手上有 v1 旧 code 还不想改？锁 `pip install "mcp>=1,<2"`（v1.x 仍在维护模式、只收安全性修补）。迁移对照表：[官方 migration guide](https://py.sdk.modelcontextprotocol.io/migration/)。
 
 #### Step 2：写 `server.py`
 
@@ -168,45 +172,20 @@ pip install mcp
 
 ```python
 # server.py
-from mcp.server import Server
-from mcp.server.stdio import stdio_server
-from mcp.types import Tool, TextContent
+from mcp.server.mcpserver import MCPServer
 
-app = Server("hello-mcp")
+app = MCPServer("hello-mcp")
 
-@app.list_tools()
-async def list_tools() -> list[Tool]:
-    return [
-        Tool(
-            name="echo",
-            description="Echo the input text back to the user.",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "text": {
-                        "type": "string",
-                        "description": "Text to echo back",
-                    }
-                },
-                "required": ["text"],
-            },
-        )
-    ]
-
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    if name == "echo":
-        return [TextContent(type="text", text=f"Echo: {arguments['text']}")]
-    raise ValueError(f"Unknown tool: {name}")
-
-async def main():
-    async with stdio_server() as (read, write):
-        await app.run(read, write, app.create_initialization_options())
+@app.tool()
+async def echo(text: str) -> str:
+    """Echo the input text back to the user."""
+    return f"Echo: {text}"
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    app.run(transport="stdio")
 ```
+
+> 💡 **为什么这么短**：v2 从 **type hints 自动生成 inputSchema**（`text: str` → 必填的 string 参数）、用 **docstring 当 tool description**、返回值也自动包成 MCP content——这三件事在 v1 都要手写。所以 schema 设计的功夫现在花在“参数命名 + type hint + docstring 写清楚”上。
 
 #### Step 3：在 Claude Desktop / Code 设置
 
@@ -226,7 +205,7 @@ if __name__ == "__main__":
 **Claude Code**：用 `claude mcp add` 指令：
 
 ```bash
-claude mcp add hello-mcp python /绝对路径/到/server.py
+claude mcp add hello-mcp --scope project -- python /绝对路径/到/server.py
 ```
 
 #### Step 4：重启 Claude Desktop / Code、测试
@@ -241,14 +220,16 @@ Claude 回（会显示 tool call icon）：Echo: hello world
 | 症状 | 原因 | 解法 |
 |---|---|---|
 | Claude Desktop 没看到 tool | server.py 启动失败 | 终端直接 `python server.py` 跑、看 stderr 哪里爆 |
-| tool 列出但 call 失败 | inputSchema 格式错（required 漏写、type 写错） | 看 [`schema-design-cheatsheet.md`](schema-design-cheatsheet.zh-Hans.md) |
-| Claude 不主动叫 tool | description 太笼统 | description 改成“When the user asks X, use this tool”式的具体 trigger |
-| stdio 跟 SSE 哪个用？ | local desktop integration 用 stdio；remote / web 用 SSE | 第一个 server 一律用 stdio |
+| tool 列出但 call 失败 | 参数 type hint 没写（v2 靠它产 schema）、或类型对不上 | 每个参数都补 type hint；看 [`schema-design-cheatsheet.zh-Hans.md`](schema-design-cheatsheet.zh-Hans.md) |
+| Claude 不主动叫 tool | docstring（= tool description）太笼统 | docstring 改成“When the user asks X, use this tool”式的具体 trigger |
+| `ImportError` / `AttributeError` 在 import 那行 | 混到 v1 写法（`from mcp.server import Server`、`@app.list_tools()`）跑在 v2 上 | 用上面的 v2 写法，或锁 `mcp>=1,<2` 留在 v1 |
+| stdio 跟 HTTP 哪个用？ | 本地桌面集成用 **stdio**；远程用 **Streamable HTTP**（旧的 HTTP+SSE transport 已于 2025-03-26 deprecated、别再用） | 第一个 server 一律用 stdio |
+| stdio server 要不要做 OAuth？ | 不用。spec 明写 authorization 整体是 optional，HTTP transport 才 SHOULD 遵循，**stdio SHOULD NOT 用 authorization** | 凭证从**环境变量**取（例如 `os.environ["API_KEY"]`），不要在 server 里实现登录流程 |
 
 ### 进一步
 
 - 看 [Stage 5.2](../stages/05-claude-code-ecosystem.zh-Hans.md#52--mcpmodel-context-protocol-基础) 的 MCP 完整介绍
-- 看 [`modelcontextprotocol/servers`](https://github.com/modelcontextprotocol/servers) 官方示例（filesystem、github、sqlite、time 等）
+- 看 [`modelcontextprotocol/servers`](https://github.com/modelcontextprotocol/servers) 官方 reference server（现有 7 个：everything / fetch / filesystem / git / memory / sequentialthinking / time；github、sqlite 已移到 `servers-archived`）。官方 README 自述这些是 reference implementation、**不是 production-ready**，要找实际能用的 server 走 [官方 Registry](https://registry.modelcontextprotocol.io)（仍在 preview）
 - 写 production server 看 [Stage 5.2“练习：MCP in production”](../stages/05-claude-code-ecosystem.zh-Hans.md#52--mcpmodel-context-protocol-基础) 跟 [`anthropics/claude-code`](https://github.com/anthropics/claude-code) 的 `~/.claude/skills/`
 
 ---
@@ -260,6 +241,7 @@ Claude 回（会显示 tool call icon）：Echo: hello world
 ### 为什么
 
 最常见场景：
+
 - 把 Markdown / 大纲 → 自动生成 Word / PPT
 - 读一堆 PDF / Excel → 整理摘要 / 提取数字
 - 改别人传来的 docx → 加 track changes、或重排格式
@@ -330,7 +312,7 @@ Claude 会根据 user query 自动加载合适的 skill。
 
 ### 进一步
 
-- catalog 2 [`mcp-skills-catalog.md` 2 办公文件](mcp-skills-catalog.zh-Hans.md#2-办公文件word--excel--powerpoint--pdf)：补强版 office skill / Excel / PPT 专用 MCP
+- catalog 2 [`mcp-skills-catalog.zh-Hans.md` 2 办公文件](mcp-skills-catalog.zh-Hans.md#2-办公文件word--excel--powerpoint--pdf)：补强版 office skill / Excel / PPT 专用 MCP
 - 中文圈 office workflow：[`leemysw/feishu-docx`](https://github.com/leemysw/feishu-docx) 飞书 / Lark docs ↔ Markdown
 
 ---
@@ -342,6 +324,7 @@ Claude 会根据 user query 自动加载合适的 skill。
 ### 为什么
 
 NotebookLM 强的地方：
+
 - 上传 50 份 PDF 自动建索引
 - Q&A 带 citation（每个答案都标出来自哪份文件第几页）
 - 生成 summary / mind map / podcast-style audio overview
@@ -349,6 +332,7 @@ NotebookLM 强的地方：
 弱点：要在 NotebookLM 网页里用，跟你的其他 workflow（Claude Code、Obsidian、Zotero）断开。
 
 两个方案桥接：
+
 1. **PleasePrompto/notebooklm-skill**（Skill，browser automation）
 2. **teng-lin/notebooklm-py**（Python API + CLI）
 
@@ -415,7 +399,7 @@ print(answer.citations)
 
 ### 进一步
 
-- catalog 1 [`mcp-skills-catalog.md` 1 笔记 / 知识库](mcp-skills-catalog.zh-Hans.md#1-笔记--知识库)
+- catalog 1 [`mcp-skills-catalog.zh-Hans.md` 1 笔记 / 知识库](mcp-skills-catalog.zh-Hans.md#1-笔记--知识库)
 - 完整 research workspace：用 [`WenyuChiou/research-hub`](https://github.com/WenyuChiou/research-hub) 集成 NotebookLM + Zotero + Obsidian
 
 ---
@@ -427,6 +411,7 @@ print(answer.citations)
 ### 为什么
 
 研究流程经典痛点：
+
 - “我那篇 paper 在哪？”——Zotero 有，但要切换窗口
 - “给我所有讲 transformer 的 paper 摘要”——要自己 select、export、丢给 LLM
 - “这篇 paper 该打什么 tag？”——人工
@@ -447,6 +432,7 @@ zotero-skills 把这些变成 Claude Code 内一句 prompt 就跑。
 #### Step 1：开启 Zotero local API
 
 Zotero 桌面版默认不开 API。打开：
+
 - **Edit → Preferences → Advanced → Config Editor**
 - 找 `extensions.zotero.httpServer.enabled`，设 `true`
 - 找 `extensions.zotero.httpServer.port`，默认 `23119`
@@ -586,7 +572,7 @@ hermes
 | 成本 | 订阅或 per-token | `$0` token cost |
 | 速度 | 通常较稳 | 看硬件，常慢 2-5 倍 |
 | 隐私 | 内容送 Anthropic | 内容留在本地 |
-| Reasoning 上限 | Claude 4.5+ 较强 | 取决于本地模型 |
+| Reasoning 上限 | Claude 4.8+ 较强 | 取决于本地模型 |
 | 适合 use case | 复杂 codebase、长 context、可靠推理 | 隐私资料、离线 demo、低成本反复试 |
 
 ### 重要限制：Claude Code 不能直接用本地 LLM
@@ -607,7 +593,7 @@ Claude Code 目前需要 Anthropic OAuth / API key，没有官方设置可以把
 ### 进一步
 
 - Stage 1 [Local LLM 练习](../stages/01-llm-basics.zh-Hans.md#练习-6local-llm)：Ollama / llama.cpp / vLLM 的差异
-- [`cli-agents-guide.md`](cli-agents-guide.zh-Hans.md)：7 个 CLI agent 怎么选
+- [`cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md)：8 个 CLI agent 怎么选
 - Hermes Agent README：多平台 gateway（Telegram / Discord / Slack）与 provider 设置
 
 ---
@@ -615,8 +601,8 @@ Claude Code 目前需要 Anthropic OAuth / API key，没有官方设置可以把
 ## 找不到你要的 recipe？
 
 - 看 [Stage 5](../stages/05-claude-code-ecosystem.zh-Hans.md) 完整概念
-- 看 [`mcp-skills-catalog.md`](mcp-skills-catalog.zh-Hans.md) 完整工具清单
-- 看 [`schema-design-cheatsheet.md`](schema-design-cheatsheet.zh-Hans.md) 写 tool schema 的细节
-- 看 [`cli-agents-guide.md`](cli-agents-guide.zh-Hans.md) 7 个主流 CLI agent 比较
+- 看 [`mcp-skills-catalog.zh-Hans.md`](mcp-skills-catalog.zh-Hans.md) 完整工具清单
+- 看 [`schema-design-cheatsheet.zh-Hans.md`](schema-design-cheatsheet.zh-Hans.md) 写 tool schema 的细节
+- 看 [`cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md) 8 个主流 CLI agent 比较
 
 要新 recipe → 开 issue 或直接 PR 一份。recipe 格式：**为什么 + 步骤 + 范本 prompt + 常见 pitfall + 进一步**。

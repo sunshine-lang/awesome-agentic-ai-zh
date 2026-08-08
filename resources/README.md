@@ -13,8 +13,8 @@
 | 檔案 | 角色 | 什麼時候看 | 行數 |
 |---|---|---|---|
 | [`glossary.md`](glossary.md) | **30 秒查詞典** | 看 stage 內文時遇到 LLM / RAG / token / agent / vector DB / streaming / batch API 不知道什麼意思 | ~210 |
-| [`cli-agents-guide.md`](cli-agents-guide.md) | **7 個 CLI agent 比較** | 第一次選 CLI agent（Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent）不知道挑哪個 | ~134 |
-| [`mcp-skills-catalog.md`](mcp-skills-catalog.md) | **62 個整合 catalog** | 想把 Claude Code 接 Notion / Obsidian / Excel / Postgres / Slack / 等等實際工具 | ~775 |
+| [`cli-agents-guide.md`](cli-agents-guide.md) | **8 個 CLI agent 比較** | 第一次選 CLI agent（Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build）不知道挑哪個 | ~134 |
+| [`mcp-skills-catalog.md`](mcp-skills-catalog.md) | **77+ 個整合 catalog** | 想把 Claude Code 接 Notion / Obsidian / Excel / Postgres / Slack / 等等實際工具 | ~775 |
 | [`schema-design-cheatsheet.md`](schema-design-cheatsheet.md) | **function schema 設計 5 規則 + 5 anti-pattern** | 寫 tool schema / MCP server schema / function calling，發現 LLM 選錯 tool / 傳錯參數 | ~159 |
 | [`cookbook.md`](cookbook.md) | **6 個 step-by-step recipe** | 想 30-50 分鐘做出第一個 Skill / MCP server / 接 Office / 接 NotebookLM / 接 Zotero / 接本機 LLM | ~620 |
 | [`setup-guide.md`](setup-guide.md) | **從零開始的 setup 指南** | 完全沒 dev 背景、第一次申請 API key / 裝 Python / 用 Claude Code | ~400 |
@@ -40,7 +40,7 @@
 
 ### 🔌 我要把 Claude Code 接 X 工具（Notion / Excel / Postgres 等）
 
-→ [`mcp-skills-catalog.md`](mcp-skills-catalog.md)（62 個整合分 14 類）
+→ [`mcp-skills-catalog.md`](mcp-skills-catalog.md)（77+ 個整合分 16 類）
 
 ### 🍳 我想動手寫第一個 Skill / MCP server / 接 Word 等
 
@@ -94,6 +94,7 @@
 3. **預期會被 ≥ 3 個 stage 或 branch cross-ref**——只服務一個 stage 的內容，放那個 stage 就好
 
 近期考慮過、但**沒加**的（可選 future work）：
+
 - `cost-calculator-guide.md`（cross-provider 計價）—— 現在 [Stage 1](../stages/01-llm-basics.md) 有提到，等需求明顯再開
 - `troubleshooting-guide.md`（常見錯誤 runbook）—— 現有資料夠應付，等社群回報多了再開
 - `prompt-patterns-guide.md`（CoT / few-shot 範本庫）—— 現在 [Stage 2](../stages/02-prompt-engineering.md) 有，深度版等社群 PR

@@ -112,6 +112,7 @@ description: Use PROACTIVELY before commits touching auth or payment code. Check
 ### Pattern A — 平行隔離（最常用、最簡單）
 
 **何時用**：3 個任務**獨立**、不需要互相溝通。例：
+
 - 4 個 file 都要做同樣的 audit（spawn 4 個 `general-purpose`）
 - 同時跑「code review」+「找相關 paper」+「寫 changelog」3 個獨立任務
 
@@ -126,6 +127,7 @@ description: Use PROACTIVELY before commits touching auth or payment code. Check
 ### Pattern B — Pipeline 串接（多步驟協作）
 
 **何時用**：任務需要**步驟順序**、前一個的 output 是後一個的 input。例：
+
 - Multi-LLM workflow：Claude planner → Codex implementer → Gemini reviewer
 - 文獻研究 pipeline：splitter 切題 → 多 researcher 跑各 sub-query → reconciler 合稿
 
@@ -142,6 +144,7 @@ description: Use PROACTIVELY before commits touching auth or payment code. Check
 **為什麼存在**：理論上「一個 subagent 寫出更多 subagent」聽起來很 elegant。
 
 **為什麼不推薦**：
+
 1. **Context explosion 風險**——subagent 寫的 subagent 寫的 subagent... 失控
 2. **沒人 audit 新建的 agent**——可能寫出危險的 tools allowlist
 3. **Anthropic 官方範例都不這樣用**——社群也未發展出可靠 pattern
@@ -179,6 +182,7 @@ description: Use PROACTIVELY before commits touching auth or payment code. Check
 /agents
 ```
 **期待**：列表裡有你寫的那個 name。**沒有**：
+
 - 檔案位置錯（應該在 `~/.claude/agents/<name>.md` global 或 `<repo>/.claude/agents/<name>.md` project-level；**同名時 project-level 覆蓋 global**）
 - YAML frontmatter 語法錯（譬如 `---` 沒包好、`name:` 欄位拼錯）
 - 名字衝突（同名 agent 被覆蓋）
@@ -193,6 +197,7 @@ description: Use PROACTIVELY before commits touching auth or payment code. Check
 ```
 
 **Claude 沒派你 agent**：description 寫得 Claude 看不出「我該派這個」。
+
 - 缺 `PROACTIVELY` keyword → 加上
 - 條件太抽象 → 改成具體 trigger
 - 跟其他 agent 描述重疊 → 寫出**獨特性**

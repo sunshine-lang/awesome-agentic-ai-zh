@@ -5,6 +5,13 @@
 # Exercise 4: Multi-Step Reasoning
 
 Corresponds to [Stage 3 — Tool Use & Agent Intro](../../../stages/03-tool-use-and-hello-agent.en.md) Exercise 4.
+> 🎓 **How to use this**: `starter.py` is the **complete solution**, not a TODO skeleton. The active approach works better — `mv starter.py starter_reference.py`, read the signatures but not the bodies, write your own `starter.py` from scratch, then run `python test.py` to check it; if you are stuck for 20 minutes, go back and compare against the reference. Full methodology in [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md).
+
+> 📚 **Want the chapter-length version?** The starter in this folder is a 70-150 line illustrative build focused on `the core pattern + two SDK paths` — it is not in-depth teaching material. Recommended for depth:
+> - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ the most complete Chinese-language course out there — chapter-based, covering 16 production capabilities. **this exercise maps to hello-agents' planning / multi-step workflow chapter**
+> - [Anthropic — Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) (when to break a task into steps, and when not to)
+> - Full references in [Stage 3 Curated Projects](../../../stages/03-tool-use-and-hello-agent.en.md#-curated-projects)
+
 
 ## Why this matters
 
@@ -84,7 +91,7 @@ This is precisely the teaching point of Exercise 4 — **same ReAct loop, differ
 Default is `claude-haiku-4-5` (cheapest). Try Sonnet:
 
 ```bash
-MODEL=claude-sonnet-4-6 python starter_anthropic.py
+MODEL=claude-sonnet-5 python starter_anthropic.py
 ```
 
 Or on the Ollama path, swap to a larger model:

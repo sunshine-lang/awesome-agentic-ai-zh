@@ -11,6 +11,13 @@ on:
       - 'tracks/**.md'
       - 'resources/**.md'
       - 'walkthroughs/**.md'
+      # examples/ 有 84 個 .md（28 canonical + 56 mirror），原本整個不在範圍內。
+      # 注意這個提醒只管「canonical 改了但 mirror 沒跟」這個方向；2026-08-02 那次
+      # 21 個 example README 少 202 行是既有的 mirror drift（99adcf7 動了 42 個 mirror、
+      # 只有 2 個 canonical），那一類是 check-mirror-parity.py 的 ratchet 在管，不是這裡。
+      # 例外：examples/stage-5/tool-calling-tutor/SKILL.md 的譯本在 translations/ 子目錄，
+      # 而 check-mirror-sync.py 只找同目錄的 <stem>.en.md，所以那一個仍不受這條保護。
+      - 'examples/**.md'
       - 'README.md'
       - 'CONTRIBUTING.md'
 

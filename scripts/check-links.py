@@ -42,7 +42,11 @@ MAX_WORKERS = 10
 def find_md_files(root: Path) -> list[Path]:
     files = []
     for fp in root.glob(MD_GLOB):
-        if any(part in EXCLUDE_DIRS for part in fp.parts):
+        # Relative to `root`, not fp.parts — matching the ABSOLUTE path makes a
+        # checkout under an excluded-looking directory (e.g. `.ai/`, `book/`,
+        # `.claude/worktrees/`) skip everything and report a silent all-clear.
+        # Same bug as the 2026-08-02 check-locale-links.py fix.
+        if any(part in EXCLUDE_DIRS for part in fp.relative_to(root).parts):
             continue
         files.append(fp)
     return files

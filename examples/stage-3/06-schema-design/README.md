@@ -9,7 +9,7 @@
 
 > 📚 **想要 chapter-length 深入版？** 本 folder 的 starter 是 70-150 行 illustrative 版、聚焦 `核心 pattern + 兩條 SDK path`，不是進階深度教材。深度教材推薦：
 > - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ 中文圈最完整、章節式 + 16 種 production 能力。**本練習對應 hello-agents 的 [Extra08 — 如何寫出好的 Skill](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra08-如何写出好的Skill.md)**
-> - [OpenAI Function Calling guide](https://platform.openai.com/docs/guides/function-calling) + [](../../../resources/schema-design-cheatsheet.md)
+> - [OpenAI Function Calling guide](https://platform.openai.com/docs/guides/function-calling) + [schema 設計 cheatsheet](../../../resources/schema-design-cheatsheet.md)
 > - 完整 references 見 [Stage 3 精選 Projects](../../../stages/03-tool-use-and-hello-agent.md#-精選-projects)
 
 

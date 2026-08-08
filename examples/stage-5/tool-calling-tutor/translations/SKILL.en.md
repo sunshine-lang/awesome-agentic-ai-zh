@@ -85,7 +85,7 @@ Full mock pattern → [`../../stage-3/03-react-from-scratch/test.py`](../../../s
 This skill does **NOT** handle:
 
 - **LangChain / LangGraph / CrewAI / Pydantic AI** framework questions → Stage 4
-- **MCP server / client** design → [`resources/cookbook.md` 2](../../../../resources/cookbook.md)
+- **MCP server / client** design → [`resources/cookbook.en.md` 2](../../../../resources/cookbook.en.md)
 - **Production monitoring / observability / cost tracking** → Stage 7
 - **General prompt engineering** → Stage 2
 

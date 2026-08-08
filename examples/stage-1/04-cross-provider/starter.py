@@ -69,13 +69,13 @@ def call_openai(prompt: str) -> Reply | None:
     client = OpenAI()
     t0 = time.time()
     r = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-5-mini",
         max_tokens=200,
         messages=[{"role": "user", "content": prompt}],
     )
     return Reply(
         provider="OpenAI",
-        model="gpt-4o-mini",
+        model="gpt-5-mini",
         text=r.choices[0].message.content or "",
         in_tokens=r.usage.prompt_tokens,
         out_tokens=r.usage.completion_tokens,
@@ -91,13 +91,13 @@ def call_gemini(prompt: str) -> Reply | None:
     client = genai.Client()
     t0 = time.time()
     r = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         contents=prompt,
     )
     usage = getattr(r, "usage_metadata", None)
     return Reply(
         provider="Google",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         text=r.text,
         in_tokens=getattr(usage, "prompt_token_count", 0) or 0,
         out_tokens=getattr(usage, "candidates_token_count", 0) or 0,

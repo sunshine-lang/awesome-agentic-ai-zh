@@ -361,6 +361,6 @@ Subagent 不是免费的——每次派遣**会烧 token，也有延迟**。下�
 ## 接下来
 
 - **想理解完整理论**（subagent 跟 skill / MCP 的差别、3 种 multi-agent 机制）→ [Stage 5.5](../stages/05-claude-code-ecosystem.zh-Hans.md#55--subagentsclaude-code-原生-multi-agent-机制-2025-新功能)
-- **CLI 日常用法 playbook** → [`tracks/cli/A3-cli-production.md` Playbook 4](../tracks/cli/A3-cli-production.zh-Hans.md#-playbook-4派遣-subagent-跑独立任务)
-- **想看 subagent 在 agent paradigm 体系内的定位** → [`resources/agent-paradigms.md`](./agent-paradigms.zh-Hans.md#subagent--在-agent-runtime-里再-spawn-agent)
-- **词汇快查** → [`resources/glossary.md` § 5. Claude Code 生态 — Subagent](./glossary.zh-Hans.md#subagent子-agent)
+- **CLI 日常用法 playbook** → [`tracks/cli/A3-cli-production.zh-Hans.md` Playbook 4](../tracks/cli/A3-cli-production.zh-Hans.md#-playbook-4派遣-subagent-跑独立任务)
+- **想看 subagent 在 agent paradigm 体系内的定位** → [`resources/agent-paradigms.zh-Hans.md`](./agent-paradigms.zh-Hans.md#subagent--在-agent-runtime-里再-spawn-agent)
+- **词汇快查** → [`resources/glossary.zh-Hans.md` § 5. Claude Code 生态 — Subagent](./glossary.zh-Hans.md#subagent子-agent)

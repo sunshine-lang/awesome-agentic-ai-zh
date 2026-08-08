@@ -8,15 +8,19 @@
 > 💡 **Don't recognize a term?** Check [`resources/glossary.en.md`](../resources/glossary.en.md) for a 30-second definition. Stage 0 doesn't lean on much jargon, but the next stages do.
 > 🗺️ **Want the big picture of the agent landscape first** (why some agents live in a terminal, some in Telegram, some on a Jetson board)? → [`resources/agent-paradigms.en.md`](../resources/agent-paradigms.en.md) (5 agent paradigms, ~10 min read)
 
+> 📋 **Structure of this chapter**: skip-check → environment setup steps → on to Stage 1 (a foundation stage, so it has no "learning goals / prerequisites" frame)  
+> 🔑 **Key terms**: see [`resources/glossary.en.md`](../resources/glossary.en.md) (every term each stage uses is collected there)
+
 ## When to skip this stage
 
 If you can:
+
 - Write a Python function that calls a public API and parses JSON response
 - Use git to clone, commit, push, and resolve a basic merge
 - Use the command line on your OS (cd, ls, mkdir, run a script)
 - Read a YAML / JSON file without confusion
 
-→ **Skip directly to [Stage 1](01-llm-basics.md)**.
+→ **Skip directly to [Stage 1](01-llm-basics.en.md)**.
 
 If you can't, work through this stage. Don't skip — every later stage assumes these.
 
@@ -37,33 +41,28 @@ If you can't, work through this stage. Don't skip — every later stage assumes 
 
 ## 🎯 Curated Resources (not full projects, just learning material)
 
-### Python
-- [**Python Crash Course**](https://github.com/ehmatthes/pcc_3e) — book + exercises (paid book, free exercises)
-- [**Real Python tutorials**](https://realpython.com/) — high-quality free articles
-- [**Corey Schafer YouTube**](https://www.youtube.com/c/Coreyms) — video tutorials, beginner to advanced, very clear delivery
-- [**Boot.dev**](https://www.boot.dev/) — interactive Python course (partially free)
-- [**runoob.com Python tutorial**](https://www.runoob.com/python3/python3-tutorial.html) — Chinese-language Python intro reference
+Five prereq topics, 18 resources, one table. **Pick your entry point from "Who it's for", then follow the link to the repo / site when you want to go deeper.**
 
-### Git
-- [**Pro Git book**](https://git-scm.com/book/en/v2) — free, full-length reference
-- [**Atlassian Git Tutorials**](https://www.atlassian.com/git/tutorials) — workflow-focused
-- [**Oh Shit, Git!?!**](https://ohshitgit.com/) — when things go wrong
-- [**git-flight-rules**](https://github.com/k88hudson/git-flight-rules) — "I screwed up X, how do I undo?" — popular cheat sheet
-
-### CLI / Shell
-- [**The Art of Command Line**](https://github.com/jlevy/the-art-of-command-line) — beginner-to-advanced command-line skills (180k+ stars, multi-language)
-- [**Learn Shell**](https://www.learnshell.org/) — interactive Bash tutorial
-- [**explainshell.com**](https://explainshell.com/) — break down any shell command (debug life-saver)
-
-### REST APIs
-- [**MDN — HTTP**](https://developer.mozilla.org/en-US/docs/Web/HTTP) — protocol fundamentals
-- [**Postman Learning Center**](https://learning.postman.com/) — API exploration tool
-- [**HTTPie**](https://github.com/httpie/cli) — friendlier-than-`curl` command-line HTTP client
-
-### YAML / JSON
-- [**YAML official site**](https://yaml.org/) — spec
-- [**JSON crash course**](https://www.json.org/json-en.html) — official quick guide
-- [**jq**](https://github.com/jqlang/jq) — command-line JSON processor (heavy use in agent workflows)
+| Topic | Resource | Who it's for | Why recommended / Notes |
+|---|---|---|---|
+| **Python** | [Python Crash Course](https://github.com/ehmatthes/pcc_3e) | Learning Python from scratch | Book + exercises; the book is paid, the exercises are free |
+| | [Real Python tutorials](https://realpython.com/) | Know the basics, want to go deep on one topic | High-quality free articles; they turn up in Google searches all the time |
+| | [Corey Schafer YouTube](https://www.youtube.com/c/Coreyms) | Learners who like English video | Beginner to advanced, very clear delivery |
+| | [Boot.dev](https://www.boot.dev/) | Want interactive practice | Partially free; the paid tier includes a full backend track |
+| | [runoob.com Python tutorial](https://www.runoob.com/python3/python3-tutorial.html) | Chinese readers looking up syntax fast | Chinese-language Python intro reference |
+| **Git** | [Pro Git book](https://git-scm.com/book/en/v2) | Want to understand Git properly | Free, full-length reference; the official recommendation |
+| | [Atlassian Git Tutorials](https://www.atlassian.com/git/tutorials) | Want to learn workflows (branch / merge / rebase) | Workflow-focused, good visuals |
+| | [Oh Shit, Git!?!](https://ohshitgit.com/) | First aid when things go wrong | "I screwed up X, how do I undo?" cheat sheet |
+| | [git-flight-rules](https://github.com/k88hudson/git-flight-rules) | Want a deeper recovery manual | Popular cheat sheet, covers more scenarios |
+| **CLI / Shell** | [The Art of Command Line](https://github.com/jlevy/the-art-of-command-line) | Want to learn the command line systematically | ★ 160k+, multi-language, covers beginner to advanced |
+| | [Learn Shell](https://www.learnshell.org/) | Like interactive practice | Interactive Bash tutorial, runs in the browser |
+| | [explainshell.com](https://explainshell.com/) | Debugging shell commands | Breaks down any shell command (debug life-saver) |
+| **REST API** | [MDN — HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) | Want to understand the HTTP protocol | Mozilla's web platform reference docs |
+| | [Postman Learning Center](https://learning.postman.com/) | Exploring APIs through a GUI | API exploration tool, good visuals |
+| | [HTTPie](https://github.com/httpie/cli) | Prefer the CLI, find `curl` ugly | Friendlier-than-`curl` command-line HTTP client |
+| **YAML / JSON** | [YAML official site](https://yaml.org/) | Need to look up the syntax spec | The YAML spec document |
+| | [JSON crash course](https://www.json.org/json-en.html) | First time meeting JSON | Official quick guide |
+| | [jq](https://github.com/jqlang/jq) | Processing JSON on the command line | Heavy use in agent work; essential for handling API responses |
 
 ## Why this stage exists
 

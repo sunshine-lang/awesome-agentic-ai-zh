@@ -5,7 +5,7 @@
 > [← Back to main README](../README.en.md)
 
 > 📌 **This is a mental-model reference**. After reading you'll understand: "Why do Claude Code, Hermes Agent, and OpenClaw all call themselves 'agents' but feel completely different to use?"
-> If you already know which one you want → [`resources/cli-agents-guide.en.md`](cli-agents-guide.en.md) (7-CLI side-by-side comparison) or [`resources/cookbook.en.md`](cookbook.en.md) (step-by-step deployment).
+> If you already know which one you want → [`resources/cli-agents-guide.en.md`](cli-agents-guide.en.md) (8-CLI side-by-side comparison) or [`resources/cookbook.en.md`](cookbook.en.md) (step-by-step deployment).
 
 The word "agent" gets used loosely. Cursor is an agent. Claude Code is an agent. Hermes Agent — the one chatting with you on Telegram — is an agent. OpenClaw running on a Jetson board in your apartment is also an agent. But these four feel completely different in practice — because they belong to **different paradigms**. The difference isn't which LLM family they use; it's **where the agent runs, what interface you use to talk to it, and whether it needs an internet connection**.
 
@@ -62,7 +62,7 @@ You open Claude Code in a terminal and type "refactor the entire auth module, sw
 **Examples**: [Aider](https://aider.chat) / [OpenCode](https://github.com/sst/opencode) / [goose](https://block.github.io/goose) / [Hermes Agent](https://github.com/NousResearch/hermes-agent)*
 
 **Hero example**:
-You want to use DeepSeek-R1 to write code (10× cheaper than Claude Opus). Aider with `--model deepseek/deepseek-reasoner` + an `OPENROUTER_API_KEY` does it — git-aware, automatic commit messages, the same workflow as Type 2.
+You want to use DeepSeek-V4-Pro (the former R1 reasoning lineage now merged into the main line) to write code (~10× cheaper than Claude Opus). Aider with `--model deepseek/deepseek-v4-pro` + an `OPENROUTER_API_KEY` does it — git-aware, automatic commit messages, the same workflow as Type 2.
 
 **Difference from Type 2**: Type 2 locks you into one LLM family. Type 3 takes any OpenAI-compatible endpoint with your own API key.
 
@@ -77,7 +77,7 @@ You want to use DeepSeek-R1 to write code (10× cheaper than Claude Opus). Aider
 
 ## Type 4: Cloud-deployed — exemplar: Hermes Agent
 
-**Exemplar**: [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research, ★ 175k+, MIT)
+**Exemplar**: [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research, ★ 224k+, MIT)
 
 **Hero example**:
 You're on the subway, you open Telegram on your phone, and you message your Hermes bot: "Pull today's arXiv ML papers, give me 3 highlights, send the result back to Telegram." Hermes — running on your $5 DigitalOcean VPS — receives the message, decides to use GPT-5 (paper discovery) + Claude Opus (summary) + Gemini Flash (compression to 3 bullet points), executes the pipeline, and sends the result back. You never touched your laptop.
@@ -95,6 +95,7 @@ You're on the subway, you open Telegram on your phone, and you message your Herm
 **Distinguishing trait**: ~$5/month VPS hosting + API costs; China-region LLM support (GLM / Kimi) — a useful backup to switch to when US services are flaky.
 
 **Trade-offs**:
+
 - ⚠️ Self-improving skills are a new capability with no independent security audit yet — don't enable it for high-stakes tasks (medical / legal / payments)
 - You lose IDE/terminal-style direct filesystem manipulation; you adopt a chat-first workflow
 - You need self-host fluency (Linux / Docker / systemd basics)
@@ -124,6 +125,7 @@ You run a law firm. You need AI to help organize a client's medical records + me
 **Distinguishing trait**: one-time hardware investment, then API cost goes to zero; lives inside NVIDIA's edge hardware ecosystem; Jetson Thor can run a 30B model.
 
 **Trade-offs**:
+
 - Model size is bounded by edge hardware (Orin Nano tops out at 7B, Thor at 30B)
 - Setup is more involved than cloud (you need NVIDIA Jetson familiarity, JetPack, Docker, Ollama)
 - No 24/7 cross-platform convenience like cloud-deployed
@@ -145,6 +147,7 @@ There are two main implementation paths:
 | **Claude Code native** (Stage 5.5) | Write `.claude/agents/<name>.md`; invoke it from the main session with the Task tool | Claude Code subagents + Claude Agent SDK |
 
 **The difference is runtime ownership**:
+
 - Framework path: your own Python process runs the orchestrator, and each sub-agent is an object inside your program
 - Claude path: Claude Code spawns a new agent instance itself; parent / child share the Claude runtime, and the parent only sees the child’s final result (context is isolated automatically)
 
@@ -161,6 +164,7 @@ Real power users often run **2 or 3 types simultaneously**, each handling what i
 ![Personal power-user multi-type workflow](../resources/diagrams/power-user-multi-type-workflow.en.png)
 
 **Why this combination**:
+
 - Type 2 handles code (terminal is the most natural interface)
 - Type 4 handles routines + cross-platform (works when your laptop is closed)
 - Type 5 handles privacy (data cannot leave the machine)
@@ -176,7 +180,7 @@ Real power users often run **2 or 3 types simultaneously**, each handling what i
 ## Links to existing stages / branches
 
 - **Learn Type 2 hands-on** → [Stage 5: Claude Code Ecosystem](../stages/05-claude-code-ecosystem.en.md)
-- **See the 7-CLI detailed comparison** (Type 2 + Type 3) → [`resources/cli-agents-guide.en.md`](cli-agents-guide.en.md)
+- **See the 8-CLI detailed comparison** (Type 2 + Type 3) → [`resources/cli-agents-guide.en.md`](cli-agents-guide.en.md)
 - **Compare IDE-coupled tools** (Type 1) → [`branches/for-developer.en.md`](../branches/for-developer.en.md)
 - **Step-by-step Hermes deployment** → [`resources/cookbook.en.md` Recipe 6](cookbook.en.md) (Hermes + Ollama walkthrough)
 - **Jetson + OpenClaw setup** → [Jetson AI Lab tutorial](https://www.jetson-ai-lab.com/tutorials/openclaw/) + [Seeed Studio wiki](https://wiki.seeedstudio.com/local_openclaw_on_recomputer_jetson/)

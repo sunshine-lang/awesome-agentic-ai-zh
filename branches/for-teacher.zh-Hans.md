@@ -12,7 +12,7 @@
 
 这样的分类参考 AI in Education 文献中常见的行政、教学与学习应用脉络，也加入生成式 AI 在教材生成、反馈与互动支援上的近期讨论（Chen et al., 2020；Mittal et al., 2024）。阅读时建议先理解教师把关原则与使用边界，再依自己的教学需求挑一个分支深入。
 
-![教师与 AI agent 使用场景总览](../resources/diagrams/teacher-ai-use-cases-overview.jpg)
+![教师与 AI agent 使用场景总览](../resources/diagrams/teacher-ai-use-cases-overview.zh-Hans.png)
 
 ### 教师使用 AI 辅助时要注意什么
 
@@ -36,7 +36,7 @@ AI 可以帮忙准备和辅助，但不应该直接取代教师判断。近期 A
 
 ### 教学现场与学习辅助
 
-![教学现场与学习辅助应用场景](../resources/diagrams/teacher-ai-classroom-use-cases.jpg)
+![教学现场与学习辅助应用场景](../resources/diagrams/teacher-ai-classroom-use-cases.zh-Hans.png)
 
 这类场景偏向“帮学生理解、练习、互动”，AI 比较像教学助教或活动辅助工具。特别注意：不需要在单一教学活动中加入所有要素，而是挑选适合的环节加入 AI agent 设计。
 
@@ -75,7 +75,7 @@ AI 可以帮忙准备和辅助，但不应该直接取代教师判断。近期 A
 通用的写作 / 头脑风暴 skill。可改用在备课上。
 
 #### 进阶自动化：[Claude Code](https://github.com/anthropics/claude-code)（搭配自定义 CLAUDE.md）⭐⭐⭐⭐⭐
-★ 120k+ — **教师的基础工具是 Claude.ai（网页版）+ NotebookLM + Google Classroom / LMS 集成**，先从这里开始。**只有当你已有会重复跑的批量流程**（如每周生成 50 份家长信、每学期跑学生反馈分析）才升级到 Claude Code，需要学一点 CLI。
+★ 138k+ — **教师的基础工具是 Claude.ai（网页版）+ NotebookLM + Google Classroom / LMS 集成**，先从这里开始。**只有当你已有会重复跑的批量流程**（如每周生成 50 份家长信、每学期跑学生反馈分析）才升级到 Claude Code，需要学一点 CLI。
 
 ### 教学课程素材（给教师备课用）
 
@@ -83,7 +83,7 @@ AI 可以帮忙准备和辅助，但不应该直接取代教师判断。近期 A
 
 | 栏位 | 内容 |
 |---|---|
-| Stars | ★ 28k+ |
+| Stars | ★ 30k+ |
 | License | Apache-2.0 |
 
 **教什么**：Hugging Face 官方的 agent 课程——notebook、练习、结业认证。是一份**现成的“AI agent 教学”素材**。
@@ -221,4 +221,4 @@ AI 可以帮忙准备和辅助，但不应该直接取代教师判断。近期 A
 - 教师专属的 MCP server（成绩册集成、LMS 串接如 Canvas / Moodle / Google Classroom）
 - **某学科 + 某年级的完整 case study**（例如“我用 AI 带初中数学一个学期，这是我的 workflow”）
 
-请见 [CONTRIBUTING.md](../CONTRIBUTING.md)。
+请见 [CONTRIBUTING.zh-Hans.md](../CONTRIBUTING.zh-Hans.md)。

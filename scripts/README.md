@@ -56,6 +56,7 @@ LANG_VARIANT=en bash scripts/build-pdf.sh  # 英文版
 輸出：`dist/awesome-agentic-ai-zh.pdf`（或 `.en.pdf`）
 
 依賴：
+
 - `pandoc` (>= 3.0)
 - `xelatex`（TeX Live with CJK support）
 - **CJK 字型**：`Noto Sans CJK TC`（zh-TW + en 共用——en 版也需要，因為章節標題仍含中文）
@@ -108,6 +109,7 @@ bash scripts/build-mdbook.sh --serve   # 建好後本機開 server (port 3000)
 ```
 
 依賴：
+
 - Rust + cargo（[rustup.rs](https://rustup.rs)）
 - `cargo install mdbook mdbook-mermaid`
 - 第一次跑前：`mdbook-mermaid install .`（會生成 `mermaid.min.js`、`mermaid-init.js`，工作流需要）

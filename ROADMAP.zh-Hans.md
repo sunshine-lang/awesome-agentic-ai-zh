@@ -4,7 +4,7 @@
 
 这份 repo 是**社区维护的学习路线图**——没有发布日期、没有承诺的时间表。这份文件公开“我们知道哪里还不够好、接下来想往哪里走”，让想贡献的人能挑一块上手，而不用先读完整个 repo 才知道缺什么。
 
-> 想动其中一项？开个 [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions) 说一声，或直接 PR。担任 stage / branch 长期维护者请看 [`CONTRIBUTORS.md`](CONTRIBUTORS.md)。新手切入点看 [`CONTRIBUTING.md`](CONTRIBUTING.md) 的“好上手的 5 个切入点”。
+> 想动其中一项？开个 [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions) 说一声，或直接 PR。担任 stage / branch 长期维护者请看 [`CONTRIBUTORS.md`](CONTRIBUTORS.md)。新手切入点看 [`CONTRIBUTING.zh-Hans.md`](CONTRIBUTING.zh-Hans.md) 的“好上手的 5 个切入点”。
 
 **状态图例**：🟢 进行中 / 随时可贡献 · 🟡 已知缺口、想做 · 🔵 想法、待讨论 · ✅ 近期完成
 

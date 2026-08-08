@@ -22,6 +22,7 @@
 **One-line summary**: **route → depth, not reinvent**. Every exercise folder ends with 📚 "want chapter-length? go to hello-agents X + [extra ref]".
 
 **Existing examples of this pattern** (as of 2026-05-13):
+
 - All Stage 3 / 4 / 6 / 7 example READMEs have the 📚 callout (20 folders × 1 callout)
 - Main README + 3-lang mirror have the positioning statement near 🎯 Why this exists section
 - `tracks/cli/` is outline-only on purpose (CLI exercises are bash/markdown/config, not Python SDK; doesn't fit the dual-path frame — that's correct)
@@ -37,6 +38,7 @@
 | **`mistral-nemo:12b`** | Higher-quality local fallback | 7.1 GB, closer-to-cloud quality |
 
 **Wrong tags I've used in error before** (now fixed across 13 files via `.ai/.../rename_gemma.py`):
+
 - ❌ `gemma3:4b` — older naming, replaced 2026-05-12
 - ❌ `gemma3n:e4b` — wrong family, replaced 2026-05-12
 - ✅ `gemma4:e4b` — correct (per user's Ollama installation screenshot)
@@ -47,18 +49,18 @@ If unsure, ask the user to run `ollama list` and verify.
 
 | Model | Use case | Pricing (per 1M tokens) |
 |---|---|---|
-| **`claude-fable-5`** | Highest-capability widely-released tier (Mythos-class, above Opus); GA 2026-06-09 | $10 input / $50 output |
+| **`claude-fable-5`** | Mythos-class (above Opus); suspended 2026-06-12, **restored 2026-07-01** (controls lifted 2026-06-30); the highest Claude tier | $10 input / $50 output |
 | **`claude-haiku-4-5`** | Cheapest cloud option, OK for all exercises | $1 input / $5 output |
-| **`claude-sonnet-4-6`** | Production default, agent development | $3 input / $15 output |
-| **`claude-opus-4-8`** | Opus-class flagship + Fable 5 safeguard-fallback; high quality, complex reasoning | $5 input / $25 output |
+| **`claude-sonnet-5`** | Production default, agent development | $3 input / $15 output |
+| **`claude-opus-5`** | Opus-class flagship (2026-07-24; succeeds Opus 4.8 at the same price, which stays available as legacy); high quality, complex reasoning (Fable 5 is the tier above) | $5 input / $25 output |
 
 ## Framing rules (do not violate)
 
 1. **Claude is the canonical / production reference** in documentation positioning.
 2. **Ollama is the practice default** because of cost — students should not be blocked by API fees during learning.
 3. **Every exercise must ship BOTH paths**:
-   - Path A (Ollama, `<details open>`, primary practice runnable)
-   - Path B (Anthropic, `<details>`, optional cloud-quality comparison)
+   - Path A (Ollama, `<details markdown="1" open>`, primary practice runnable)
+   - Path B (Anthropic, `<details markdown="1">`, optional cloud-quality comparison)
 4. **Every exercise must mention budget explicitly** — single-run cost + total stage cost.
 5. **Local LLMs must appear in any model recommendation list** — never list cloud-only options.
 
