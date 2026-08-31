@@ -524,7 +524,7 @@ agent = Agent(
 ### Voice agents（语音界面）
 
 - [**Vapi**](https://vapi.ai/) / [**Retell**](https://www.retellai.com/) — 商业语音智能体平台
-- [**LiveKit Agents**](https://github.com/livekit/agents) — 开源，★ 11k+
+- [**LiveKit Agents**](https://github.com/livekit/agents) — 开源，★ 13k+
 - [**OpenAI Realtime API**](https://platform.openai.com/docs/guides/realtime) — 直接构建 speech-to-speech 智能体
 
 ### VLA（Vision-Language-Action）机器人

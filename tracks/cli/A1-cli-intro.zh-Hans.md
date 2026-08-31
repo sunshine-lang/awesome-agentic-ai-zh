@@ -68,13 +68,13 @@
 | 分类 | Project | ⭐ | 适合谁 | 为什么推荐 / 备注 |
 |---|---|---|---|---|
 | **8 个主流 CLI agent** | [anthropics/claude-code](https://github.com/anthropics/claude-code) | ⭐⭐⭐⭐⭐ | **推荐作为第一个 CLI agent** | 内建 SKILL / plugin 生态、CLAUDE.md prompt 系统、中文社群资源丰富（★ 140k+） |
-| | [openai/codex](https://github.com/openai/codex) | ⭐⭐⭐⭐⭐ | 已订 ChatGPT Plus / Pro 的人 | 用同一个账号就能在终端机跑（★ 100k+） |
+| | [openai/codex](https://github.com/openai/codex) | ⭐⭐⭐⭐⭐ | 已订 ChatGPT Plus / Pro 的人 | 用同一个账号就能在终端机跑（★ 120k+） |
 | | [sst/opencode](https://github.com/sst/opencode) | ⭐⭐⭐⭐⭐ | 要 self-host / 不想 vendor lock-in | 开源、不绑 LLM provider、社群迭代最快（★ 190k+） |
 | | [google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli) | ⭐⭐⭐⭐ | 处理大 codebase / 大 PDF | 1M token 长 context（★ 103k+） |
 | | [block/goose](https://github.com/block/goose) | ⭐⭐⭐⭐ | 想用既有 Claude / ChatGPT / Gemini 订阅 + Ollama 本地 | 15+ provider 支持（含 Ollama），★ 51k+。**已迁至 `aaif-goose/goose`（AAIF / Linux Foundation）** |
 | | [Aider-AI/aider](https://github.com/Aider-AI/aider) | ⭐⭐⭐⭐⭐ | 要写 code、想要 git 流程干净 | git-native、自动 commit / branch（★ 47k+） |
 | | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | ⭐⭐⭐⭐⭐ | 想要 cloud-deployed agent（Telegram / Discord / Slack 界面）+ 中文 LLM 生态 | Nous Research 出的自动演化型 agent、200+ provider routing、含 GLM / Kimi / 小米 MiMo / MiniMax、内建 cron 调度 + skill 自动演化循环（★ 数据截至 2026-05；以官方 GitHub 为准）。⚠️ 自动演化 skill 是实验性功能，缺第三方独立审计，production 用前请自行验证安全性与维护状态，先在低风险场景试 |
-| | [xai-org/grok-build](https://github.com/xai-org/grok-build) | ⭐⭐⭐ | 已在用 Grok / X 生态、想尝鲜的人 | SpaceXAI（xAI）官方 TUI coding agent、Rust、支持 headless 模式 / ACP 编辑器嵌入（★ 23k+）。⚠️ 2026-07-14 才开源、非常新——先观察、不建议当第一个 CLI agent |
+| | [xai-org/grok-build](https://github.com/xai-org/grok-build) | ⭐⭐⭐ | 已在用 Grok / X 生态、想尝鲜的人 | SpaceXAI（xAI）官方 TUI coding agent、Rust、支持 headless 模式 / ACP 编辑器嵌入（★ 26k+）。⚠️ 2026-07-14 才开源、非常新——先观察、不建议当第一个 CLI agent |
 | **进阶：互补工具**<br>（不是 CLI，但常搭配） | [LM Studio](https://lmstudio.ai/) | ⭐⭐⭐ | Windows / Mac 不想学 command line、想跑本地 LLM | 非开源 desktop app、拖拉界面跑本地 LLM |
 | | [Ollama](https://github.com/ollama/ollama) | ⭐⭐⭐⭐⭐ | 想本地跑 LLM 给 CLI agent 用 | 本地 LLM runner、跟 OpenCode / goose 搭配（也能单独给 IDE 接 OpenAI 兼容 API），★ 170k+。详见 [Stage 1 — Local LLM 执行](../../stages/01-llm-basics.zh-Hans.md#练习-6local-llm) |
 
