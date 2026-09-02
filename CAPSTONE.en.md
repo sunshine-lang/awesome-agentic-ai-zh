@@ -17,7 +17,7 @@ After finishing a track, **build something yourself** — this file is not a tut
 
 ## Track A Capstone — CLI Power User
 
-**Prerequisites**: Stage 0–2 + A1 + A2 + Stage 5 + A3 have each passed their self-check (Stage 8 is a shared hub across both tracks — recommended, but it does not gate capstone entry; the Track A capstone focuses on the CLI workflow).
+**Prerequisites:** Stage 0–2 + A1 + A2 + Stage 5's Track A core 5.1–5.4 + A3 have each passed their self-check. Stage 5 sections 5.5–5.8 do not block entry. Stage 8 is recommended, but it does not block Capstone entry either; the Track A Capstone focuses on the CLI workflow.
 
 **Brief**: Assemble a CLI-agent workflow **you will reuse**, automating something you currently do by hand.
 

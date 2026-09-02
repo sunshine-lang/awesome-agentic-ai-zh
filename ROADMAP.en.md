@@ -2,55 +2,75 @@
 
 > [繁體中文](./ROADMAP.md) | [简体中文](./ROADMAP.zh-Hans.md) | **English**
 
-This repo is a **community-maintained learning roadmap**: no release date, no promised schedule. This document makes public “where we know things are not good enough and where we want to go next”, so people who want to contribute can pick one piece to start with, without reading the whole repo first just to know what is missing.
+This page answers two questions: **What is usable now, and what still needs work?** It is not a release date or delivery promise.
 
-> Want to work on one item? Open a [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions) first, or send a PR directly. For long-term stage / branch maintainers, see [`CONTRIBUTORS.md`](CONTRIBUTORS.md). For beginner entry points, see the “5 easy entry points” section in [`CONTRIBUTING.en.md`](CONTRIBUTING.en.md).
-
-**Status legend**: 🟢 In progress / always open to contributions · 🟡 Known gap, wanted · 🔵 Idea, pending discussion · ✅ Recently completed
+**Status:** 🟢 active / open to contributions · 🟡 known gap · 🔵 idea · ✅ recently completed
 
 ---
 
-## Near-Term Gaps We Want to Fill
+<a id="near-term-gaps-we-want-to-fill"></a>
+<a id="in-progress--always-open-to-contributions"></a>
+<a id="-fill-out-hands-on-exercise-coverage"></a>
+<a id="-deepen-the-audience-branch-files"></a>
+<a id="-stage-2--stage-3-2026-freshness-touch-up"></a>
 
-### 🟡 Fill Out Hands-On Exercise Coverage
-`examples/` currently covers Stage 1, 3, 4, 5, 6, and 7. **Missing**: Stage 2 (Prompt Design), Stage 8 (Agent Interfaces), plus Stage 0 (Foundation Concepts) and Stage 7.5 (Advanced Agentic Concepts), two existing stages that also have no corresponding hands-on examples. Each example should run in under 30 minutes and include `how to run` commands.
+## 🟢 Active work
 
-### 🟡 Deepen the audience branch Files
-5 audience branch files by length (zh-TW canonical, 2026-05 snapshot): for-knowledge-worker (143 lines, shortest) < for-developer (166) < for-everyday-users (179) < for-researcher (208) < for-teacher (224). **The shortest files, `for-knowledge-worker.md` / `for-developer.md`, need scenario coverage the most**. `for-teacher.md` is actually the longest, but `CONTRIBUTORS.md` still marks it as “especially open to self-nominations”: what is truly thin is the **academic citation depth for teacher scenarios** (currently only Chen 2020 / Mittal 2024), and more 3-tier teacher AI application scenarios + matching citations are welcome.
+### 1. Connect the site into one route
 
-### 🟡 Stage 2 / Stage 3 2026 freshness Touch-Up
-A few small 2026 wording / model-reference updates have not been synced to mirrors yet (about 5 lines of diff × 2 locales).
+- Shared foundation: `Stage 0 → Stage 1 → Stage 2`
+- Track A: `A1 → A2 → Stage 5 → A3 → Stage 8`
+- Track B: `Stage 3 → Stage 4 → Stage 5 → Stage 6 → Stage 7 → Stage 7.5 → Stage 8`
 
----
+Track A may start its Capstone after A3. Stage 8 is recommended, but it does not block entry. The homepage map, text, and tests now use the same route; any future order change must update all three together.
 
-## In Progress / Always Open to Contributions
+### 2. Improve the five role paths
 
-- 🟢 **Outdated entry reports** — Run `python scripts/refresh-stars.py` to find repos with large star-count gaps, then open an issue or PR to annotate / remove them.
-- 🟢 **Broken link fixes** — Monthly CI scans for link-rot, but direct PRs for anything found in real time are fastest.
-- 🟢 **Complete `how to run` sections** — Many entries are missing installation / execution commands. If you have run one, add them.
-- 🟢 **Mirror translation smoothing** — Compare `.en.md` / `.zh-Hans.md` against zh-TW, and fix one sentence that reads awkwardly.
-- 🟢 **Long-term stage / branch maintainers** — Claim one stage or branch and review it when you have time. The slot table is in `CONTRIBUTORS.md`.
+Researcher, developer, teacher, knowledge-worker, and everyday-user paths will each show one “start today” action. Full project tables, alternatives, and troubleshooting stay closed by default. Core terms and editorial star ratings stay intact.
 
----
+### 3. Improve setup, courses, cookbook, glossary, and catalog
 
-## Infrastructure (maintainer in progress)
+- Setup first helps readers choose Web, Desktop, IDE, CLI, or API.
+- Cookbook recipes show the outcome, first copyable action, and success check first.
+- Glossary terms and short definitions remain directly searchable.
+- The MCP/Skills catalog stays searchable and gains category navigation and maintenance status.
 
-- ✅ **Community health files** — `CODE_OF_CONDUCT.md` / `SECURITY.md` / `CITATION.cff` / issue-template routing (same batch as this roadmap).
-- 🟢 **Learner progress layer** — `PROGRESS.md` self-check template + “Self check / Exit check” at the end of each stage (planned).
-- 🔵 **Browsable docs site** — Render stages/tracks/branches into a website with navigation + search + language switching (GitHub Pages, under evaluation).
-- 🟢 **Trilingual mirror parity** — `mirror-sync-reminder` + `check-mirror-sync.py` already guard PRs, and legacy drift is being cleaned continuously.
-- 🟢 **Quality gates** — link-rot / star-drift / banned-word / anchor / zh-Hans localization CI is online and maintained.
+### 4. Keep repositories and volatile facts current
 
----
-
-## Idea Box (pending discussion, not committed yet)
-
-- 🔵 **More audience branch files**: There are currently 5 (researcher / developer / teacher / knowledge-worker / everyday-users). Whether to split further (for example PM / designer / legal) depends on community needs.
-- 🔵 **A third track?**: Today, Track A = CLI Power User (A1–A3 under `tracks/cli/`), and Track B = stages learning path (`stages/` directory Stage 0–8, **not** a standalone directory under `tracks/`). Whether to add a third track (for example “no-code agent only”) is pending discussion.
-- 🔵 **Video / interactive supplements**: Whether a text-only learning roadmap should include minimal video walkthroughs depends on cost and maintenance load.
-
-To suggest an idea, open a [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions), not an issue (issues are for bugs / outdated entries / new projects).
+The weekly workflow checks canonical GitHub repositories, redirects, archives, license metadata, releases, and activity. An older last push is a warning, not an automatic deletion rule. Models, prices, APIs, and capabilities still require chapter-by-chapter official-source checks.
 
 ---
 
-> This roadmap is not a contract. It reflects the direction “now”, and will change as the community contributes. The most reliable source for “what should happen next” is always open issues + Discussions.
+<a id="infrastructure-maintainer-in-progress"></a>
+
+## ✅ Recently completed
+
+- Stage 0–8 and A1–A3 completed their first progressive-disclosure, core-term, resource-table, and trilingual pass.
+- Stage 2 retained zero-shot, one-shot, few-shot, and Chain of Thought, and gained a localized Prompt Engineering map.
+- Stage 3 now teaches the first Agent Loop with a localized diagram; Stage 4 uses frameworks to teach Workflow Graphs; Stage 7 integrates both through Agent Production Engineering across Harness, Loops, and Graphs. Stage 6 gained a two-lane RAG pipeline; Stage 8 gained interface-choice and safety maps.
+- Stage 0 has an integrated exercise. Stage 7.5 is intentionally a reading map. Stage 8 has copyable safety exercises; a separate end-to-end example remains open to contributions.
+- MkDocs build, mirror/anchor/locale checks, reader-UX, freshness, and repository snapshot gates are in the maintenance flow.
+
+---
+
+## 🟢 Good contribution tasks
+
+- Report an outdated fact or broken link with a current official source.
+- Add a clearer “how to run” and success check to one exercise.
+- Improve one English or Simplified Chinese sentence without changing meaning, numbers, URLs, or safety rules.
+- Add one real role-path scenario with input, output, human review, and privacy boundaries.
+- Add status, license, or limits for a stable project; do not judge it only by stars or last-push date.
+
+Start with [`CONTRIBUTING.en.md`](CONTRIBUTING.en.md). For long-term chapter maintenance, see [`CONTRIBUTORS.en.md`](CONTRIBUTORS.en.md).
+
+---
+
+<a id="idea-box-pending-discussion-not-committed-yet"></a>
+
+## 🔵 Still under discussion
+
+- Whether a third formal no-code/web-only track is needed; everyday users can already enter through their role path.
+- Whether to add a minimal video walkthrough, including subtitle, trilingual, and maintenance cost.
+- Whether Voice Agents and VLA belong under Stage 8/research/developer extensions or need a separate topic page.
+
+Use [Discussions](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions) for ideas; keep issues for defects, stale information, or concrete new resources.

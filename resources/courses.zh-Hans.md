@@ -1,95 +1,103 @@
+# AI Agent 课程地图：先学会，再决定要不要拿证书
+
 > [繁體中文](./courses.md) | **简体中文** | [English](./courses.en.md)
 
-# 线上 AI Agent 课程（带证书对照）
+<!-- freshness: canonical=resources/courses.md; verified_on=2026-08-29; scope=course-availability,cost,certificate,assessment,repository-status; max_age_days=90 -->
 
-> [← 回主路线 README](../README.zh-Hans.md)
+这一页帮你做一件事：**从很多课程里，挑一门真正适合现在的你。** 不必先收集证书，也不必一次报名五门。先选一门，做出一个可以展示的作品，再走下一步。
 
-> 📌 **这份是 reference catalog，不是排名。** 本 repo 是动手做的学习路线，**不取代**结构化线上课程——下面这些课程可当作平行的影片／互动式入门对照。想动手做 → 回 [stages](../README.zh-Hans.md)；想先查用语 → [`resources/glossary.zh-Hans.md`](glossary.zh-Hans.md)。本页只收**会发证书**的课程。
+想照着本项目一步一步实践，回到[主学习路线](../README.zh-Hans.md)；遇到陌生术语，可以查[术语表](glossary.zh-Hans.md)。
 
-> ⚠️ **先读这段，再往下看。** 完成证书（Certificate of Completion）证明的是**你参与并完成了课程**，不是 mastery，也**不等于** accredited 学历或学分。雇主看的顺序通常是“内容跟职务相不相关 > 评量严不严 > 你做出什么作品 > 机构背书”，证书本身排在后面。把它当成**自主学习的证据 + 维持动机的结构**，不是“拿了证书就能找到工作”。下面“证书”栏只陈述事实，不做价值判断。
+## 🧩 先分清五个容易混在一起的词
 
----
+| 核心词 | 五岁也能懂的说法 | 正确意思 |
+|---|---|---|
+| **Course（课程）** | 老师排好了一条学习路线。 | 一组按顺序安排的视频、文章、练习或项目。 |
+| **Certificate of Completion（完成证书）** | 证明你走完了这门课。 | 证明你完成了指定内容；不等于学位，也不能单独证明你已经能做 production 系统。 |
+| **Skill Badge（技能徽章）** | 一张小贴纸，表示你做过某项任务。 | 平台针对短模块或特定技能发放的数字徽章。 |
+| **Professional Certificate（专业课程证书）** | 好几门课程装成一个更大的学习包。 | 由公司或学校设计的系列课程证书；通常仍不是学位或执照。 |
+| **Certification Exam（认证考试）** | 不只是上课，还要另外参加考试。 | 由供应商或考试机构验证特定产品知识的考试；可能需要付费、验证身份或定期更新。 |
 
-## ⚡ 快速选（30 秒挑一门）
+**最重要的规则：证书证明你完成了一条路；作品才让别人看到你会做什么。**
 
-- **完全没方向** → 先做 [Hugging Face — AI Agents Course](https://huggingface.co/learn/agents-course)：🆓 免费、框架中立、证书要过 quiz + 作业才拿得到。本页最推荐的起点。
-- **想免费就拿证书** → Hugging Face、[Weights & Biases — AI Engineering: Agents](https://wandb.ai/site/courses/agents/)、[Anthropic Academy](https://anthropic.skilljar.com/)（Claude / MCP 方向）。
-- **想要履历用的大学／大厂背书（付费）** → [IBM — RAG and Agentic AI（Professional Certificate）](https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai)、[Vanderbilt — AI Agent Developer](https://www.coursera.org/specializations/ai-agents)。
-- **想沿一个框架（LangChain / LangGraph）做到底** → [Coursera — Agentic AI Engineering（Edureka）](https://www.coursera.org/specializations/agentic-ai-engineering)。
-- **想用中文** → [NVIDIA DLI 中文](https://www.nvidia.cn/training/instructor-led-workshops/building-agentic-ai-applications-with-llms/)（最贴题）、阿里云 ACA、华为 HCIA-AI。
-  > ⚠️ **中文、带证书、又 agent 专门的课，目前基本都要付费**（NVIDIA DLI / 阿里 / 华为）。想**免费**拿证书，现阶段得走上面的英文课（部分有社群字幕）。
+## ⚡ 先选一条，不要全部一起读
 
-**图例**：🆓 免费（含证书）· 💰 付费 · 🆓→💰 旁听免费、证书付费。
+| 你现在想做什么 | 先选这个 | 为什么 |
+|---|---|---|
+| 完全不知道从哪里开始 | [Hugging Face AI Agents Course](https://huggingface.co/learn/agents-course) | 免费，先教 Agent、工具和基本框架，再做挑战。 |
+| 想看大量可执行代码 | [Microsoft AI Agents for Beginners](https://github.com/microsoft/ai-agents-for-beginners) | 每课都有文字、视频和代码；但示例偏向 Microsoft Agent Framework。 |
+| 想读完整的中文教材 | [Datawhale Hello-Agents](https://github.com/datawhalechina/hello-agents) | 从原理一路讲到 RAG、Multi-Agent、MCP 和部署。 |
+| 想先学不绑定框架的设计方法 | [DeepLearning.AI Agentic AI](https://www.deeplearning.ai/courses/agentic-ai/) | 从零实践 reflection、tool use、planning、eval 和 multi-agent。 |
+| 想补上观测和评估 | [W&B AI Engineering: Agents](https://wandb.ai/site/courses/agents/) | 把 accuracy、latency 和 cost 一起放进可重复运行的 Eval。 |
+| 已经决定使用 Claude／LangGraph | [Claude Academy](https://academy.claude.com/)／[LangChain Academy](https://academy.langchain.com/courses/intro-to-langgraph) | 直接学习供应商的现行工具；记得把通用概念和产品按钮分开。 |
+| 主要目标是系列证书 | [IBM](https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai)／[Vanderbilt](https://www.coursera.org/specializations/ai-agents) | 这是较长的付费系列课程；先确认费用、语言和项目是否符合需要。 |
 
----
+## 🎯 精选课程与学习路线
 
-## 怎么读这份清单
+星等是本项目的**编辑推荐度**，不是证书排名：⭐⭐⭐⭐⭐ 适合当主线；⭐⭐⭐⭐ 很值得学习，但更偏向特定工具或目的；⭐⭐⭐ 适合已经确定使用该供应商的人。
 
-- **学习价值**（讲师可信 + 动手做 + 内容够新）和**证书价值**是两条不同的轴。本清单主要照学习价值排，证书当成大量加注的次要信号。
-- ⭐ 星等照 [style-guide §2](style-guide.zh-Hans.md#2-推荐星等定义)：⭐⭐⭐⭐⭐ 必做 … ⭐ 利基。
-- **付费 Professional Certificate / Specialization（IBM、大学）认可度，通常高于免费完成证书**；但两者都不是学位，Coursera 那种“X% career outcomes”是行销数字。
-- **Agent 领域变化快**：超过 12–18 个月的课，对框架版本（smolagents / LangGraph / MCP）要打 recency 折扣。
+<table>
+  <thead>
+    <tr><th scope="col">学习目的</th><th scope="col">课程／教材</th><th scope="col">语言与费用</th><th scope="col">你会做出什么</th><th scope="col">证书／限制</th><th scope="col">推荐度</th></tr>
+  </thead>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="3">免费打基础</th><td><a href="https://huggingface.co/learn/agents-course">Hugging Face — AI Agents Course</a></td><td>以英文为主；免费</td><td>认识 Agent Loop，实践 smolagents、LlamaIndex、LangGraph、Agentic RAG 和 Eval。</td><td>Unit 1 测验达到 80% 可取得基础完成证书；完整路线还包括作业和最终挑战。</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/microsoft/ai-agents-for-beginners">Microsoft — AI Agents for Beginners</a></td><td>多语言；免费开源</td><td>用文字、视频和 Python／.NET 示例来做工具、记忆、规划、RAG、Multi-Agent 和部署。</td><td>没有 Certificate of Completion；现行示例偏向 Microsoft Agent Framework 和 Foundry。</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/datawhalechina/hello-agents">Datawhale — Hello-Agents</a></td><td>简体中文；免费开源</td><td>从 Agent 原理和经典 pattern，一路做到 RAG、记忆、Multi-Agent、MCP 和完整项目。</td><td>没有 Certificate of Completion；章节很多，请按自己的问题选读，不必一次读完。</td><td>⭐⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="5">构建与上线</th><td><a href="https://www.deeplearning.ai/courses/agentic-ai/">DeepLearning.AI — Agentic AI</a></td><td>英文；视频可免费旁听</td><td>从零实践 reflection、tool use、planning、Multi-Agent、错误分析和 component Eval。</td><td>测验、graded assignments 和证书需要 Pro；免费旁听不包含证书。</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://wandb.ai/site/courses/agents/">Weights &amp; Biases — AI Engineering: Agents</a></td><td>英文；免费</td><td>制作 deterministic workflow、单 Agent、记忆、Multi-Agent 和 accuracy／latency／cost Eval。</td><td>约两小时；当前公开页面没有明确说明证书条件，注册前不要先假定一定会发证。</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://academy.claude.com/">Claude Academy</a></td><td>英文；免费</td><td>按需要学习 Claude API、Claude Code、MCP、Agent Skills 和 Subagents。</td><td>通过课程 quiz 可以取得免费完成徽章；这是 Claude 产品路线，不取代通用 Agent 基础。</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://academy.langchain.com/courses/intro-to-langgraph">LangChain Academy — Introduction to LangGraph</a></td><td>英文；免费</td><td>实践 graph、state、memory、HITL、subgraph、deployment 和 long-term memory。</td><td>偏向 LangGraph／LangSmith；当前公开课程页面没有清楚列出证书门槛。</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://www.kaggle.com/learn-guide/5-day-agents">Google × Kaggle — 5-Day AI Agents Intensive</a></td><td>英文；免费自学</td><td>通过模型、工具、orchestration、memory 和 Eval 理解 Agent，然后完成 capstone。</td><td>原本是限时 intensive，现在作为自学 guide 使用；不要把 cohort 活动资格当成永久证书。</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="2">较长的系列课程</th><td><a href="https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai">IBM — RAG and Agentic AI Professional Certificate</a></td><td>英文；付费订阅，可查看助学选项</td><td>通过多门课程完成 RAG、Agentic AI、工具、向量数据库和实践项目。</td><td>IBM／Coursera 系列证书；不是学位，费用和可用的助学支持因地区和账号而异。</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://www.coursera.org/specializations/ai-agents">Vanderbilt — AI Agent Developer Specialization</a></td><td>英文；付费订阅，平台提供多语言字幕</td><td>使用 Python、工具、记忆和 Agent architecture 完成一组应用项目。</td><td>Vanderbilt／Coursera Specialization 证书；部分内容偏向 OpenAI 工具。</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="2">中文供应商路线</th><td><a href="https://www.nvidia.cn/training/certification/generative-ai-llm-learning-path/">NVIDIA — 中文 Agentic AI 学习路径</a></td><td>简体中文；自学和讲师带领的课程大多收费</td><td>依次学习 RAG Agent、Agentic AI 应用、评估和 production deployment。</td><td>部分课程授予 DLI 培训证书；价格和排课以官方页面为准，内容偏向 NVIDIA stack。</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://edu.aliyun.com/certification/cldm02">阿里云 — 基于百炼平台构建智能体应用</a></td><td>简体中文；目前可以免费启用</td><td>制作低代码智能体、工作流和智能体编排，并连接网站、钉钉等场景。</td><td>完成学习和考试后领取 Clouder 证书；需符合官方网站列出的身份证明文件条件，并且绑定百炼平台。</td><td>⭐⭐⭐</td></tr>
+  </tbody>
+</table>
 
----
+想用中文伴读 DeepLearning.AI，可以接着看 [Datawhale 的开源整理](https://github.com/datawhalechina/agentic-ai)。
 
-## 🌍 英文课程
+## 🧪 每学完一门课，都留下同一份作品证据
 
-### tier-1（高度可信 + 动手做 + 够新）
+不要只下载 PDF。直接复制这张小卡，为每门课程留下可检查的成果：
 
-| 课程（连结） | 成本 | 适合谁 | 教什么 | 证书 |
-|---|---|---|---|---|
-| [Hugging Face — AI Agents Course](https://huggingface.co/learn/agents-course) ⭐⭐⭐⭐⭐ | 🆓 | 想用免费、框架中立教材动手做的人 | smolagents / LangGraph / LlamaIndex 三家动手 + observability / eval；建并 benchmark 一个 agent | 免费，两级：Fundamentals（Unit 1 + quiz ≥80%）；Certificate of Completion（再加作业 + 最终挑战）。HF 直接签发 |
-| [DeepLearning.AI — Agentic AI](https://www.deeplearning.ai/courses/agentic-ai/) ⭐⭐⭐⭐⭐ | 🆓→💰 | 有中阶 Python + 基本 LLM/API 概念的开发者 | 四个核心设计模式：reflection、tool use、planning、multi-agent（31 影片 + 8 评量作业） | 旁听免费（无证书）；证书需付费 Pro（约 $25–30/月）并完成评量。讲师 Andrew Ng。中文对照：[`datawhalechina/agentic-ai`](https://github.com/datawhalechina/agentic-ai) |
-| [Weights & Biases — AI Engineering: Agents](https://wandb.ai/site/courses/agents/) ⭐⭐⭐⭐ | 🆓 | 想学“会评估、可上线”agent 的开发者 | 与 OpenAI 团队合作；reasoning model 建 agent、tool/memory/planning、orchestrator-worker 多 agent、用 accuracy/latency/cost 做可复现 eval（约 2 小时） | 免费完成证书（W&B AI Academy 签发） |
-| [IBM — RAG and Agentic AI（Professional Certificate）](https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai) ⭐⭐⭐⭐ | 💰 | 想要大厂 Professional Certificate 的人 | RAG + agentic AI 实作，多课程组成的 Professional Certificate | 付费（Coursera Plus；可申请助学金）。IBM 签发，认可度高于一般完成证书 |
-| [Vanderbilt 大学 — AI Agent Developer](https://www.coursera.org/specializations/ai-agents) ⭐⭐⭐⭐ | 💰 | 想要大学背书、系统性学 agent 开发的人 | 设计、打造、调校 agent 软件；Python agentic 应用 | 付费（Coursera Plus；可申请助学金）。Vanderbilt 大学 Specialization Certificate |
+```text
+我解决的问题：
+Agent 可以使用的工具：
+我怎么知道它做对了：
+失败时怎么安全停止：
+可执行代码或 Demo 链接：
+```
 
-### tier-2（扎实，但有特定 caveat）
+最小作品可以只是一个会查资料、调用一个工具、留下 Eval 结果的小 Agent。完成后再回到本项目，对照 [Stage 3 工具使用](../stages/03-tool-use-and-hello-agent.zh-Hans.md)、[Stage 4 Workflow Graph](../stages/04-agent-frameworks.zh-Hans.md) 和 [Stage 7 上线工程](../stages/07-multi-agent-production.zh-Hans.md)。
 
-| 课程（连结） | 成本 | 适合谁 | 教什么 | 证书 |
-|---|---|---|---|---|
-| [Coursera — Agentic AI Engineering（Edureka）](https://www.coursera.org/specializations/agentic-ai-engineering) ⭐⭐⭐ | 💰 | 想沿 LangChain / LangGraph / MCP 一路做完的人 | 4 课：LangChain 生态、LCEL、ReAct/memory、LangGraph 多 agent、MCP 部署、eval | 付费 Specialization Certificate。caveat：Edureka 是商业培训机构（非大学/lab），可信度中等；想要更高背书选上面 IBM / Vanderbilt |
-| [Anthropic Academy](https://anthropic.skilljar.com/) ⭐⭐⭐⭐ | 🆓 | 在 Claude / MCP stack 上做 agent 的人 | Claude Code、Claude API、MCP、Agent Skills；17 门自学课、5 条学习轨 | 免费官方证书（Skilljar 签发，含 quiz，email 注册即可，可加 LinkedIn）。caveat：vendor-specific（Claude/MCP），补充而非取代框架中立的基础课 |
+<details markdown="1">
+<summary>📜 展开：证书到底能证明什么？</summary>
 
-> 也想了解但未列为主 entry：[LangChain Academy — Intro to LangGraph](https://academy.langchain.com/courses/intro-to-langgraph)（🆓 免费 LangGraph 完成证书，single-vendor）。云厂商（Google Cloud / AWS）的 agentic 路线多半给 skill badge，跟它们各自的付费**专业认证考试**不是同一回事，别混为一谈。
+1. **完成证书只证明完成了指定步骤。** 它不是学位，也不保证你能独立上线 Agent。
+2. **Certification Exam 和完成证书不同。** 前者可能需要监考、身份验证和另外付费；不要把免费课程徽章写成专业执照。
+3. **免费不等于差，付费也不保证适合。** 先看课程有没有练习、Eval、项目和现行文档。
+4. **履历上也要放作品。** 诚实写清楚“完成了什么、做出了什么、怎么测试”，不要只贴一排徽章。
+5. **课程会变化。** 报名前重新确认费用、证书门槛、语言，以及需要的 API／云账号。
 
----
+</details>
 
-## 🀄 中文课程
+<details markdown="1">
+<summary>🔎 展开：这份清单如何维护？</summary>
 
-> **gap-first 事实**：会发证书、又 agent 专门的中文课**目前都要付费**，且多是**大厂 vendor 认证**（绑自家 stack）；**zh-TW 原生 + 带证书 + agent 专门的几乎不存在**。想免费拿证书，繁中／简中学习者现阶段通常还是走上面的英文课（Hugging Face / W&B / Anthropic 皆免费）。下面三门以 NVIDIA DLI 中文版最贴题。
+- 先查看课程或供应商的官方页面，再看官方 repository；第三方文章只能作为线索。
+- 星等评的是教学价值、实践完整度、更新状态和可迁移性，不评“哪张证书更容易帮你找到工作”。
+- 不列入只有营销页面、无法确认课程大纲，或把一般完成证书包装成执照的项目。
+- repository 的 stars 只用来发现社区关注度，不写进正文；维护状态要看是否封存、最近更新和现行文档。
+- 费用、证书或 cohort 发生变化时，三种语言和测试要一起更新。
 
-### tier-1（高度可信）
+</details>
 
-| 课程（连结） | 成本 | 适合谁 | 教什么 | 证书 |
-|---|---|---|---|---|
-| [NVIDIA DLI — 使用大语言模型建构代理式 AI（中文）](https://www.nvidia.cn/training/instructor-led-workshops/building-agentic-ai-applications-with-llms/) ⭐⭐⭐⭐ | 💰 | 想用中文、跟着动手做 agent 系统的人 | 用 LLM 建 agentic 系统：deep reasoning、检索、tool 调用、多 agent、LangGraph、上线部署考量（8 小时） | 付费（约 ¥3500／人，讲师带领、排程制），含 6 个月云端 lab。完成测验后拿 NVIDIA DLI 证书。caveat：价格较高、需排课 |
-
-### tier-2（扎实，但有特定 caveat）
-
-| 课程（连结） | 成本 | 适合谁 | 教什么 | 证书 |
-|---|---|---|---|---|
-| [阿里云 — 大模型 ACA 认证 + 百炼智能体 Clouder](https://edu.aliyun.com/certification) ⭐⭐⭐ | 💰 | 在阿里云（百炼/通义）stack 上做 agent、想要圈内认可的人 | 大模型工程；Clouder 系列含“基于百炼平台构建智能体应用”模组 | 付费官方认证（需实名）。caveat：认可是 vendor-scoped（绑百炼/通义）、非学术可转移；zh-Hans 限定 |
-| [华为 — HCIA-AI（大模型应用方向）](https://e.huawei.com/cn/talent/cert/) ⭐⭐⭐ | 💰 | 想要华为生态认可、系统性入门的人 | 2026 V1.0 大纲含人工智慧基础、大模型知识、大模型应用、智算中心方案 | 付费官方认证（考试制）。caveat：认可偏华为生态与大陆就业市场；zh-Hans。HCIP/HCIE 为更深延伸 |
-
-> 其他中文选项以备注处理，不列为主 entry：慕课网“AI Agent 全栈开发工程师”（商业 bootcamp，judge by syllabus、外部认可有限）、教育部“人工智慧课程修读证书”（官方电子证书、偏综合素养非 agent 工程）。**不收** cert-mill（无评量、无可信签发方的泛 AIGC 认证）。
-
----
-
-## ⚠️ 关于“拿证书”这件事——完整 caveat（请务必照实转述给读者）
-
-1. **完成证书不是 accredited 学历。** 它代表参与和投入，不代表 mastery；跟学分课、学位是两回事。本清单**绝不**把这些证书讲成资格认证。
-2. **付费 ≠ 一定被认可，免费 ≠ 一定没份量。** 大厂／大学的付费 Professional Certificate（IBM、Vanderbilt）认可度通常高些；但免费课也可能评量严格（Hugging Face 的证书 gate 在 quiz + 作业 + 挑战）。看的是签发方和评量，不是价格。
-3. **这些证书实际证明 exposure 与 effort，不是 competence。** 诚实说法是“自主学习的证据”，不是“能打造可上线 agent 的证明”。
-4. **证书最有用的场景是 screening，且很少单独起作用。** 来自可信来源的证书能帮你过初筛，但几乎不保证 offer，要搭作品集才有效。
-5. **你做出的作品，比你拿到的证书更重要。** 雇主要的是你能做事的证据（GitHub repo、deploy 的 agent、开源贡献）。一门课真正的 payoff 是它逼你做出的 artifact，不是那张 PDF。
-6. **别搜集零散 badge，要往一条连贯的 skill set 走。** 五张不相关的入门证书，远不如一条展示同一 skill set 的连贯路径可信——这也是把课程当“roadmap 的步骤”而非“奖杯墙”的理由。
-7. **Recency caveat。** Agent 框架与最佳实务汰换很快，旧 cohort 的证书可能代表过时的知识。看课程的 vintage。
-
----
-
-## 维护备注
-
-- **最后核对：2026-05。** 课程资讯（尤其证书条件、免费／付费）漂移很快——以各课官网为准，stale 的可见地标注而非默默错误。
-- 加新课的门槛：讲师／机构可辨识 + 真的有评量或第一方签发的证书 + 内容够新。**不收** cert-mill（marketplace 型完成证书外部认可近乎零）。
-- 三语同步：每次增删／改星等／改证书条件，都要套到 `courses.md` + `courses.en.md` + `courses.zh-Hans.md`。
+<small>资料核对：2026-08-29 UTC。</small>

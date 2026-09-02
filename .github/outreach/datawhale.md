@@ -1,17 +1,17 @@
 # Outreach: Datawhale (datawhalechina)
 
-> ⚠️ **Send content is now canonical in [`_send-day-packages.md`](_send-day-packages.md)** (package E — current numbers: 8 stages / 240+ resources). This file is kept for positioning rationale; do not paste its older issue/stats blocks directly.
+> ⚠️ **Send content is now canonical in [`_send-day-packages.md`](_send-day-packages.md)** (package E — 10 learning stops / curated resources). This file is kept for positioning rationale; do not paste its older issue/stats blocks directly.
 
 > **Status**: not contacted · **Channel**: GitHub issue + (later) WeChat group
 > **Primary lang**: zh-Hans
 > **Last updated**: 2026-05-09
 > **Decision-maker**: Datawhale 開源教學團隊 (open-source curriculum team)
 
-**Why this target**: Datawhale 是中國大陸最有影響力的 AI 教學社群之一；他們的 [`hello-agents`](https://github.com/datawhalechina/hello-agents) (★ 60k+) 在中文 agentic AI 圈子幾乎人人在用。我們的 Stage 5 cookbook 已經 cite 他們的 Extra05 / Extra08——cross-link 對雙方都加分。
+**Why this target**: Datawhale 是中文 AI 教學社群；他們的 [`hello-agents`](https://github.com/datawhalechina/hello-agents) 是 Agent 入門專案。我們的 Stage 5 cookbook 已經 cite 他們的 Extra05 / Extra08——cross-link 對雙方都加分。
 
-**Pitch angle (我們對他們)**: 我們的 7 階段三語學習地圖把 Hello-Agents 放在 Stage 5 / 6 的位置——讀完我們前 4 階段的 LLM 基礎、prompt、context engineering 之後再進 Hello-Agents 會吸收得更好。我們等於是他們的「pre-flight」入口。
+**Pitch angle (我們對他們)**: 我們的 Stage 0 → Stage 8 三語學習地圖把 Hello-Agents 接在 Stage 5 / 6 的延伸資源——先學 LLM、prompt、tools 與 framework 基礎，再進 Hello-Agents 會比較容易吸收。我們等於是他們的「pre-flight」入口。
 
-**Their counter-value (他們對我們)**: ★45k 的影響力；如果他們在 Hello-Agents README / docs 提我們一句「想看更完整的學習路線可以參考...」，能帶可觀流量。
+**Their counter-value (他們對我們)**: 如果他們在 Hello-Agents README / docs 提一句「想看完整學習路線可以參考……」，讀者就能從專案教學回到循序路線。
 
 ---
 
@@ -19,9 +19,9 @@
 
 > 「想用 Hello-Agents 但不確定該從哪裡入手？」
 >
-> awesome-agentic-ai-zh 把 agentic AI 切成 7 階段（Stage 0 基礎 → Stage 7 production），每階段都標註預估時程跟入門條件。Stage 5/6 直接接到 @datawhalechina 的 Hello-Agents Extra05/08。
+> awesome-agentic-ai-zh 把 agentic AI 排成 10 個學習站（8 個主題 Stage + Stage 0 準備關 + Stage 7.5 閱讀站；最後到 Stage 8 Agent Interfaces）。Stage 5/6 直接接到 @datawhalechina 的 Hello-Agents Extra05/08。
 >
-> 三語（zh-TW / zh-Hans / en）· 145+ curated projects · MIT
+> 三語（zh-TW / zh-Hans / en）· 分組整理的 curated projects · MIT
 > 👉 https://github.com/WenyuChiou/awesome-agentic-ai-zh
 
 ## Variant 2 — GitHub issue (200-300 字)
@@ -32,8 +32,8 @@
 Hi Datawhale 團隊！
 
 我在維護 [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh)
-——一份中文 agentic AI 的 7 階段三語學習地圖（zh-TW canonical / zh-Hans / en，145+
-curated projects，MIT），第一週累積 ★525、3,185 unique visitors、1,099 clones。
+——一份中文 agentic AI 的 Stage 0 → Stage 8 三語學習地圖（zh-TW canonical / zh-Hans / en，
+分組整理 curated projects，採用 MIT）。
 
 我們的 Stage 5 cookbook 已經把 Hello-Agents 的 Extra05（記憶 + RAG 概覽）跟 Extra08
 （多代理）放進 reading list（[cookbook.md](https://github.com/WenyuChiou/awesome-agentic-ai-zh/blob/main/resources/cookbook.md)），
@@ -59,8 +59,8 @@ curated projects，MIT），第一週累積 ★525、3,185 unique visitors、1,0
 ```
 Hi Datawhale 團隊好，
 
-我是 awesome-agentic-ai-zh 的維護者 Wenyu。這份 repo 是中文 agentic AI 的 7 階段
-三語學習地圖（145+ projects，三語齊全），上線一週 ★525。
+我是 awesome-agentic-ai-zh 的維護者 Wenyu。這份 repo 是中文 agentic AI 的 Stage 0 → Stage 8
+三語學習地圖（分組整理的 projects，三語齊全）。
 
 我們 Stage 5 cookbook 已經把 Hello-Agents 的 Extra05/08 放進延伸閱讀清單。想跟你們
 聊聊有沒有可能 reciprocal cross-link 的可能——細節在我剛開的 [GitHub issue]
@@ -77,6 +77,6 @@ Hi Datawhale 團隊好，
 ## Notes
 
 - **不要 promise**「我們會幫你們宣傳」之類的——只 offer 已經 ship 的 cross-link
-- 如果他們同意 reverse PR 加 Hello-Agents 到 §11，記得用 `gh api` 確認 ★ 後加
+- 如果他們同意 reverse PR 加 Hello-Agents 到 §11，先重查連結、授權與目前章節位置
 - WeChat 是 Datawhale 主要互動 channel，但 GitHub issue 比較 maintainable + 可追蹤
 - 如果一週沒回——OK，他們團隊很忙、不要 ping

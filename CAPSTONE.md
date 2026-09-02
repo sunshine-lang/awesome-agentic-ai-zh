@@ -17,7 +17,7 @@
 
 ## Track A Capstone — CLI Power User
 
-**進入條件**:Stage 0–2 + A1 + A2 + Stage 5 + A3 都過了各自的自我檢查(Stage 8 是兩軌共用 hub,建議完成、但不擋 capstone 入場——Track A capstone 聚焦 CLI 工作流)。
+**進入條件**：Stage 0–2 + A1 + A2 + Stage 5 的 Track A 核心 5.1–5.4 + A3 都通過自我檢查。Stage 5 的 5.5–5.8 不擋入場。建議接著完成 Stage 8，但它也不擋 Capstone 入場；Track A Capstone 聚焦 CLI 工作流。
 
 **題目**:組一條**你會重複用**的 CLI-agent 工作流,把一件你現在手動做的事自動化。
 

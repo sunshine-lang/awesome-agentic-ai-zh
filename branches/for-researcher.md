@@ -1,208 +1,180 @@
-# 研究者延伸路線（For Researchers）
+# 研究人員延伸路線（For Researchers）
 
 > **繁體中文** | [简体中文](./for-researcher.zh-Hans.md) | [English](./for-researcher.en.md)
 
-> 🚀 **計算型研究者**（會跑 Python script、有 API key、會用 git）可直接進階；**非程式背景研究者**（人文社科、臨床研究、文獻為主）可先從文獻 Q&A（NotebookLM）、Zotero AI 工具開始、需要時再看 [`resources/setup-guide.md` A-C](../resources/setup-guide.md)。
+[← 回主路線](../README.md)
 
-> [← 回主路線 README](../README.md) · 走完 **Track A 的 A3** 或 **Track B 的 Stage 7** 後從這裡接續。把 agentic AI 應用到研究流程上。
+<!-- freshness: canonical=branches/for-researcher.md; verified_on=2026-08-29; scope=research-tools,citations,privacy,reproducibility,project-status; max_age_days=90 -->
 
-## 使用情境（研究階段 × AI 怎麼幫）
+<a id="使用情境研究階段-ai-怎麼幫"></a>
 
-研究者一天分成幾個階段、AI 在每個階段的角色不同。下表幫你定位：
+## 📌 這條路幫你做什麼
 
-| 階段 | 你常遇到的痛點 | AI 能幫的部分 | 推薦工具（從輕到重） |
+這一頁不是要讓 AI 替你當研究者。它要幫你做一件更簡單的事：**找到資料、看懂資料，再確認答案真的有資料支持。**
+
+- 會用終端機或 Python：完成 [Track A 的 A3](../tracks/cli/A3-cli-production.md) 或 [Track B 的 Stage 7](../stages/07-multi-agent-production.md) 後再來。
+- 不寫程式：也可以直接做下面的第一個練習。只需要瀏覽器和一篇公開 paper。
+
+## 🎯 學習目標
+
+完成這一頁後，你可以：
+
+1. 分清「AI 說了什麼」和「原文真的寫了什麼」。
+2. 逐條核對引用來源，而不是看到引用編號就相信答案。
+3. 知道哪些資料可以上傳，哪些資料要先問機構或資料擁有者。
+4. 保存足夠紀錄，讓自己或同事能重新做一次。
+
+## 🧩 八個核心詞
+
+- **Source（來源）**：你拿來查證的原始材料，例如 paper、資料集或研究紀錄。像答案後面的課本。
+- **Claim（主張）**：一句可以被檢查的說法，例如「方法 A 在資料集 B 上比較好」。
+- **Citation（引用）**：帶你回到來源位置的路標。它只說「去這裡看」，不保證那裡真的支持主張。
+- **Source Verification（來源核對）**：打開原文，檢查作者寫的內容、範圍與限制是否和答案一致。
+- **Literature RAG（文獻 RAG）**：先從你允許使用的文獻找片段，再把片段交給模型回答。像先翻書再作答。
+- **Reproducibility（可重現性）**：別人拿到你的資料、步驟、版本與設定後，可以重新跑出可比較的結果。
+- **Private Data（私人資料）**：不能任意公開或上傳的內容，例如受試者資料、病歷、未公開手稿與公司機密。
+- **Human Review（人工審查）**：由人對 claim、citation、程式、表格與最後決定負責。AI 不能替你簽名或承擔責任。
+
+<a id="文獻-rag--qa"></a>
+## 🛠 第一個練習：核對一篇 paper 的三個答案
+
+上傳前先確認 **授權或著作權** 與 **工具條款** 都允許。paper 公開可讀，不等於可以交給另一個服務。
+
+使用公開 paper：[Attention Is All You Need](https://arxiv.org/abs/1706.03762)。把 paper 加進能顯示 citation 的工具，再直接複製下面這段：
+
+```text
+請只根據這篇 paper 回答下面三題。每個答案都要附 citation；找不到證據就寫「unsupported／未支持」，不要猜。
+
+1. 這篇 paper 想解決什麼問題？
+2. 作者提出的方法包含哪些主要部分？
+3. 作者用哪些實驗支持結果，又說了哪些限制？
+
+回答後，列出每個 citation 對應的 original text。不要把你的推測寫成作者的 claim。
+```
+
+接著做三個動作：
+
+1. 點開每一個 citation。
+2. 把答案和 original text 放在一起讀；數字、資料集與適用範圍都要相同。
+3. 原文沒有支持的句子標成 **unsupported／未支持**，不要為了讓答案看起來完整而補一個不相干的引用。
+
+<a id="層級建議"></a>
+## 📚 先選一個入口
+
+| 你現在想做的事 | 先用什麼 | 為什麼 | 推薦度 |
 |---|---|---|---|
-| **文獻探索** | 不知道某個領域有哪些經典 paper | 推薦 + 摘要 + 比較 | NotebookLM → paper-qa → gpt-researcher |
-| **文獻精讀** | PDF 翻一半就忘 / 抓不到 claim | 抓 claim、figure、citation、做筆記 | Zotero + zotero-gpt → zotero-skills |
-| **研究設計** | RQ 模糊、不知選哪個 method | 對話釐清、列出 trade-off | Claude.ai 對話 → ai-research-skills |
-| **實驗 / 寫程式** | 重複 boilerplate、寫 plot 浪費時間 | 寫 / 改 code、batch refactor | Claude Code → codex-delegate |
-| **論文撰寫** | 草稿卡關、句子不通 | 大綱 → 段落 → 潤色 | Claude.ai → Gemini CLI（長稿） |
-| **改稿 / 投稿** | 期刊規範一堆、容易漏 | banned-word / figure-text / submission checklist | academic-writing-skills |
-| **跨 paper synthesis** | 5 篇 paper 互相對話、context 爆 | 1M token 一次讀完 + 整理 | Gemini CLI |
+| 用瀏覽器問一篇 paper | [Gemini Notebook（原 NotebookLM）](https://notebooklm.google.com/) | 上傳來源後可從 citation 回到原文，最容易開始 | ⭐⭐⭐⭐⭐ |
+| 整理自己的文獻庫 | [Zotero](https://www.zotero.org/) | 先把 PDF、作者、年份與筆記放好，再談 AI | ⭐⭐⭐⭐⭐ |
+| 用 Python 做可重跑的文獻 RAG | [PaperQA2](https://github.com/Future-House/paper-qa) | 回答以科學文件和引用為中心，適合學程式化流程 | ⭐⭐⭐⭐⭐ |
 
-> 💡 **計算型 vs 非程式背景**：表中「推薦工具」由輕到重——非程式背景研究者先停在每行**第一個**就夠了；計算型研究者要自動化才往後挑。
+Gemini Notebook 是 Google 在 2026-07-16 對 NotebookLM 使用的現行名稱；舊名稱只保留來幫你辨識。citation 是查證入口，不是「答案一定正確」的保證。
 
-## 精選 Projects
+<a id="必修閱讀"></a>
+## 📖 必修閱讀
 
-> 💡 **想把 Claude Code 接到 NotebookLM、Obsidian、Notion、Excel、PDF、Excalidraw 等研究常用工具？** 77+ 個整合在 [`resources/mcp-skills-catalog.md`](../resources/mcp-skills-catalog.md)（按使用情境分類）。下面這節保留「研究專屬」的工具與 marketplace。
+照這個順序讀。前兩份教你不要把 citation 當保證，後四份把來源、程式、資料與研究成果保存好：
 
-### 研究流程 Marketplace
+1. [Gemini Notebook citation 說明](https://support.google.com/gemininotebook/answer/16179559)：點 citation 回到原文，讀完整上下文。
+2. [Gemini Notebook 隱私與使用條款](https://support.google.com/gemininotebook/answer/17004255)：上傳前先知道資料會怎麼被處理。
+3. [Zotero 快速入門](https://www.zotero.org/support/quick_start_guide)：先把作者、年份、PDF 與筆記整理好。
+4. [PaperQA2 README](https://github.com/Future-House/paper-qa)：看程式化 literature RAG 怎麼把回答連回文件。
+5. [DVC 常用流程](https://doc.dvc.org/command-reference)：用 Git 搭配資料版本與可重跑 pipeline。
+6. [Zenodo 快速入門](https://help.zenodo.org/docs/get-started/quickstart/)：把可公開的資料、程式或材料保存成可引用的版本。
 
-#### [flonat/claude-research](https://github.com/flonat/claude-research) ⭐⭐⭐
+<a id="精選-projects"></a>
+<a id="大綱與寫作"></a>
+<a id="文獻管理整合"></a>
+## ⭐ 精選研究工具與專案
 
-給博士研究者的 Claude Code 基礎建設——學術流程用的 skill、agent、hook、規則。LaTeX / 文獻管理為主。
+<small>工具名稱、授權與 repository 狀態於 2026-08-29 UTC 依官方頁面與 GitHub API 查核。推薦度是本學習地圖的編輯評分，不是 GitHub stars 或排行榜。</small>
 
----
+<table>
+<thead><tr><th scope="col">分類</th><th scope="col">官方工具／專案</th><th scope="col">適合做什麼</th><th scope="col">狀態／授權</th><th scope="col">先知道的限制</th><th scope="col">推薦度</th></tr></thead>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">開始與整理</th><td><a href="https://notebooklm.google.com/">Gemini Notebook（原 NotebookLM）</a></td><td>用來源做問答並回到 citation</td><td>正式可用；雲端服務</td><td>引用仍要逐條核對；私人資料先看政策</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://www.zotero.org/">Zotero</a></td><td>管理 PDF、metadata、筆記與引用</td><td>正式可用；桌面／Web</td><td>它先解決來源管理，不會替你判斷研究品質</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/Future-House/paper-qa">Future-House/paper-qa</a></td><td>用 Python 建立 citation-grounded literature RAG</td><td>活躍；Apache-2.0</td><td>需要設定模型與文獻來源，品質仍要自己評測</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">探索與寫作</th><td><a href="https://github.com/assafelovic/gpt-researcher">assafelovic/gpt-researcher</a></td><td>多來源搜尋與 research brief</td><td>活躍；Apache-2.0</td><td>適合找候選來源，不是引用正確性的最後裁判</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/stanford-oval/storm">stanford-oval/storm</a></td><td>先整理多個觀點，再寫大綱與長文</td><td>可用；MIT；更新較慢</td><td>使用前先確認依賴與資料來源仍相容</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/kaixindelele/ChatPaper">kaixindelele/ChatPaper</a></td><td>中文 paper 摘要、翻譯與寫作輔助</td><td>可用；CC BY-NC-ND 4.0</td><td>repository 授權禁止商業使用與改作，不是一般開源程式授權</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/MuiseDestiny/zotero-gpt">MuiseDestiny/zotero-gpt</a></td><td>在 Zotero 閱讀時和文獻互動</td><td>可用；AGPL-3.0</td><td>外掛與模型設定要另外維護</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="5">可重現與證據</th><td><a href="https://github.com/asreview/asreview">asreview/asreview</a></td><td>用 active learning 協助系統性回顧的文獻篩選</td><td>活躍；Apache-2.0</td><td>排序可以省時間；納入／排除理由仍需人工篩選並保存紀錄</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/treeverse/dvc">treeverse/dvc</a></td><td>保存資料版本、模型與可重跑 pipeline</td><td>活躍；Apache-2.0</td><td>需要 Git 與資料儲存位置；資料版本不會替你證明結論正確</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/mlflow/mlflow">mlflow/mlflow</a></td><td>記錄每次 run 的參數、指標、資料與產物</td><td>活躍；Apache-2.0</td><td>有紀錄不等於實驗有效；不要把密鑰或受試者資料寫進 tracking</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://zenodo.org/">Zenodo</a></td><td>保存並發表資料、程式與研究材料，取得 DOI</td><td>正式可用；雲端服務</td><td>metadata 會公開；私人資料必須先依機構規則去識別或改用核准環境</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/jupyterhub/repo2docker">jupyterhub/repo2docker</a></td><td>從 repository 設定重建可執行的研究環境</td><td>活躍；BSD-3-Clause</td><td>container 能保存環境，仍要另外保存資料、硬體需求與外部服務</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="2">研究自動化</th><td><a href="https://github.com/flonat/flonat-research">flonat/flonat-research</a></td><td>參考研究用 skills、agents、hooks 與 LaTeX 流程</td><td>活躍；MIT</td><td>是基礎建設範例，不是每個領域都可直接套用</td><td>⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/SakanaAI/AI-Scientist-v2">SakanaAI/AI-Scientist-v2</a></td><td>研究端到端 multi-agent 實驗架構</td><td>研究參考；自訂 source-code license</td><td>授權要求揭露機器產生的科學稿件；作者仍要人工審查與負責</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="1">歷史</th><td><a href="https://github.com/langchain-ai/open_deep_research">langchain-ai/open_deep_research</a></td><td>閱讀早期 deep-research agent 架構</td><td>已封存；MIT</td><td>只作歷史參考；不是新專案的現行預設</td><td>⭐⭐⭐</td></tr>
+</tbody>
+</table>
 
-### 文獻 RAG / Q&A
+## ✅ 完成檢查與下一站
 
-#### [Future-House/paper-qa](https://github.com/Future-House/paper-qa) ⭐⭐⭐⭐⭐
+- [ ] 我核對了三個答案，不只看 citation 編號。
+- [ ] 我至少找到一個「原文支持」或「未支持」的例子。
+- [ ] 我沒有上傳未獲允許的私人資料。
+- [ ] 我保存了來源、問題、工具名稱、日期與自己的判斷。
 
-| 欄位 | 內容 |
+下一站：想做文獻 RAG，走 [Stage 6](../stages/06-memory-rag.md)；想讓多個 agent 分工，走 [Stage 7](../stages/07-multi-agent-production.md)；想把流程接到外部工具，再看 [MCP／Skills catalog](../resources/mcp-skills-catalog.md)。
+
+<details markdown="1">
+<summary>⏱ 展開：時間、帳號、費用與資料安全</summary>
+
+第一個練習約需 20–40 分鐘。私人資料先停下來確認 IRB、機構政策、合約、資料擁有者同意與工具條款。
+
+[Gemini Notebook 隱私說明](https://support.google.com/gemininotebook/answer/17004255)指出，一般內容不會直接拿來訓練基礎模型，除非使用者選擇提供 feedback；feedback 可能連同內容交由人員檢視。這不等於你的研究資料自動獲准上傳。病歷、受試者資料、未公開稿件與公司機密仍要遵守自己的治理規則。
+
+付費功能、配額與機構帳號規則會改變。開始前看官方頁面，不在教材保存容易過期的固定價格。
+
+</details>
+
+<a id="研究流程-marketplace"></a>
+<a id="multi-llm-研究組合本-repo-維護者的研究-setup"></a>
+<a id="multi-agent-for-research"></a>
+<a id="必練流程按使用頻率"></a>
+<details markdown="1">
+<summary>🧪 展開：把單篇練習變成可重跑研究流程</summary>
+
+### 文獻 inbox
+
+1. 先保存 DOI、URL、作者、年份與取得日期。
+2. 讓工具產生摘要，但把每個 claim 連回原文。
+3. 人工決定「閱讀、排除、待確認」，並記下理由。
+
+### 跨 paper synthesis
+
+先問每篇 paper 各自說什麼，再比較它們在哪裡同意、衝突或使用不同條件。不要先要求模型寫一個看起來完整的故事，才回頭找引用。
+
+### 程式與實驗
+
+保存資料版本、environment、seed、prompt、模型／工具版本、輸出與人工修改。能重新執行不代表結論正確，但沒有這些紀錄，錯誤通常更難找到。
+
+### 投稿前
+
+逐一核對 claim、citation、表格、圖、程式與期刊規範。AI 可以提供第二雙眼睛；作者仍要做最後判斷並依期刊政策揭露使用方式。
+
+</details>
+
+<details markdown="1">
+<summary>🧯 展開：常見錯誤、替代方案與排錯</summary>
+
+| 問題 | 先怎麼做 |
 |---|---|
-| Stars | ★ 8.9k+ |
-| License | Apache-2.0 |
+| citation 點開後沒有支持答案 | 把句子標成未支持；縮小問題；不要換一個看似相關的引用硬補 |
+| 工具讀不到掃描 PDF | 先做 OCR，再抽查頁碼與公式有沒有壞掉 |
+| 多篇 paper 的結論被混在一起 | 要求每個 claim 都列 paper 名稱、頁碼或段落，再做 synthesis |
+| 資料不能上傳雲端 | 使用機構核准環境；必要時看 [Stage 6](../stages/06-memory-rag.md) 的本機 RAG 路線 |
+| 自動化太複雜 | 回到「一篇 paper、三個問題、逐條核對」，確認小流程可靠後再加工具 |
 
-**教什麼**：對 PDF 文件以 **citation-grounded Q&A** 為設計目標——每個答案附句子層級的引用、減少幻覺風險。實際準確率依文件類型而異、評測結果以官方 benchmark / paper 為準。
+沒有任何工具可以代替 IRB、資料治理、作者責任或領域專家的判斷。
 
-**適合誰**：寫文獻回顧、需要「查文獻時答案要可追溯」的研究者。比一般 RAG 更嚴謹。
-
----
-
-#### [assafelovic/gpt-researcher](https://github.com/assafelovic/gpt-researcher) ⭐⭐⭐⭐
-
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 28k+ |
-| License | Apache-2.0 |
-
-**教什麼**：自主 deep-research agent——planner + multi-source crawl + report 合成。給定一個研究主題，自動產出 markdown / PDF brief。
-
-**適合誰**：要快速 scope 新題目、產 research brief 的研究者。
-
----
-
-### 大綱與寫作
-
-#### [stanford-oval/storm](https://github.com/stanford-oval/storm) ⭐⭐⭐⭐
-
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 30k+ |
-| License | MIT |
-
-**教什麼**：multi-perspective outline-then-write pipeline——**白話三步**：(1) 先模擬不同觀點提出問題、(2) 把問題整理成大綱、(3) 最後生成 Wikipedia-style 草稿。Stanford OVAL 出品。
-
-**適合誰**：想學「**outline-driven 寫作**」的人。從零產主題 brief 時的好工具，類似 NotebookLM structured report 流程的開源版。
-
-**備註**：最後一次推送已超過 6 個月，使用前確認最新 commit 日期。
-
----
-
-#### [kaixindelele/ChatPaper](https://github.com/kaixindelele/ChatPaper) ⭐⭐⭐⭐⭐（中文讀者）
-
-| 欄位 | 內容 |
-|---|---|
-| 語言 | 中文 + Python |
-| Stars | ★ 19k+ |
-| License | NOASSERTION（自訂條款，非商用） |
-
-**教什麼**：中文研究者向的 arXiv 全流程工具——論文總結 + 翻譯 + 潤色 + 審稿回覆生成。中國研究團隊維護，預設值對中文場景友善。
-
-**適合誰**：中文研究生想找對中文友善的 paper 全流程入門工具。
-
-**備註**：License 是自訂的非商用條款，使用前請先讀原始條款；研究或個人用途常見，但條款還是要自己看過確認。
-
----
-
-### 文獻管理整合
-
-#### [MuiseDestiny/zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt) ⭐⭐⭐⭐
-
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 7k+ |
-| License | AGPL-3.0 |
-
-**教什麼**：Zotero 的 LLM plugin——可以跟你的文獻庫對話、總結 selection、生成 inline notes。
-
-**適合誰**：Zotero 重度使用者，想在閱讀流程裡直接接 AI 而不用切到別的工具。
-
-**備註**：AGPL-3.0 license（傳染性開源）— 修改後要散布的衍生產品需遵守條款。
-
----
-
-### Multi-LLM 研究組合（本 repo 維護者的研究 setup）
-
-研究流程裡有些任務 Claude 一個就夠（對話、設計、review），有些 Claude 做會浪費 token（大批 code refactor、長稿 draft）。維護者實際用的搭配是 **Claude 當 planner / reviewer、Codex 跑程式、Gemini 跑長稿**——下表列何時用哪個：
-
-| 任務類型 | 例子 | 用哪個 LLM | 為什麼 |
-|---|---|---|---|
-| 研究設計 / 假設討論 | 「這個 RQ 該用 logistic vs survival？」 | Claude.ai 對話 | 對話協作、context memory |
-| 寫 / 改 code | 「50 個 simulation script 都加 logging」 | codex-delegate | 機械式編輯快、不燒 Claude token |
-| 寫長稿（中英文） | 「draft 一個 8 頁 paper section」 | Gemini CLI | 1M context、長 prose 強項 |
-| Second opinion | 「請 Gemini 看我的 discussion 段落」 | Gemini CLI | LLM-vs-LLM 對照、容易看出 Claude 自身偏誤 |
-| 投稿前 audit | 「跑 banned-word + figure-text checklist」 | academic-writing-skills | structured audit、不靠 LLM 即興判斷 |
-
-#### 維護者自用的 6 個研究 skill
-
-> ⚠️ **揭露**：以下 6 個工具是維護者 [@WenyuChiou](https://github.com/WenyuChiou)（Lehigh CEE PhD candidate）日常在用的研究 skills、公開讓有相似需求的人用。**未經第三方獨立評測**——適合 PhD 學位寫作 / 跨 paper 文獻整理這類流程；不一定適合你的領域。詳細 entry 看 [`resources/mcp-skills-catalog.md` 13 + 14](../resources/mcp-skills-catalog.md#13-研究工作流-skills學術--paper--文獻)。
-
-| 工具 | 適合階段 | 一句話 |
-|---|---|---|
-| **[ai-research-skills](https://github.com/WenyuChiou/ai-research-skills)** ⭐⭐⭐⭐⭐ | 全流程 | 14 個研究 skill 打包成 5-plugin marketplace、一個指令裝整套 |
-| **[research-hub](https://github.com/WenyuChiou/research-hub)** ⭐⭐⭐⭐ | 文獻整理 | Zotero + Obsidian + NotebookLM 三工具整合 workspace、CLI / MCP / REST / dashboard 四介面 |
-| **[zotero-skills](https://github.com/WenyuChiou/zotero-skills)** ⭐⭐⭐⭐ | 文獻管理 | Zotero CLI skill（搜 / 加 / 分類 / 標記）——跟 zotero-gpt 互補（後者在 Zotero 裡 chat、這份從外部操作） |
-| **[academic-writing-skills](https://github.com/WenyuChiou/academic-writing-skills)** ⭐⭐⭐ | 投稿前 | banned-word audit、figure-text coupling、submission checklist；per-paper 可自訂 journal_format / style_overrides |
-| **[codex-delegate](https://github.com/WenyuChiou/codex-delegate)** ⭐⭐⭐⭐⭐ | 寫程式 | Claude planner + Codex executor 的標準 skill——batch refactor / boilerplate / migration |
-| **[gemini-delegate-skill](https://github.com/WenyuChiou/gemini-delegate-skill)** ⭐⭐⭐（⚠️ 已封存） | 長稿 / synthesis | Claude planner + Gemini 寫 1M context 長文 / CJK / second-opinion。**⚠️ repo 已封存 2026-07**——workflow 仍可直接用 [Gemini CLI](https://github.com/google-gemini/gemini-cli) 做 |
-
----
-
-### Multi-Agent for Research
-
-#### [langchain-ai/open_deep_research](https://github.com/langchain-ai/open_deep_research) ⭐⭐⭐⭐⭐
-
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 12k+ |
-| License | MIT |
-
-**教什麼**：開源版的 Deep Research——支援單 agent 跟 supervisor + multi-researcher 兩種架構（multi-agent 那條目前在 `src/legacy/`）、平行搜尋、再合成成有引用的 report。是學「LLM agent 怎麼自動產出有引用 brief」的好參考。
-
-**適合誰**：要打造「agent 自動產出有引用 brief」工作流程的研究者。是這個分類最 canonical 的開源選擇。
-
-**備註**：依賴 LangGraph + 搜尋 tool（要 API key）。
-
----
-
-#### [SakanaAI/AI-Scientist-v2](https://github.com/SakanaAI/AI-Scientist-v2) ⭐⭐⭐⭐
-
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 6.9k+ |
-| License | The AI Scientist Source Code License（source-available，非商用 + 有 manuscript-disclosure 條款） |
-
-**教什麼**：端到端的 multi-agent 科學研究 loop：構想 → 寫程式 → 跑實驗 → 寫 paper → 互審。Sakana AI 的「AI 寫整篇 ML paper」研究實作。
-
-**適合誰**：想看「多個 agent 跑完整研究 lifecycle 會長什麼樣」的研究者。研究架構參考、不是 production 工具。
-
-**備註**：產出是 demo 等級（不是直接投稿用），ML / CS 領域偏多。License 是自訂的 source-available 條款（含 manuscript-disclosure 規定），使用前請先讀 LICENSE 檔。
-
----
-
-> 還缺：peer-review 自動化、conference review pipeline 的活躍開源案例。如果你做過或知道有，歡迎開 PR。
-
-## 必修閱讀
-
-1. [The Effortless Academic — Claude Code beginner guides](https://effortlessacademic.com/claude-code-and-cowork-for-academics-beginner-guide-part-1/)
-2. [Pedro Sant'Anna — Researcher setup guide](https://paulgp.substack.com/p/getting-started-with-claude-code)
-
-## 必練流程（按使用頻率）
-
-研究者用 AI 的最大誤區是「只在卡關才打開 ChatGPT」。把 AI 變成日常工具的關鍵是**設好頻率**——下表 7 條都是維護者自己每週都在跑的、不是空想。
-
-| 頻率 | 流程 | 怎麼做（≤ 3 步） | 推薦工具 | 適合誰 |
-|---|---|---|---|---|
-| **每天** | 文獻 inbox 分流 | (1) 把昨天看到的 paper 丟 paper-qa<br>(2) 抓 claim + 4-5 行 summary<br>(3) 進 Zotero / Obsidian | paper-qa + zotero-gpt | 全研究者 |
-| **每天** | 寫作 sprint（25 min） | (1) 寫一段給 Claude.ai<br>(2) 跑 banned-word + figure-text audit<br>(3) 改完進 main draft | Claude.ai + academic-writing-skills | 寫 paper 階段 |
-| **每週** | 跨 paper synthesis | (1) 把 5-10 篇 PDF 餵 Gemini<br>(2) 問「這幾篇 disagree 在哪」<br>(3) 寫成 1 頁 brief | Gemini CLI（1M context） | 計算型 |
-| **每週** | Zotero 整理 | (1) 標未讀 / 已讀<br>(2) 重 tag<br>(3) 抓出該歸檔的 PDF | zotero-skills 或 zotero-gpt | 全研究者 |
-| **每月** | 研究進度 brief | (1) 從 Obsidian + Zotero + NotebookLM 抓近期筆記<br>(2) 整理出 5 個進度點<br>(3) 送指導教授 | research-hub | 同時用 3 工具的人 |
-| **Per paper** | 投稿前 final audit | (1) banned-word audit<br>(2) figure-text coupling check<br>(3) submission checklist | academic-writing-skills | 投稿前 1 週 |
-| **Per paper** | Multi-agent peer review | (1) Claude 看 logic / argument<br>(2) Codex 看 code / table 數字<br>(3) Gemini 看 prose / clarity | codex-delegate + Gemini CLI | 投稿前 second-opinion |
-
-> 💡 **新手起手式**：先做「每天 inbox 分流」+「寫作 sprint」兩條一個月、習慣後再加進階流程。一次裝太多會養不起來。
-
-## 層級建議
-
-研究者不需要一開始就裝 Claude Code。下表是建議的進階路徑：
-
-| Tier | 工具 | 適合誰 | 學習成本 |
-|---|---|---|---|
-| **Tier 0** | Claude.ai 網頁版 + NotebookLM | 非程式背景、人文社科、臨床研究 | 0（會用瀏覽器就行） |
-| **Tier 1** | Claude Desktop + Zotero MCP / Obsidian MCP | 已有 Zotero / Obsidian 習慣的研究者 | 半天裝好 |
-| **Tier 2** | Claude Code + ai-research-skills | 計算型研究者、寫 / 改程式為主 | 1-2 天上手 |
-| **Tier 3** | Claude Code + codex-delegate + Gemini CLI + research-hub | 想跑 multi-LLM 研究 pipeline、跨多工具整合 | 1 週 setup + 持續調 |
-
-**多數研究者停在 Tier 1-2 就夠了**——Tier 3 是有大量重複流程（譬如每週跑同樣的 paper synthesis）才值得。
+</details>

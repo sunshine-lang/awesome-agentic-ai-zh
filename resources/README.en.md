@@ -1,102 +1,101 @@
-# `resources/` Index
+# The `resources/` Tool Cabinet
 
 <div align="right">
   <a href="./README.md">繁體中文</a> | <a href="./README.zh-Hans.md">简体中文</a> | <strong>English</strong>
 </div>
 
-> This is the repo's **reference area**: supplementary material that sits outside the main path and is meant to be opened when needed. Each file has a distinct role.
+Think of this folder as a tool cabinet. When you get stuck, take only the card you need now. **You do not need to read every file from top to bottom.**
 
----
+## 🧭 What are you stuck on?
 
-## 7 References + When to Read Each
+| What you want to do now | Open this first |
+|---|---|
+| I have never coded and do not know where to start | [`setup-guide.en.md`](setup-guide.en.md) |
+| I want to follow the complete learning map | [Home](../README.en.md) → [Stage 0](../stages/00-foundations.en.md) |
+| I cannot tell how models learn, how they are adapted, and when they are only producing an answer | [`model-training-guide.en.md`](model-training-guide.en.md) |
+| I see a term but do not know what it means | [Term lookup](glossary.en.md) |
+| I cannot tell these names apart: OpenRouter = unified model API/router; Ollama = local model runtime; OpenCode/Pi = coding agents/toolkits | [`cli-agents-guide.en.md`](cli-agents-guide.en.md) |
+| I want to build my first action card (Skill), tool connector (MCP server), or document workflow | [Hands-on recipes](cookbook.en.md) |
+| I wrote a tool description (tool schema), but the model keeps choosing the wrong tool | [`schema-design-cheatsheet.en.md`](schema-design-cheatsheet.en.md) |
+| I need a tool for Notion, Office, a database, or a browser | [`mcp-skills-catalog.en.md`](mcp-skills-catalog.en.md) |
+| I want to choose a course or check whether a certificate helps | [`courses.en.md`](courses.en.md) |
+| I want to know whether an agent works in a terminal, editor, cloud, or my own device | [`agent-paradigms.en.md`](agent-paradigms.en.md) |
+| I want a helper-agent (subagent) dispatch example I can copy now | [`subagent-cookbook.en.md`](subagent-cookbook.en.md) |
+| I want to design, combine, or debug helper agents (subagents) | [`subagent-advanced.en.md`](subagent-advanced.en.md) |
+| I want to write content or send a PR to this project | [`style-guide.en.md`](style-guide.en.md) |
 
-| File | Role | When to Read | Lines |
-|---|---|---|---|
-| [`glossary.en.md`](glossary.en.md) | **30-second term lookup** | You hit terms like LLM / RAG / token / agent / vector DB / streaming / batch API while reading a stage | ~210 |
-| [`cli-agents-guide.en.md`](cli-agents-guide.en.md) | **8 CLI agents compared** | First time choosing among Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build | ~134 |
-| [`mcp-skills-catalog.en.md`](mcp-skills-catalog.en.md) | **77+ integration catalog** | You want Claude Code connected to Notion / Obsidian / Excel / Postgres / Slack / other real tools | ~775 |
-| [`schema-design-cheatsheet.en.md`](schema-design-cheatsheet.en.md) | **5 function-schema rules + 5 anti-patterns** | You are writing a tool schema / MCP server schema / function calling and the LLM picks the wrong tool or arguments | ~159 |
-| [`cookbook.en.md`](cookbook.en.md) | **6 step-by-step recipes** | You want to build a first Skill / MCP server / Office integration / NotebookLM flow / Zotero flow / local LLM in 30-50 minutes | ~620 |
-| [`setup-guide.en.md`](setup-guide.en.md) | **From-zero setup guide** | No dev background; first time creating an API key, installing Python, or using Claude Code | ~400 |
-| [`style-guide.en.md`](style-guide.en.md) | **Format and wording rules before PRs** | You want to contribute to the repo, add entries, or improve translations | ~338 |
+## 🧩 Five words to know first
 
-Together these are about ~2500 lines of reference. That sounds large, but **each file is read at a different moment**. You do not read all of them at once; you open the relevant one for 30 seconds to 45 minutes.
+- **Reference**: something you return to when stuck, not another required course.
+- **Guide**: helps you make choices along one path.
+- **Cookbook**: gives you small, complete examples you can follow.
+- **Catalog**: keeps many tools in one searchable, comparable place.
+- **Glossary**: gives a short definition, then sends you to the chapter with the full explanation.
 
----
+## 📚 All 12 references
 
-## Entry Points: "What Am I Trying to Do?"
+The left column merges resources of the same type. This table stays visible because learners need to see which entrances exist.
 
-### 🆕 I Have Never Written Code / This Is My First AI Agent Setup
+<table>
+<thead><tr><th scope="col">Type</th><th scope="col">File</th><th scope="col">Best time to read it</th><th scope="col">What it does not do</th></tr></thead>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">Start and choose</th><td><a href="setup-guide.en.md">setup-guide.en.md</a></td><td>Your first choice among Web, Desktop, IDE, CLI, and API</td><td>Does not replace each product’s current installation page</td></tr>
+<tr><td><a href="glossary.en.md">glossary.en.md</a></td><td>Look up one term in 30 seconds</td><td>Does not replace a full chapter or practice</td></tr>
+<tr><td><a href="cli-agents-guide.en.md">cli-agents-guide.en.md</a></td><td>Separate models, model entrances (routers), execution environments (runtimes), and coding agents</td><td>Does not grant permissions or choose a paid plan for you</td></tr>
+<tr><td><a href="courses.en.md">courses.en.md</a></td><td>Compare courses, practice depth, and certificate limits</td><td>Does not promise that a certificate gets you a job</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="2">Build and debug</th><td><a href="cookbook.en.md">cookbook.en.md</a></td><td>Build a Skill, MCP, Office, Gemini Notebook, Zotero, or local CLI workflow</td><td>Does not turn every topic into a textbook</td></tr>
+<tr><td><a href="schema-design-cheatsheet.en.md">schema-design-cheatsheet.en.md</a></td><td>A tool or its parameters are often wrong</td><td>Does not teach complete MCP server installation</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">Search and position</th><td><a href="model-training-guide.en.md">model-training-guide.en.md</a></td><td>Separate Pre-training, Post-training, Fine-tuning, and Inference</td><td>Is not a complete course on training a model from scratch</td></tr>
+<tr><td><a href="mcp-skills-catalog.en.md">mcp-skills-catalog.en.md</a></td><td>Find a tool connector (MCP server) or action card (Skill) by job</td><td>Listing does not mean risk-free or permanently available</td></tr>
+<tr><td><a href="agent-paradigms.en.md">agent-paradigms.en.md</a></td><td>See whether an agent runs in a terminal, editor, cloud, or your own device</td><td>Is not a product leaderboard</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="2">Advanced subagents</th><td><a href="subagent-cookbook.en.md">subagent-cookbook.en.md</a></td><td>Copy a helper-agent dispatch example first</td><td>Does not explain every design principle</td></tr>
+<tr><td><a href="subagent-advanced.en.md">subagent-advanced.en.md</a></td><td>Design, combine, and debug helper agents</td><td>Is not where a first-time CLI-agent user should begin</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="1">Maintain the project</th><td><a href="style-guide.en.md">style-guide.en.md</a></td><td>Write entries, translate, build tables, or send a PR</td><td>Is not required reading for ordinary learners</td></tr>
+</tbody>
+</table>
 
-→ [`setup-guide.en.md`](setup-guide.en.md) (30-45 minutes from zero)
+## 🔁 Where do you return next?
 
-### 🆕 I Am Just Starting to Learn AI Agents
+- First-time learner: return to [Stage 0](../stages/00-foundations.en.md).
+- Want to finish work with a CLI: return to [Track A1](../tracks/cli/A1-cli-intro.en.md).
+- Want to build an Agent: return to [Stage 3](../stages/03-tool-use-and-hello-agent.en.md).
+- Want to choose an entrance again: return to [Home](../README.en.md).
 
-You do not need any reference first. **Start with the main [README](../README.en.md) → [Stage 0](../stages/00-foundations.en.md)**. When a term is unclear, come back to [`glossary.en.md`](glossary.en.md).
+## ✅ 30-second completion check
 
-### 🛠 I Need to Choose a CLI Agent
+- [ ] I know which one file I need now.
+- [ ] I am not treating the catalog as a textbook to read from start to finish.
+- [ ] I know where to return on the main route afterward.
 
-→ [`cli-agents-guide.en.md`](cli-agents-guide.en.md) (CLI comparison + recommendations by use case)
+<details markdown="1">
+<summary>Why not combine all 12 references into one book?</summary>
 
-### 🔌 I Want to Connect Claude Code to Tool X (Notion / Excel / Postgres / etc.)
+They solve different problems. The Glossary is a 30-second lookup, a Stage builds a concept in a few minutes, the Cookbook helps you make something, and the Catalog helps you search for tools. Mixing them into one book would make the entrance harder to find.
 
-→ [`mcp-skills-catalog.en.md`](mcp-skills-catalog.en.md) (77+ integrations in 16 categories)
+For chapter-length Chinese lessons, continue with [Hello-Agents](https://github.com/datawhalechina/hello-agents). This project helps you find the route instead of rewriting another long textbook.
 
-### 🍳 I Want to Build My First Skill / MCP Server / Word Integration
+</details>
 
-→ [`cookbook.en.md`](cookbook.en.md) (6 step-by-step recipes)
+<details markdown="1">
+<summary>Maintainers: locale coverage and rules for a new reference</summary>
 
-### 📐 I Wrote a Tool Schema and the LLM Is Not Following It
+All 12 references above have Traditional Chinese, English, and Simplified Chinese versions. Before adding another reference, confirm all four rules:
 
-→ [`schema-design-cheatsheet.en.md`](schema-design-cheatsheet.en.md) (5 rules + 5 anti-patterns)
+1. It has a job that no existing file can replace.
+2. At least three stages, tracks, or branches will need it.
+3. Terms, URLs, limitations, and safety rules can stay aligned across three locales.
+4. If it serves only one chapter, keep it in that chapter instead of creating another file.
 
-### 📚 I Hit an Unclear Term While Reading a Stage
+Traditional Chinese is the source version: zh-TW is canonical. Verify official sources first. If the answer is unknown, say so instead of guessing. Do not preserve drifting GitHub stars, fixed totals, and line counts.
 
-→ [`glossary.en.md`](glossary.en.md) (30-80 words per term + which stage goes deeper)
+Before submitting a change, check the [MCP/Skills catalog](mcp-skills-catalog.en.md), [Cookbook](cookbook.en.md), [style guide](style-guide.en.md), and [CONTRIBUTING](../CONTRIBUTING.en.md).
 
-### 🤝 I Want to Send a PR / Translate / Add a New Entry
-
-→ [`style-guide.en.md`](style-guide.en.md) + [`../CONTRIBUTING.en.md`](../CONTRIBUTING.en.md)
-
----
-
-## Duplication?
-
-Duplication is deliberately avoided. Here is how each reference relates to the main path and to the other references:
-
-- **glossary** is a 30-second lookup, stage text is a 3-5 minute read, and cookbook is a 30-50 minute build — three depths, no overlap.
-- **schema-design-cheatsheet** overlaps with cookbook 2 (building an MCP server), but the cheatsheet explains **the rules for writing a schema** while the cookbook explains **how to get a server running**. Which one you want depends on where you are stuck.
-- **cli-agents-guide** is a reference table; the catalog is plug-in tools — two different levels.
-- **Relationship to [Hello-Agents](https://github.com/datawhalechina/hello-agents)**: Hello-Agents is the most complete Chinese-language agent course available, and it goes deep. This repo works from a different angle, **roadmap + curated catalog + hands-on recipes**, and does not replace it. Stage 5.3 and cookbook 1 both cross-reference Hello-Agents Extra08, "How to Write a Good Skill", as deeper follow-up reading.
-
----
-
-## Language Coverage
-
-| File | zh-TW (canonical) | zh-Hans | English |
-|---|---|---|---|
-| glossary | ✅ | ✅ | ✅ |
-| cli-agents-guide | ✅ | ✅ | ✅ |
-| mcp-skills-catalog | ✅ | ✅ | ✅ |
-| schema-design-cheatsheet | ✅ | ✅ | ✅ |
-| cookbook | ✅ | ✅ | ✅ |
-| setup-guide | ✅ | ✅ | ✅ |
-| style-guide | ✅ | ✅ | ✅ |
-
----
-
-## Standards for Adding a New Reference
-
-A new reference file should not be added casually. It must:
-
-1. **Avoid duplicating any existing role** in the table above.
-2. **Solve a problem the main path cannot cover well**. If 50 lines in Stage X would cover it, put it in that stage.
-3. **Be expected to receive 3+ cross-references** from stages or branches. If it only serves one stage, keep it in that stage.
-
-Possible future references:
-
-- `cost-calculator-guide.md`: cross-provider pricing. [Stage 1](../stages/01-llm-basics.en.md) covers enough for now.
-- `troubleshooting-guide.md`: common error runbook. Existing material is enough until more community reports arrive.
-- `prompt-patterns-guide.md`: CoT / few-shot template library. [Stage 2](../stages/02-prompt-engineering.en.md) already covers the basics; a deeper version can wait for community PRs.
-
-If the community wants one of these added, open an issue to discuss it.
+</details>

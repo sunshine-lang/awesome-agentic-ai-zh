@@ -34,11 +34,11 @@
 
 | Stage | Maintainer | 加入日期 |
 |---|---|---|
-| Stage 3 — Tool Use & Agent 入門 ⭐ | （社群 PR 機會） | — |
-| Stage 4 — Agent 框架 | （社群 PR 機會） | — |
+| Stage 3 — 工具使用與第一個 Agent Loop ⭐ | （社群 PR 機會） | — |
+| Stage 4 — Workflow Graph 與 Agent 框架 | （社群 PR 機會） | — |
 | Stage 5 — Claude Code 生態 ⭐⭐（兩條軌共用） | （社群 PR 機會） | — |
 | Stage 6 — Memory · RAG · 進階 | （社群 PR 機會） | — |
-| Stage 7 — 進階 Multi-Agent | （社群 PR 機會） | — |
+| Stage 7 — Agent Production Engineering：Harness、Loop 與 Graph | （社群 PR 機會） | — |
 
 ## 🌳 Branch 維護者 / Branch maintainers
 

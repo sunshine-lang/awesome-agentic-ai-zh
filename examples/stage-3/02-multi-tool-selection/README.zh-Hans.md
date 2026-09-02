@@ -4,8 +4,8 @@
 
 # 练习 2：多工具选择
 
-对应 [Stage 3 — Tool Use & Agent 入门](../../../stages/03-tool-use-and-hello-agent.zh-Hans.md) 练习 2。
-> 🎓 **学习模式**：这份 `starter.py` 是**完整解答**、不是 TODO skeleton。建议用**主动模式**——`mv starter.py starter_reference.py`、看 signature 不看 body、自己重写一份 `starter.py`、跑 `python test.py` 验证；卡 20 分钟再回去对照 reference。完整方法论看 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
+对应 [Stage 3 — 工具使用与第一个 Agent Loop](../../../stages/03-tool-use-and-hello-agent.zh-Hans.md) 练习 2。
+> 🎓 **学习模式**：先运行提供的 `starter.py`（`python starter.py`），然后只改一个小地方，再重新运行现有测试 `python test.py`。如果测试失败，就撤销或修正这一个改动，再试一次。不需要重命名文件，也不需要重写整份解答。完整方法见 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
 
 > 📚 **想要 chapter-length 深入版？** 本 folder 的 starter 是 70-150 行 illustrative 版、聚焦 `核心 pattern + 两条 SDK path`，不是进阶深度教材。深度教材推荐：
 > - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ 中文圈最完整、章节式 + 16 种 production 能力。**本练习对应 hello-agents 的 tool-calling / multi-tool dispatch 章节**
@@ -21,24 +21,24 @@
 
 ### Path A（默认、本机免费）
 
-```bash
+```powershell
 pip install -r requirements.txt
 ollama pull qwen2.5:3b
 ollama serve
 python starter.py
 ```
 
-预算：**$0**。qwen2.5:3b 单轮 tool call ≈ 1-5 秒（CPU 慢、GPU 快）。
+预算：**$0 API 费用**；不包含硬件、内存与电力成本。
 
-### Path B（Anthropic、想看 cloud 高质量）
+### Path B（Anthropic、云端比较）
 
-```bash
+```powershell
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
+$env:ANTHROPIC_API_KEY = "your-key"
 python starter_anthropic.py
 ```
 
-预算：每次 ≈ **$0.0005**（claude-haiku-4-5）。
+预算：每次先预留 **$0.05**。实际费用按 `输入 tokens × $1 / 1,000,000 + 输出 tokens × $5 / 1,000,000` 计算，Tool Use 还会加入 prompt tokens；价格查核日：`2026-08-27`。
 
 预期看到（Path A、本机）：
 
@@ -52,7 +52,7 @@ python starter_anthropic.py
 
 ## 不花钱验证程序逻辑（mock-based）
 
-```bash
+```powershell
 python test.py            # 验 Path A (Ollama) starter.py 逻辑
 python test_anthropic.py  # 验 Path B (Anthropic) starter_anthropic.py 逻辑
 ```
@@ -69,7 +69,7 @@ python test_anthropic.py  # 验 Path B (Anthropic) starter_anthropic.py 逻辑
 | 抓 tool call | `resp.content[i].type == "tool_use"` | `resp.choices[0].message.tool_calls[i]` |
 | input 格式 | `call.input` 是 dict（自动 parse） | `call.function.arguments` 是 JSON string、要 `json.loads(...)` |
 
-Tool selection **逻辑本身**跨 backend——schema 写好、qwen2.5:3b 也会挑对 tool。这题很适合拿来对照 Claude vs qwen2.5“在哪几题会挑错”，是观察小 model 边界的好实验。
+Tool selection **逻辑本身**跨 backend，但实际行为会随模型与题目变化。固定 prompt、schema 与测试题，用 eval 记录成功率与失败类型。
 
 ## 容易踩坑
 
@@ -77,20 +77,20 @@ Tool selection **逻辑本身**跨 backend——schema 写好、qwen2.5:3b 也�
 
 - `calendar_lookup` 描述只说“行事历”就会跟 `web_search` 边界模糊；明写“查特定日期事件”才好
 - `web_search` 适合“外部 / 近期 / 不确定信息”、`calculator` 只处理算式；边界写越清楚、模型越少误判
-- 小 model（qwen2.5:3b）对 description 质量比 Claude **更敏感**——同一份 schema、Claude 可能还能猜对、qwen 直接挑错
+- 不同模型对 description 质量的反应可能不同；不要预设哪一个一定更稳，用同一组固定 eval 实测
 
 ## 想看更聪明的答案？
 
-预设用 `claude-haiku-4-5`（最便宜）。改成 sonnet：
+预设用固定 ID `claude-haiku-4-5-20251001`。想比较 sonnet 时：
 
-```bash
-MODEL=claude-sonnet-5 python starter_anthropic.py
+```powershell
+$env:MODEL = "claude-sonnet-5"; python starter_anthropic.py
 ```
 
-或在 Ollama path 换 `qwen2.5:7b`（更大、更稳、但慢）：
+或在 Ollama path 换 `qwen2.5:7b`；行为和成本要用固定 eval 实测：
 
-```bash
-MODEL=qwen2.5:7b python starter.py
+```powershell
+$env:MODEL = "qwen2.5:7b"; python starter.py
 ```
 
 ## 延伸

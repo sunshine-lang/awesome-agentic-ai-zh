@@ -39,6 +39,13 @@ def _run(files: dict, baseline=None, args=()):
         (root / "scripts" / SCRIPT.name).write_text(
             SCRIPT.read_text(encoding="utf-8"), encoding="utf-8"
         )
+        # The gate imports the shared fence parser (md_fences, issue #97),
+        # so the temp repo needs it too or the subprocess dies on ImportError
+        # and every assertion below fails for the wrong reason.
+        _SHARED = SCRIPT.parent / "md_fences.py"
+        (root / "scripts" / _SHARED.name).write_text(
+            _SHARED.read_text(encoding="utf-8"), encoding="utf-8"
+        )
         if baseline is not None:
             (root / "scripts" / "mirror-parity-baseline.json").write_text(
                 json.dumps({"deficits": baseline}, ensure_ascii=False), encoding="utf-8"
@@ -169,6 +176,13 @@ def test_trio_count_drop_fails():
         (root / "scripts" / SCRIPT.name).write_text(
             SCRIPT.read_text(encoding="utf-8"), encoding="utf-8"
         )
+        # The gate imports the shared fence parser (md_fences, issue #97),
+        # so the temp repo needs it too or the subprocess dies on ImportError
+        # and every assertion below fails for the wrong reason.
+        _SHARED = SCRIPT.parent / "md_fences.py"
+        (root / "scripts" / _SHARED.name).write_text(
+            _SHARED.read_text(encoding="utf-8"), encoding="utf-8"
+        )
         (root / "scripts" / "mirror-parity-baseline.json").write_text(
             json.dumps({"trios": 1, "deficits": {}}), encoding="utf-8"
         )
@@ -210,6 +224,13 @@ def test_update_baseline_then_clean():
         (root / "scripts").mkdir()
         (root / "scripts" / SCRIPT.name).write_text(
             SCRIPT.read_text(encoding="utf-8"), encoding="utf-8"
+        )
+        # The gate imports the shared fence parser (md_fences, issue #97),
+        # so the temp repo needs it too or the subprocess dies on ImportError
+        # and every assertion below fails for the wrong reason.
+        _SHARED = SCRIPT.parent / "md_fences.py"
+        (root / "scripts" / _SHARED.name).write_text(
+            _SHARED.read_text(encoding="utf-8"), encoding="utf-8"
         )
         for name, body in files.items():
             (root / name).write_text(body, encoding="utf-8")

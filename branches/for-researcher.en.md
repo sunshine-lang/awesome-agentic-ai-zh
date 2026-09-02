@@ -2,207 +2,110 @@
 
 > [繁體中文](./for-researcher.md) | [简体中文](./for-researcher.zh-Hans.md) | **English**
 
-> 🚀 **Computational researchers** (can run Python scripts, have an API key, and can use git) can jump into the advanced path directly. **Non-programming researchers** (humanities/social sciences, clinical research, literature-first work) can start with literature Q&A (NotebookLM) and Zotero AI tools, then read [`resources/setup-guide.en.md` A-C](../resources/setup-guide.en.md) when needed.
+[← Back to the main route](../README.en.md)
 
-> [← Back to main path README](../README.en.md) · Continue here after **Track A's A3** or **Track B's Stage 7**. Apply agentic AI to research workflows.
+<!-- freshness: canonical=branches/for-researcher.md; verified_on=2026-08-29; scope=research-tools,citations,privacy,reproducibility,project-status; max_age_days=90 -->
 
-## Use Cases
+<a id="use-cases"></a>
+## 📌 What this path helps you do
 
-Research days break into stages, and AI plays a different role at each stage. Use this table to orient yourself:
+This page does not make AI your researcher. It helps with one simpler task: **find sources, understand them, and confirm that answers are actually supported by evidence.**
 
-| Stage | Common pain point | How AI helps | Recommended tools (light to heavy) |
+- If you use a terminal or Python, come after [Track A A3](../tracks/cli/A3-cli-production.en.md) or [Track B Stage 7](../stages/07-multi-agent-production.en.md).
+- If you do not code, start with the first exercise below. You only need a browser and one public paper.
+
+## 🎯 Learning goals
+After this page, you can:
+1. Separate what AI says from what the original text says.
+2. Check each numbered reference instead of trusting an answer just because it has reference numbers.
+3. Know which data may be uploaded and which requires permission from an institution or data owner.
+4. Keep enough records for yourself or a colleague to reproduce the work.
+
+## 🧩 Eight core terms
+- **Source**: original material used for verification, such as a paper, dataset, or research record.
+- **Claim**: a checkable statement, such as “method A performs better on dataset B.”
+- **Citation**: a signpost back to a source location; it does not guarantee that the source supports the claim.
+- **Source Verification**: open the original and check that content, scope, and limitations match the answer.
+- **Literature RAG**: retrieve passages from permitted literature, then give them to a model to answer.
+- **Reproducibility**: others can rerun comparable results from your data, steps, versions, and settings.
+- **Private Data**: content that cannot be freely published or uploaded, such as participant data, medical records, unpublished manuscripts, or company secrets.
+- **Human Review**: a person is responsible for claims, citations, code, tables, and the final decision; AI cannot sign or assume responsibility.
+
+<a id="literature-rag--qa"></a>
+## 🛠 First exercise: verify three answers about one paper
+Before uploading, confirm that the **license or copyright** and the **tool's terms** allow it. Publicly readable is not permission to upload a paper to another service.
+
+Use the public paper [Attention Is All You Need](https://arxiv.org/abs/1706.03762). Add the paper to a citation-capable tool and paste:
+```text
+Answer only from this paper. Attach a citation to each answer; if evidence is missing, write “unsupported” and do not guess.
+1. What problem does the paper aim to solve?
+2. What are the main parts of the proposed method?
+3. Which experiments support the result, and what limitations do the authors state?
+After answering, list the original text for each citation. Do not present your inference as an author claim.
+```
+Then open each citation, read answer and original text together, and mark unsupported sentences **unsupported** instead of adding an unrelated citation.
+
+<a id="tier-recommendations"></a>
+## 📚 Choose an entry point
+| What you want | Start with | Why | Rating |
 |---|---|---|---|
-| **Literature exploration** | You do not know the classic papers in a field | Recommendations + summaries + comparison | NotebookLM → paper-qa → gpt-researcher |
-| **Close reading** | You lose the thread halfway through a PDF / miss the claim | Extract claims, figures, citations, and notes | Zotero + zotero-gpt → zotero-skills |
-| **Research design** | The RQ is fuzzy, or the method choice is unclear | Clarifying dialogue and trade-off mapping | Claude.ai chat → ai-research-skills |
-| **Experiments / coding** | Boilerplate repeats and plotting eats time | Write / edit code and batch refactor | Claude Code → codex-delegate |
-| **Manuscript writing** | Drafts stall or sentences do not land | Outline → paragraphs → polishing | Claude.ai → Gemini CLI (long drafts) |
-| **Revision / submission** | Journal requirements are easy to miss | banned-word / figure-text / submission checklist | academic-writing-skills |
-| **Cross-paper synthesis** | Five papers need to talk to each other and context explodes | Read 1M tokens at once and organize the synthesis | Gemini CLI |
+| Ask about one paper in a browser | [Gemini Notebook (formerly NotebookLM)](https://notebooklm.google.com/) | Return from source uploads to citations | ⭐⭐⭐⭐⭐ |
+| Organize your literature library | [Zotero](https://www.zotero.org/) | Organize PDFs, authors, years, and notes first | ⭐⭐⭐⭐⭐ |
+| Build rerunnable literature RAG in Python | [PaperQA2](https://github.com/Future-House/paper-qa) | Science-document and citation-centered workflow | ⭐⭐⭐⭐⭐ |
 
-> 💡 **Computational vs non-programming researchers**: the recommended tools run from light to heavy. Non-programming researchers can usually stop at the **first** tool in each row; computational researchers should move right only when they need automation.
+Gemini Notebook is Google’s current name for NotebookLM as of 2026-07-16; the old name remains for recognition. A citation is an entry point for checking, not a guarantee.
 
-## Curated Projects
+<a id="required-reading"></a>
+## 📖 Required reading
+Read in order. The first two prevent treating citations as guarantees; the next four help preserve sources, code, data, and results:
+1. [Gemini Notebook citation help](https://support.google.com/gemininotebook/answer/16179559): open citations and read context.
+2. [Gemini Notebook privacy and terms](https://support.google.com/gemininotebook/answer/17004255): understand data handling before upload.
+3. [Zotero quick start](https://www.zotero.org/support/quick_start_guide): organize authors, years, PDFs, and notes.
+4. [PaperQA2 README](https://github.com/Future-House/paper-qa): connect literature RAG answers to documents.
+5. [DVC command reference](https://doc.dvc.org/command-reference): version data and rerunnable pipelines with Git.
+6. [Zenodo quickstart](https://help.zenodo.org/docs/get-started/quickstart/): preserve publishable data, code, or materials in a citable version.
 
-> 💡 **Want to wire Claude Code into NotebookLM, Obsidian, Notion, Excel, PDF, Excalidraw, and other research tools?** 77+ integrations in [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) (grouped by use case). The section below keeps research-specific tools and marketplaces.
+<a id="curated-projects"></a><a id="outline--writing"></a><a id="citation-manager-integrations"></a>
+## ⭐ Curated research tools and projects
+<small>Tool names, licenses, and repository status were checked against official pages and the GitHub API on 2026-08-29 UTC. Ratings are editorial ratings for this map, not GitHub stars or rankings.</small>
 
-### Research Workflow Marketplaces
+<table><thead><tr><th scope="col">Category</th><th scope="col">Official tool / project</th><th scope="col">Good for</th><th scope="col">Status / license</th><th scope="col">Know this limitation</th><th scope="col">Rating</th></tr></thead>
+<tbody><tr><th scope="rowgroup" rowspan="3">Start and organize</th><td><a href="https://notebooklm.google.com/">Gemini Notebook (formerly NotebookLM)</a></td><td>Source-grounded Q&A and citations</td><td>Available; cloud service</td><td>Check every citation; review policy before private data</td><td>⭐⭐⭐⭐⭐</td></tr><tr><td><a href="https://www.zotero.org/">Zotero</a></td><td>Manage PDFs, metadata, notes, and citations</td><td>Available; desktop / web</td><td>Manages sources; does not judge research quality</td><td>⭐⭐⭐⭐⭐</td></tr><tr><td><a href="https://github.com/Future-House/paper-qa">Future-House/paper-qa</a></td><td>Build citation-grounded literature RAG in Python</td><td>Active; Apache-2.0</td><td>Configure model and sources; evaluate quality yourself</td><td>⭐⭐⭐⭐⭐</td></tr></tbody>
+<tbody><tr><th scope="rowgroup" rowspan="4">Explore and write</th><td><a href="https://github.com/assafelovic/gpt-researcher">assafelovic/gpt-researcher</a></td><td>Multi-source search and research briefs</td><td>Active; Apache-2.0</td><td>Find candidate sources; not the final citation judge</td><td>⭐⭐⭐⭐</td></tr><tr><td><a href="https://github.com/stanford-oval/storm">stanford-oval/storm</a></td><td>Organize viewpoints, outlines, and long-form writing</td><td>Usable; MIT; slower updates</td><td>Check dependencies and sources before use</td><td>⭐⭐⭐⭐</td></tr><tr><td><a href="https://github.com/kaixindelele/ChatPaper">kaixindelele/ChatPaper</a></td><td>Chinese paper summaries, translation, and writing support</td><td>Usable; CC BY-NC-ND 4.0</td><td>Noncommercial, no-derivatives license; not a general open-source license</td><td>⭐⭐⭐⭐⭐</td></tr><tr><td><a href="https://github.com/MuiseDestiny/zotero-gpt">MuiseDestiny/zotero-gpt</a></td><td>Interact with literature in Zotero</td><td>Usable; AGPL-3.0</td><td>Maintain plugin and model settings separately</td><td>⭐⭐⭐⭐</td></tr></tbody>
+<tbody><tr><th scope="rowgroup" rowspan="5">Reproducibility and evidence</th><td><a href="https://github.com/asreview/asreview">asreview/asreview</a></td><td>Active-learning support for systematic-review screening</td><td>Active; Apache-2.0</td><td>Ranking saves time; human screening still decides inclusion and keeps the record</td><td>⭐⭐⭐⭐</td></tr><tr><td><a href="https://github.com/treeverse/dvc">treeverse/dvc</a></td><td>Keep data versions, models, and pipelines rerunnable</td><td>Active; Apache-2.0</td><td>Needs Git and storage; versions do not prove conclusions</td><td>⭐⭐⭐⭐⭐</td></tr><tr><td><a href="https://github.com/mlflow/mlflow">mlflow/mlflow</a></td><td>Track parameters, metrics, data, and artifacts across runs</td><td>Active; Apache-2.0</td><td>Tracking does not make an experiment valid; keep secrets and participant data out</td><td>⭐⭐⭐⭐⭐</td></tr><tr><td><a href="https://zenodo.org/">Zenodo</a></td><td>Publish data, code, and materials with a DOI</td><td>Available; cloud service</td><td>Metadata is public; de-identify private data under institutional rules</td><td>⭐⭐⭐⭐⭐</td></tr><tr><td><a href="https://github.com/jupyterhub/repo2docker">jupyterhub/repo2docker</a></td><td>Rebuild a runnable environment from repository settings</td><td>Active; BSD-3-Clause</td><td>A container preserves the environment; also preserve data, hardware needs, and external services</td><td>⭐⭐⭐⭐</td></tr></tbody>
+<tbody><tr><th scope="rowgroup" rowspan="2">Research automation</th><td><a href="https://github.com/flonat/flonat-research">flonat/flonat-research</a></td><td>Research skills, agents, hooks, and LaTeX workflows</td><td>Active; MIT</td><td>Infrastructure example, not universal for every field</td><td>⭐⭐⭐</td></tr><tr><td><a href="https://github.com/SakanaAI/AI-Scientist-v2">SakanaAI/AI-Scientist-v2</a></td><td>End-to-end multi-agent research experiments</td><td>Research reference; custom source-code license</td><td>License requires disclosure of machine-generated manuscripts; authors remain responsible</td><td>⭐⭐⭐⭐</td></tr></tbody>
+<tbody><tr><th scope="rowgroup" rowspan="1">History</th><td><a href="https://github.com/langchain-ai/open_deep_research">langchain-ai/open_deep_research</a></td><td>Study early deep-research agent architecture</td><td>Archived; MIT; historical reference</td><td>Not a current default</td><td>⭐⭐⭐</td></tr></tbody></table>
 
-#### [flonat/claude-research](https://github.com/flonat/claude-research) ⭐⭐⭐
+## ✅ Completion check and next stop
+- [ ] I checked three answers, not just citation numbers.
+- [ ] I found an example supported by the original or marked unsupported.
+- [ ] I did not upload unapproved Private Data.
+- [ ] I saved sources, questions, tool name, date, and my judgment.
 
-Claude Code infrastructure for PhD researchers — skills, agents, hooks, rules for academic workflows. Strong LaTeX/bibliography focus.
+Next: use [Stage 6](../stages/06-memory-rag.en.md) for literature RAG; [Stage 7](../stages/07-multi-agent-production.en.md) for multiple agents; and the [MCP / Skills catalog](../resources/mcp-skills-catalog.en.md) for external tools.
 
----
-
-### Literature RAG / Q&A
-
-#### [Future-House/paper-qa](https://github.com/Future-House/paper-qa) ⭐⭐⭐⭐⭐
-
-| Field | Value |
+<details markdown="1"><summary>⏱ Expand: time, accounts, cost, and data safety</summary>
+The first exercise takes about 20–40 minutes. For Private Data, pause and confirm IRB, institutional policy, contracts, data-owner consent, and tool terms. [Gemini Notebook privacy guidance](https://support.google.com/gemininotebook/answer/17004255) says general content is not directly used to train foundation models unless feedback is provided, and feedback may be reviewed by people; this does not automatically approve research uploads. Plans, quotas, and account rules change, so check official pages rather than preserving fixed prices.
+</details>
+<a id="research-workflow-marketplaces"></a><a id="multi-llm-research-stack-maintainer-setup"></a><a id="multi-agent-for-research"></a><a id="workflows-to-master"></a>
+<details markdown="1"><summary>🧪 Expand: turn one-paper practice into a rerunnable workflow</summary>
+### Literature inbox
+Save DOI, URL, authors, year, and acquisition date; let tools summarize while linking each claim to the original; humans decide read, exclude, or verify and record why.
+### Cross-paper synthesis
+Ask what each paper says before comparing agreement, conflict, and conditions. Do not ask for a complete story before finding citations.
+### Code and experiments
+Save data versions, environment, seed, prompt, model/tool versions, outputs, and human edits. Rerunning does not prove correctness, but missing records hide errors.
+### Before submission
+Check every claim, citation, table, figure, program, and journal rule. Authors make the final judgment and disclose use under journal policy.
+</details>
+<details markdown="1"><summary>🧯 Expand: common errors, alternatives, and troubleshooting</summary>
+| Problem | What to do first |
 |---|---|
-| Stars | ★ 8.9k+ |
-| License | Apache-2.0 |
+| Citation does not support the answer | Mark unsupported, narrow the question, and do not force a related citation |
+| Tool cannot read a scanned PDF | OCR first, then spot-check pages and formulas |
+| Conclusions from papers are mixed | Require paper name and page/paragraph for each claim before synthesis |
+| Data cannot go to the cloud | Use an institutional environment; consider the local RAG route in [Stage 6](../stages/06-memory-rag.en.md) |
+| Automation is too complex | Return to one paper, three questions, and one-by-one checking |
 
-**What it teaches**: PDF Q&A designed for **citation-grounded Q&A** — every answer includes sentence-level citations to reduce hallucination risk. Actual accuracy depends on document type; use the official benchmarks / papers as the reference.
-
-**Best for**: Researchers writing literature reviews who need "every answer must be traceable to its source." More rigorous than generic RAG.
-
----
-
-#### [assafelovic/gpt-researcher](https://github.com/assafelovic/gpt-researcher) ⭐⭐⭐⭐
-
-| Field | Value |
-|---|---|
-| Stars | ★ 28k+ |
-| License | Apache-2.0 |
-
-**What it teaches**: Autonomous deep-research agent — planner + multi-source crawl + report synthesis. Give it a research topic, get a markdown / PDF brief out.
-
-**Best for**: Researchers who need to quickly scope new topics and produce research briefs.
-
----
-
-### Outline & Writing
-
-#### [stanford-oval/storm](https://github.com/stanford-oval/storm) ⭐⭐⭐⭐
-
-| Field | Value |
-|---|---|
-| Stars | ★ 30k+ |
-| License | MIT |
-
-**What it teaches**: Multi-perspective outline-then-write pipeline — plain-language version: (1) simulate different perspectives asking questions, (2) organize those questions into an outline, then (3) generate a Wikipedia-style draft. From Stanford OVAL.
-
-**Best for**: Learning **outline-driven writing**. Great for producing topic briefs from scratch; the closest open-source analog to NotebookLM's structured report flow.
-
-**Notes**: Last push was over 6 months ago — verify the latest commit date before relying on it.
-
----
-
-#### [kaixindelele/ChatPaper](https://github.com/kaixindelele/ChatPaper) ⭐⭐⭐⭐⭐ (Chinese readers)
-
-| Field | Value |
-|---|---|
-| Language | Chinese + Python |
-| Stars | ★ 19k+ |
-| License | NOASSERTION (custom non-commercial) |
-
-**What it teaches**: Full arXiv workflow for Chinese researchers — paper summary + translation + polishing + review-response generation. Maintained by a Chinese team; defaults are friendly to Chinese-language workflows.
-
-**Best for**: Chinese graduate students looking for a Chinese-friendly entry-level paper workflow tool.
-
-**Notes**: License is custom non-commercial — read the original terms before any use; common practice is research / personal use, but you should verify the terms yourself.
-
----
-
-### Citation Manager Integrations
-
-#### [MuiseDestiny/zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt) ⭐⭐⭐⭐
-
-| Field | Value |
-|---|---|
-| Stars | ★ 7k+ |
-| License | AGPL-3.0 |
-
-**What it teaches**: A Zotero LLM plugin — chat with your library, summarize selections, generate inline notes.
-
-**Best for**: Heavy Zotero users who want AI inside their reading workflow without switching tools.
-
-**Notes**: AGPL-3.0 license (copyleft) — derivative products that ship modifications must follow the terms.
-
----
-
-### Multi-LLM Research Stack (Maintainer Setup)
-
-Some research tasks only need Claude (dialogue, design, review). Others waste Claude tokens (large code refactors, long-form drafts). The maintainer's actual setup is **Claude as planner / reviewer, Codex for code, and Gemini for long drafts**. Use this table to decide which model to use when:
-
-| Task type | Example | LLM to use | Why |
-|---|---|---|---|
-| Research design / hypothesis discussion | "Should this RQ use logistic vs survival?" | Claude.ai chat | Collaborative dialogue and context memory |
-| Writing / editing code | "Add logging to 50 simulation scripts" | codex-delegate | Fast mechanical edits without burning Claude tokens |
-| Long-form drafting (Chinese / English) | "Draft an 8-page paper section" | Gemini CLI | 1M context and strong long-form prose |
-| Second opinion | "Ask Gemini to review my discussion section" | Gemini CLI | LLM-vs-LLM comparison makes Claude's own biases easier to spot |
-| Pre-submission audit | "Run banned-word + figure-text checklist" | academic-writing-skills | Structured audit instead of ad hoc LLM judgment |
-
-#### Maintainer's 6 self-used research skills
-
-> ⚠️ **Disclosure**: The following 6 tools are research skills used day to day by the maintainer [@WenyuChiou](https://github.com/WenyuChiou) (Lehigh CEE PhD candidate) and published for people with similar needs. **They have not been independently evaluated by third parties**. Best fit: PhD dissertation writing and cross-paper literature organization. They may not fit your field. Full entries are in [`resources/mcp-skills-catalog.en.md` 13 + 14](../resources/mcp-skills-catalog.en.md#13-research-workflow-skills-academic--paper--lit).
-
-| Tool | Best for stage | One-liner |
-|---|---|---|
-| **[ai-research-skills](https://github.com/WenyuChiou/ai-research-skills)** ⭐⭐⭐⭐⭐ | Full pipeline | 14 research skills packaged as a 5-plugin marketplace; one command installs the set |
-| **[research-hub](https://github.com/WenyuChiou/research-hub)** ⭐⭐⭐⭐ | Literature organization | Zotero + Obsidian + NotebookLM workspace with CLI / MCP / REST / dashboard interfaces |
-| **[zotero-skills](https://github.com/WenyuChiou/zotero-skills)** ⭐⭐⭐⭐ | Reference management | Zotero CLI skill for search / add / classify / tag; complements zotero-gpt, which chats inside Zotero while this operates from outside |
-| **[academic-writing-skills](https://github.com/WenyuChiou/academic-writing-skills)** ⭐⭐⭐ | Pre-submission | banned-word audit, figure-text coupling, and submission checklist; per-paper journal_format / style_overrides customization |
-| **[codex-delegate](https://github.com/WenyuChiou/codex-delegate)** ⭐⭐⭐⭐⭐ | Coding | Standard Claude planner + Codex executor skill for batch refactor / boilerplate / migration work |
-| **[gemini-delegate-skill](https://github.com/WenyuChiou/gemini-delegate-skill)** ⭐⭐⭐ (⚠️ archived) | Long drafts / synthesis | Claude planner + Gemini for 1M-context long-form writing / CJK / second opinions. **⚠️ Repo archived 2026-07** — the workflow still works directly via [Gemini CLI](https://github.com/google-gemini/gemini-cli) |
-
----
-
-### Multi-Agent for Research
-
-#### [langchain-ai/open_deep_research](https://github.com/langchain-ai/open_deep_research) ⭐⭐⭐⭐⭐
-
-| Field | Value |
-|---|---|
-| Stars | ★ 12k+ |
-| License | MIT |
-
-**What it teaches**: Open-source Deep Research — supports both single-agent and supervisor + multi-researcher architectures (the multi-agent path currently lives in `src/legacy/`), parallel search, citation-grounded report synthesis. A solid reference for "LLM agent that auto-produces a cited brief."
-
-**Best for**: Researchers building "agent auto-generates a cited brief" workflows. A solid open-source pick when you want a maintained reference implementation.
-
-**Notes**: Depends on LangGraph + search tools (API key required).
-
----
-
-#### [SakanaAI/AI-Scientist-v2](https://github.com/SakanaAI/AI-Scientist-v2) ⭐⭐⭐⭐
-
-| Field | Value |
-|---|---|
-| Stars | ★ 6.9k+ |
-| License | The AI Scientist Source Code License (source-available, non-commercial + manuscript-disclosure clause) |
-
-**What it teaches**: End-to-end multi-agent science loop: ideate → code → experiment → write → peer-review. Sakana AI's research implementation of "AI writes a full ML paper."
-
-**Best for**: Researchers who want to see "what does a swarm of agents running a full research lifecycle look like." Architecture reference, not a production tool.
-
-**Notes**: Outputs are demo-level (not field-ready), ML/CS-domain bias. License is a custom source-available term (with a manuscript-disclosure clause) — read the LICENSE file before use.
-
----
-
-> Still missing: actively-maintained peer-review automation, conference-review pipelines. If you've built or know of one, please open a PR.
-
-## Required Reading
-
-1. [The Effortless Academic — Claude Code beginner guides](https://effortlessacademic.com/claude-code-and-cowork-for-academics-beginner-guide-part-1/)
-2. [Pedro Sant'Anna — Researcher setup guide](https://paulgp.substack.com/p/getting-started-with-claude-code)
-
-## Workflows to Master
-
-The biggest mistake researchers make with AI is opening ChatGPT only when they get stuck. The key is making AI a daily tool by setting a cadence. The 7 workflows below are ordered by usage frequency and are routines the maintainer actually runs, not hypotheticals.
-
-| Frequency | Workflow | How to run it (≤ 3 steps) | Recommended tools | Best for |
-|---|---|---|---|---|
-| **Daily** | Literature inbox triage | (1) Put yesterday's papers into paper-qa<br>(2) Extract claims + a 4-5 line summary<br>(3) Move notes into Zotero / Obsidian | paper-qa + zotero-gpt | All researchers |
-| **Daily** | Writing sprint (25 min) | (1) Give one paragraph to Claude.ai<br>(2) Run banned-word + figure-text audit<br>(3) Merge the revision into the main draft | Claude.ai + academic-writing-skills | Paper-writing stage |
-| **Weekly** | Cross-paper synthesis | (1) Feed 5-10 PDFs to Gemini<br>(2) Ask where the papers disagree<br>(3) Turn the answer into a 1-page brief | Gemini CLI (1M context) | Computational researchers |
-| **Weekly** | Zotero cleanup | (1) Mark unread / read<br>(2) Retag items<br>(3) Pull out PDFs that should be archived | zotero-skills or zotero-gpt | All researchers |
-| **Monthly** | Research progress brief | (1) Pull recent notes from Obsidian + Zotero + NotebookLM<br>(2) Summarize 5 progress points<br>(3) Send to your advisor | research-hub | People using all 3 tools |
-| **Per paper** | Final pre-submission audit | (1) banned-word audit<br>(2) figure-text coupling check<br>(3) submission checklist | academic-writing-skills | Final week before submission |
-| **Per paper** | Multi-agent peer review | (1) Claude reviews logic / argument<br>(2) Codex checks code / table numbers<br>(3) Gemini reviews prose / clarity | codex-delegate + Gemini CLI | Pre-submission second opinion |
-
-> 💡 **Starter playbook**: run the daily inbox triage and writing sprint for one month first. Add advanced workflows only after the habit sticks.
-
-## Tier Recommendations
-
-Researchers do not need to install Claude Code on day one. This is the recommended progression:
-
-| Tier | Tools | Best for | Learning cost |
-|---|---|---|---|
-| **Tier 0** | Claude.ai web + NotebookLM | Non-programming researchers, humanities / social sciences, clinical research | 0 (browser skills are enough) |
-| **Tier 1** | Claude Desktop + Zotero MCP / Obsidian MCP | Researchers already using Zotero / Obsidian | Half-day setup |
-| **Tier 2** | Claude Code + ai-research-skills | Computational researchers who mostly write / edit code | 1-2 days to get started |
-| **Tier 3** | Claude Code + codex-delegate + Gemini CLI + research-hub | People building a multi-LLM research pipeline across multiple tools | 1 week setup + ongoing tuning |
-
-**Most researchers can stop at Tier 1-2**. Tier 3 is worth it only when you have a lot of repeated workflows, such as running the same paper synthesis every week.
+No tool replaces IRB, data governance, author responsibility, or domain expertise.
+</details>

@@ -2,8 +2,9 @@
 """
 Internal anchor validator.
 
-掃所有 .md 內的 cross-file + same-file anchor link、驗 anchor 真實存在
-target file 的 H1-H6 內。GitHub markdown slugification 規則。
+掃所有 .md 內的 cross-file + same-file anchor link，驗 anchor 真實存在於
+target file 的 H1-H6 或明示 `<a id>`／`<a name>`。Markdown heading 使用
+GitHub slug 規則；HTML ID 保持瀏覽器實際使用的精確值。
 
 Usage:
     python scripts/check-anchors.py [--strict]
@@ -25,6 +26,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
 
 # --- Config ---
@@ -43,8 +45,11 @@ ANCHOR_LINK_RE = re.compile(r'\[([^\]]+)\]\(([^)]*?)#([^)]+)\)')
 # Markdown header: ## or ### etc., capture H2-H6
 HEADER_RE = re.compile(r'^(#{1,6})\s+(.+?)\s*$', re.MULTILINE)
 
-# Code block fence (to skip anchor matches inside code)
-CODE_FENCE_RE = re.compile(r'^```', re.MULTILINE)
+# NOTE: a `CODE_FENCE_RE = re.compile(r'^```')` used to live here. It was never
+# referenced — strip_code_blocks did its own `line.startswith` — and it encodes
+# the fence rule that issue #95 proved wrong (any ``` opens or closes). Removed
+# rather than left as a trap. The fence parser now lives in md_fences.py,
+# shared by every gate (issue #97).
 
 
 def slugify(text: str) -> str:
@@ -91,23 +96,73 @@ def slugify(text: str) -> str:
     return s
 
 
-def strip_code_blocks(content: str) -> str:
-    """Replace content inside ``` ... ``` fences with blanks to skip anchor matches inside."""
-    lines = content.split('\n')
-    out = []
-    in_code = False
-    for line in lines:
-        if line.startswith('```'):
-            in_code = not in_code
-            out.append('')
-            continue
-        out.append('' if in_code else line)
-    return '\n'.join(out)
+# The fence parser lives in md_fences.py so every gate shares ONE implementation.
+# Six scripts used to carry their own copy; each was wrong in at least one way and
+# one of them shipped #95 (four headings rendering as code on the published site
+# while every gate read green). sys.path insert so this resolves whether the script
+# is run directly (scripts/ is already on the path) or exec'd via importlib by a test.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from md_fences import strip_code_blocks  # noqa: E402  — re-exported for callers
+
+
+class _ExplicitAnchorParser(HTMLParser):
+    """Collect exact ``id``/``name`` values from real ``<a>`` attributes."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.anchors: set[str] = set()
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        if tag.lower() != "a":
+            return
+        for attr_name, value in attrs:
+            if attr_name.lower() in {"id", "name"} and value:
+                self.anchors.add(value)
+
+
+def collect_heading_anchors(content: str) -> set[str]:
+    """Generated GitHub-style slugs for visible Markdown H1-H6 headings."""
+    visible = strip_code_blocks(content)
+    return {slugify(m.group(2)) for m in HEADER_RE.finditer(visible)}
+
+
+def collect_explicit_anchors(content: str) -> set[str]:
+    """Exact visible ``<a id>`` and ``<a name>`` values; never slugified.
+
+    An explicit HTML fragment is a literal browser target. For example,
+    ``<a id="Foo.Bar">`` is reached by ``#Foo.Bar``—not by ``#foobar``.
+    Parsing attributes also prevents ``data-id`` and ``data-name`` from being
+    mistaken for real targets.
+    """
+    parser = _ExplicitAnchorParser()
+    parser.feed(strip_code_blocks(content))
+    parser.close()
+    return parser.anchors
 
 
 def collect_anchors(content: str) -> set[str]:
-    """All anchor slugs available in this file (from H1-H6)."""
-    return {slugify(m.group(2)) for m in HEADER_RE.finditer(content)}
+    """All visible targets: generated heading slugs plus exact HTML anchors.
+
+    Code blocks are stripped first. Without that, a `## Heading` shown INSIDE a
+    fenced example counts as a real anchor target, so a link pointing at a
+    heading that only exists in a code sample validates green while the browser
+    finds nothing to jump to. That was 642 phantom targets across this repo
+    (issue #97); no live link depended on one, which is why it stayed invisible.
+
+    The LINK side has been stripped since #95 — this is the TARGET side, and it
+    was the half nobody had connected.
+    """
+    return collect_heading_anchors(content) | collect_explicit_anchors(content)
+
+
+def anchor_exists(content: str, fragment: str) -> bool:
+    """Match explicit fragments exactly, or headings by generated slug rules."""
+    return (
+        fragment in collect_explicit_anchors(content)
+        or slugify(fragment) in collect_heading_anchors(content)
+    )
 
 
 def parse_anchor_links(content: str, file_path: Path) -> list[tuple[int, str, str]]:
@@ -115,7 +170,7 @@ def parse_anchor_links(content: str, file_path: Path) -> list[tuple[int, str, st
     Extract (line_no, target_file, anchor) tuples from anchor-style links.
     Skips matches inside code blocks.
     """
-    clean = strip_code_blocks(content)
+    clean = strip_code_blocks(content, source=str(file_path))
     results = []
     for lineno, line in enumerate(clean.split('\n'), 1):
         for m in ANCHOR_LINK_RE.finditer(line):
@@ -148,16 +203,20 @@ def validate_file(path: Path, repo_root: Path) -> list[tuple[Path, int, str]]:
     """Validate anchors in one file. Returns list of (file, lineno, message)."""
     broken = []
     content = path.read_text(encoding='utf-8')
-    own_anchors: set[str] | None = None  # lazy
+    own_content: str | None = None  # lazy; keeps exact HTML IDs separate from slugs
 
-    for lineno, target_raw, anchor in parse_anchor_links(content, path):
-        anchor_slug = slugify(anchor)
+    # Repo-relative, matching every other diagnostic this script prints.
+    try:
+        rel_for_msgs = path.relative_to(repo_root)
+    except ValueError:
+        rel_for_msgs = path
 
+    for lineno, target_raw, anchor in parse_anchor_links(content, rel_for_msgs):
         if target_raw == '':
             # Same-file anchor [text](#section)
-            if own_anchors is None:
-                own_anchors = collect_anchors(content)
-            if anchor_slug not in own_anchors:
+            if own_content is None:
+                own_content = content
+            if not anchor_exists(own_content, anchor):
                 broken.append((path, lineno, f'same-file anchor not found: #{anchor}'))
         else:
             # Cross-file: resolve target path relative to current file
@@ -170,8 +229,8 @@ def validate_file(path: Path, repo_root: Path) -> list[tuple[Path, int, str]]:
             if not tgt_path.exists():
                 broken.append((path, lineno, f'target file not found: {target_raw}'))
                 continue
-            target_anchors = collect_anchors(tgt_path.read_text(encoding='utf-8'))
-            if anchor_slug not in target_anchors:
+            target_content = tgt_path.read_text(encoding='utf-8')
+            if not anchor_exists(target_content, anchor):
                 broken.append(
                     (path, lineno, f'anchor not found in {target_raw}: #{anchor}')
                 )

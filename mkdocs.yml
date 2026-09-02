@@ -1,5 +1,5 @@
 site_name: awesome-agentic-ai-zh
-site_description: A trilingual learning roadmap for agentic AI (English / 繁中 / 简中) — 8 stages from LLM basics to multi-agent systems, with hands-on exercises and curated projects.
+site_description: A trilingual 10-stop learning roadmap for agentic AI (English / 繁中 / 简中) — 8 topic stages plus Stage 0 readiness and the Stage 7.5 reading stop, with hands-on exercises and curated projects.
 site_url: https://wenyuchiou.github.io/awesome-agentic-ai-zh/
 repo_url: https://github.com/WenyuChiou/awesome-agentic-ai-zh
 repo_name: WenyuChiou/awesome-agentic-ai-zh
@@ -116,8 +116,26 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - tables
+  # slugify: python-markdown's default strips non-ASCII, so every CJK heading
+  # ("### Loop Engineering（迴圈工程）") rendered as id="loop-engineering" while
+  # GitHub — and scripts/check-anchors.py, which validates against GitHub's
+  # github-slugger rules — produce "loop-engineering迴圈工程". The two disagreed
+  # on 151 distinct fragments: the gate stayed green while those jump-links were
+  # dead on the published site. Emoji-prefixed ASCII headings diverged too, since
+  # GitHub keeps the leading separator that python-markdown strips.
+  # pymdownx's slugify(case="lower") reproduces check-anchors.py's output exactly
+  # on every heading in this repo (4344 real headings), so the SITE and the GATE
+  # now share one rule. GitHub is aligned too except for one documented case:
+  # it preserves U+FE0F where both of these strip it, so a heading carrying a
+  # variation selector has no fragment that works in both. That is guarded
+  # separately — a linked-to heading may not contain one.
+  # All of this is pinned by scripts/test_anchor_slug_parity.py; do not change
+  # this block without running it.
   - toc:
       permalink: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tasklist:
@@ -142,18 +160,23 @@ nav:
   - 書本版: https://wenyuchiou.github.io/awesome-agentic-ai-zh/book/
   - 共用基礎:
       - Stage 0 — Foundations: stages/00-foundations.md
-      - Stage 1 — LLM Basics: stages/01-llm-basics.md
+      - Stage 1 — LLM Basics:
+          - Overview: stages/01-llm-basics.md
+          - Model Training & Adaptation: resources/model-training-guide.md
       - Stage 2 — Prompt Engineering: stages/02-prompt-engineering.md
   - Track A — CLI:
       - A1 — CLI Intro: tracks/cli/A1-cli-intro.md
       - A2 — CLI Workflow: tracks/cli/A2-cli-workflow.md
       - A3 — CLI Production: tracks/cli/A3-cli-production.md
   - Track B — Agent:
-      - Stage 3 — Tool Use & Hello Agent: stages/03-tool-use-and-hello-agent.md
-      - Stage 4 — Agent Frameworks: stages/04-agent-frameworks.md
+      - Stage 3 — Tool Use & Your First Agent Loop: stages/03-tool-use-and-hello-agent.md
+      - Stage 4 — Workflow Graphs & Agent Frameworks: stages/04-agent-frameworks.md
       - Stage 5 — Claude Code Ecosystem: stages/05-claude-code-ecosystem.md
-      - Stage 6 — Memory & RAG: stages/06-memory-rag.md
-      - Stage 7 — Multi-Agent: stages/07-multi-agent-production.md
+      - Stage 6 — Memory & RAG:
+          - Overview: stages/06-memory-rag.md
+          - Advanced RAG: resources/advanced-rag.md
+          - Agent Memory: resources/agent-memory.md
+      - Stage 7 — Agent Production Engineering：Harness、Loop 與 Graph: stages/07-multi-agent-production.md
       - Stage 7.5 — Advanced Agentic: stages/07.5-advanced-agentic-concepts.md
       - Stage 8 — Agent Interfaces: stages/08-agent-interfaces.md
   - 讀者分流:

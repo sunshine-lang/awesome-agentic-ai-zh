@@ -5,7 +5,10 @@ refresh-stars.py — 用 `gh api` 把所有 GitHub repo 的星數抓最新值，
 用法：
     python scripts/refresh-stars.py              # 列出所有有變化的 entry
     python scripts/refresh-stars.py --threshold 20  # 只列差距 > 20% 的
-    python scripts/refresh-stars.py --check      # 退出 code 1 如果任何 entry 過時超過門檻
+    python scripts/refresh-stars.py --check      # 退出 code 1 如果任何 entry 真的過時
+
+「真的過時」= 差距超過門檻 **而且**算繪後的 `★ Xk+` 字串會改變。只有百分比超標
+但四捨五入後字串一樣的（`10k+` → `10k+`）不算，否則 `--check` 永遠不會綠。
 
 環境需求：
     pip install requests
@@ -17,6 +20,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -35,10 +39,39 @@ MD_GLOB = "**/*.md"
 # check-anchors), 2026-08-03.
 EXCLUDE_DIRS = {".git", ".github", ".ai", ".claude", "node_modules", "_build", "_site", ".venv"}
 
+# Same reasoning as .github, one level down: these files DISCUSS star counts
+# rather than DECLARING them, so every number in them is a quotation, not a
+# claim to keep fresh.
+#   CHANGELOG.md — records what a count WAS on a date ("★ 25 → 29", "★ 11k+").
+#     Rewriting those falsifies the history they exist to preserve. Measured
+#     at the v2026.08.11 tag: 30 historical ★, 0 currently bound to a repo, so
+#     --apply could not reach them yet — this closes it before a future entry
+#     pairs a repo URL with a ★ on one line and quietly makes them rewritable.
+#     (The ★ total moves every time anyone writes a changelog entry; "0 bound"
+#     is the number that actually characterises the exposure.)
+#   It also generates its own false advisories: writing the 2026-08-11 entry, a
+#     sentence *describing* a counter-example ("a line saying `agents <N>k+
+#     stars` identifies nothing") was itself counted as a prose star claim.
+#     Rewording sentence-by-sentence is whack-a-mole — a changelog about star
+#     counts will always contain star-count-shaped text.
+EXCLUDE_FILES = {"CHANGELOG.md"}
+
 # 抓 GitHub repo URL：https://github.com/owner/repo
 GITHUB_RE = re.compile(r"https://github\.com/([\w.-]+)/([\w.-]+?)(?:[#?/)\s]|$)")
 # 抓 markdown 內標註的 stars：`| Stars | ★ 12k+ |` 或 inline `★ 12k+`
 STARS_RE = re.compile(r"★\s*([\d.]+)\s*([kKmM]?)\+?")
+
+# A count written as prose ("108k+ stars" / "108k+ 星") is invisible to STARS_RE,
+# so it drifts for exactly as long as it takes a human to notice the sentence:
+# browser-use sat at "86k stars" across 21 places in all three locales while the
+# repo was actually at 108,651 (found 2026-08-10, by reading — no gate reported it).
+#
+# This pattern makes those VISIBLE. It deliberately does NOT make them
+# auto-rewritable: the --apply write-back emits `★ {fmt_stars(n)}` in place of the
+# matched text, which would eat the trailing word and turn "Why is browser-use so
+# popular (86k stars)?" into "... (★ 108k+)?" — and would have to guess the right
+# word per locale (stars / 星). Report it; a human edits the sentence.
+PROSE_STARS_RE = re.compile(r"(?<![\d.])([\d.]+)\s*([kKmM])\+?\s*(?:stars?|顆星|颗星|星)", re.I)
 
 # 排除的假 / 範本 repo
 PLACEHOLDER_REPOS = {
@@ -86,6 +119,10 @@ def find_md_files(root: Path) -> list[Path]:
         # Same bug as the 2026-08-02 check-locale-links.py fix.
         if any(part in EXCLUDE_DIRS for part in fp.relative_to(root).parts):
             continue
+        # Matched on the basename, so a CHANGELOG.md in any subdirectory is
+        # skipped too — they are all release history, wherever they sit.
+        if fp.name in EXCLUDE_FILES:
+            continue
         files.append(fp)
     return files
 
@@ -104,18 +141,58 @@ def parse_stars_text(s: str) -> int | None:
     return int(num)
 
 
-def fetch_stars(repo: str) -> int | None:
-    """gh api repos/<owner>/<repo>"""
-    try:
-        result = subprocess.run(
-            ["gh", "api", f"repos/{repo}", "--jq", ".stargazers_count"],
-            capture_output=True, text=True, timeout=15
-        )
-        if result.returncode != 0:
-            return None
-        return int(result.stdout.strip())
-    except (subprocess.SubprocessError, ValueError):
-        return None
+#: Returned when the API says the repo is really gone (404). Distinct from None,
+#: which means "could not determine" — see fetch_stars.
+FETCH_GONE = object()
+
+
+def fetch_stars(repo: str, retries: int = 2) -> "int | object | None":
+    """gh api repos/<owner>/<repo>. Three outcomes, deliberately distinct.
+
+    * ``int``          — the live star count.
+    * ``FETCH_GONE``   — the API returned 404. The repo really is gone/renamed/private.
+    * ``None``         — we could NOT determine. 403 secondary rate limit, 401 bad
+      credentials, 451, 5xx, `gh` not logged in, or a malformed body all land here.
+
+    The three-way split matters because the caller publishes the result. Collapsing
+    "could not determine" into "not found" prints a false public claim about someone
+    else's repository and fails --check. Measured 2026-08-10: a clean scan reported
+    21st-dev/magic-mcp as not-found while it was live at 5,630 stars and an immediate
+    re-query returned it fine. Retrying narrows that window but cannot close it — with
+    MAX_WORKERS parallelism across ~275 repos a 403 secondary rate limit is the
+    realistic failure, and it will not clear in a few seconds of backoff. So the
+    unknown case is reported as unknown rather than guessed at.
+    """
+    for attempt in range(retries + 1):
+        try:
+            result = subprocess.run(
+                ["gh", "api", f"repos/{repo}", "--jq", ".stargazers_count"],
+                capture_output=True, text=True, timeout=20
+            )
+            if result.returncode == 0:
+                return int(result.stdout.strip())
+            # A real 404 is terminal; anything else is worth another try.
+            if "404" in result.stderr or "Not Found" in result.stderr:
+                return FETCH_GONE
+        except (subprocess.SubprocessError, ValueError):
+            pass
+        if attempt < retries:
+            time.sleep(1.5 * (attempt + 1))
+    return None
+
+
+def is_real_drift(declared: int, latest: int, threshold: float) -> bool:
+    """True only if the entry is over threshold AND the rendered text would change.
+
+    pct_diff is computed on the parsed int ("10k+" -> 10000) while the write-back
+    emits fmt_stars(latest) — "10k+" again for anything under 11000. Without the
+    second clause such an entry is re-flagged and re-written on every run and
+    --check can never go green. Measured 2026-08-10: 24 of 110 reported entries.
+    """
+    if declared == 0:
+        return True
+    pct_diff = abs(latest - declared) / declared * 100
+    return pct_diff >= threshold and fmt_stars(latest) != fmt_stars(declared)
 
 
 def fmt_stars(n: int) -> str:
@@ -126,6 +203,72 @@ def fmt_stars(n: int) -> str:
     if n >= 1_000:
         return f"{n/1000:.1f}k+".replace(".0k", "k")
     return str(n)
+
+
+def prose_value(m: "re.Match") -> int:
+    """`108k+ stars` / `108k+ 星` -> 108000. Shared by both prose passes."""
+    return int(float(m.group(1)) * {"k": 1_000, "m": 1_000_000}[m.group(2).lower()])
+
+
+#: Repo short names too generic to bind a prose count by name. A line saying
+#: "agents 12k+ stars" tells us nothing about WHICH agents repo, and this repo
+#: links several (livekit/agents, openai/agents, ...). Binding those by name
+#: would attribute one project's count to another. Ambiguity is reported instead.
+GENERIC_REPO_NAMES = {
+    "agents", "agent", "skills", "docs", "cookbook", "examples", "api",
+    "cli", "sdk", "mcp", "core", "app", "web", "ai", "chat", "tools",
+}
+
+
+def bind_re(repo: str) -> "re.Pattern":
+    """Match a repo's short name as a standalone token in prose.
+
+    ``browser-use/browser-use`` -> matches "browser-use" in "Why is browser-use
+    so popular", but not inside "browser-useful" or "mcp-server-browserbase".
+    The boundaries are ASCII-class rather than ``\\b`` on purpose: these names sit
+    inside CJK sentences ("為什麼 browser-use 這麼火"), where ``\\b`` behaves
+    differently around non-ASCII neighbours.
+
+    Short names in GENERIC_REPO_NAMES get a pattern that never matches, so they
+    fall through to the "ambiguous / unbindable" report rather than binding.
+    """
+    short = repo.split("/")[-1]
+    if short.lower() in GENERIC_REPO_NAMES:
+        return re.compile(r"(?!)")          # never matches
+    return re.compile(r"(?<![A-Za-z0-9_-])" + re.escape(short) + r"(?![A-Za-z0-9_-])",
+                      re.IGNORECASE)
+
+
+def apply_replacements(by_file: "dict[Path, list[tuple[int, str, str]]]") -> tuple[int, int]:
+    """Rewrite the given ``{path: [(line_no, old_text, new_text)]}`` in place.
+
+    Returns ``(replacements_applied, files_rewritten)``. Both counters move only on
+    text that actually changed: a queued replacement whose ``new_text`` equals what
+    is already on the line is a no-op and must not be counted, and a file whose every
+    replacement is a no-op must not be rewritten or counted.
+
+    This is what the tool prints as its own summary, so an over-count is a false
+    public claim about what was edited — on 2026-08-10 an unconditional write
+    reported "110 fixes across 44 files" when the truth was 86 across 38. It lives
+    out here rather than inline in main() so a test can exercise the real counting
+    path instead of a copy of it.
+    """
+    applied = files_changed = 0
+    for fp, replacements in by_file.items():
+        lines = fp.read_text(encoding="utf-8").splitlines(keepends=True)
+        applied_here = 0
+        for line_no, old_text, new_text in replacements:
+            idx = line_no - 1
+            if 0 <= idx < len(lines) and old_text in lines[idx]:
+                before = lines[idx]
+                lines[idx] = lines[idx].replace(old_text, new_text, 1)
+                if lines[idx] != before:
+                    applied_here += 1
+        if applied_here:
+            fp.write_text("".join(lines), encoding="utf-8")
+            files_changed += 1
+            applied += applied_here
+    return applied, files_changed
 
 
 def detect_stars(lines: list[str], i: int) -> tuple[int | None, str | None, int]:
@@ -170,6 +313,14 @@ def detect_stars(lines: list[str], i: int) -> tuple[int | None, str | None, int]
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--prose-threshold", type=int, default=5,
+                        help="散文星數的獨立門檻（預設 5,比 --threshold 更嚴）。刻意不跟"
+                             " --threshold 綁在一起,而且刻意更低:★ 格式的 drift 跑一次"
+                             " --apply 就自己好了,所以 CI 用寬門檻（50%%）只挑嚴重的沒關係;"
+                             "散文格式**修不動**、只能等人改句子,門檻放寬等於永遠不會有人知道。"
+                             "實測:browser-use 卡在 86k / 實際 108,651 是 26%% 落差,在"
+                             " --threshold 50 之下完全不會被報出來;UI-TARS 36k / 實際 38,545"
+                             "是 7%%,連 10%% 都擋不住。")
     parser.add_argument("--threshold", type=int, default=10,
                         help="只列出星數差距百分比超過此值的 entry（預設 10）")
     parser.add_argument("--check", action="store_true",
@@ -183,6 +334,10 @@ def main():
     # 找所有 GitHub repo + 它在每個檔案中的標註 stars
     # entries: {repo: [(file_path, declared_stars_int, line_no, declared_text)]}
     entries: dict[str, list[tuple[Path, int | None, int, str]]] = {}
+    # Prose-form counts, reported but never auto-rewritten — see PROSE_STARS_RE.
+    prose: list[tuple[str, Path, int, str, int]] = []
+    # Prose counts naming no repo we could pin down. Reported, never failed on.
+    prose_unbound: list[tuple[Path, int, str, str]] = []
 
     for fp in find_md_files(REPO_ROOT):
         text = fp.read_text(encoding="utf-8")
@@ -190,6 +345,13 @@ def main():
         # (same-line, or entry-block on a later line) and returns the ★'s own
         # line for the write-back target — see that function's docstring.
         lines = text.splitlines()
+        # MUST stay inside the per-file loop. The name-binding pass below trusts
+        # this to mean "linked in THIS file"; hoisting it out (a natural-looking
+        # "don't rebuild the set each iteration" tidy-up) makes binding global,
+        # so a file that merely NAMES a tool inherits a repo it never linked —
+        # and publishes that repo's star count as its own, silently.
+        # Pinned by test_binding_does_not_leak_across_files.
+        file_repos: set[str] = set()
         for i, line in enumerate(lines):
             m_repo = GITHUB_RE.search(line)
             if not m_repo:
@@ -197,6 +359,7 @@ def main():
             repo = normalize_repo(m_repo.group(1), m_repo.group(2))
             if repo is None:
                 continue
+            file_repos.add(repo)
             declared, declared_text, star_idx = detect_stars(lines, i)
             # Record the ★'s own line (star_idx), NOT the URL line — the
             # --apply write-back keys on this, so entry-block formats
@@ -204,6 +367,41 @@ def main():
             entries.setdefault(repo, []).append(
                 (fp, declared, star_idx + 1, declared_text or "(no stars line)")
             )
+
+            # Prose-form counts, same line as the URL only. Requiring the URL on
+            # the SAME line is what exempts a threshold like the catalog's
+            # "> 30k stars" inclusion bar, which names no repo. Skip lines that
+            # already carry a ★ — those are the STARS_RE path's job, and counting
+            # both would double-report the one entry.
+            if "★" not in line:
+                for pm in PROSE_STARS_RE.finditer(line):
+                    prose.append((repo, fp, i + 1, pm.group(0).strip(),
+                                  prose_value(pm)))
+
+        # Second pass: prose counts on lines with NO GitHub URL at all.
+        # These are the sentences the URL-anchored pass structurally cannot see
+        # ("Why is browser-use so popular (108k stars)?", a comparison-table cell
+        # naming the tool without linking it, a bullet whose only link is the
+        # project's docs site rather than its repo). 12 of them sat in stage 08
+        # across three locales, which is 40% of this file's prose counts.
+        #
+        # Binding is by NAME, and only when the line names exactly one repo that
+        # is linked somewhere else in the SAME file. Ambiguity is reported, never
+        # guessed: attributing repo B's count to repo A would publish a false
+        # claim about someone's project, which is the failure the ★ path already
+        # had to fix once (15 live cross-entry leaks).
+        known = {r: bind_re(r) for r in file_repos}
+        for i, line in enumerate(lines):
+            if "★" in line or GITHUB_RE.search(line):
+                continue  # owned by the pass above
+            for pm in PROSE_STARS_RE.finditer(line):
+                hits = [r for r, rx in known.items() if rx.search(line)]
+                if len(hits) == 1:
+                    prose.append((hits[0], fp, i + 1, pm.group(0).strip(),
+                                  prose_value(pm)))
+                else:
+                    why = "names no linked repo" if not hits else f"ambiguous: {hits}"
+                    prose_unbound.append((fp, i + 1, pm.group(0).strip(), why))
 
     # 去重 repo（每個 repo 只查一次）
     unique_repos = list(entries.keys())
@@ -223,12 +421,17 @@ def main():
     # 比對
     drift = []
     missing = []
-    not_found = []
+    not_found = []      # real 404 — the repo is gone/renamed/private
+    unresolved = []     # could not determine (rate limit, auth, 5xx, timeout)
 
     for repo, occurrences in entries.items():
         latest = actual[repo]
-        if latest is None:
+        if latest is FETCH_GONE:
             not_found.append(repo)
+            continue
+        if latest is None:
+            # Do NOT claim this repo is missing — we simply could not ask.
+            unresolved.append(repo)
             continue
 
         for fp, declared, line_no, declared_text in occurrences:
@@ -236,23 +439,32 @@ def main():
                 missing.append((repo, fp, line_no))
                 continue
 
-            if declared == 0:
-                pct_diff = 100
-            else:
-                pct_diff = abs(latest - declared) / declared * 100
+            pct_diff = 100 if declared == 0 else abs(latest - declared) / declared * 100
 
-            if pct_diff >= args.threshold:
+            if is_real_drift(declared, latest, args.threshold):
                 drift.append((
                     repo, fp, line_no, declared, latest, pct_diff, declared_text
                 ))
 
+    # Prose-form counts, evaluated with the same predicate but never auto-fixed.
+    prose_drift = []
+    for repo, fp, line_no, text, declared in prose:
+        latest = actual.get(repo)
+        if not isinstance(latest, int):
+            continue  # 404 / could-not-query are already reported by repo
+        if is_real_drift(declared, latest, args.prose_threshold):
+            prose_drift.append((repo, fp, line_no, text, declared, latest))
+
     # 報告
     print()
     print("=" * 60)
-    print(f"Total repos checked:   {len(unique_repos) - len(not_found)}")
+    print(f"Total repos checked:   {len(unique_repos) - len(not_found) - len(unresolved)}")
     print(f"Drift (>={args.threshold}%):     {len(drift)}")
+    print(f"Prose-form drift:      {len(prose_drift)} (>={args.prose_threshold}%, manual fix)")
+    print(f"Prose, unbindable:     {len(prose_unbound)} (advisory)")
     print(f"Missing stars line:    {len(missing)}")
     print(f"Repo not found (404):  {len(not_found)}")
+    print(f"Could not query:       {len(unresolved)}")
     print()
 
     if drift:
@@ -262,6 +474,32 @@ def main():
             arrow = "↑" if latest > declared else "↓"
             print(f"  {repo}  declared={text} actual={fmt_stars(latest)} "
                   f"(diff {arrow}{pct:.0f}%)  →  {rel}:{line_no}")
+
+    if prose_drift:
+        print()
+        print("=== Prose-form counts — STALE, and --apply will NOT fix these ===")
+        for repo, fp, line_no, text, declared, latest in prose_drift:
+            rel = fp.relative_to(REPO_ROOT)
+            arrow = "↑" if latest > declared else "↓"
+            print(f"  {repo}  written as \"{text}\" actual={fmt_stars(latest)} "
+                  f"({arrow})  →  {rel}:{line_no}")
+        print("  Rewriting these would eat the trailing word and the locale's wording.")
+        print("  Edit the sentences by hand, then re-run.")
+
+    if prose_unbound:
+        print()
+        print("=== Prose counts we could NOT tie to a repo (advisory, not a failure) ===")
+        for fp, line_no, text, why in prose_unbound:
+            print(f"  \"{text}\"  {why}  →  {fp.relative_to(REPO_ROOT)}:{line_no}")
+        print("  Not failed on: with no repo identified there is nothing to compare against.")
+        print("  To bring one under the gate, link the repo on that line or name it exactly once.")
+
+    if unresolved:
+        print()
+        print("=== Could not query (rate limit / auth / network — NOT a 404) ===")
+        for repo in unresolved:
+            print(f"  {repo}")
+        print("  These are NOT reported as missing; re-run when the API settles.")
 
     if not_found:
         print()
@@ -281,7 +519,10 @@ def main():
             by_repo.setdefault(repo, []).append((fp, line_no))
         for repo in sorted(by_repo):
             latest = actual.get(repo)
-            star_str = f"★{fmt_stars(latest)}" if latest is not None else "(404)"
+            # Repos that 404'd or could not be queried never reach `missing` (they
+            # `continue` above), so this is an int in practice — but don't hand a
+            # sentinel to fmt_stars if that ever changes.
+            star_str = f"★{fmt_stars(latest)}" if isinstance(latest, int) else "(unresolved)"
             occs = by_repo[repo]
             print(f"  {repo}  {star_str}  ({len(occs)} occurrence(s))")
             for fp, ln in occs[:3]:
@@ -304,24 +545,20 @@ def main():
             new_text = f"★ {fmt_stars(latest)}" + trail
             by_file.setdefault(fp, []).append((line_no, text, new_text))
 
-        files_changed = 0
-        for fp, replacements in by_file.items():
-            content = fp.read_text(encoding="utf-8")
-            lines = content.splitlines(keepends=True)
-            for line_no, old_text, new_text in replacements:
-                idx = line_no - 1
-                if 0 <= idx < len(lines) and old_text in lines[idx]:
-                    lines[idx] = lines[idx].replace(old_text, new_text, 1)
-            fp.write_text("".join(lines), encoding="utf-8")
-            files_changed += 1
+        applied, files_changed = apply_replacements(by_file)
 
         print()
-        print(f"=== Applied {len(drift)} drift fixes across {files_changed} files ===")
-        sys.exit(0 if drift else 2)
+        print(f"=== Applied {applied} drift fixes across {files_changed} files ===")
+        sys.exit(0 if applied else 2)
 
-    if args.check and (drift or not_found):
-        # CI 模式：只有 drift 或 404 算失敗。
-        # `missing` 是 by design（article / spec / catalog entry 不需要 Stars row，見 style-guide §1）
+    if args.check and (drift or not_found or prose_drift):
+        # CI 模式：只有真的 drift 或真的 404 算失敗。
+        # `missing` 是 by design（article / spec / catalog entry 不需要 Stars row，見 style-guide §1）。
+        # `unresolved`（rate limit / auth / 5xx / timeout）**刻意不算失敗**——我們無法判定，
+        # 讓 CI 因為查不到而變紅，只會訓練大家忽略這個 gate，而且會把「查不到」誤導成
+        # 「repo 不見了」。它會印在報告裡讓人看見，但不影響 exit code。
+        # `prose_drift` **算失敗**：數字是真的過時了,只是 --apply 修不動、要人去改句子。
+        # 這是這個 gate 唯一「報紅但自動修不了」的類別,訊息裡已寫明怎麼收尾。
         sys.exit(1)
 
 

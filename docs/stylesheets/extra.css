@@ -7,7 +7,10 @@
   --md-primary-fg-color:        #4f46e5;
   --md-primary-fg-color--light: #6366f1;
   --md-primary-fg-color--dark:  #4338ca;
-  --md-accent-fg-color:         #6366f1;
+  --md-accent-fg-color:         #4f46e5;
+}
+body[data-md-color-scheme="slate"] {
+  --md-accent-fg-color: #a5b4fc;
 }
 
 /* ---- Landing hero (index.md) ---- */
@@ -38,7 +41,11 @@
 .aaz-cta .md-button { border-radius: 24px; }
 .aaz-langs { display: flex; gap: .4rem; justify-content: center; flex-wrap: wrap; }
 .aaz-langs a {
+  align-items: center;
+  box-sizing: border-box;
+  display: inline-flex;
   font-size: .72rem;
+  min-height: 44px;
   color: var(--md-default-fg-color--light);
   border: 1px solid var(--md-default-fg-color--lighter);
   border-radius: 20px;
@@ -46,10 +53,64 @@
   text-decoration: none;
   transition: color .15s ease, border-color .15s ease, background .15s ease;
 }
+
+/* ---- Teaching diagrams: fast to load, easy to enlarge on a phone ---- */
+.md-typeset .aaz-diagram {
+  margin: 1.5rem auto;
+  text-align: center;
+  width: 100%;
+}
+.md-typeset .aaz-diagram__image-link {
+  border-radius: 10px;
+  display: block;
+}
+.md-typeset .aaz-diagram img {
+  aspect-ratio: 16 / 9;
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+  width: 100%;
+}
+.md-typeset .aaz-diagram__caption {
+  font-size: .75rem;
+  margin-top: .25rem;
+}
+.md-typeset .aaz-diagram__caption a {
+  align-items: center;
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 .5rem;
+}
+.md-typeset details > summary {
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 44px;
+}
 .aaz-langs a:hover {
   color: var(--md-accent-fg-color);
   border-color: var(--md-accent-fg-color);
   background: var(--md-default-fg-color--lightest);
+}
+
+/* ---- Mobile reading and touch targets ---- */
+.md-header__button {
+  align-items: center;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+.md-select__link {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  min-height: 44px;
+}
+.md-typeset a,
+.md-typeset code {
+  overflow-wrap: anywhere;
 }
 
 /* ---- Stat strip ---- */
@@ -84,9 +145,29 @@
 }
 
 /* ---- Tables: tighter, rounded, hover ---- */
+.md-typeset .resource-table-scroll {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+.md-typeset .resource-table-scroll:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+.md-typeset .resource-table-scroll > table.resource-table {
+  inline-size: 100%;
+  min-inline-size: 44rem;
+}
 .md-typeset table:not([class]) {
   border-radius: 10px;
-  overflow: hidden;
+  /* auto, not hidden. Any non-visible overflow value still gives the rounded
+     corners a clipping context, but `hidden` ALSO means a table that does
+     overflow gets silently cropped with no way to reach the rest, which is
+     worse than the sideways drag it was replacing. Today no table overflows at
+     375px (measured across 14 pages), and the README now tells phone readers so
+     — this keeps that claim true by degrading to a scroll rather than to
+     invisible content. */
+  overflow: auto;
   font-size: .80rem;
 }
 .md-typeset table:not([class]) th {

@@ -4,12 +4,12 @@
 
 # 練習 6：Function Schema 設計（bad vs good）
 
-對應 [Stage 3 — Tool Use & Agent 入門](../../../stages/03-tool-use-and-hello-agent.md) 練習 6。
-> 🎓 **學習模式**：這份 `starter.py` 是**完整解答**、不是 TODO skeleton。建議用**主動模式**——`mv starter.py starter_reference.py`、看 signature 不看 body、自己重寫一份 `starter.py`、跑 `python test.py` 驗證；卡 20 分鐘再回去對照 reference。完整方法論看 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
+對應 [Stage 3 — 工具使用與第一個 Agent Loop](../../../stages/03-tool-use-and-hello-agent.md) 練習 6。
+> 🎓 **學習模式**：先執行提供的 `starter_bad.py` 和 `starter_good.py`（`python starter_bad.py`、`python starter_good.py`），再只改一個小地方，然後重新執行既有測試：`python test.py` 和 `python test_anthropic.py`。如果測試失敗，就撤銷或修正這一個改動，再試一次。不需要改名檔案，也不需要整份解答重寫。完整方法看 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
 
 > 📚 **想要 chapter-length 深入版？** 本 folder 的 starter 是 70-150 行 illustrative 版、聚焦 `核心 pattern + 兩條 SDK path`，不是進階深度教材。深度教材推薦：
 > - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ 中文圈最完整、章節式 + 16 種 production 能力。**本練習對應 hello-agents 的 [Extra08 — 如何寫出好的 Skill](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra08-如何写出好的Skill.md)**
-> - [OpenAI Function Calling guide](https://platform.openai.com/docs/guides/function-calling) + [schema 設計 cheatsheet](../../../resources/schema-design-cheatsheet.md)
+> - [OpenAI Function Calling guide](https://developers.openai.com/api/docs/guides/function-calling) + [schema 設計 cheatsheet](../../../resources/schema-design-cheatsheet.md)
 > - 完整 references 見 [Stage 3 精選 Projects](../../../stages/03-tool-use-and-hello-agent.md#-精選-projects)
 
 
@@ -18,7 +18,7 @@
 Schema 是 **prompt 的一部分**、而且是模型做工具選擇時**最依賴**的 prompt。這題用 `starter_bad` 與 `starter_good` 對照同一題：「把攝氏 32 度換成華氏」。
 
 - **Bad schema**：description 太短、參數都 string、沒 required、沒 enum → LLM 容易把溫度轉換丟給 `process_data`
-- **Good schema**：用途明確、`value: number`、`unit: enum["celsius", "fahrenheit"]`、required 都列好 → 穩定選到 `convert_temperature`
+- **Good schema**：用途明確、`value: number`、`unit: enum["celsius", "fahrenheit"]`、required 都列好 → 應用固定 eval 驗證是否較常選到 `convert_temperature`
 
 寫 schema 不要只想「人看得懂」、要想「模型能不能用它排除錯誤工具」。
 
@@ -26,7 +26,7 @@ Schema 是 **prompt 的一部分**、而且是模型做工具選擇時**最依�
 
 ### Path A（默認、本機免費、4 個 starter）
 
-```bash
+```powershell
 pip install -r requirements.txt
 ollama pull qwen2.5:3b
 ollama serve
@@ -35,23 +35,23 @@ python starter_bad.py # 觀察壞 schema 怎麼讓 qwen 挑錯
 python starter_good.py # 觀察好 schema 怎麼讓 qwen 挑對
 ```
 
-預算：**$0**。
+預算：**$0 API 費用**；不包含硬體、記憶體與電力成本。
 
-### Path B（Anthropic、想看 cloud 高品質）
+### Path B（Anthropic、雲端比較）
 
-```bash
+```powershell
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
+$env:ANTHROPIC_API_KEY = "your-key"
 
 python starter_bad_anthropic.py
 python starter_good_anthropic.py
 ```
 
-預算：每次 ≈ **$0.0005**（claude-haiku-4-5、單輪 call）。
+預算：每次先保留 **$0.05**。實際費用依 `輸入 tokens × $1 / 1,000,000 + 輸出 tokens × $5 / 1,000,000` 計算，Tool Use 還會加入 prompt tokens；價格查核日：`2026-08-27`。
 
 ## 不花錢驗證程式邏輯（mock-based）
 
-```bash
+```powershell
 python test.py # 驗 Path A (Ollama) starter_bad + starter_good
 python test_anthropic.py # 驗 Path B (Anthropic) starter_*_anthropic
 ```
@@ -70,15 +70,15 @@ python test_anthropic.py # 驗 Path B (Anthropic) starter_*_anthropic
 
 ## 兩個 path 的觀察重點（教學重點）
 
-**小 model 對 schema 質量的敏感度比大 model 高**——這題在 Ollama 上**反而更有教學意義**：
+不同 model 對 schema 質量的反應可能不同；固定 prompt、schema 與測試題，用 eval 記錄行為。這題在 Ollama 上也很適合觀察這個差異：
 
 | 觀察項 | Anthropic Claude haiku | Ollama qwen2.5:3b |
 |---|---|---|
-| Bad schema 仍能猜對 | 中-高機率 | 低機率（幾乎必錯） |
-| Good schema 選對 | 穩定 | 穩定 |
-| 差距 | 小 | 大 |
+| Bad schema 是否猜對 | 用固定 eval 測量 | 用固定 eval 測量 |
+| Good schema 是否選對 | 用固定 eval 測量 | 用固定 eval 測量 |
+| Bad／Good 差距 | 用固定 eval 測量 | 用固定 eval 測量 |
 
-換句話說：**寫 schema 的功夫、在小 model 上能省下換大 model 的成本**。Production 想用便宜 model（qwen / mistral）？schema 必須寫到能上線跑的程度。
+換句話說：schema 品質與模型行為要用固定 eval 一起測量。Production 想用便宜 model（qwen / mistral）？schema 必須寫到能上線跑的程度。
 
 ## 延伸閱讀
 

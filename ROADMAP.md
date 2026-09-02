@@ -2,55 +2,77 @@
 
 > **繁體中文** | [简体中文](./ROADMAP.zh-Hans.md) | [English](./ROADMAP.en.md)
 
-這份 repo 是**社群維護的學習路線圖**——沒有發行日期、沒有承諾的時程。這份文件公開「我們知道哪裡還不夠好、接下來想往哪走」,讓想貢獻的人能挑一塊上手,而不用先讀完整個 repo 才知道缺什麼。
+這份文件只回答兩件事：**現在已經能用什麼？接下來還要補什麼？** 它不是發行日期，也不承諾完成時間。
 
-> 想動其中一項?開個 [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions) 講一聲,或直接 PR。擔任 stage / branch 長期維護者請看 [`CONTRIBUTORS.md`](CONTRIBUTORS.md)。新手切入點看 [`CONTRIBUTING.md`](CONTRIBUTING.md) 的「好上手的 5 個切入點」。
-
-**狀態圖例**:🟢 進行中 / 隨時可貢獻 · 🟡 已知缺口、想做 · 🔵 想法、待討論 · ✅ 近期完成
+**狀態圖例**：🟢 正在做／隨時可貢獻 · 🟡 已知缺口 · 🔵 想法 · ✅ 最近完成
 
 ---
 
-## 近期想補的缺口
+<a id="近期想補的缺口"></a>
+<a id="進行中--隨時可貢獻"></a>
+<a id="-動手練習覆蓋補齊"></a>
+<a id="-audience-branch-深化"></a>
+<a id="-stage-2--stage-3-2026-freshness-小修"></a>
 
-### 🟡 動手練習覆蓋補齊
-`examples/` 目前涵蓋 Stage 1、3、4、5、6、7。**缺**:Stage 2(Prompt 設計)、Stage 8(Agent Interfaces),以及 Stage 0(基礎概念)、Stage 7.5(進階 Agentic 概念)這兩個現有 stage 也都沒有對應的 hands-on 範例。每個範例要能在 30 分鐘內跑完、附 `怎麼跑` 指令。
+## 🟢 現在正在做
 
-### 🟡 audience branch 深化
-5 條 audience branch 篇幅(zh-TW canonical,2026-05 snapshot):for-knowledge-worker(143 行,最短)< for-developer(166)< for-everyday-users(179)< for-researcher(208)< for-teacher(224)。**篇幅最短的 `for-knowledge-worker.md` / `for-developer.md` 最需要補情境**。`for-teacher.md` 篇幅其實最長,但 `CONTRIBUTORS.md` 仍把它標「特別歡迎自薦」——它真正薄的是**教師情境的學術引用深度**(目前只有 Chen 2020 / Mittal 2024 兩筆),歡迎補更多 3-tier 教師 AI 應用情境 + 對應引用。
+### 1. 把整站接成同一條路
 
-### 🟡 Stage 2 / Stage 3 2026 freshness 小修
-幾處 2026 用語 / 模型引用的小幅更新還沒同步到鏡像(約 5 行 diff × 2 locale)。
+文字路線統一為：
 
----
+- 共用基礎：`Stage 0 → Stage 1 → Stage 2`
+- Track A：`A1 → A2 → Stage 5 → A3 → Stage 8`
+- Track B：`Stage 3 → Stage 4 → Stage 5 → Stage 6 → Stage 7 → Stage 7.5 → Stage 8`
 
-## 進行中 / 隨時可貢獻
+Track A 做完 A3 就能開始 Capstone；Stage 8 建議完成，但不擋入場。首頁學習地圖、文字與測試現在使用同一條路線；之後改順序時，三者要一起更新。
 
-- 🟢 **過時 entry 回報** — 跑 `python scripts/refresh-stars.py` 找星數差距大的 repo,開 issue 或 PR 標註 / 移除。
-- 🟢 **失效連結修正** — link-rot 每月 CI 會掃,但即時發現的直接 PR 最快。
-- 🟢 **`怎麼跑` section 補完** — 很多 entry 缺安裝 / 執行指令,你跑過就補。
-- 🟢 **鏡像翻譯順稿** — 對照 `.en.md` / `.zh-Hans.md` 與 zh-TW,改一句翻得不順的。
-- 🟢 **stage / branch 長期維護者** — 認領一個 stage 或 branch,有空時 review 一輪。名額表在 `CONTRIBUTORS.md`。
+### 2. 整理五條角色路徑
 
----
+研究人員、開發者、教師、知識工作者與日常使用者都會補上「今天先做什麼」。第一個動作留在畫面上；完整專案表、替代方案與疑難排解預設收合。重要名詞與五星編輯推薦度不會因為縮短頁面而消失。
 
-## 基礎建設(maintainer 進行中)
+### 3. 整理 setup、courses、cookbook、glossary 與 catalog
 
-- ✅ **社群健康檔** — `CODE_OF_CONDUCT.md` / `SECURITY.md` / `CITATION.cff` / issue-template 導流(本路線圖同批)。
-- 🟢 **學習者進度層** — `PROGRESS.md` 自我打勾範本 + 每個 stage 結尾「自我檢核 / Exit check」(規劃中)。
-- 🔵 **可瀏覽文件站** — 把 stages/tracks/branches 渲染成有導覽 + 搜尋 + 語言切換的網站(GitHub Pages,評估中)。
-- 🟢 **三語鏡像 parity** — `mirror-sync-reminder` + `check-mirror-sync.py` 已在 PR 時把關,持續清 legacy drift。
-- 🟢 **品質 gate** — link-rot / star-drift / banned-word / anchor / zh-Hans 在地化 CI 已上線並維護中。
+- Setup 先幫讀者選 Web、Desktop、IDE、CLI 或 API，再展開安裝細節。
+- Cookbook 先顯示成果、第一個可複製動作與成功條件。
+- Glossary 的名詞和短定義保持可搜尋；長例子才收合。
+- MCP／Skills catalog 保持可搜尋，增加分類導航與維護狀態，不把每一列拆成一個選單。
 
----
+### 4. 持續檢查 repository 與易變資訊
 
-## 想法箱(待討論,還沒承諾)
-
-- 🔵 **更多 audience branch**:目前 5 條(researcher / developer / teacher / knowledge-worker / everyday-users),是否要再分(例如 PM / 設計師 / 法務)看社群需求。
-- 🔵 **第三條軌道?**:目前 Track A = CLI Power User(`tracks/cli/` 的 A1–A3)、Track B = stages 學習路線(`stages/` 目錄 Stage 0–8,**不是** `tracks/` 下的獨立目錄)。是否要有第三條軌道(例如「只用 no-code agent」)待討論。
-- 🔵 **影音 / 互動補充**:純文字學習路線是否要配最小影音 walkthrough,成本與維護負擔待評估。
-
-要提想法請開 [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions),不要開 issue(issue 留給 bug / 過時 entry / 新增 project)。
+每週 workflow 逐一檢查 canonical GitHub repo、redirect、archive、license metadata、release 與最近活動。較久沒 push 只會產生 warning，不會自動刪除穩定且仍有教學價值的專案。模型、價格、API 與產品能力仍要回官方文件逐章查證。
 
 ---
 
-> 這份路線圖不是契約。它反映「現在」的方向,會隨社群投入而變。最可靠的「接下來要做什麼」永遠是 open issues + Discussions。
+<a id="基礎建設maintainer-進行中"></a>
+
+## ✅ 最近完成
+
+- Stage 0–8 與 A1–A3 已完成第一輪漸進式揭露、三語一致性、核心詞與資源表整理。
+- Stage 2 保留 zero-shot、one-shot、few-shot、Chain of Thought 等必要名詞，並加入三語 Prompt Engineering 概念圖。
+- Stage 3 用三語圖教第一個 Agent Loop；Stage 4 用 framework 教 Workflow Graph；Stage 7 以 Agent Production Engineering 整合 Harness、Loop 與 Graph。Stage 6 重畫兩條路的 RAG pipeline；Stage 8 補上介面選擇與安全檢查圖。
+- Stage 0 有整合練習；Stage 7.5 本來就是 reading map，不強迫新增程式資料夾；Stage 8 已有可複製的安全練習，獨立 end-to-end 範例仍可貢獻。
+- MkDocs build、三語 mirror／anchor／locale gate、reader-UX gate、freshness gate 與 repository snapshot 都已納入維護流程。
+
+---
+
+## 🟢 很適合貢獻的小任務
+
+- 回報過時事實或失效連結，附官方新來源。
+- 替一個練習補上更清楚的「怎麼跑」與成功條件。
+- 修順一段英文或簡中鏡像，但不要改變原意、數字、URL 或安全規則。
+- 替 role path 補一個真實情境，說清楚輸入、輸出、人工檢查與隱私邊界。
+- 替穩定專案補 status／license／限制；不要只用 stars 或最近 push 日期下結論。
+
+先看 [`CONTRIBUTING.md`](CONTRIBUTING.md)；想長期維護一章，再看 [`CONTRIBUTORS.md`](CONTRIBUTORS.md)。
+
+---
+
+<a id="想法箱待討論還沒承諾"></a>
+
+## 🔵 還在討論
+
+- 是否需要第三條正式軌道，例如 no-code／web-only 路線；目前日常使用者可直接走 role path，不必先多造一條主幹。
+- 是否加入最小影音 walkthrough；需要先衡量字幕、三語同步與長期維護成本。
+- Voice Agent 與 VLA 應放在既有 Stage 8／研究或開發者延伸，還是需要新的專題頁；先避免為新名詞增加主線負擔。
+
+要提想法請開 [Discussion](https://github.com/WenyuChiou/awesome-agentic-ai-zh/discussions)；issue 留給缺陷、過時資訊或明確的新資源。

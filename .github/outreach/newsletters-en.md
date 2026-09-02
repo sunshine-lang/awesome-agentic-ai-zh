@@ -19,8 +19,8 @@
 ## Blurb A — generic one-liner (TLDR AI / Rundown style)
 
 ```
-A free, trilingual, staged roadmap for learning agentic AI — 8 stages
-from LLM basics to multi-agent + Computer/Browser Use, 240+ curated
+A free, trilingual, staged roadmap for learning agentic AI — 10 learning stops
+from LLM basics to multi-agent + Computer/Browser Use, curated
 projects, runnable exercises, with entry conditions and a self-check per
 stage. MIT. Rendered site: https://wenyuchiou.github.io/awesome-agentic-ai-zh/
 ```
@@ -32,8 +32,8 @@ Most "awesome-AI-agents" lists are flat link dumps — useful to look
 things up, useless as a path. This is a sequenced roadmap instead: 8
 stages (LLM basics → tool use → frameworks → Claude Code ecosystem →
 memory/RAG → multi-agent → Computer/Browser Use), two tracks (use
-existing CLI agents vs build your own), 5 audience branches, 240+
-curated projects with "what it teaches / how to run", and small runnable
+existing CLI agents vs build your own), 5 audience branches, curated
+projects with "what it teaches / how to run", and small runnable
 exercises that work locally (Ollama) before any paid API. Trilingual and
 MIT; the English edition is fully maintained, not machine-translated.
 https://wenyuchiou.github.io/awesome-agentic-ai-zh/

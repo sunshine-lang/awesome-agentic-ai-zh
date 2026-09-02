@@ -22,7 +22,7 @@ Coze——缺 Moonshot 的 entry。
 如果月之暗面的同學 / 熱心開發者覺得有 Kimi 系列的 agent skill / SDK / cookbook
 該收進來，歡迎 PR：github.com/WenyuChiou/awesome-agentic-ai-zh
 
-240+ projects · 三語齊全 · MIT · ★525 第一週
+分組整理的 projects · 三語齊全 · MIT
 ```
 
 ## Variant 2 — Discussion / 知乎文章 (200-300 字)
@@ -35,8 +35,8 @@ Coze——缺 Moonshot 的 entry。
 你好 Moonshot 社群，
 
 我维护 [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh)
-——一份中文 agentic AI 的 8 阶段三语学习地图（zh-TW canonical / zh-Hans / en，240+
-projects，MIT，★525 第一周）。
+——一份中文 agentic AI 的 10 站三语学习地图（8 个主题 Stage + Stage 0 准备关 + Stage 7.5 阅读站；zh-TW canonical / zh-Hans / en，分组整理的
+projects，MIT）。
 
 **§11 中文圈专用** 已经收了 Qwen-Agent / Coze / Langchain-Chatchat 等，但缺
 Moonshot Kimi 的 entry。我评估过的几个候选：
@@ -64,8 +64,8 @@ Moonshot Kimi 的 entry。我评估过的几个候选：
 ```
 你好 Moonshot 社群，
 
-我是 awesome-agentic-ai-zh 的维护者 Wenyu。这份是中文 agentic AI 的 8 阶段三语
-学习地图（240+ projects，三语齐全，MIT，★525 第一周）。
+我是 awesome-agentic-ai-zh 的维护者 Wenyu。这份是中文 agentic AI 的 10 站三语
+学习地图（分组整理的 projects，三语齐全，MIT）。
 
 §11 中文圈专用 收了 Qwen-Agent + Coze，缺 Kimi 的 entry。如果有官方推荐的 Kimi
 agent / Skills / cookbook 仓库我应该收进来，请告诉我；或者直接 PR 到 §11。收录

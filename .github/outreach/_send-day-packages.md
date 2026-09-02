@@ -1,13 +1,13 @@
 # Send-Day Packages (ready to paste)
 
-> **What this file is**: the copy-paste operational source for outreach submissions. Open it on a send-day, pick ONE target, refresh the stats line, paste, submit. The per-target `.md` files in this folder hold the *positioning rationale* (why each target, pitch angle); **this** file holds the *exact content to send*.
+> **What this file is**: the copy-paste operational source for outreach submissions. Open it on a send-day, pick ONE target, recheck the target section and links, then paste and submit. The per-target `.md` files in this folder hold the *positioning rationale* (why each target, pitch angle); **this** file holds the *exact content to send*.
 >
-> **Canonical numbers as of 2026-06-08** (baked into every package below):
+> **Stable facts checked 2026-08-29 UTC**:
 > - Trilingual: **繁中 (canonical) / English / 简中** — all three hand-maintained, not machine-translated
-> - **8 stages** (Stage 0 → Stage 8; Stage 5 + Stage 8 are shared hubs) · 2 tracks · 5 extension paths
-> - **240+ curated resources** · MIT · CI lints links + anchors + banned-words on every PR
+> - Route: Stage 0 → Stage 8, with a CLI track and role-based paths
+> - **Curated resources and runnable examples** · MIT · CI lints links + anchors + banned-words on every PR
 > - Repo: https://github.com/WenyuChiou/awesome-agentic-ai-zh · Docs: https://wenyuchiou.github.io/awesome-agentic-ai-zh/
-> - ★ ≈ **1.9k** — **refresh on the day you send** (`gh repo view WenyuChiou/awesome-agentic-ai-zh --json stargazerCount`). Stale stars in a PR read as careless.
+> - Popularity numbers are intentionally omitted because they drift. Do not paste a cached star or traffic total.
 >
 > **Cadence (do NOT blast)**: one target per send-day, 1–2 sends/day max. Wait for a reply or ~1 week before the next. All submissions are done by you (maintainer identity); I prepare content only.
 
@@ -15,15 +15,15 @@
 
 ## Status board
 
-| # | Target | ★ | Channel | Section | Lang | Fit | Status |
-|---|---|---|---|---|---|---|---|
-| A | Hannibal046/Awesome-LLM | 18k+ | PR | LLM Tutorials and Courses | en | good | ready (last batch) |
-| B | HqWu-HITCS/Awesome-Chinese-LLM | 20k+ | PR | ### 7. LLM教程 | zh-Hans | good | ready (last batch) |
-| C | kyrolabs/awesome-langchain | 9k+ | PR | Learn → Notebooks | en | good | ready |
-| D | liyupi/ai-guide | 14k+ | PR | AI 学习路线 / 相关资源 | zh-Hans | good | ready |
-| E | datawhalechina/hello-agents | 55k+ | **Issue** | (cross-link, not catalog) | zh-Hans | good | ready |
-| F | Jenqyang/Awesome-AI-Agents | — | PR | Related | en | medium | ready (looser fit — see note) |
-| — | AiHubCN/Awesome-Chinese-LLM | — | — | — | — | — | **SKIP** (fork of B) |
+| # | Target | Channel | Section | Lang | Fit | Status |
+|---|---|---|---|---|---|---|
+| A | Hannibal046/Awesome-LLM | PR | LLM Tutorials and Courses | en | good | ready (last batch) |
+| B | HqWu-HITCS/Awesome-Chinese-LLM | PR | ### 7. LLM教程 | zh-Hans | good | ready (last batch) |
+| C | kyrolabs/awesome-langchain | PR | Learn → Notebooks | en | good | ready |
+| D | liyupi/ai-guide | PR | AI 学习路线 / 相关资源 | zh-Hans | good | ready |
+| E | datawhalechina/hello-agents | **Issue** | (cross-link, not catalog) | zh-Hans | good | ready |
+| F | Jenqyang/Awesome-AI-Agents | PR | Related | en | medium | ready (looser fit — see note) |
+| — | AiHubCN/Awesome-Chinese-LLM | — | — | — | — | **SKIP** (fork of B) |
 
 **Nudges pending** (your existing open PRs — you run these): #121 WangRongsheng, #754 travisvn — see bottom.
 
@@ -35,7 +35,7 @@
 **Entry line**:
 
 ```markdown
-*   [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) - Trilingual (zh-TW / English / zh-Hans) learning roadmap for agentic AI, from LLM basics to multi-agent systems, with 240+ curated resources and runnable examples.
+*   [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) - Trilingual (zh-TW / English / zh-Hans) learning roadmap for agentic AI, from LLM basics to multi-agent systems, with curated resources and runnable examples.
 ```
 
 **PR title**: `Add awesome-agentic-ai-zh (trilingual agentic-AI learning roadmap)`
@@ -47,7 +47,7 @@ Hi Hannibal046,
 
 Adding awesome-agentic-ai-zh to LLM Tutorials and Courses (move it if another spot fits better).
 
-It's a trilingual learning roadmap for agentic AI — Traditional Chinese (canonical), English, and Simplified Chinese, all three hand-maintained. The path runs from Stage 0 (what an LLM is, how tokens work) to Stage 8 (multi-agent orchestration, Computer Use / Browser Use / sandboxes), with 240+ curated resources and small runnable examples. MIT licensed; CI checks links and anchors on every PR.
+It's a trilingual learning roadmap for agentic AI — Traditional Chinese (canonical), English, and Simplified Chinese, all three hand-maintained. The path runs from Stage 0 (what an LLM is, how tokens work), through Stage 7 (multi-agent systems and production engineering), to Stage 8 (Agent Interfaces: Computer Use, Browser Use, and sandboxes), with curated resources and small runnable examples. MIT licensed; CI checks links and anchors on every PR.
 
 Thanks for maintaining Awesome-LLM.
 
@@ -64,7 +64,7 @@ Thanks for maintaining Awesome-LLM.
 ```markdown
 * awesome-agentic-ai-zh:
     * 地址:[https://github.com/WenyuChiou/awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh)
-    * 简介:三语(繁中 / English / 简中)agentic AI 学习地图,从 LLM 基础到多代理系统,8 个阶段 + 2 条学习路线 + 240+ curated 资源,附可跑的范例。MIT。
+    * 简介:三语(繁中 / English / 简中)agentic AI 学习地图,共 10 个学习站（8 个主题 Stage + Stage 0 准备关 + Stage 7.5 阅读站）+ 2 条学习路线 + 分组整理的 curated 资源,附可跑的范例。MIT。
 ```
 
 **PR title**: `添加 awesome-agentic-ai-zh(三语 agentic AI 学习地图)到 7. LLM教程`
@@ -74,7 +74,7 @@ Thanks for maintaining Awesome-LLM.
 ```markdown
 你好,
 
-想把 awesome-agentic-ai-zh 加到「7. LLM教程」。这是一份 agentic AI 的三语学习地图(繁中 canonical / 简中 / English,三语手工维护),8 个阶段从 LLM 基础排到多代理编排,每阶段标了预估时程、入门条件、该读什么,目前 240+ curated 资源,MIT 协议。
+想把 awesome-agentic-ai-zh 加到「7. LLM教程」。这是一份 agentic AI 的三语学习地图(繁中 canonical / 简中 / English,三语手工维护),共 10 个学习站（8 个主题 Stage + Stage 0 准备关 + Stage 7.5 阅读站）,并提供分组整理的 curated 资源与可运行练习,MIT 协议。
 
 已按本项目格式提供链接与简介。觉得不合适直接关掉就好,谢谢维护这份清单。
 
@@ -91,7 +91,7 @@ Thanks for maintaining Awesome-LLM.
 
 ```diff
   - [LangChain Chinese Getting Started Guide](https://github.com/liaokongVFX/LangChain-Chinese-Getting-Started-Guide): Chinese LangChain Tutorial for Beginners ![GitHub Repo stars](https://img.shields.io/github/stars/liaokongVFX/LangChain-Chinese-Getting-Started-Guide?style=social)
-+ - [WenyuChiou/awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh): Trilingual (zh-TW / zh-Hans / en) 8-stage learning roadmap for agentic AI. Stage 4 walks through LangChain, LangGraph, AutoGen, CrewAI, and Smolagents with prerequisites, time estimates, and hands-on exercises ![GitHub Repo stars](https://img.shields.io/github/stars/WenyuChiou/awesome-agentic-ai-zh?style=social)
++ - [WenyuChiou/awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh): Trilingual (zh-TW / zh-Hans / en) 10-stop learning roadmap for agentic AI: 8 topic stages plus Stage 0 readiness and the Stage 7.5 reading stop. Stage 4 covers Workflow Graphs, LangGraph, AutoGen, CrewAI, and Smolagents with hands-on exercises ![GitHub Repo stars](https://img.shields.io/github/stars/WenyuChiou/awesome-agentic-ai-zh?style=social)
 ```
 
 **PR title**: `Add awesome-agentic-ai-zh (trilingual learning roadmap) to Learn → Notebooks`
@@ -105,10 +105,10 @@ Proposing [WenyuChiou/awesome-agentic-ai-zh](https://github.com/WenyuChiou/aweso
 
 Why it fits:
 - Trilingual (zh-TW canonical · zh-Hans · en — all three hand-maintained, not MT), which fills a gap for non-English learners.
-- Stage 4 (Agent Frameworks) walks new developers through LangChain / LangGraph / AutoGen / CrewAI / Smolagents with prerequisites, time estimates, and hands-on exercises.
+- Stage 4 (Workflow Graphs & Agent Frameworks) walks new developers through LangChain / LangGraph / AutoGen / CrewAI / Smolagents with prerequisites, time estimates, and hands-on exercises.
 - The §11 catalog has 7 Chinese-ecosystem entries including `chatchat-space/Langchain-Chatchat` and the LangChain Chinese Getting Started Guide already in your list.
 
-Stats (refresh on send-day): ★1.9k, MIT licensed, rendered docs at https://wenyuchiou.github.io/awesome-agentic-ai-zh/. CI runs banned-word, link-rot, and anchor-integrity lints on every PR.
+MIT licensed, with rendered docs at https://wenyuchiou.github.io/awesome-agentic-ai-zh/. CI runs banned-word, link-rot, and anchor-integrity lints on every PR. Popularity metrics are intentionally omitted because they drift.
 
 If a different section works better, happy to redirect. Thanks for maintaining awesome-langchain.
 
@@ -126,7 +126,7 @@ If a different section works better, happy to redirect. Thanks for maintaining a
 **Entry line**:
 
 ```markdown
-- [WenyuChiou/awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) — agentic AI 的三语(繁中 / English / 简中)8 阶段学习地图,从 Stage 0 的 LLM 基础走到 Stage 8 的多代理编排,240+ curated 资源 + 可跑的范例,MIT。和 ai-guide 互补:ai-guide 找 project、这份找学习顺序。
+- [WenyuChiou/awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) — agentic AI 的三语学习地图（繁中 / English / 简中），从 Stage 0 的 LLM 基础，走到 Stage 7 的多 Agent 系统与稳定运作，再到 Stage 8 的 Agent Interfaces；包含 curated 资源与可运行范例，采用 MIT。和 ai-guide 互补：ai-guide 找 project，这份找学习顺序。
 ```
 
 **PR title**: `添加 awesome-agentic-ai-zh(三语 agentic AI 学习地图)到「AI 学习路线」`
@@ -138,7 +138,7 @@ If a different section works better, happy to redirect. Thanks for maintaining a
 
 想把 [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) 加到「AI 学习路线」或「相关资源」section(放哪边你决定)。
 
-这份是 agentic AI 的三语学习地图(繁中 canonical / 简中 / English,三语手工维护,不是机翻),8 个阶段从 Stage 0 的 LLM 基础排到 Stage 8 的多代理编排,每阶段标了预估时程、入门条件、该读什么,目前 240+ curated 资源,MIT 协议。
+这份是 agentic AI 的三语学习地图（繁中 canonical / 简中 / English，三语手工维护，不是机翻）：从 Stage 0 的 LLM 基础，走到 Stage 7 的多 Agent 系统与稳定运作，再到 Stage 8 的 Agent Interfaces。每阶段标了预估时程、入门条件与该读什么，并提供分组整理的 curated 资源，采用 MIT 协议。
 
 定位上和 ai-guide 互补,不是取代:ai-guide 是资源大全,这份补的是「该按什么顺序学」。常见读者是想学但不知道先学哪个的工程师,走完阶段后回 ai-guide 找具体 project 用。
 
@@ -161,7 +161,7 @@ If a different section works better, happy to redirect. Thanks for maintaining a
 ```markdown
 你好 Datawhale 团队,
 
-我在维护 [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) —— 一份 agentic AI 的三语(繁中 canonical / 简中 / English)8 阶段学习地图,240+ curated 资源,MIT。
+我在维护 [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) —— 一份 agentic AI 的三语(繁中 canonical / 简中 / English)10 站学习地图（8 个主题 Stage + Stage 0 准备关 + Stage 7.5 阅读站）,分组整理的 curated 资源,MIT。
 
 我们这边已经把 Hello-Agents 放进了「走完前面阶段后的延伸阅读」(无条件,已经 ship)。读者主要是走完 Stage 4 之后想进 framework 跟 multi-agent 的人,Hello-Agents 正好是下一阶段最强的中文教材。
 
@@ -187,7 +187,7 @@ If a different section works better, happy to redirect. Thanks for maintaining a
 **Entry line** (matches their `*   [Name](URL) - desc ![stars]` format):
 
 ```markdown
-*   [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) - Trilingual (Traditional Chinese / English / Simplified Chinese) 8-stage learning roadmap for agentic AI, from LLM basics to multi-agent systems, with 240+ curated resources and runnable examples. [![GitHub Repo stars](https://img.shields.io/github/stars/WenyuChiou/awesome-agentic-ai-zh?style=social)](https://github.com/WenyuChiou/awesome-agentic-ai-zh)
+*   [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) - Trilingual (Traditional Chinese / English / Simplified Chinese) 10-stop learning roadmap for agentic AI: 8 topic stages plus Stage 0 readiness and the Stage 7.5 reading stop, with curated resources and runnable examples. [![GitHub Repo stars](https://img.shields.io/github/stars/WenyuChiou/awesome-agentic-ai-zh?style=social)](https://github.com/WenyuChiou/awesome-agentic-ai-zh)
 ```
 
 **PR title**: `Add awesome-agentic-ai-zh (trilingual agentic-AI learning roadmap) to Related`
@@ -199,7 +199,7 @@ Hi Jenqyang,
 
 Proposing awesome-agentic-ai-zh for the Related section — happy to move it wherever fits best, I wasn't sure which subsection is right.
 
-It's a trilingual learning roadmap for agentic AI: Traditional Chinese (canonical), English, and Simplified Chinese, all three hand-maintained rather than machine-translated. The structure runs from Stage 0 (what an LLM is, how tokens work) up to Stage 8 (multi-agent orchestration, Computer Use / Browser Use / sandboxes), with 240+ curated resources and small runnable examples.
+It's a trilingual learning roadmap for agentic AI: Traditional Chinese (canonical), English, and Simplified Chinese, all three hand-maintained rather than machine-translated. The structure runs from Stage 0 (what an LLM is, how tokens work), through Stage 7 (multi-agent systems and production engineering), to Stage 8 (Agent Interfaces: Computer Use, Browser Use, and sandboxes), with curated resources and small runnable examples.
 
 The gap it fills: most agent lists, including yours, are catalogs you reach for once you know what you want. This is the "where do I start, and in what order" layer for people who don't yet. MIT licensed; CI checks links and anchors on every PR.
 

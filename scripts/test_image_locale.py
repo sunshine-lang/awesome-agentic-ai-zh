@@ -39,6 +39,13 @@ def _run(files: dict, assets=(), args=()):
         (root / "scripts" / SCRIPT.name).write_text(
             SCRIPT.read_text(encoding="utf-8"), encoding="utf-8"
         )
+        # The gate imports the shared fence parser (md_fences, issue #97),
+        # so the temp repo needs it too or the subprocess dies on ImportError
+        # and every assertion below fails for the wrong reason.
+        _SHARED = SCRIPT.parent / "md_fences.py"
+        (root / "scripts" / _SHARED.name).write_text(
+            _SHARED.read_text(encoding="utf-8"), encoding="utf-8"
+        )
         for a in assets:
             p = root / a
             p.parent.mkdir(parents=True, exist_ok=True)
@@ -158,6 +165,23 @@ def test_repo_currently_has_no_fixable_mismatch():
         cwd=str(Path(__file__).resolve().parent.parent),
     )
     assert r.returncode == 0, f"fixable image-locale mismatch present:\n{r.stdout}"
+
+
+def test_unreferenced_diagram_is_an_error():
+    rc, out = _run(
+        {"page.md": "No image here.\n"},
+        assets=["resources/diagrams/old.png"],
+    )
+    assert rc == 1, out
+    assert "unreferenced diagram: resources/diagrams/old.png" in out
+
+
+def test_referenced_diagram_is_clean():
+    rc, out = _run(
+        {"page.md": "![clear alt](resources/diagrams/current.png)\n"},
+        assets=["resources/diagrams/current.png"],
+    )
+    assert rc == 0, out
 
 
 def _run_all():

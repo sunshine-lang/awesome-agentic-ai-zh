@@ -2,166 +2,149 @@
 
 > [繁體中文](./for-developer.md) | [简体中文](./for-developer.zh-Hans.md) | **English**
 
-> 🚀 **First time installing Claude Code or writing `CLAUDE.md` / `SKILL.md`?** The quick setup guide is [`resources/setup-guide.en.md` D-E](../resources/setup-guide.en.md). Skip it if you already know this.
+[← Back to the main route](../README.en.md)
 
-> [← Back to main path README](../README.en.md) · Continue here after **Track A's A3** or **Track B's Stage 7**. Apply agentic AI to coding workflows.
+<!-- freshness: canonical=branches/for-developer.md; verified_on=2026-08-29; scope=coding-agents,tool-identity,permissions,sandboxing,project-status; max_age_days=90 -->
 
-## Use Cases (Developer Scenarios × How AI Helps)
+<a id="use-cases-developer-scenarios--how-ai-helps"></a>
+## 📌 What this path helps you do
 
-The table below splits a developer's day into 7 common scenarios. Each has a different pain point, and each calls for a different level of AI tooling:
+An AI coding assistant reads files, edits code, and runs commands. It is fast and can be wrong. This path teaches you to narrow the task, understand each change, and let a person decide whether to keep it.
 
-| Scenario | Pain point | How AI helps | Recommended tools (light → heavy) |
-|---|---|---|---|
-| **AI pair programming** | You forget syntax mid-flow or cannot recall a method name | Autocomplete + rewrite + explanation | Cursor / Copilot → Claude Code |
-| **Multi-file refactoring** | Changing one class risks missed references; cross-file rename is error-prone | Batch refactors while keeping style consistent across many files | Cursor → Claude Code → codex-delegate |
-| **Code review (your own PR)** | Reviewing your own diff makes it easy to miss problems | Find bugs / smells and check edge cases | Claude Code / Cline → Continue (CI) |
-| **Writing tests** | TDD cases are easy to miss; coverage falls short | Generate pytest cases from signatures / specs | Claude Code + Aider |
-| **Debugging** | Logs are thin; stack traces are hard to interpret | Explain traces, generate hypotheses, run minimal repros | Claude Code |
-| **Docs** | Docstrings / READMEs lag behind refactors | Generate docs from code and update docs alongside PRs | Claude Code |
-| **CI / team automation** | Manual review is repetitive; style varies across people | Run automated review / lint in GitHub Actions | Claude Code Action + Continue |
+Recommended route: `A1 → A2 → Stage 5 core 5.1–5.4 → A3`. Progress through [A1](../tracks/cli/A1-cli-intro.en.md), [A2](../tracks/cli/A2-cli-workflow.en.md), [Stage 5](../stages/05-claude-code-ecosystem.en.md), and [A3](../tracks/cli/A3-cli-production.en.md); [Stage 8](../stages/08-agent-interfaces.en.md) is recommended but does not block starting this path. Track B readers can start with [Stage 7](../stages/07-multi-agent-production.en.md).
 
-> 💡 **Individual vs team**: the first 6 rows are personal daily workflows. The final row (CI) is team governance. For teams under 5 people, AI automation in CI often has low ROI; you can defer it.
+## 🎯 Learning goals
 
-## Curated Projects
+After this page, you can:
+1. Separate what a tool is from the surface where you use it.
+2. Limit files, commands, and network access before the tool acts.
+3. Manage a small change with a diff, test, human review, and rollback.
+4. Check code quality, agent behavior, and production telemetry separately.
 
-> **CLI agent comparison**: 8 major CLI agents (Claude Code / Codex / OpenCode / Gemini CLI / goose / Aider / Hermes Agent / Grok Build) compared side-by-side in [`resources/cli-agents-guide.en.md`](../resources/cli-agents-guide.en.md). New to CLI agents and want step-by-step onboarding → [`tracks/cli/A1-cli-intro.en.md`](../tracks/cli/A1-cli-intro.en.md) (Track A first stop).
->
-> **MCP catalog**: Looking for integrations to wire CLI into daily tools (GitHub, Linear, Atlassian, Postgres, Playwright, Figma…) → [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md) (77+ entries by category).
->
-> This page only lists tool entry points directly relevant to developer workflows.
+<a id="coding-agents"></a>
+## 🧩 Eight core terms
 
-### Coding Agents
+- **IDE／Surface (Integrated Development Environment / interface)**: an IDE is a code workbench; a Surface is where you operate a tool, such as CLI, IDE, desktop, or cloud. One tool can have many Surfaces; looking like an IDE does not mean it only works in an IDE.
+- **Coding Agent／Harness**: a Coding Agent reads code, uses tools, edits files, and continues from results. A Harness connects model, tools, rules, and execution loops. They may be in one product but are not the same thing.
+- **Provider／Router**: a Provider supplies model services; a Router sends requests to one or more Providers. A Router is not a model and does not manage repo permissions.
+- **Model／Runtime**: a Model generates the next content; a Runtime runs it locally or in a service. A local Runtime is not a coding agent.
+- **Sandbox**: a limited area for running code. It reduces the blast radius but is not a perfect guarantee.
+- **Approval**: a person explicitly permits a high-risk action. A passing Test does not grant push, merge, or deploy permission.
+- **Diff／Rollback**: a Diff shows what changed; Rollback reverses the unwanted change. Read the Diff first so you know which files Rollback should touch.
+- **Eval／Observability**: Eval tests quality with fixed cases; Observability records traces, logs, cost, and errors during execution.
 
-#### [Cursor](https://www.cursor.com/) ⭐⭐⭐⭐⭐
-Editor-integrated AI pair-programming tool. Widely adopted in AI editor tools and a useful baseline for comparing other IDE agents.
+### Do not mix up OpenCode, Pi, OpenRouter, and Ollama
 
-#### [Aider-AI/aider](https://github.com/Aider-AI/aider) ⭐⭐⭐⭐⭐
-★ 47k+ · Apache-2.0 — git-aware CLI pair-programmer. Edits files in your repo directly and writes commits for you. **The open-source reference for "git-native AI editing."** Model-agnostic.
+| Name | Core identity | Plain-language description |
+|---|---|---|
+| OpenCode | Coding Agent／Harness | Reads, edits, and tests in a code project |
+| Pi | Coding Agent／Harness | Adds extensions, skills, or RPC to a small core |
+| OpenRouter | API Router | Sends model requests to Providers; does not edit your repo |
+| Ollama | Local Model Runtime | Runs models and an API locally; is not itself a Coding Agent |
 
-#### [anthropics/claude-code](https://github.com/anthropics/claude-code) ⭐⭐⭐⭐⭐
-★ 138k+ — Anthropic's official agentic coding assistant. Skills + plugins ecosystem.
+**OpenCode／Pi do the work, OpenRouter routes requests, and Ollama runs local models.**
 
-#### [cline/cline](https://github.com/cline/cline) ⭐⭐⭐⭐⭐
-★ 65k+ · Apache-2.0 — VS Code extension, autonomous in-IDE agent: tool use, browser, step-by-step approval. **The first pick for VS Code users wanting IDE-native agentic dev.**
+<a id="code-review"></a>
+## 🛠 First exercise: make one small, reversible change
 
-#### [continuedev/continue](https://github.com/continuedev/continue) ⭐⭐⭐⭐
-★ 35k+ · Apache-2.0 — source-controlled AI checks, enforceable in CI. Represents the **team / governance** angle on coding agents.
+Use a disposable demo repo or a new branch. Paste this to a Coding Agent:
+```text
+First make a read-only plan; do not modify any files.
+Task: find one sentence in README.md that could be clearer without changing its technical meaning.
+Report which sentence, why it is small scope, which test or documentation check to run, and how to rollback.
+Before my explicit human Approval, do not write files. After approval, modify only README.md.
+Show git diff -- README.md and report the Test result. Do not push, merge, or deploy.
+```
+Read the plan and approve it as a human. After the change, run:
 
-#### [OpenHands (formerly OpenDevin)](https://github.com/All-Hands-AI/OpenHands) ⭐⭐⭐⭐
-★ 81k+ · MIT — open-source autonomous software development agent. More aggressive design than Aider / Claude Code — agent runs in its own sandbox and commits autonomously. Best for "throw a whole issue at it" scenarios.
-
-#### [block/goose](https://github.com/block/goose) ⭐⭐⭐⭐
-★ 51k+ · Apache-2.0 — Open-source, extensible AI agent that goes beyond code suggestions — install / execute / edit / test, with any LLM. Supports multiple LLM providers and MCP, ships as desktop app, CLI, and API. (Repo now resolves to `aaif-goose/goose`.)
-
-#### [RooCodeInc/Roo-Code](https://github.com/RooCodeInc/Roo-Code) ⭐⭐⭐ (⚠️ archived)
-★ 24k+ · Apache-2.0 — VS Code coding agent with a "**team of specialized modes**" model. Different from Cline's single-agent flow. **⚠️ Repo archived 2026-05 (read-only, no longer maintained)** — still usable, but don't expect new features.
-
-### Code Review
-
-#### [obra/superpowers](https://github.com/obra/superpowers) ⭐⭐⭐⭐
-20+ battle-tested skills including TDD patterns, debugging, collaboration patterns. Good source for code-review skill design.
-
-### Recommended Tools
-
-- [**yamadashy/repomix**](https://github.com/yamadashy/repomix) ⭐⭐⭐⭐⭐ ★ 27k+ — **Typical developer use case: package the whole codebase for a reviewer / refactor agent**. Outputs a single AI-friendly file (XML / Markdown / JSON) for Claude Code / Codex code review / refactoring. See the official README for technical details such as MCP server mode, tree-sitter compression, and secretlint filtering. **A must-have, daily-driver-grade tool for Track A.**
-
-## Workflows to Master (by frequency)
-
-| Frequency | Workflow | Steps (≤3) | Recommended tools | Best for |
-|---|---|---|---|---|
-| **Daily** | AI pair programming | (1) Open a branch<br>(2) Give the task to Claude Code and **ask for a plan first** (no code yet)<br>(3) Review plan → approve → code → review your own diff | Claude Code / Cursor / Cline | All developers |
-| **Daily** | Git-native AI editing | (1) `aider`<br>(2) Ask in natural language<br>(3) review + commit / `/undo` | Aider | People who want a clean git flow |
-| **Per PR** | Automated code review | (1) `.github/workflows/claude-review.yml`<br>(2) Capture git diff → run prompt → post back to PR<br>(3) human + AI review | Claude Code Action + Continue | Teams |
-| **Per feature** | Test generation | (1) Provide function signature + docstring<br>(2) Ask AI for pytest cases, including edge cases<br>(3) Run coverage + intentionally break a bug to verify tests catch it | Claude Code / Aider | Test-writing phase |
-| **Occasional** | Multi-file batch edits | (1) Claude writes a plan<br>(2) codex-delegate handles mechanical refactors<br>(3) Claude reviews the diff | Claude + codex-delegate | Refactors across 30+ files |
-
-> 💡 **Starter habit**: run "daily AI pairing" and "test generation" for a month first, then add automated PR review.
-
-### 3 Concrete Workflow Recipes
-
-**1. AI Pair Programming (daily cadence)**
-
-1. Start a feature → `git checkout -b feature/xxx`
-2. Hand the task to Claude Code / Cursor — **make it write a plan first** (don't dive into code)
-3. Review the plan, course-correct → only then approve coding
-4. After it's done: run tests + lint → review the diff yourself (**don't blind-accept**)
-5. Write the commit message yourself, or have AI draft and edit before committing
-
-**2. Aider Git-Native Flow (closest "pair with AI" experience)**
-```bash
-# Inside the repo
-aider --model anthropic/claude-sonnet-5
-
-# Natural-language ask
-> Add a timezone parameter to parse_date in utils.py, default UTC
-
-# Aider edits + commits automatically. To roll back:
-> /undo # undoes the last AI commit
+```powershell
+git diff -- README.md
+# Then run this repository's documentation test or smallest relevant test
 ```
 
-**3. PR-time Claude code review (GitHub Action)**
+If wrong, confirm README.md has no other work and Rollback only this exercise’s change; never clear the whole worktree.
 
-`.github/workflows/claude-review.yml`:
-```yaml
-on:
-  pull_request:
-jobs:
-  review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Run Claude review
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          # Use anthropics/claude-code-action or your own script
-          # Get git diff, run prompt, post results back to PR
-```
-Reference: official [`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action) GitHub Action.
+<a id="recommended-tools"></a><a id="tier-progression"></a>
+## 📚 Choose an entry point
 
-## Common Pitfalls (Anti-patterns)
+| What you want | Start with | Why |
+|---|---|---|
+| Learn permission and sandbox workflows | [Claude Code](https://code.claude.com/docs/en/overview) | Its docs separate permissions, isolation, and Surfaces |
+| Work through app, CLI, IDE, or cloud | [OpenAI Codex](https://github.com/openai/codex) | One Coding Agent works across multiple entry points |
+| Give a GitHub issue to a cloud agent | [GitHub Copilot cloud agent](https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent) | Understand cloud-agent versus IDE-agent mode |
+| Use an open, Provider-flexible tool | [OpenCode](https://github.com/anomalyco/opencode) | Keep Agent, Provider, and Router distinct |
+| Start in an IDE with step-by-step Approval | [Cline](https://github.com/cline/cline) | Practice approving tools, files, and browser actions |
 
-| ❌ Don't | ✅ Do instead |
+Do not ask only “which is strongest?” Ask what files and commands it can access, whether it can connect to the network, who approves high-risk actions, and how failure is reversed.
+
+## 📖 Required reading
+
+Read in order, answering one question for each:
+1. [Claude Code permissions](https://code.claude.com/docs/en/permissions): what do `allow`, `ask`, and `deny` mean?
+2. [OpenAI Codex agent approvals & security](https://learn.chatgpt.com/docs/agent-approvals-security): how do Sandbox, Approval, and network controls work together?
+3. [GitHub Copilot cloud agent](https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent): where do cloud and IDE agent modes run?
+4. [Pi — Permissions & Containerization](https://github.com/earendil-works/pi#permissions--containerization): who is responsible without a built-in permission Sandbox?
+5. [OpenRouter provider selection](https://openrouter.ai/docs/guides/routing/provider-selection): how does a Router select a Provider?
+6. [Ollama docs](https://docs.ollama.com/): what does a Local Model Runtime provide, and what does it not provide?
+
+<a id="curated-projects"></a><a id="community-note"></a>
+## ⭐ Curated tools and projects
+<small>Tool identity, Surface, license, and repository status were checked against official documentation and the GitHub API on 2026-08-29 UTC. Ratings are editorial ratings for this map, not GitHub stars or performance rankings.</small>
+
+<table>
+<thead><tr><th scope="col">Category</th><th scope="col">Official tool / project</th><th scope="col">Core identity</th><th scope="col">Main Surface</th><th scope="col">Good for</th><th scope="col">Status, license, and limits</th><th scope="col">Rating</th></tr></thead>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">Official / commercial Coding Agents</th><td><a href="https://code.claude.com/docs/en/overview">Claude Code</a></td><td>coding agent</td><td>CLI／IDE／desktop／cloud</td><td>Permissions, sandbox, project rules, and workflow</td><td>Commercial; keep permission prompts and start with a small repo</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/openai/codex">openai/codex</a></td><td>coding agent</td><td>app／CLI／IDE／cloud</td><td>Compare local and remote operation</td><td>Active; repository code is Apache-2.0, while app/cloud follow their service terms; do not disable required Approval or expand workspace permissions</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent">GitHub Copilot</a></td><td>coding agent／code assistant</td><td>GitHub／IDE／CLI／app</td><td>Move from IDE collaboration to issues, branches, and PRs</td><td>Commercial; Cloud Agent and IDE mode have different permissions; output needs human review</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://cursor.com/docs">Cursor</a></td><td>coding agent + AI editor</td><td>IDE／CLI／cloud／SDK</td><td>Compare editor, background agent, and other Surfaces</td><td>Commercial; check permissions and data boundaries per Surface</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody><tbody>
+<tr><th scope="rowgroup" rowspan="6">Open-source Coding Agents／Harnesses</th><td><a href="https://github.com/anomalyco/opencode">anomalyco/opencode</a></td><td>coding agent／harness</td><td>terminal／desktop</td><td>Switch Provider or compatible endpoint</td><td>Active; MIT; <code>AGENTS.md</code> has priority, with <code>CLAUDE.md</code> used only when absent</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/earendil-works/pi">earendil-works/pi</a></td><td>coding agent／harness</td><td>terminal／SDK／RPC</td><td>Add extensions, skills, and custom workflows to a small core</td><td>Active; MIT; no built-in Sandbox, so isolate it yourself</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/Aider-AI/aider">Aider-AI/aider</a></td><td>coding agent／pair programmer</td><td>CLI</td><td>Manage small changes with Git diff, commit, and undo</td><td>Active; Apache-2.0; auto-commit does not skip hooks</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/aaif-goose/goose">aaif-goose/goose</a></td><td>coding／general agent</td><td>CLI／desktop／API</td><td>Connect Providers, MCP, and extensions</td><td>Active; Apache-2.0; start with low-privilege extensions</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/cline/cline">cline/cline</a></td><td>coding agent</td><td>IDE／CLI／SDK</td><td>Approve tools, files, and browser actions step by step</td><td>Active; Apache-2.0; an IDE Surface is not a safety guarantee</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/OpenHands/OpenHands">OpenHands/OpenHands</a></td><td>software-development agent platform</td><td>web／CLI／SDK／cloud</td><td>Handle a fuller issue in an isolated environment</td><td>Active; MIT; larger tasks need checkpoints and human review</td><td>⭐⭐⭐⭐</td></tr>
+</tbody><tbody>
+<tr><th scope="rowgroup" rowspan="2">Workflow support</th><td><a href="https://github.com/obra/superpowers">obra/superpowers</a></td><td>workflow collection</td><td>agent plugin／skills</td><td>Planning, TDD, debugging, and review workflows</td><td>Active; MIT; adapt templates to your repo gate</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/yamadashy/repomix">yamadashy/repomix</a></td><td>repo context packer</td><td>CLI／MCP</td><td>Prepare one-time codebase context</td><td>Active; MIT; exclude secrets and unnecessary files before output</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody><tbody>
+<tr><th scope="rowgroup" rowspan="2">Maintenance / history</th><td><a href="https://github.com/continuedev/continue">continuedev/continue</a></td><td>coding agent</td><td>CLI／VS Code／JetBrains</td><td>Study the history of open-source editor-agent integration</td><td>Read-only; Apache-2.0; official 2.0.0 is the last version and it is no longer actively maintained</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/RooCodeInc/Roo-Code">Roo Code</a></td><td>coding agent</td><td>VS Code extension</td><td>Study multi-mode agent design history</td><td>Archived; Apache-2.0; use a maintained tool for new projects</td><td>⭐⭐⭐</td></tr>
+</tbody></table>
+
+<a id="other-branches-also-apply"></a>
+## ✅ Completion check and next stop
+- [ ] I can explain Coding Agent／Harness, Router, and Local Model Runtime.
+- [ ] The tool gives a read-only plan and changes one file only after human Approval.
+- [ ] I read the complete Diff and ran the relevant Test.
+- [ ] I know how to Rollback only this change, and the tool did not push, merge, or deploy.
+
+Next stop: design Skills／MCP with [Stage 5](../stages/05-claude-code-ecosystem.en.md); build Eval, Observability, and production gates with [Stage 7](../stages/07-multi-agent-production.en.md); compare CLI agents in the [CLI agent guide](../resources/cli-agents-guide.en.md).
+
+<details markdown="1"><summary>⏱ Expand: time, environment, cost, and secret boundaries</summary>
+The first exercise takes about 20–40 minutes. Use a disposable repo or new branch, check `git status`, and do not let an agent overwrite work from a colleague or another tool. Keep API keys in environment variables or a secret store, not prompts, README files, or commits. Disable unnecessary network, external-directory, and shell access. Cost varies with Model, Provider, input, and retries. Sandbox limits the blast radius; protect external services, credentials, and human Approval separately.
+</details>
+<a id="workflows-to-master-by-frequency"></a><a id="3-concrete-workflow-recipes"></a>
+<details markdown="1"><summary>🧪 Expand: from daily changes to team workflows</summary>
+### Daily development
+`plan → human Approval → small change → diff → test → review → commit`. Every step should be stoppable.
+### PR review
+Treat agent advice as candidate findings; require files, behavior, reproduction, and a suggested Test. Unsupported guesses must not block.
+### CI
+Use read-only tokens, minimum repository permissions, and fixed inputs. Do not turn Issue, PR, or web text directly into executable commands. Keep releases, merges, and secrets behind extra Approval.
+### Batch refactoring
+Build baseline tests, then work by module. Each batch gets a checkpoint, Diff, and Rollback; do not hand over the whole repo at once.
+</details>
+<a id="common-pitfalls-anti-patterns"></a>
+<details markdown="1"><summary>🧯 Expand: common mistakes, alternatives, and rollback</summary>
+| Problem | Use this instead |
 |---|---|
-| Let AI push directly to main | Always go through PR → review → merge |
-| Blind-accept large refactor diffs | Break into < 50 LOC chunks, review each |
-| Hand `.env` / API keys to the AI | Use your tool's exclusion mechanism — Cursor `.cursorignore` / Aider `.aiderignore` / Claude Code `permissions.deny` in `.claude/settings.json` |
-| Let AI run shell freely against production code | Sandbox + permission whitelist |
-| Take AI-generated tests at face value | Run coverage + intentionally break a unit to see if tests catch it |
-| Discover wrong direction after many commits | **Plan-first** mode: review the plan before any coding |
-
-## Tier Progression
-
-Recommended progression:
-
-| Tier | Tools | Best for | Learning cost |
-|---|---|---|---|
-| **Tier 0** | Cursor / Copilot / Claude.ai | IDE chat, autocomplete, no custom agents | 0 (if you can use an editor) |
-| **Tier 1** | Claude Code / Cline / OpenCode + `CLAUDE.md` | CLI with file-system access, human-in-the-loop | 1-2 days |
-| **Tier 2** | Custom Skills + MCP server | Packaging dev workflows as shared team skills | 1 week of setup |
-| **Tier 3** | Auto-running agents in CI + production observability | [Stage 7](../stages/07-multi-agent-production.en.md) territory | Several weeks, governance required |
-
-> **Most individual developers can stay at Tier 0-1**. **Validate ROI before going Tier 2+**: it is only worth the investment if the team is large, the workflows repeat often, and failures are hard to reverse.
-
-## Other Branches Also Apply
-
-Branches that overlap heavily with developers:
-
-- **Doing ML research / writing papers** → [Researcher branch](./for-researcher.en.md)
-- **Wire Notion / Linear / Atlassian / Postgres / Figma into your CLI** → [`resources/mcp-skills-catalog.en.md`](../resources/mcp-skills-catalog.en.md)
-- **Author your own Skill / MCP server** → [Stage 5](../stages/05-claude-code-ecosystem.en.md) + [`resources/cookbook.en.md`](../resources/cookbook.en.md)
-- **Schema design details** → [`resources/schema-design-cheatsheet.en.md`](../resources/schema-design-cheatsheet.en.md)
-- **CLI from zero** → [Track A](../tracks/cli/A1-cli-intro.en.md) (A1 → A2 → A3)
-
-## Community Note
-
-Contributions especially welcome:
-
-- IDE-specific config templates (Cursor `.cursorrules`, Claude Code `CLAUDE.md` for Python / Go / Rust, etc.)
-- Language-specific Skills (Python / TypeScript / Rust / Go best-practice patterns)
-- CI / pre-commit hook integration case studies
-- **Multi-developer team governance** — sharing Skills across devs, permission design, cost tracking
-
-See [CONTRIBUTING.en.md](../CONTRIBUTING.en.md).
+| An IDE screen makes you think the tool only works in an IDE | Separate core identity from every Surface |
+| Treating OpenRouter, Ollama, and OpenCode as one category | Choose Router, Runtime, and Coding Agent separately |
+| Accepting a green Test immediately | Read the Diff, confirm coverage, then approve |
+| Judging safety by line count | Check scope, testability, reversibility, and readable Diff |
+| Skipping hooks because Aider auto-commits | Enable required verification/hooks and follow the review gate |
+| Multiple tools edit one file simultaneously | Clarify ownership, use separate worktrees, and integrate manually |
+Rollback only confirmed targets after checking `git status` and Diff; never use a broad reset to erase others’ work.
+</details>

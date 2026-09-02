@@ -11,7 +11,7 @@ labels: suggestion
 <!-- 例如：https://github.com/example/repo -->
 
 ## 建議放在哪個 stage / branch
-<!-- 例如：Stage 4 — Agent Frameworks  或  for-researcher branch -->
+<!-- 例如：Stage 4 — Workflow Graphs & Agent Frameworks  或  for-researcher branch -->
 
 ## 為什麼這個 project 教這個 stage？/ Why does it teach this stage?
 <!-- 1-2 段。具體說明它教什麼、跟現有 entries 的差異 -->

@@ -21,11 +21,15 @@ hide:
 </div>
 
 <div class="aaz-stats" markdown>
-<div class="aaz-stat"><span class="aaz-num">8</span><span class="aaz-lbl">stages</span></div>
-<div class="aaz-stat"><span class="aaz-num">240+</span><span class="aaz-lbl">projects</span></div>
-<div class="aaz-stat"><span class="aaz-num">23</span><span class="aaz-lbl">exercises</span></div>
+<div class="aaz-stat"><span class="aaz-num">10</span><span class="aaz-lbl">learning stops</span></div>
+<div class="aaz-stat"><span class="aaz-num">curated</span><span class="aaz-lbl">projects</span></div>
+<div class="aaz-stat"><span class="aaz-num">hands-on</span><span class="aaz-lbl">exercises</span></div>
 <div class="aaz-stat"><span class="aaz-num">3</span><span class="aaz-lbl">languages</span></div>
 </div>
+
+## 🤖 First: what is an AI Agent?
+
+An **AI Agent** is an AI system that can decide what to do next and take action toward a person's goal. Once given a goal, it reads the current situation, uses tools when needed, then continues, corrects course, stops, or hands control back based on the result. It can do work automatically on a person's behalf, but only within clear rules and permissions.
 
 ## Pick a learning track
 
@@ -49,9 +53,17 @@ hide:
 
 </div>
 
-## Eight stages, step by step
+## Stage 0 through Stage 8, plus the Stage 7.5 reading stop
 
 <div class="grid cards" markdown>
+
+-   :material-school-outline:{ .lg .middle } __Stage 0 — Foundations__
+
+    ---
+
+    Check Python, Git, and API basics first; skip this stop if you are ready.
+
+    [:octicons-arrow-right-24: Open](stages/00-foundations.en.md)
 
 -   :material-message-text:{ .lg .middle } __Stage 1 — LLM basics__
 
@@ -69,7 +81,7 @@ hide:
 
     [:octicons-arrow-right-24: Open](stages/02-prompt-engineering.en.md)
 
--   :material-tools:{ .lg .middle } __Stage 3 — Tool use__
+-   :material-tools:{ .lg .middle } __Stage 3 — Tool Use & Your First Agent Loop__
 
     ---
 
@@ -77,7 +89,7 @@ hide:
 
     [:octicons-arrow-right-24: Open](stages/03-tool-use-and-hello-agent.en.md)
 
--   :material-view-grid:{ .lg .middle } __Stage 4 — Agent frameworks__
+-   :material-view-grid:{ .lg .middle } __Stage 4 — Workflow Graphs & Agent Frameworks__
 
     ---
 
@@ -101,13 +113,21 @@ hide:
 
     [:octicons-arrow-right-24: Open](stages/06-memory-rag.en.md)
 
--   :material-account-group:{ .lg .middle } __Stage 7 — Multi-agent__
+-   :material-account-group:{ .lg .middle } __Stage 7 — Agent Production Engineering__
 
     ---
 
-    Harness, multi-agent collaboration, production.
+    Make loops, workflow graphs, harnesses, and multi-agent work reliable.
 
     [:octicons-arrow-right-24: Open](stages/07-multi-agent-production.en.md)
+
+-   :material-book-open-page-variant:{ .lg .middle } __Stage 7.5 — Advanced reading stop__
+
+    ---
+
+    Pick one advanced idea at a time and decide whether your system needs it.
+
+    [:octicons-arrow-right-24: Open](stages/07.5-advanced-agentic-concepts.en.md)
 
 -   :material-power-plug:{ .lg .middle } __Stage 8 — Agent interfaces__
 

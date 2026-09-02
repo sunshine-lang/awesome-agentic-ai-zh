@@ -16,17 +16,17 @@
 
 ```
 For folks asking "where do I start with agentic AI?" — built a trilingual
-8-stage learning roadmap (zh-TW · zh-Hans · en) covering Stage 0 (foundations)
-through Stage 8 (multi-agent production). 240+ curated projects with cost,
+learning roadmap (zh-TW · zh-Hans · en) covering Stage 0 (foundations)
+through Stage 8 (Agent Interfaces: Computer Use, Browser Use, and Code Sandbox). Curated projects with cost,
 audience, and time estimates per stage.
 
-⭐ 525 in week 1 · MIT
+MIT
 🔗 github.com/WenyuChiou/awesome-agentic-ai-zh
 ```
 
 ## Variant 2 — HF Community Post / Discuss (200-300 words)
 
-**Title**: Trilingual 8-stage learning roadmap for agentic AI (Stage 0 → multi-agent production)
+**Title**: Trilingual agentic-AI learning roadmap (Stage 0 → Agent Interfaces)
 
 **Body**:
 
@@ -34,20 +34,22 @@ audience, and time estimates per stage.
 Hi HF community,
 
 I've been building [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh)
-— a trilingual (zh-TW canonical · zh-Hans · English) 8-stage learning roadmap
+— a trilingual (zh-TW canonical · zh-Hans · English) Stage 0 → Stage 8 learning roadmap
 for agentic AI:
 
 - **Stage 0**: Foundations (Python, git, CLI, REST APIs)
-- **Stage 1-3**: LLM basics, prompt engineering, RAG, frameworks
-- **Stage 4**: Agentic frameworks (LangChain, LangGraph, AutoGen, etc.)
+- **Stage 1**: LLM basics
+- **Stage 2**: Prompt engineering and a first look at context
+- **Stage 3**: Tool use and a first Agent Loop
+- **Stage 4**: Agent frameworks and Workflow Graphs
 - **Stage 5**: Claude Code ecosystem (MCP, Skills, Plugins)
-- **Stage 6**: Multi-agent + memory + production hardening
-- **Stage 7**: Production deployment + observability
+- **Stage 6**: Context engineering, RAG, and memory
+- **Stage 7**: Multi-agent systems and production engineering
 - **Stage 8**: Agent Interfaces (Computer Use, Browser Use, Code Sandbox)
 
-Each stage has time estimates, prerequisites, hands-on exercises, and 240+
-curated projects across the catalog. The catalog includes MCP servers, Skills,
-and integrations grouped by 16 use-case categories — including a section
+Each stage has time estimates, prerequisites, hands-on exercises, and curated
+projects across the catalog. The catalog includes MCP servers, Skills,
+and integrations grouped by use case — including a section
 specifically for the Chinese-language ecosystem (Coze, Qwen-Agent, LangChain
 zh learning, etc.).
 
@@ -55,8 +57,7 @@ Some HF community members may find it useful as a "**before you train your
 first model**" structured path, especially folks asking where to start with
 agents. Trilingual support is genuinely tested (not machine-translated).
 
-Stats (week 1): ★525 / 50 forks / 3,185 unique visitors / 408 unique cloners.
-MIT, contributors welcome.
+MIT, contributors welcome. Popularity and traffic totals are intentionally omitted because they drift.
 
 Happy to take feedback if any HF maintainer thinks specific stages should
 reference HF resources more directly (Stage 1 already cites HF transformers
@@ -70,10 +71,10 @@ and HF model cards).
 ```
 Hi <name>,
 
-I built awesome-agentic-ai-zh, a trilingual (zh-TW / zh-Hans / en) 8-stage
-learning roadmap for agentic AI — covers foundations through multi-agent
-production with 240+ curated projects, cost/time estimates per stage. ★525
-+ 3,185 unique visitors in week 1.
+I built awesome-agentic-ai-zh, a trilingual (zh-TW / zh-Hans / en) 10-stop
+learning roadmap for agentic AI — covers foundations through Stage 7
+multi-agent production and Stage 8 Agent Interfaces, with curated projects
+and cost/time estimates per stage. Popularity metrics are intentionally omitted.
 
 Stage 1 (LLM basics) and Stage 4 (frameworks) reference HF transformers
 and HF Hub fairly heavily. Wondering if there's a HF-side touchpoint that

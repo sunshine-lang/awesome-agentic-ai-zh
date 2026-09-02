@@ -21,11 +21,15 @@ hide:
 </div>
 
 <div class="aaz-stats" markdown>
-<div class="aaz-stat"><span class="aaz-num">8</span><span class="aaz-lbl">階段</span></div>
-<div class="aaz-stat"><span class="aaz-num">240+</span><span class="aaz-lbl">精選專案</span></div>
-<div class="aaz-stat"><span class="aaz-num">23</span><span class="aaz-lbl">動手練習</span></div>
+<div class="aaz-stat"><span class="aaz-num">10</span><span class="aaz-lbl">學習站</span></div>
+<div class="aaz-stat"><span class="aaz-num">精選</span><span class="aaz-lbl">專案</span></div>
+<div class="aaz-stat"><span class="aaz-num">動手</span><span class="aaz-lbl">練習</span></div>
 <div class="aaz-stat"><span class="aaz-num">3</span><span class="aaz-lbl">語言</span></div>
 </div>
+
+## 🤖 先懂一件事：AI Agent 是什麼？
+
+**AI Agent**（AI 代理人）是能為了人的目標，自己判斷下一步並採取行動的 AI 系統。人給它目標後，它會看目前情況、必要時使用工具，再依結果繼續、修正、停止，或把控制權交還給人；它可以自動替人完成工作，但只能在規則與權限內行動。
 
 ## 選一條學習路線
 
@@ -49,9 +53,17 @@ hide:
 
 </div>
 
-## 8 個階段,循序漸進
+## 從 Stage 0 到 Stage 8，另有 Stage 7.5 閱讀站
 
 <div class="grid cards" markdown>
+
+-   :material-school-outline:{ .lg .middle } __Stage 0 — 基礎準備__
+
+    ---
+
+    先確認 Python、Git、API 是否準備好；會了就跳過。
+
+    [:octicons-arrow-right-24: 進入](stages/00-foundations.md)
 
 -   :material-message-text:{ .lg .middle } __Stage 1 — LLM 基礎__
 
@@ -69,7 +81,7 @@ hide:
 
     [:octicons-arrow-right-24: 進入](stages/02-prompt-engineering.md)
 
--   :material-tools:{ .lg .middle } __Stage 3 — 工具呼叫__
+-   :material-tools:{ .lg .middle } __Stage 3 — 工具使用與第一個 Agent Loop__
 
     ---
 
@@ -77,7 +89,7 @@ hide:
 
     [:octicons-arrow-right-24: 進入](stages/03-tool-use-and-hello-agent.md)
 
--   :material-view-grid:{ .lg .middle } __Stage 4 — Agent 框架__
+-   :material-view-grid:{ .lg .middle } __Stage 4 — Workflow Graph 與 Agent 框架__
 
     ---
 
@@ -101,13 +113,21 @@ hide:
 
     [:octicons-arrow-right-24: 進入](stages/06-memory-rag.md)
 
--   :material-account-group:{ .lg .middle } __Stage 7 — 多 Agent__
+-   :material-account-group:{ .lg .middle } __Stage 7 — Agent Production Engineering__
 
     ---
 
-    harness、多 agent 協作、production 化。
+    把 loop、workflow graph、harness 與多 agent 協作做得穩定。
 
     [:octicons-arrow-right-24: 進入](stages/07-multi-agent-production.md)
+
+-   :material-book-open-page-variant:{ .lg .middle } __Stage 7.5 — 進階概念閱讀站__
+
+    ---
+
+    一次挑一個進階概念，判斷系統是否真的需要。
+
+    [:octicons-arrow-right-24: 進入](stages/07.5-advanced-agentic-concepts.md)
 
 -   :material-power-plug:{ .lg .middle } __Stage 8 — Agent 介面__
 

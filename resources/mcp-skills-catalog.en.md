@@ -2,66 +2,81 @@
 
 > [繁體中文](./mcp-skills-catalog.md) | [简体中文](./mcp-skills-catalog.zh-Hans.md) | **English**
 
-> Connect Claude Code (or any other CLI agent) to the apps you already use, without window-hopping. This page is a curated index of 77+ MCP servers / Claude Skills / integrations grouped by use case (incl. research-workflow + multi-LLM-delegation dedicated sections).
+> This is a task-based catalog for finding tools when needed, not an install list. Start with an official entry point; expand a category only when the work calls for it.
 
----
+## 📌 How to use this catalog
 
-## How to use this catalog
+1. First state whether you need to read data or write to a real service.
+2. Prefer official hosted / reference entry points, then check maintenance, licensing, and permissions.
+3. Start with test data, read-only access, and least privilege. Keep human approval before write, send, or delete actions.
 
-- **Looking for a specific tool's MCP**: jump to the relevant section below
-- **Want to know what MCP / Skills / Plugins are**: see [RESOURCES.en.md "Three core terms"](../RESOURCES.en.md#three-core-terms-mcp--skills--plugins) first, then [Stage 5 — Claude Code Ecosystem](../stages/05-claude-code-ecosystem.en.md)
-- **Want hands-on exercises (install + test)**: see [Stage 5.2 (MCP)](../stages/05-claude-code-ecosystem.en.md#52--mcp-model-context-protocol--foundation) and [Stage 5.3 (Skills)](../stages/05-claude-code-ecosystem.en.md#53--skills-claude-codes-behavior-layer--the-most-critical-layer-of-the-claude-code-ecosystem)
+Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.en.md); this page only helps you find candidates.
 
-### Inclusion direction (not strict rules)
+## 🧩 Five terms to separate first
 
-- **Official first**: Anthropic / vendor-published MCP / Skill usually ranks higher
-- **Stars are a hint, not a gate**: community repos around 100+ tend to be maintained, but "niche but useful" repos are welcome via PR with a sentence explaining why
-- **Metadata when possible**: pull stars / license via `gh api`; refresh whenever
-- **Avoid (not forbidden)**: archived, long-stale, unclear-license repos — niche tools can be exceptions
-- **Self-submissions are labeled**: submitting your own project is fine (open an issue first, per CONTRIBUTING) and **the bar is the same as for any other entry, not relaxed**, but the entry carries a "⚠️ submitted by its author" marker so readers can weigh it themselves. (Sections 13 / 14 label the maintainer's own projects too; the difference is that those sections explicitly relax the star floor, whereas this does not.)
+- **MCP Server**: a program or hosted service that exposes data or actions as MCP tools.
+- **Skill**: reusable instructions, scripts, templates, and references; loading differs by host.
+- **Plugin**: a host-specific package that may bundle Skills, commands, hooks, or MCP configuration; it is not the MCP specification.
+- **Remote MCP**: an MCP Server operated by a provider, usually using OAuth, so you do not run it locally.
+- **Permission Boundary**: the range an Agent can actually read, write, send, or delete. A tool being capable does not mean every action should run.
+
+## 📚 Five safe starting points
+
+| Starting point | Learn first | Editorial rating |
+|---|---|---|
+| [Official MCP Registry](https://registry.modelcontextprotocol.io/) | Find published MCP Servers; still check the maintainer, permissions, and source | ⭐⭐⭐⭐⭐ |
+| [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) | See educational reference implementations; they are not a production recommendation | ⭐⭐⭐⭐⭐ |
+| [Notion MCP](https://developers.notion.com/guides/mcp/overview) | See how a hosted OAuth MCP follows the user’s workspace permissions | ⭐⭐⭐⭐⭐ |
+| [GitHub MCP Server](https://github.com/github/github-mcp-server) | Learn OAuth, tool groups, and repository permissions from an official implementation | ⭐⭐⭐⭐⭐ |
+| [anthropics/skills](https://github.com/anthropics/skills) | See how Agent Skill folders, instructions, and resources fit together | ⭐⭐⭐⭐⭐ |
+
+> ⚠️ An MCP Server may touch real data. Even with an official source, confirm the signed-in account, scopes, writable tools, and approval screen.
 
 ### Index
 
-1. [Notes / Knowledge Base](#1-notes--knowledge-base) (7)
-2. [Office Documents (Word / Excel / PowerPoint / PDF)](#2-office-documents-word--excel--powerpoint--pdf) (7)
-3. [Google Workspace](#3-google-workspace) (2)
-4. [Microsoft 365](#4-microsoft-365) (3)
-5. [Dev Collaboration (GitHub / Atlassian / Slack…)](#5-dev-collaboration-github--atlassian--slack) (9)
-6. [Databases](#6-databases) (8)
-7. [Browser Automation / Web Scraping](#7-browser-automation--web-scraping) (4)
-8. [Design (Figma / Excalidraw)](#8-design-figma--excalidraw) (4)
-9. [Monitoring / Observability](#9-monitoring--observability) (3)
-10. [Media / Streaming (YouTube / Spotify)](#10-media--streaming-youtube--spotify) (3)
-11. [Chinese-language Ecosystem](#11-chinese-language-ecosystem) (11)
-12. [Other Common (Cloudflare / Stripe…)](#12-other-common-cloudflare--stripe) (5)
-13. [Research Workflow Skills](#13-research-workflow-skills-academic--paper--lit) (4)
-14. [Multi-LLM Delegation Skills](#14-multi-llm-delegation-skills) (3)
-15. [Finance / Trading Agents](#15-finance--trading-agents) (2)
-16. [Web Search / Retrieval](#16-web-search--retrieval) (2)
+1. [Notes / Knowledge Bases](#1-notes--knowledge-bases)
+2. [Office Documents (Word / Excel / PowerPoint / PDF)](#2-office-documents-word--excel--powerpoint--pdf)
+3. [Google Workspace](#3-google-workspace)
+4. [Microsoft 365](#4-microsoft-365)
+5. [Dev Collaboration (GitHub / Atlassian / Slack…)](#5-dev-collaboration-github--atlassian--slack)
+6. [Databases](#6-databases)
+7. [Browser Automation / Web Scraping](#7-browser-automation--web-scraping)
+8. [Design (Figma / Excalidraw)](#8-design-figma--excalidraw)
+9. [Monitoring / Observability](#9-monitoring--observability)
+10. [Media / Streaming (YouTube / Spotify)](#10-media--streaming-youtube--spotify)
+11. [Chinese-language Ecosystem](#11-chinese-language-ecosystem)
+12. [Other Common (Cloudflare / Stripe…)](#12-other-common-cloudflare--stripe)
+13. [Research Workflow Skills (Academic / Paper / Literature)](#13-research-workflow-skills-academic--paper--literature)
+14. [Multi-LLM Delegation Skills](#14-multi-llm-delegation-skills)
+15. [Finance / Trading Agents](#15-finance--trading-agents)
+16. [Web Search / Retrieval](#16-web-search--retrieval)
+17. [Security / MCP Governance](#17-security--mcp-governance)
 
 ---
 
-## 1. Notes / Knowledge Base
+<a id="1-notes--knowledge-base"></a>
+## 1. Notes / Knowledge Bases
 
-### [makenotion/notion-mcp-server](https://github.com/makenotion/notion-mcp-server) ⭐⭐⭐⭐⭐
+<details markdown="1">
+<summary>Expand selected entries for category 1</summary>
+
+### [Notion MCP](https://developers.notion.com/guides/mcp/overview) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 4.5k+ |
-| License | MIT |
+| Delivery | Notion hosted remote MCP; OAuth |
 | Rating | ⭐⭐⭐⭐⭐ (**official**) |
 
-**What it does**: Notion's official MCP server — query pages, create pages, manipulate databases.
-**Audience**: heavy Notion users for note-taking / project management / wikis — let the LLM pull data and write pages directly.
-**Notes**: requires Notion integration token; supports both read-only and read-write modes.
+**What it does**: Notion’s official hosted MCP can search, read, create, and update content the user can already access.
+**Audience**: People who use Notion for notes, projects, or a wiki and want an MCP-capable client.
+**Notes**: OAuth follows user permissions; review the approval screen before writing. The older open-source `makenotion/notion-mcp-server` is no longer actively maintained and is not a default for new installs.
 
 ### [MarkusPfundstein/mcp-obsidian](https://github.com/MarkusPfundstein/mcp-obsidian) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 4.1k+ |
 | License | MIT |
-| Rating | ⭐⭐⭐⭐ (community, most popular) |
+| Rating | ⭐⭐⭐⭐ (community maintained) |
 
 **What it does**: read/write your Obsidian vault via the Obsidian REST API community plugin.
 **Audience**: heavy Obsidian users wanting Claude Code to organize daily notes, auto-link, search across files.
@@ -71,31 +86,28 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 7.4k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ |
 
-**What it does**: a Claude Code Skill that uses browser automation to query NotebookLM, with citation-backed answers.
-**Audience**: people who manage papers / research notes in NotebookLM but want to query from Claude Code in one prompt.
+**What it does**: a Claude Code Skill that uses browser automation to query Gemini Notebook (formerly NotebookLM), with citation-backed answers.
+**Audience**: people who manage papers / research notes in Gemini Notebook (formerly NotebookLM) but want to query from Claude Code in one prompt.
 **Notes**: requires Google account auth.
 
 ### [teng-lin/notebooklm-py](https://github.com/teng-lin/notebooklm-py) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 18k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ |
 
-**What it does**: unofficial NotebookLM Python API + CLI + agentic skill; broader feature set than the skill above, including capabilities the web UI doesn't expose.
-**Audience**: people doing programmatic / batch operations on NotebookLM (auto-create notebooks, bulk-import documents).
+**What it does**: unofficial Gemini Notebook (formerly NotebookLM) Python API, CLI, and agentic Skill.
+**Audience**: people doing programmatic or batch operations in Gemini Notebook (formerly NotebookLM).
 **Notes**: unofficial; may break with Google policy changes — check the issue tracker before relying on it.
 
 ### [ergut/mcp-logseq](https://github.com/ergut/mcp-logseq) ⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 312 |
 | License | MIT |
 | Rating | ⭐⭐⭐ |
 
@@ -107,11 +119,10 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 171 |
 | License | MIT |
 | Rating | ⭐⭐⭐ (covers both Logseq + Obsidian) |
 
-**What it does**: 39 tools across navigation, search, analysis, writing, journals, flashcards, whiteboards.
+**What it does**: a broad tool set across navigation, search, analysis, writing, journals, flashcards, whiteboards.
 **Audience**: people using both Logseq and Obsidian who don't want two MCP servers.
 **Notes**: community project; broad tool surface but each tool is relatively basic.
 
@@ -119,7 +130,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 394 |
 | License | MIT |
 | Rating | ⭐⭐⭐ |
 
@@ -129,27 +139,29 @@
 
 ---
 
+</details>
 ## 2. Office Documents (Word / Excel / PowerPoint / PDF)
+
+<details markdown="1">
+<summary>Expand selected entries for category 2</summary>
 
 ### [anthropics/skills](https://github.com/anthropics/skills) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 162k+ |
 | License | No license file (none provided upstream; confirm terms before use) |
-| Rating | ⭐⭐⭐⭐⭐ (**official**, must-install) |
+| Rating | ⭐⭐⭐⭐⭐ (**official examples**) |
 
-**What it does**: Anthropic's official Agent Skills repo — includes docx / xlsx / pptx / pdf processing skills.
-**Audience**: every Claude Code user — `claude skill install` and Claude can read/write Office files directly.
-**Notes**: this is a Skills collection, not an MCP; lives in the Stage 5.3 Skills system.
+**What it does**: Anthropic's official Agent Skills examples include document workflows for docx, xlsx, pptx, and pdf files.
+**Audience**: people who want to study how a standard Skill folder, `SKILL.md`, scripts, and resources work together.
+**Notes**: this is a Skills collection, not MCP. Preloading, installation, and support differ across Claude / Agent surfaces; check the repository and current host documentation before use.
 
 ### [haris-musa/excel-mcp-server](https://github.com/haris-musa/excel-mcp-server) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 4.1k+ |
 | License | MIT |
-| Rating | ⭐⭐⭐⭐⭐ (most popular community Excel MCP) |
+| Rating | ⭐⭐⭐⭐⭐ (community-maintained Excel MCP) |
 
 **What it does**: Excel file manipulation MCP — read / write / modify cells, formulas, sheets.
 **Audience**: people working with Excel reports daily who want LLM-driven data filling and cleanup.
@@ -159,7 +171,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 1.8k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐ (⚠️ archived) |
 
@@ -171,7 +182,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 5.9k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (agent-native slide framework) |
 
@@ -183,7 +193,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 880 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (high-throughput PDF) |
 
@@ -195,7 +204,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 790 |
 | License | NOASSERTION |
 | Rating | ⭐⭐⭐ (Office skill add-on) |
 
@@ -203,39 +211,51 @@
 **Audience**: people who find the official docx/xlsx/pptx skills too coarse-grained.
 **Notes**: complements `anthropics/skills`, not a replacement.
 
-### [kreuzberg-dev/kreuzberg](https://github.com/kreuzberg-dev/kreuzberg) ⭐⭐⭐⭐
+### [xberg-io/xberg](https://github.com/xberg-io/xberg) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 8.8k+ |
 | License | NOASSERTION |
 | Rating | ⭐⭐⭐⭐ |
 
-**What it does**: 97+ document format parser framework, Rust core. Provides MCP server + REST API + CLI.
+**What it does**: Rust framework for parsing PDF, Office, image, and other common document formats. Provides an MCP server, REST API, and CLI.
 **Audience**: cross-format batch parsing engineers who care about throughput.
 **Notes**: covers obscure formats like HWP, ODT, etc., not just PDF / Office.
 
 ---
 
+</details>
 ## 3. Google Workspace
+
+<details markdown="1">
+<summary>Expand selected entries for category 3</summary>
+
+### [Google Workspace MCP](https://developers.google.com/workspace/guides/configure-mcp-servers) ⭐⭐⭐⭐
+
+| Field | Value |
+|---|---|
+| Delivery | Google hosted remote MCP; OAuth 2.0 |
+| Rating | ⭐⭐⭐⭐ (**official**, **Developer Preview**) |
+
+**What it does**: Google provides dedicated remote MCP servers for Gmail, Drive, Docs, Sheets, Slides, Calendar, Chat, and People.
+**Audience**: people who want an official entry point for reading Workspace data or creating drafts, updating documents, and scheduling meetings.
+**Notes**: this is a **Developer Preview**. OAuth 2.0 and user / organization governance apply; enable only the APIs and scopes the task needs.
 
 ### [taylorwilsdon/google_workspace_mcp](https://github.com/taylorwilsdon/google_workspace_mcp) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 2.9k+ |
 | License | MIT |
-| Rating | ⭐⭐⭐⭐⭐ (one server, all of Google) |
+| Rating | ⭐⭐⭐⭐⭐ (community-maintained broad Workspace MCP) |
 
 **What it does**: Gmail, Calendar, Docs, Sheets, Slides, Drive, Chat, Forms, Tasks, Search — all in one MCP server.
-**Audience**: heavy Google Workspace users — replying to email, scheduling, writing docs, manipulating sheets, all from one server.
-**Notes**: OAuth setup is a bit involved but only needs to be done once; most complete coverage of Google's tools.
+**Audience**: people who need community features beyond the official Preview and are willing to maintain the OAuth setup.
+**Notes**: community-maintained; broad coverage also means a broader permission surface. Start with read-only access and the smallest useful scope.
 
 ### [xing5/mcp-google-sheets](https://github.com/xing5/mcp-google-sheets) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 952 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (Sheets-only) |
 
@@ -245,13 +265,16 @@
 
 ---
 
+</details>
 ## 4. Microsoft 365
+
+<details markdown="1">
+<summary>Expand selected entries for category 4</summary>
 
 ### [Softeria/ms-365-mcp-server](https://github.com/Softeria/ms-365-mcp-server) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 859 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (full M365) |
 
@@ -263,7 +286,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 407 |
 | License | NOASSERTION |
 | Rating | ⭐⭐⭐ (Outlook only) |
 
@@ -275,7 +297,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 278 |
 | License | MIT |
 | Rating | ⭐⭐⭐ |
 
@@ -285,73 +306,71 @@
 
 ---
 
+</details>
 ## 5. Dev Collaboration (GitHub / Atlassian / Slack…)
+
+<details markdown="1">
+<summary>Expand selected entries for category 5</summary>
 
 ### [github/github-mcp-server](https://github.com/github/github-mcp-server) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 31k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐⭐ (**official**) |
 
 **What it does**: GitHub's official MCP — issues / PRs / repos / Actions / Codespaces.
-**Audience**: every GitHub user; once Claude Code is wired up, PR review, issue triage, release notes all work.
-**Notes**: **must-install for Track A's A3 Exercise CLI-9**.
+**Audience**: GitHub users who need to look up repositories, organize issues, or assist with PR review.
+**Notes**: prefer OAuth or a least-privilege token. Keep human approval before creating an issue, changing a PR, or triggering a workflow. Track A exercise CLI-9 in A3 uses this entry point.
 
 ### [sooperset/mcp-atlassian](https://github.com/sooperset/mcp-atlassian) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 5.6k+ |
 | License | MIT |
-| Rating | ⭐⭐⭐⭐⭐ (most popular community Atlassian) |
+| Rating | ⭐⭐⭐⭐⭐ (community-maintained Atlassian MCP) |
 
-**What it does**: Confluence + Jira in one MCP, more flexible than the official remote.
-**Audience**: people using Atlassian who find the official remote server too restrictive.
-**Notes**: pick this OR `atlassian/atlassian-mcp-server` (official) depending on your IT policy.
+**What it does**: Connects Confluence and Jira through a community MCP server you can self-host.
+**Audience**: teams that need self-hosting, custom authentication, or a deployment shape the official remote MCP does not support.
+**Notes**: community maintained. Choose this or the official Atlassian remote MCP below after checking company IT policy and permission requirements.
 
-### [atlassian/atlassian-mcp-server](https://github.com/atlassian/atlassian-mcp-server) ⭐⭐⭐⭐
+### [Atlassian Rovo MCP](https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 927 |
-| License | Apache-2.0 |
-| Rating | ⭐⭐⭐⭐ (**official**) |
+| Delivery | Atlassian hosted remote MCP; OAuth 2.1 |
+| Rating | ⭐⭐⭐⭐⭐ (**Atlassian official**) |
 
-**What it does**: Atlassian's official Remote MCP, secure connection to Jira / Confluence.
-**Audience**: companies with enterprise Atlassian + IT policies requiring official tooling.
-**Notes**: remote model with official SLA.
+**What it does**: Lets an MCP-capable client read and write Jira, Confluence, and Bitbucket Cloud according to user permissions.
+**Audience**: teams using Atlassian Cloud.
+**Notes**: OAuth 2.1 applies; review approval details before changing issues, pages, or repositories.
 
-### [korotovsky/slack-mcp-server](https://github.com/korotovsky/slack-mcp-server) ⭐⭐⭐⭐
-
-| Field | Value |
-|---|---|
-| Stars | ★ 1.8k+ |
-| License | MIT |
-| Rating | ⭐⭐⭐⭐ (no admin permissions needed) |
-
-**What it does**: Slack MCP — DMs, group DMs, channel messages, with built-in history fetch logic.
-**Audience**: individual users (not Slack admins) who still want LLM-Slack integration.
-**Notes**: doesn't need admin tokens; uses user-level OAuth.
-
-### [jerhadf/linear-mcp-server](https://github.com/jerhadf/linear-mcp-server) ⭐⭐⭐ (⚠️ last commit 2025-05, over a year stale)
+### [Slack MCP Server](https://docs.slack.dev/ai/mcp-overview/) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 344 |
-| License | MIT |
-| Rating | ⭐⭐⭐ (⚠️ no update in over a year) |
+| Delivery | Slack official MCP Server |
+| Rating | ⭐⭐⭐⭐⭐ (**Slack official**) |
 
-**What it does**: Linear (issue tracker) MCP — query issues, create issues, change status.
-**Audience**: developers managing sprints / backlogs in Linear.
-**Notes**: requires Linear API key.
+**What it does**: Lets an AI app search Slack channels, send messages, manage canvases, and perform other Slack actions.
+**Audience**: teams using Slack with an MCP-capable client.
+**Notes**: this is not read-only; confirm organization policy and keep human approval before sending or changing content.
+
+### [Linear MCP](https://linear.app/docs/mcp) ⭐⭐⭐⭐⭐
+
+| Field | Value |
+|---|---|
+| Delivery | Linear hosted remote MCP; Streamable HTTP |
+| Rating | ⭐⭐⭐⭐⭐ (**Linear official**) |
+
+**What it does**: Queries or updates Linear issues, projects, and comments.
+**Audience**: Linear users who manage sprints or backlogs.
+**Notes**: use the official read-only option when needed; writes follow signed-in user permissions.
 
 ### [SaseQ/discord-mcp](https://github.com/SaseQ/discord-mcp) ⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 414 |
 | License | MIT |
 | Rating | ⭐⭐⭐ |
 
@@ -359,11 +378,10 @@
 **Audience**: maintainers running OSS / community Discord servers.
 **Notes**: requires Discord bot token; watch rate limits.
 
-### [safishamsi/graphify](https://github.com/safishamsi/graphify) ⭐⭐⭐⭐⭐
+### [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 101k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ |
 
@@ -375,35 +393,36 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 60k+ |
 | License | MIT |
-| Rating | ⭐⭐⭐⭐⭐ (must-have for coding) |
+| Rating | ⭐⭐⭐⭐⭐ (coding context) |
 
-**What it does**: pulls up-to-date library / framework docs into the agent's context so it stops hallucinating outdated APIs — one of the most-installed coding MCPs.
-**Audience**: developers who hit "the LLM wrote code against a stale version of this library" — Context7 feeds the agent current docs on demand.
-**Notes**: among the highest-starred coding MCPs; reach for it whenever the agent's library knowledge lags the version you're actually on.
+**What it does**: Finds documentation snippets by library and version, then puts them into the Agent's current context to reduce the chance of using an old API.
+**Audience**: developers who write code across library versions and want to find relevant documentation before editing.
+**Notes**: still check the version and original official documentation. It helps find material; it does not guarantee that every result is current or complete.
 
 ### [DeusData/codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 36k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐⭐ (code intelligence) |
 
-**What it does**: indexes a codebase into a queryable knowledge graph, so a coding agent can ask about structure / symbols / call paths instead of repeatedly grepping and reading files. Single static binary, 158 languages.
+**What it does**: Indexes a codebase into a queryable knowledge graph, so a coding agent can inspect structure, symbols, and call paths before returning to the actual code to verify them.
 **Audience**: people running coding agents on large or unfamiliar repos who want fast orientation and lower token use.
 **Notes**: re-index after big edits, since the graph can go stale; treat its answers as a fast first pass and verify load-bearing claims (who-calls-X / is-this-dead) against the actual code.
 
 ---
 
+</details>
 ## 6. Databases
+
+<details markdown="1">
+<summary>Expand selected entries for category 6</summary>
 
 ### [googleapis/mcp-toolbox](https://github.com/googleapis/mcp-toolbox) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 16k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ (**Google official**, multi-DB) |
 
@@ -415,7 +434,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 3.2k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐⭐ (community multi-DB) |
 
@@ -423,11 +441,10 @@
 **Audience**: engineers who don't want the Google Cloud SDK and need cross-OSS-DB support.
 **Notes**: overlaps with `googleapis/mcp-toolbox` but lighter weight.
 
-### [supabase-community/supabase-mcp](https://github.com/supabase-community/supabase-mcp) ⭐⭐⭐⭐⭐
+### [supabase/mcp](https://github.com/supabase/mcp) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 2.9k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ (**Supabase official-community**) |
 
@@ -439,7 +456,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 1.8k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐ (Postgres coding aid) |
 
@@ -451,7 +467,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 2k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (read-only MySQL) |
 
@@ -463,7 +478,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 1.1k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐ (**MongoDB official**) |
 
@@ -475,7 +489,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 555 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (**Redis official**) |
 
@@ -487,7 +500,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 9.3k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐ (**AWS official**) |
 
@@ -497,25 +509,27 @@
 
 ---
 
+</details>
 ## 7. Browser Automation / Web Scraping
+
+<details markdown="1">
+<summary>Expand selected entries for category 7</summary>
 
 ### [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 35k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ (**Microsoft official**) |
 
 **What it does**: Playwright MCP server — let the LLM open browsers, click buttons, fill forms, scrape pages.
 **Audience**: anyone doing E2E automation, cross-site integration, scraping behind logins.
-**Notes**: official Playwright; most robust. **First choice for Claude Code + web automation**.
+**Notes**: Playwright is an official project; evaluate it alongside the browser permissions and login flows your task needs.
 
 ### [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 47k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ (**Chrome official**) |
 
@@ -527,7 +541,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 7k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐⭐ (**Firecrawl official**) |
 
@@ -539,7 +552,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 3.3k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐ (**Browserbase official**, ⚠️ archived) |
 
@@ -549,25 +561,38 @@
 
 ---
 
+</details>
 ## 8. Design (Figma / Excalidraw)
+
+<details markdown="1">
+<summary>Expand selected entries for category 8</summary>
+
+### [Canva MCP](https://www.canva.dev/docs/mcp/) ⭐⭐⭐⭐⭐
+
+| Field | Value |
+|---|---|
+| Delivery | Canva hosted remote MCP; `https://mcp.canva.com/mcp` |
+| Rating | ⭐⭐⭐⭐⭐ (**Canva official**) |
+
+**What it does**: Lets an AI assistant create, edit, search, and export Canva designs, and work with assets, brands, and comments.
+**Audience**: people who want to operate Canva while following existing design permissions.
+**Notes**: each user authenticates; operations follow asset and design permissions, and some features vary by plan. Review high-impact edits before approving them.
 
 ### [GLips/Figma-Context-MCP](https://github.com/GLips/Figma-Context-MCP) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 15k+ |
 | License | MIT |
-| Rating | ⭐⭐⭐⭐⭐ (most popular Figma MCP) |
+| Rating | ⭐⭐⭐⭐⭐ (community-maintained design-to-code MCP) |
 
 **What it does**: feed Figma layout info to coding agents — read design files, expose component structure, let Cursor / Claude Code generate matching React components.
 **Audience**: front-end devs going from Figma designs to component code.
-**Notes**: requires Figma access token; must-install for design-to-code workflows.
+**Notes**: requires a Figma access token. Start with a test file and least privilege while checking whether it fits your design-to-code workflow.
 
 ### [excalidraw/excalidraw-mcp](https://github.com/excalidraw/excalidraw-mcp) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 5k+ |
 | License | NOASSERTION |
 | Rating | ⭐⭐⭐⭐⭐ (**Excalidraw official**) |
 
@@ -579,7 +604,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 2.2k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (alternative Excalidraw) |
 
@@ -591,7 +615,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 53k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ |
 
@@ -601,13 +624,16 @@
 
 ---
 
+</details>
 ## 9. Monitoring / Observability
+
+<details markdown="1">
+<summary>Expand selected entries for category 9</summary>
 
 ### [grafana/mcp-grafana](https://github.com/grafana/mcp-grafana) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 3.3k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ (**Grafana official**) |
 
@@ -619,7 +645,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 782 |
 | License | NOASSERTION |
 | Rating | ⭐⭐⭐⭐ (**Sentry official**) |
 
@@ -631,7 +656,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 142 |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐ (community Datadog) |
 
@@ -641,13 +665,16 @@
 
 ---
 
+</details>
 ## 10. Media / Streaming (YouTube / Spotify)
+
+<details markdown="1">
+<summary>Expand selected entries for category 10</summary>
 
 ### [varunneal/spotify-mcp](https://github.com/varunneal/spotify-mcp) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 599 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ |
 
@@ -659,7 +686,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 581 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (YouTube transcripts) |
 
@@ -671,7 +697,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 557 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (full YouTube API) |
 
@@ -681,49 +706,49 @@
 
 ---
 
+</details>
 ## 11. Chinese-language Ecosystem
+
+<details markdown="1">
+<summary>Expand selected entries for category 11</summary>
 
 ### [leemysw/feishu-docx](https://github.com/leemysw/feishu-docx) ⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 243 |
 | License | MIT |
 | Rating | ⭐⭐⭐ |
 
 **What it does**: bidirectional Feishu (Lark) docs / sheet / bitable ↔ Markdown, with OAuth 2.0, CLI, TUI, Claude Skills.
 **Audience**: Chinese-language users on Feishu / Lark wanting to bridge Lark content with Claude Code.
-**Notes**: currently one of the few MCP / Skill options in the Chinese ecosystem; WeChat / DingTalk don't have standalone MCPs yet (they live inside chatbot frameworks).
+**Notes**: community maintained. Lark APIs, OAuth scopes, and supported features can change; check the current documentation and start in a test space.
 
 ### [netease-youdao/LobsterAI](https://github.com/netease-youdao/LobsterAI) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 5.6k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ |
 
-**What it does**: NetEase Youdao's "24/7 all-scenario AI agent" — workflow automation, cross-app coordination, file processing. Chinese-native.
-**Audience**: Chinese-language users wanting an alternative to Claude Code / OpenAI Operator-class all-in-one agents; scenarios needing tight integration with mainland Chinese services (NetEase, DingTalk, etc.).
-**Notes**: product-style agent (not a Skill / MCP); substitutes for Claude Code / Codex rather than complementing them.
+**What it does**: NetEase Youdao's product-style Agent demonstrates workflow automation, cross-app coordination, and file processing.
+**Audience**: people evaluating a Chinese interface and integrations with mainland Chinese services.
+**Notes**: this is a complete Agent product, not a Skill or MCP server. Check the current project documentation for supported integrations, permissions, and deployment options.
 
 ### [QwenLM/Qwen-Agent](https://github.com/QwenLM/Qwen-Agent) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 16k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ |
 
 **What it does**: Alibaba's official Qwen agent framework — RAG, tool use, code interpreter, multi-agent, MCP-compatible. Defaults to Qwen models but swappable to other LLMs.
 **Audience**: developers using Qwen / Tongyi as primary LLM; teams that want a Chinese-native agent framework (examples + docs are bilingual but Chinese-first).
-**Notes**: MCP compatibility is the highlight — plugs into Claude Code-style hosts directly; active maintenance (last commit 2026-03).
+**Notes**: MCP compatibility and replaceable models are the main teaching points; check current releases, examples, and supported hosts before adopting it.
 
 ### [coze-dev/coze-studio](https://github.com/coze-dev/coze-studio) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 21k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ |
 
@@ -735,7 +760,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 5.6k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐ |
 
@@ -747,11 +771,10 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 8.9k+ |
 | License | unspecified |
 | Rating | ⭐⭐⭐⭐ |
 
-**What it does**: Chinese-language LangChain getting-started guide — covers basics, prompts, memory, agents, chains, and applied examples. The earliest and most complete LangChain Chinese learning resource.
+**What it does**: Chinese-language LangChain getting-started guide — covers basics, prompts, memory, agents, chains, and applied examples. It is a structured Chinese learning resource.
 **Audience**: Chinese-language users who want LangChain but find the English docs heavy; readers who want to understand LangChain's design before committing to the framework.
 **Notes**: no formal license (content is openly readable); LangChain itself moves fast — some APIs in the guide may diverge from the latest version.
 
@@ -759,19 +782,17 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 37k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐ |
 
 **What it does**: LangChain-based open-source knowledge-base QA system — local deployment, supports multiple vector stores, end-to-end RAG example.
 **Audience**: Chinese teams who want RAG without building it from scratch; scenarios requiring local-only deployment (no cloud LLM).
-**Notes**: ★ 37k makes it the most popular RAG implementation in the Chinese ecosystem; maintenance has slowed (last commit 2025-11). For new projects, fork and evaluate as a reference, not a turnkey base.
+**Notes**: useful for reading the end-to-end structure of a locally deployed RAG system. Maintenance has slowed; before using it for a new project, check the current branch, dependencies, and issues, and treat it primarily as a reference implementation.
 
 ### [usewhale/whale](https://github.com/usewhale/whale) ⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 967 |
 | License | MIT |
 | Rating | ⭐⭐⭐ |
 
@@ -783,13 +804,12 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 8.3k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐ |
 
-**What it does**: China A-share market data toolkit — a single SKILL.md file wrapping 8 data sources (mootdx, EastMoney, akshare, iwencai, etc.) with 21 endpoints, directly usable by AI coding assistants.
+**What it does**: China A-share data Skill that wraps mootdx, EastMoney, akshare, iwencai, and other sources as a data entry point an AI coding assistant can call.
 **Audience**: Chinese developers using Claude Code / Codex / OpenClaw for investment research or quantitative analysis; those who don't want to build data-fetching logic from scratch.
-**Notes**: Installable with a single `curl` + `pip install`; highest-starred community Skill for Chinese A-share data. Compatible with Claude Code, Codex, and OpenClaw.
+**Notes**: community implementation. Data-source terms, stability, and fields can change; verify the original data and licenses before investment research. Check the project's current documentation for compatible hosts.
 
 > Looking for WeChat / DingTalk integrations? Today the mainstream is chatbot frameworks (e.g., zhayujie/CowAgent), not pure MCP servers. Will add when proper MCPs emerge.
 
@@ -797,7 +817,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 10.7k+ |
 | License | Modified MIT |
 | Rating | ⭐⭐⭐ |
 
@@ -809,35 +828,36 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 4.3k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐ |
 
 **What it does**: Zhipu (Z.ai)'s GLM-4.5 open model — positioned as Agentic, Reasoning, and Coding (ARC) foundation models; open weights + API, usable as a backend for agent / tool use / coding.
 **Audience**: Chinese developers evaluating domestic open agentic models, or who need weights under a permissive license (Apache-2.0).
-**Notes**: zai-org is Zhipu's open-source org; the same series also has GLM-4 (★ 7k+) for context; weights are on Hugging Face.
+**Notes**: zai-org is Zhipu's open-source org; the same series also has GLM-4 () for context; weights are on Hugging Face.
 
 ---
 
+</details>
 ## 12. Other Common (Cloudflare / Stripe…)
+
+<details markdown="1">
+<summary>Expand selected entries for category 12</summary>
 
 ### [cloudflare/mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 4k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐⭐⭐ (**Cloudflare official**) |
 
 **What it does**: Cloudflare's official MCP — Workers, Pages, R2, KV, D1, DNS, Zero Trust.
 **Audience**: anyone running edge / serverless on Cloudflare.
-**Notes**: officially maintained; the best edge platform MCP.
+**Notes**: officially maintained; compare its permissions and supported operations with the edge workflows you need.
 
 ### [stripe/ai](https://github.com/stripe/ai) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 1.7k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (**Stripe official**) |
 
@@ -852,19 +872,18 @@
 | Type | hosted MCP server |
 | Rating | ⭐⭐⭐ (finance analysis tool; practical example of hosted vs self-hosted MCP architecture) |
 
-**What it does**: YIELD INTELLIGENCE hosted remote MCP server — live US Treasury yield rates, dividend ETF / REIT / preferred stock analysis, and passive income portfolio optimization. Two tools: `analyze_yield_opportunities` (scans passive income options) + `optimize_income_portfolio` (builds a portfolio toward a target monthly income). Listed in the official MCP Registry (`io.github.thebrierfox/intuitek-ace`, since 2026-05-10).
-**Audience**: people doing personal finance analysis in Claude Code / Claude Desktop who want AI to surface passive income opportunities. Good hands-on example of a hosted remote MCP server — plug the URL in, zero install, useful for Stage 5 learners exploring the hosted vs self-hosted difference.
-**Notes**: Live endpoint `https://api.intuitek.ai/yield/mcp` (no auth, no API key required). x402 micropayment $1 USDC/call on Base (agent-to-agent scenarios); free for regular users. Analysis-only, no trading. GitHub: [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace) (MIT License).
+**What it does**: Uses a hosted remote MCP to read US Treasury yields and income-asset analysis, while showing the connection shape of hosted versus self-hosted MCP.
+**Audience**: learners who want to observe MCP requests and results with test finance questions; it is not an automatic trading entry point.
+**Notes**: the [live endpoint](https://api.intuitek.ai/yield/mcp) is provided by the MIT [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace) repository. Data timing, methods, authentication, and pricing can change; check current service documentation and original market data before use. Not investment advice.
 
 ### [ComposioHQ/composio](https://github.com/ComposioHQ/composio) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 28.8k+ |
 | License | MIT |
-| Rating | ⭐⭐⭐⭐⭐ (1000+ tool-integration hub) |
+| Rating | ⭐⭐⭐⭐⭐ (many tool-integration hub) |
 
-**What it does**: a platform (SDKs + MCP servers) that connects agents to 1000+ apps (Slack / GitHub / Gmail / Salesforce / Notion…) and handles the logins for you, so you don't build a separate connector for each one.
+**What it does**: a platform (SDKs + MCP servers) that connects agents to many apps (Slack / GitHub / Gmail / Salesforce / Notion…) and handles the logins for you, so you don't build a separate connector for each one.
 **Audience**: teams whose agents need broad API coverage without maintaining dozens of separate MCP servers.
 **Notes**: provides MCP servers + Python / TypeScript SDKs; connect to Claude Code via MCP. A "tool aggregator" (compare with n8n / Zapier for automation).
 
@@ -874,7 +893,6 @@
 
 | Field | Value |
 |---|---|
-| Stars | ★ 14 |
 | License | MIT |
 | Rating | ⭐⭐⭐ |
 
@@ -888,19 +906,25 @@ npx -y jacobian mcp
 
 ---
 
+</details>
+<a id="13-research-workflow-skills-academic--paper--literature"></a>
 ## 13. Research Workflow Skills (academic / paper / lit)
 
-> ⚠️ **Maintainer's own projects**: the following are skills the repo maintainer [@WenyuChiou](https://github.com/WenyuChiou) (Lehigh CEE PhD candidate) uses daily for research and open-sourced for other researchers. **Star counts are lower than general-purpose tools** because these are niche / research-specific. The ★ 100+ inclusion floor is relaxed in this section — the only criterion here is "actually useful in the maintainer's research workflow". Evaluate fit yourself.
+Research Skills can organize literature and writing workflows; the researcher remains responsible for citations, source data, and academic integrity.
+
+<details markdown="1">
+<summary>Expand selected entries for category 13</summary>
+
+> ⚠️ **Maintainer's own projects**: these are research tools the repo maintainer [@WenyuChiou](https://github.com/WenyuChiou) uses and has published. Inclusion is based on the workflow problem solved, not popularity; evaluate them against your research requirements, data, and host.
 
 ### [WenyuChiou/ai-research-skills](https://github.com/WenyuChiou/ai-research-skills) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 182 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐⭐ (full research workflow) |
 
-**What it does**: 14 Claude Code skills covering common research tasks — literature triage, research design, project context, manuscript writing, multi-AI delegation. Packaged as a 5-plugin marketplace, install with one command.
+**What it does**: Uses a set of research Skills to cover literature triage, research design, project context, manuscript writing, and multi-AI delegation, distributed through a marketplace.
 **Audience**: grad students / postdocs wanting a complete "research workflow" skill set in one drop.
 **Notes**: marketplace format, aligns with the plugin/marketplace concept taught in Stage 5.4.
 
@@ -908,19 +932,17 @@ npx -y jacobian mcp
 
 | Field | Value |
 |---|---|
-| Stars | ★ 10 |
 | License | MIT |
 | Rating | ⭐⭐⭐ (narrow but deep) |
 
 **What it does**: rigorous academic paper writing / revision / submission skill for Claude Code. Field-agnostic, customizable per-paper via journal_format.md and style_overrides.md.
 **Audience**: researchers actively writing / revising papers who want to automate banned-word audit, figure-text coupling, submission checklists.
-**Notes**: one of the 5 plugins inside ai-research-skills; can also be installed standalone.
+**Notes**: use it through the complete marketplace, or install it separately by following the current official instructions.
 
 ### [WenyuChiou/zotero-skills](https://github.com/WenyuChiou/zotero-skills) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 45 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ |
 
@@ -932,80 +954,85 @@ npx -y jacobian mcp
 
 | Field | Value |
 |---|---|
-| Stars | ★ 42 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ |
 
-**What it does**: AI-operable research workspace bridging Zotero + Obsidian + NotebookLM, with CLI / MCP / REST / dashboard interfaces.
-**Audience**: researchers using Zotero / Obsidian / NotebookLM together, wanting to bind them into one workspace for LLMs to operate.
+**What it does**: AI-operable research workspace integrating Zotero, Obsidian, and Gemini Notebook (formerly NotebookLM), with several interfaces.
+**Audience**: researchers using Zotero, Obsidian, and Gemini Notebook (formerly NotebookLM) together.
 **Notes**: complementary to single-tool MCPs (mcp-obsidian, notion-mcp, etc.) — this is a hub that integrates multiple tools.
 
 ---
 
+</details>
 ## 14. Multi-LLM Delegation Skills
 
-> ⚠️ **Maintainer's own projects** (same as 13): delegation skills the maintainer extracted from daily workflow. Star floor is relaxed; criterion is "the Claude-planner + Codex/Gemini-executor combo runs reliably". Multi-LLM space evolves quickly — evaluate alongside the multi-agent frameworks listed in Stage 7 before adopting.
+Delegation tools need clear files, budgets, acceptance checks, and stop conditions. A second model does not automatically make an answer correct.
+
+<details markdown="1">
+<summary>Expand selected entries for category 14</summary>
+
+> ⚠️ **Maintainer's own projects**: these delegation skills come from the maintainer's daily workflow. Inclusion depends on whether each entry can bound responsibility, inputs, outputs, and acceptance—not popularity. Multi-LLM tools change quickly; evaluate them with the production framework in Stage 7.
 
 <!-- not-an-entry -->
-### How the three skills compose
+### How delegation skills compose
 
-The 3 skills below are **designed to be used together**, not as standalone tools:
+The skills below can work together, but each one needs a clear task boundary and acceptance check:
 
 ![Claude + 3 delegate skills — division of labor](../resources/diagrams/multi-llm-delegation-composition.en.png)
 
-Claude is bad at token-heavy mechanical work (cost, context blowout); Codex is bad at conversational coordination; Gemini's 1M context is great but mid-tier reasoning. **Division of labor: Claude handles design / review, Codex handles implementation, Gemini handles long-form drafting / synthesis.**
+Do not turn model names into permanent job titles. First check the current models, tools, and costs; then assign **design / review, implementation, and long-form synthesis** to the suitable executors. Use the same acceptance criteria for the final result.
 
 ### [WenyuChiou/codex-delegate](https://github.com/WenyuChiou/codex-delegate) ⭐⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 62 |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐⭐ |
 
 **What it does**: Claude Code skill that uses Codex CLI as the execution specialist — multi-file refactors, batch edits, boilerplate generation, wrapper-based implementation tasks. Claude writes the plan + reviews; Codex executes.
 **Audience**: developers wanting to save tokens / accelerate large-scale mechanical edits; learners who want to verify "multi-agent isn't just a buzzword".
-**Use it for**: refactoring 30+ files, generating test scaffolds, porting the same pattern across N files, writing migration scripts.
-**Don't use for**: architecture decisions, bug diagnosis, security review, tasks needing conversation memory — Claude does these better directly.
-**Notes**: pairs with `gemini-delegate-skill`. Practical implementation of the Stage 7 multi-agent concept.
+**Use it for**: applying one transform across many files, generating test scaffolds, porting an existing pattern, or writing migration scripts.
+**Don't use for**: tasks without a clear responsibility boundary or acceptance criteria, or tasks that still need an independent security review.
+**Notes**: treat it as a bounded executor, not a permanent job assigned to one model. Validate the result with the same acceptance criteria.
 
 ### [WenyuChiou/gemini-delegate-skill](https://github.com/WenyuChiou/gemini-delegate-skill) ⭐⭐⭐ (⚠️ archived 2026-07)
 
 | Field | Value |
 |---|---|
-| Stars | ★ 37 |
 | License | MIT |
 | Rating | ⭐⭐⭐ (⚠️ archived) |
 
-**What it does**: Claude Code skill that uses Gemini CLI as the long-form / large-context / CJK executor — 1M-token context window, Chinese long-form drafting, second-opinion review. Claude provides the outline and critique; Gemini writes the long form.
-**Audience**: researchers writing papers, knowledge workers writing Chinese reports / Threads posts, people who want a second LLM's perspective for cross-checking.
-**Use it for**: long-form drafts (>3000 words), cross-document synthesis (stuffing many long docs into the 1M-token context), Chinese / CJK content, LLM-vs-LLM comparison views.
-**Don't use for**: short queries, code generation (use codex), production-critical decisions (final human review).
-**Notes**: pairs with `codex-delegate` for the "Codex writes code, Gemini writes prose" split.
+**What it does**: Historical Claude Code delegation skill that sent long-form, cross-document, or CJK tasks to another CLI executor.
+**Audience**: maintainers of older setups and readers studying early multi-LLM delegation patterns.
+**Use it for**: history and migration reference only.
+**Don't use for**: new work; the repository is archived and is not a current installation starting point.
+**Notes**: do not preserve its old fixed model roles. Use a maintained delegation entry that fits the current host and can be checked against explicit acceptance criteria.
 
 ### [WenyuChiou/agent-collab-skills](https://github.com/WenyuChiou/agent-collab-skills) ⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 22 |
 | License | MIT |
 | Rating | ⭐⭐ (experimental — treat as reference) |
 
-**What it does**: Claude Code marketplace for multi-agent collaboration — task splitter, output reconciler, adversarial debate, shared memory, acceptance gate. Composes with codex-delegate / gemini-delegate.
-**Audience**: people running 2+ delegate agents per round who want to see one way of packaging multi-agent coordination into a marketplace.
-**Notes**: **experimental** — don't treat this as a framework ready for production use. It's the maintainer's own setup made public as a reference. For multi-agent frameworks built for production, see LangGraph / AutoGen / CrewAI in Stage 7.
+**What it does**: Claude Code marketplace for multi-agent collaboration — task splitter, output reconciler, adversarial debate, shared memory, acceptance gate.
+**Audience**: people coordinating multiple delegates who want to see one way of packaging multi-agent coordination into a marketplace.
+**Notes**: **experimental** — don't treat this as a framework ready for production use. It's the maintainer's own setup made public as a reference. For multi-agent frameworks built for production, see LangGraph / Microsoft Agent Framework / CrewAI in Stage 7.
 
 ---
 
+</details>
 ## 15. Finance / Trading Agents
 
 > ⚠️ **Application-domain section**: agents applied to quantitative trading, hedge-fund simulation, and automated order placement. The two entries here are Apache-2.0 and MIT, but licensing across this category varies widely — verify each repo before reuse. **Caveat**: real-money trading agents carry significant risk; listed here for agent-design study, not as investment advice.
+
+<details markdown="1">
+<summary>Expand selected entries for category 15</summary>
 
 ### [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents) ⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 93k+ |
 | License | Apache-2.0 |
 | Rating | ⭐⭐⭐ |
 
@@ -1017,7 +1044,6 @@ Claude is bad at token-heavy mechanical work (cost, context blowout); Codex is b
 
 | Field | Value |
 |---|---|
-| Stars | ★ 62k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐ |
 
@@ -1027,13 +1053,16 @@ Claude is bad at token-heavy mechanical work (cost, context blowout); Codex is b
 
 ---
 
+</details>
 ## 16. Web Search / Retrieval
+
+<details markdown="1">
+<summary>Expand selected entries for category 16</summary>
 
 ### [exa-labs/exa-mcp-server](https://github.com/exa-labs/exa-mcp-server) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| Stars | ★ 4.8k+ |
 | License | MIT |
 | Rating | ⭐⭐⭐⭐ (**Exa official**) |
 
@@ -1045,30 +1074,80 @@ Claude is bad at token-heavy mechanical work (cost, context blowout); Codex is b
 
 | Field | Value |
 |---|---|
-| Stars | ★ 2.3k+ |
 | License | MIT |
-| Rating | ⭐⭐⭐⭐ (beginner-friendly web search) |
+| Rating | ⭐⭐⭐⭐ (LLM search MCP) |
 
-**What it does**: Tavily's search API as an MCP — web search built for LLMs / RAG, returning an answer plus its sources.
-**Audience**: a beginner who just wants the agent to search the web — good first pick thanks to an easy free tier.
-**Notes**: free tier available; returns both a synthesized answer and the underlying sources.
+**What it does**: wraps the Tavily search API as MCP, giving an Agent search results and sources.
+**Audience**: beginners who want an Agent to search the web and then verify the source content separately.
+**Notes**: requires a Tavily API key. Plans and quotas can change; check the current official documentation.
 
 ---
+
+</details>
+## 17. Security / MCP Governance
+
+<details markdown="1">
+<summary>Expand selected entries for category 17</summary>
+
+### [trailofbits/skills](https://github.com/trailofbits/skills) ⭐⭐⭐⭐⭐
+
+| Field | Value |
+|---|---|
+| License | CC-BY-SA-4.0 |
+| Rating | ⭐⭐⭐⭐⭐ (**official Trail of Bits**) |
+
+**What it does**: the official Claude Code plugin marketplace from security firm Trail of Bits, carrying the skills they use themselves for security analysis, testing, and vulnerability research.
+**Audience**: people who want an agent to help with code audits, vulnerability analysis, and security testing; also anyone curious how a professional security team encodes its own methodology as skills.
+**Notes**: install with `/plugin marketplace add trailofbits/skills`; Codex supports the same marketplace directly. The license is **CC-BY-SA-4.0** (share-alike), so derivative work ships under the same terms; check that before commercial integration. Note this is a **different repo** from [`trailofbits/skills-curated`](https://github.com/trailofbits/skills-curated) in the Stage 5 table: that one is a curation marketplace of community-contributed plugins reviewed by Trail of Bits staff, this one is Trail of Bits' own security skills.
+
+### [stacklok/toolhive](https://github.com/stacklok/toolhive) ⭐⭐⭐⭐
+
+| Field | Value |
+|---|---|
+| License | Apache-2.0 |
+| Rating | ⭐⭐⭐⭐ |
+
+**What it does**: runs every MCP server in an isolated container, replaces local credentials with a minimal permission file, and adds audit logs plus configurable identity and access policy. Ships a Kubernetes operator as well.
+**Audience**: teams where everyone has installed their own pile of MCP servers and somebody now has to answer "who installed what, and which credentials can it reach".
+**Notes**: Go project, available as a desktop app and a CLI. Open-source ToolHive and Stacklok's enterprise product are separate, so check which features sit on which side.
+
+### [NVIDIA/OpenShell](https://github.com/NVIDIA/OpenShell) ⭐⭐⭐⭐
+
+| Field | Value |
+|---|---|
+| License | Apache-2.0 |
+| Rating | ⭐⭐⭐⭐ (**NVIDIA official**) |
+
+**What it does**: a sandboxed execution environment for autonomous agents, with declarative policy over files, network and processes. Claude Code and Codex run inside it unmodified; OpenClaw goes through NemoClaw, the next entry below.
+**Audience**: people who want an agent to actually execute commands without handing it the whole machine.
+**Notes**: Rust project. Needs Docker / Podman or host virtualization for MicroVM-backed sandboxes; Windows goes through WSL 2 and is marked experimental. **⚠️ The project still calls itself alpha**, so read it and try it, but assess before depending on it. The split against `toolhive`: toolhive governs MCP servers, this governs the Agent's own execution boundary.
+
+### [nolabs-ai/nono](https://github.com/nolabs-ai/nono) ⭐⭐⭐⭐
+
+| Field | Value |
+|---|---|
+| License | Apache-2.0 |
+| Rating | ⭐⭐⭐⭐ |
+
+**What it does**: confines agents using the operating system's own isolation (Linux Landlock, macOS Seatbelt), with no daemon and no container.
+**Audience**: people who want a sandbox without installing a whole container runtime for it.
+**Notes**: Rust project, maintained by the team behind Sigstore. Going container-free is the main trade against OpenShell: faster to start, but the isolation is only as strong as what the OS provides.
 
 ## What's not here?
 
 If your integration isn't above, check these catalogs first:
 
-- [`wong2/awesome-mcp-servers`](https://github.com/wong2/awesome-mcp-servers) — most complete community MCP server catalog, 150+ entries by category
+- [Official MCP Registry](https://registry.modelcontextprotocol.io/) — find published MCP servers, then check the maintainer, permissions, license, and current status
+- [`wong2/awesome-mcp-servers`](https://github.com/wong2/awesome-mcp-servers) — community MCP server catalog with many entries by category
 - [`punkpeye/awesome-mcp-servers`](https://github.com/punkpeye/awesome-mcp-servers) — another MCP server catalog, complementary
-- [`modelcontextprotocol/servers`](https://github.com/modelcontextprotocol/servers) — official reference servers (7 today: everything, fetch, filesystem, git, memory, sequentialthinking, time; github and sqlite have moved to `servers-archived`)
+- [`modelcontextprotocol/servers`](https://github.com/modelcontextprotocol/servers) — official reference implementations for learning how MCP works; not production recommendation material.
 - [`travisvn/awesome-claude-skills`](https://github.com/travisvn/awesome-claude-skills) — Claude Skills catalog
 
 ### Want to add something?
 
 1. Open an issue with the repo link, why it should be added, and which category it fits.
-2. Or PR directly: add an entry under the relevant category in this format (Stars / License / Rating + What it does / Audience / Notes).
-3. **Stars < 100 + non-official** typically gets rejected unless you can argue a strong niche use case.
+2. Or open a PR with its source, license or service status, editorial rating, purpose, audience, permissions, and limits.
+3. Explain which learning gap it fills; popularity numbers alone do not prove quality or safety.
 
 Read [`resources/style-guide.en.md`](style-guide.en.md) and [`CONTRIBUTING.en.md`](../CONTRIBUTING.en.md) before submitting.
 
@@ -1078,8 +1157,9 @@ Read [`resources/style-guide.en.md`](style-guide.en.md) and [`CONTRIBUTING.en.md
 
 Not an SLA — just "do what you can" guidance:
 
-- Pull stars / license via `gh api repos/<owner>/<repo>`. **Refresh whenever you have time** — no fixed cadence.
-- Spot a broken link / archived repo? Just remove it.
-- New category (AR/VR, IoT, etc.) — open it once you have 1-2 entries worth listing.
-- "Chinese-language ecosystem" stays loose; Chinese-community repos accumulate stars more slowly.
-- Inconsistent wording or formatting between entries — don't sweat it. Readability of the PR comes first.
+- Treat vendor documentation or the canonical repo as the source for official status, licensing, permissions, and hosted endpoints.
+- CI periodically scans repository redirects, archive status, HTTP errors, and freshness signals. A warning still needs human judgment; do not remove a stable tool only because it has not released recently.
+- Define the reader's task and safety boundary before opening a new category, then add verifiable official or high-quality community entries.
+- Apply the same learning-value, maintenance, licensing, and permission standards to Chinese-community tools; do not use a star threshold.
+- Make wording and formatting clear enough for a five-year-old to follow while preserving exact terms, limits, and sources.
+</details>

@@ -43,39 +43,37 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from md_fences import code_line_flags, fence_marker_count  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BASELINE = REPO_ROOT / "scripts" / "mirror-parity-baseline.json"
 LOCALES = {"en": ".en.md", "zh-Hans": ".zh-Hans.md"}
 SKIP_DIR_PARTS = {".git", ".claude", ".ai", "_build", "_site", "node_modules", "book", "archives"}
 SKIP_FILES = {"CHANGELOG.md"}
 
-FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
 IMAGE_RE = re.compile(r"!\[[^\]]*\]\(")
 
 
 def metrics(path: Path) -> dict:
     """Count reader-visible structural elements, ignoring anything inside code fences."""
     h2 = h3 = blockquote = fences = images = table_rows = 0
-    open_marker = None  # the character that opened the current fence, or None
-    for line in path.read_text(encoding="utf-8").split("\n"):
-        m = FENCE_RE.match(line)
-        if m:
-            marker = m.group(1)[0]
-            # Track WHICH marker opened the fence. A single boolean toggled by
-            # either ``` or ~~~ flips state on a mismatched marker and silently
-            # mis-scopes every count that follows — which in this gate means a
-            # real deficit can be hidden. Per CommonMark a fence closes only on
-            # its own marker type.
-            if open_marker is None:
-                open_marker = marker
-                fences += 1
-                continue
-            if marker == open_marker:
-                open_marker = None
-                fences += 1
-                continue
-            # a different marker inside a fence is literal content
-        if open_marker is not None:
+    # Both "which lines are code" and "how many fence markers" come from the
+    # shared parser (md_fences). The local version tracked the marker CHARACTER —
+    # better than a plain toggle — but still ignored the two rules #95 turned up:
+    # a closer may not carry an info string, and it must be at least as long as
+    # its opener, so a nested ```python counted as two markers it should not.
+    #
+    # fence_marker_count rather than counting code-run boundaries: two blocks
+    # with no blank line between them are ONE contiguous run, so boundaries
+    # report 1 block where there are 2 — and in this gate a metric that drops on
+    # one side of a trio is either a false deficit or a masked real one.
+    text = path.read_text(encoding="utf-8")
+    lines = text.split("\n")
+    flags = code_line_flags(text)
+    fences = fence_marker_count(text)
+    for line, in_code in zip(lines, flags):
+        if in_code:
             continue
         if line.startswith("## "):
             h2 += 1

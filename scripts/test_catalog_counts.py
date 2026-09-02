@@ -1,22 +1,14 @@
 #!/usr/bin/env python3
-"""Regression tests for scripts/check-catalog-counts.py.
+"""Regression tests for the catalog entry and no-advertised-total gate."""
 
-Pins the 2026-08 incident: the catalog's advertised size drifted three separate
-ways, and two hand-counts got it wrong differently — one grep keyed on `^### [`
-and silently skipped the single entry whose heading has no bracket link.
+from __future__ import annotations
 
-The first version of this checker then had its OWN coverage hole: its headline
-regex required the number to be immediately followed by a fixed keyword, so
-prose like "76+ 個**常用**整合" or "76+ **integration** catalog" never matched —
-it validated 17 of 36 real claims and would have gone green while the docs
-drifted. These tests pin both the entry-counting rule and the claim coverage.
-
-Run:  python scripts/test_catalog_counts.py     (plain asserts, no pytest needed)
- or:  pytest scripts/test_catalog_counts.py
-"""
 import importlib.util
+import io
+import sys
 import tempfile
 from pathlib import Path
+
 
 _SPEC = importlib.util.spec_from_file_location(
     "check_catalog_counts", Path(__file__).with_name("check-catalog-counts.py")
@@ -26,119 +18,155 @@ _SPEC.loader.exec_module(ccc)
 
 
 def _parse(body: str):
-    with tempfile.TemporaryDirectory() as d:
-        fp = Path(d) / "cat.md"
-        fp.write_text(body, encoding="utf-8")
-        return ccc.parse_catalog(fp)
+    with tempfile.TemporaryDirectory() as directory:
+        path = Path(directory) / "catalog.md"
+        path.write_text(body, encoding="utf-8")
+        return ccc.parse_catalog(path)
 
 
-# --- entry counting -----------------------------------------------------------
-
-def test_counts_entry_without_bracket_link():
-    """The bug that made the total read 75 instead of 76."""
-    body = "## 1. Things\n\n### [a/b](https://x)\n\n### YIELD INTELLIGENCE MCP（Hosted）\n"
-    entries, _ = _parse(body)
-    assert entries[1] == 2
+def test_counts_entry_without_bracket_link() -> None:
+    body = "## 1. Things\n\n### [a/b](https://x)\n\n### Hosted service\n"
+    assert _parse(body) == {1: 2}
 
 
-def test_not_an_entry_marker_excludes_heading():
-    body = ("## 1. Things\n\n### [a/b](https://x)\n\n"
-            "<!-- not-an-entry -->\n### How the three skills compose\n")
-    entries, _ = _parse(body)
-    assert entries[1] == 1
+def test_not_an_entry_marker_excludes_heading() -> None:
+    body = (
+        "## 1. Things\n\n### [a/b](https://x)\n\n"
+        "<!-- not-an-entry -->\n### How the tools compose\n"
+    )
+    assert _parse(body) == {1: 1}
 
 
-def test_headings_outside_numbered_sections_are_ignored():
-    body = "## Some prose section\n\n### 要加新的？\n\n## 1. Things\n\n### [a/b](https://x)\n"
-    entries, _ = _parse(body)
-    assert entries == {1: 1}
+def test_headings_outside_numbered_sections_are_ignored() -> None:
+    body = "## Some prose\n\n### Help\n\n## 1. Things\n\n### [x/y](https://x)\n"
+    assert _parse(body) == {1: 1}
 
 
-def test_index_parses_both_bracket_styles():
-    body = ("### Index\n\n1. [A](#a) (7)\n2. [B](#b)（11）\n\n"
-            "## 1. A\n\n### [x/y](https://x)\n")
-    _, index = _parse(body)
-    assert index == {1: 7, 2: 11}
+def test_details_do_not_change_entry_counting() -> None:
+    body = (
+        "## 1. Things\n\n<details markdown=\"1\">\n<summary>Show entries</summary>\n\n"
+        "### [x/y](https://x)\n\n### Hosted service\n\n</details>\n"
+    )
+    assert _parse(body) == {1: 2}
 
 
-# --- headline-claim coverage (the checker's own bug) --------------------------
-
-def _claims(line: str):
-    """Numbers the checker would actually validate on this line."""
-    if not any(mark in line for mark in ccc.CLAIM_LINE_MARKERS):
-        return []
-    out = []
-    for m in ccc.HEADLINE_RE.finditer(line):
-        if ccc.NOT_A_CATALOG_COUNT.match(line[m.end():]):
-            continue
-        out.append(int(m.group(1)))
-    return out
-
-
-def test_catches_claim_with_words_between_number_and_noun():
-    """The coverage hole: prose inserts words after the number."""
-    assert _claims("見 [`resources/mcp-skills-catalog.md`](x)（76+ 個常用辦公整合工具表）") == [76]
-    assert _claims("See [`resources/mcp-skills-catalog.en.md`](x) — 76+ integration catalog") == [76]
+def test_finds_advertised_catalog_totals() -> None:
+    lines = (
+        "See resources/mcp-skills-catalog.md — 81+ integrations",
+        "完整 MCP / Skills catalog（81 個 entry）",
+        "Catalog includes 81 curated tools",
+        "MCP, Skills, Plugins, with an 81+ entry integration catalog",
+        "Plugins and 81+ integrations grouped by use case",
+    )
+    assert [ccc.advertised_catalog_totals(line) for line in lines] == [
+        [81],
+        [81],
+        [81],
+        [81],
+        [81],
+    ]
 
 
-def test_catches_catalogs_own_intro_line():
-    """The single most important claim — it was never even scanned."""
-    line = "> This page is a curated index of 76+ MCP servers / Claude Skills / integrations"
-    assert _claims(line) == [76]
+def test_finds_volatile_public_inventory_totals_in_prose_and_html() -> None:
+    lines = (
+        "A roadmap with 240+ curated resources and runnable examples",
+        "目前 240+ curated 资源",
+        "81+ entry integration catalog",
+        '<span class="aaz-num">240+</span><span class="aaz-lbl">projects</span>',
+        "術語決策影響 100+ 個 entry",
+        "术语决策影响 100+ 个 entry",
+        "It's MIT, ~240 curated projects with runnable examples",
+        "integrations grouped by 16 use-case categories",
+    )
+    assert [ccc.advertised_public_inventory_totals(line) for line in lines] == [
+        [240],
+        [240],
+        [81],
+        [240],
+        [100],
+        [100],
+        [240],
+        [16],
+    ]
 
 
-def test_catches_readme_scale_table_without_plus():
-    assert _claims("| curation | ... | 240+ projects、76 MCP/Skill |") == [76]
+def test_finds_stale_outreach_stage_counts_and_stage8_roles() -> None:
+    stale = (
+        "a 7-stage learning roadmap",
+        "我們的 7 階段三語學習地圖",
+        "8-" + "stage roadmap from Stage 0 to multi-agent production",
+        "Stage 8 (multi-agent orchestration and sandboxes)",
+        "Stage 8 (production)",
+        "Stage 8 的多代理編排",
+    )
+    current = (
+        "Stage 7 covers multi-agent production; Stage 8 covers Agent Interfaces.",
+        "Stage 0 → Stage 8 learning roadmap",
+    )
+    assert all(ccc.has_stale_outreach_route(line) for line in stale)
+    assert all(not ccc.has_stale_outreach_route(line) for line in current)
 
 
-def test_project_total_is_not_treated_as_catalog_size():
-    """'240+ projects' on the same line is a different number."""
-    line = "| **資源 curation** | 每階段精選 **240+** 個 project | 240+ projects、76 MCP/Skill |"
-    assert 240 not in _claims(line)
+def test_finds_cached_outreach_popularity_and_traffic_metrics() -> None:
+    frozen = (
+        "★525 week 1",
+        "⭐ ≈ **1.9k**",
+        "1.9k stars",
+        "525 stars",
+        "120 stargazers",
+        "3,185 views",
+        "900 visitors",
+        "50 forks",
+        "1,099 clones",
+        "408 unique cloners",
+    )
+    dynamic = (
+        "![GitHub stars](https://img.shields.io/github/stars/example/repo)",
+        "gh repo view example/repo --json stargazerCount",
+        "Popularity metrics are intentionally omitted because they drift.",
+    )
+    assert all(ccc.has_outreach_popularity_metric(line) for line in frozen)
+    assert all(not ccc.has_outreach_popularity_metric(line) for line in dynamic)
 
 
-def test_filenames_and_time_ranges_are_not_counted():
-    """A bare \\d{2,3} match flagged `05-claude-code-ecosystem` and '30-50 分鐘'."""
-    line = "看 [`resources/mcp-skills-catalog.md`](x)，約 30-50 分鐘，見 stages/05-claude-code-ecosystem.md"
-    assert _claims(line) == []
+def test_ignores_versions_time_ranges_and_project_totals() -> None:
+    lines = (
+        "Use Python 3.11 and read this in 30-50 minutes",
+        "Stage 05 links to mcp-skills-catalog.md",
+        "The repository contains 240 projects",
+    )
+    assert all(not ccc.advertised_catalog_totals(line) for line in lines)
+    assert all(not ccc.advertised_public_inventory_totals(line) for line in lines)
 
 
-def test_ignores_lines_not_about_the_catalog():
-    assert _claims("Ollama has 170k+ stars and 16 categories of models") == []
-
-
-def test_repo_is_consistent():
-    """The live repo must pass — this is the CI gate."""
-    assert ccc.main.__module__  # sanity: module loaded
-    import io, sys
-    buf, old = io.StringIO(), sys.stdout
-    sys.stdout = buf
+def test_repo_is_consistent_and_does_not_advertise_a_total() -> None:
+    buffer, previous_stdout, previous_argv = io.StringIO(), sys.stdout, sys.argv
+    sys.stdout = buffer
     try:
         sys.argv = ["check-catalog-counts.py", "--quiet"]
-        rc = ccc.main()
+        assert ccc.main() == 0, buffer.getvalue()
     finally:
-        sys.stdout = old
-    assert rc == 0, buf.getvalue()
+        sys.stdout = previous_stdout
+        sys.argv = previous_argv
 
 
-def _run_all():
-    fns = [v for k, v in sorted(globals().items())
-           if k.startswith("test_") and callable(v)]
+def _run_all() -> int:
+    functions = [
+        value
+        for name, value in sorted(globals().items())
+        if name.startswith("test_") and callable(value)
+    ]
     failed = 0
-    for fn in fns:
+    for function in functions:
         try:
-            fn()
-            print(f"  PASS  {fn.__name__}")
-        except AssertionError as exc:
-            failed += 1
-            print(f"  FAIL  {fn.__name__}: {exc}")
+            function()
+            print(f"  PASS  {function.__name__}")
         except Exception as exc:  # noqa: BLE001
             failed += 1
-            print(f"  ERROR {fn.__name__}: {exc!r}")
-    print(f"\n{len(fns) - failed}/{len(fns)} passed")
+            print(f"  FAIL  {function.__name__}: {exc!r}")
+    print(f"\n{len(functions) - failed}/{len(functions)} passed")
     return failed
 
 
 if __name__ == "__main__":
-    import sys
-    sys.exit(1 if _run_all() else 0)
+    raise SystemExit(1 if _run_all() else 0)

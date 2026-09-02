@@ -47,9 +47,25 @@ audience 切太細會：
 | 💻 開發者 | 「我有 10 個 PR 要 review、每個 codebase 都不同 convention」 | git-native CLI、IDE coding agent、code review skill |
 | 🎓 教師 | 「備課要花 4 小時、我手上的 prompt 都太通用」 | 學科特化 prompt、課程素材、評量自動化 |
 | 📊 知識工作者 | 「每天信箱 100 封、會議紀錄要轉成 action items、隔天還要寫 weekly report」 | Email triage、會議紀錄、自動化 workflow |
-| 👥 日常使用者 | 「我不寫 code，但想用 AI 改善生活，不知道從哪開始」 | Tier 0 入門到 Tier 2 進階 CLI 的階梯式路線 |
+| 👥 日常使用者 | 「我不寫 code，但想用 AI 改善生活，不知道從哪開始」 | 按工作選 Chat surface、App／Connector、CLI Agent 或 Local LLM Runtime |
 
 每個 branch 的 entry 選入都應該回到「能不能解決核心 pain」這個問題。如果不能，就是 entry 該放別的地方。
+
+## Branch 頁的閱讀順序
+
+加入 `scripts/reader-ux-pages.yml` 的 Branch 不是工具倉庫。讀者第一次打開頁面時，必須依序看到 `📌` 這條路解決什麼、`🎯` 四個目標、`🧩` 粗體核心詞、`🛠` 一個可直接複製的安全任務、可選入口、必修閱讀與 `✅` 完成條件。收合與否看讀者是否立刻需要：第一題會用到的來源、推薦入口與安全警告必須可見；時間、帳號、費用、替代方案、進階流程與排錯才放進預設關閉的 `<details markdown="1">`。必修閱讀與精選 Projects／學習資源保持可見，因為安全政策、工具身分與下一個入口很容易被忽略。舊深連結的空 anchor 要放在語意相符的新 heading 或收合摘要旁，不能全部堆在頁首。
+
+白話只能降低理解門檻，不能刪掉專業詞。研究人員頁要保留 Source、Claim、Citation、Source Verification、Literature RAG、Reproducibility、Private Data 與 Human Review；第一個任務固定教「公開 paper → 三個問題 → 逐 citation 對原文 → 未支持就標出」。開發者頁要保留 IDE／Surface、Coding Agent／Harness、Provider／Router、Model／Runtime、Sandbox、Approval、Diff／Rollback 與 Eval／Observability，而且成對列出不代表它們是同義詞；第一個任務固定教 `read-only plan → 人工批准 → 小改 → diff → test → 人工 review → rollback`，且不授權 push、merge 或 deploy。教師頁要保留 Learning Objective、Scaffolding、Rubric、Formative Assessment、AI Literacy、Student Data、Human Review 與 Academic Integrity；第一個任務固定使用虛構課堂資料，教「目標 → AI 草稿 → 教師檢查隱私／事實／偏見 → 學生使用 → 教師觀察並修改」。
+
+開發工具的「核心身分」和「surface」必須分欄。Coding agent 可以同時有 CLI、IDE、desktop、cloud、CI 或 SDK surface；IDE／CLI 不是互斥產品分類。OpenRouter 是 API Router，Ollama 是 local model runtime，OpenCode／Pi 等才是 coding agent／harness，不能因名字相近而混在一起。
+
+完整資源表保留五星編輯評分，但不保存 GitHub stars。研究人員頁固定 15 筆、`3／4／5／2／1` 五組；開發者頁固定 14 筆、`4／6／2／2` 四組，補齊現行 Codex 與 GitHub Copilot，並把 Continue、Roo Code 放在維護／歷史組；教師頁固定 12 筆、`3／3／3／3` 四組；知識工作者頁固定 15 筆、`4／4／2／3／2` 五組；日常使用者頁固定 15 筆、`4／4／4／2／1` 五組。五頁的必修閱讀、精選工具及學習資源預設可見，因為安全入口與工具身分直接影響第一個練習。每組使用獨立 `<tbody>` 與真正 `rowspan`；三語的 URL、順序、評分、狀態、授權與安全限制要結構化比對。已封存的 `open_deep_research` 與 Roo Code 只能放歷史組；已封存的 Flowise 不放進知識工作者現行推薦組。Gemini Notebook 第一次出現時可附舊名 NotebookLM 幫助辨識。教師頁不能把一般消費者帳號寫成學校已核准方案；地區、資格與資料條款不確定時要明說。
+
+知識工作者頁的九個核心詞固定為 **Source**、**Action Item**、**Knowledge Base**、**Private Data**、**Human Review**、**App／Connector**、**MCP Server**、**Workflow Automation** 與 **Approval Gate**。第一題只用虛構會議紀錄，固定輸出 `Decision | Action Item | Owner | Due date | Source sentence | Needs confirmation`，缺少人名或日期時要標記確認，不得猜測或直接寫回外部系統。ChatGPT 現行把 Connector 稱為 App，但不同供應商仍可能保留 Connector；App／Connector 是服務內的橋，MCP Server 是協定端點，Workflow Automation 是 trigger／condition／action 的重複流程，三者不能互換。官方 MCP Registry 仍是 Preview，namespace／metadata 驗證不能寫成安全背書。n8n 的 Sustainable Use License、Dify／LobeHub 的額外商用條件，以及自架工具實際資料流都要明寫；固定安裝時間、整合數量與 GitHub stars 不進教材。
+
+教師頁的安全線與新圖都不能暗示 AI 可以自行評分、診斷學生、推測特殊教育需求或用單次輸出判定能力。圖只表達教師把關循環，不取代 Human Review、校方政策或所在地規則；三語版本必須保持相同五步、同一箭頭方向與各自語系文字。
+
+日常使用者頁的九個核心詞固定為 **Prompt**、**Source**、**Private Data**、**Hallucination**、**Human Review**、**App／Connector**、**CLI Agent**、**Local LLM／Runtime** 與 **Approval Gate**。第一題只用虛構訊息，固定輸出 `Draft | Facts copied | Needs confirmation`，不能猜測或自行傳送。Chat surface、App／Connector、CLI Agent、Local LLM Runtime 是按工作選的四扇門，不是由低到高的 Tier；desktop 只是 surface，不代表功能等級。App／Connector 的能力取決於方案、地區、workspace 與原服務權限；CLI Agent 在寫檔／執行命令前要有 preview／diff／approval；Local Runtime 啟用 cloud model、web search 或雲端功能時，不能再宣稱所有資料都留在裝置。
 
 ---
 
@@ -66,8 +82,8 @@ audience 切太細會：
 ### 3. 應用場景
 同一個工具在不同場景下歸類不同。例如：
 
-- **Ollama**：給 everyday-users 是「隱私場景跑本地 LLM」（Tier 3），給 developer 是「開發 agent 的本地測試 backend」——但這份 catalog 把它放在 **Stage 1**（基礎設施層級），各 branch 從那裡引用。
-- **f/awesome-chatgpt-prompts**：放 for-teacher（給教師當教材參考）、也放 for-everyday-users（不寫 code 也能用的 prompt 庫）。
+- **Ollama**：給 everyday-users 是「Local LLM Runtime 入口」，給 developer 是「開發 agent 的本地測試 backend」——兩處都要說清 cloud model／web search 不是本機推論；基礎模型說明仍由 **Stage 1** 提供。
+- **f/prompts.chat**：放 for-teacher（給教師當教材參考）、也放 for-everyday-users（不寫 code 也能用的 prompt 庫）。
 
 ### 灰色地帶處理（同一 repo 出現在多 branch）
 
@@ -88,18 +104,17 @@ audience 切太細會：
 
 ---
 
-## 兩種 entry 結構：tier vs flat
+## 兩種 entry 結構：job-based doors vs flat
 
-### Tier 結構（目前只用在 for-everyday-users）
-![Branch tier 漸進結構](../resources/diagrams/branch-tier-progression.png)
-**用 tier 的條件**：audience 內部「動手程度差很多」。Everyday users 從「打開 Claude.ai」到「跑 Ollama 本地 LLM」差距太大，不分 tier 會混亂。
+### Job-based doors（用在 for-everyday-users）
+**使用條件**：入口的能力、風險與使用目的不同，但不是由低到高的升級關係。Everyday users 固定按工作選 Chat surface、App／Connector、CLI Agent 或 Local LLM Runtime；每扇門都在表中先說用途與動手前的安全檢查。四列短表比流程圖更容易讀，也避免讀者把箭頭誤認成必走順序，因此不再使用 `branch-tier-progression.png`。
 
 ### Flat 結構（其他 4 個 branch 都用這個）
 單一個 list，照子主題分類（Coding Agents / Code Review / Workflow Tools 等）。
 **用 flat 的條件**：audience 內部相對同質——研究者多半願意動手用 CLI、開發者一定會寫 code，沒必要分 tier。
 
-### 什麼時候從 flat 升級成 tier
-觀察 issue / PR 是否反覆出現「**這個 entry 太進階 / 太簡單**」抱怨。若 ≥3 個讀者反映該 branch 內 entry 落差太大，考慮分 tier。
+### 什麼時候從 flat 改成 job-based doors
+只有當不同入口的「身分、權限與安全邊界」真的不同時才改；不能只因工具比較難，就畫成升級階梯。先問「讀者是在選工作入口，還是在學同一能力的進階版本？」前者用 doors，後者才可討論 level。
 
 ---
 

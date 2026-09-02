@@ -1,608 +1,461 @@
-# Cookbook — 把概念变成可执行的 recipe
+# Cookbook — 把概念变成真的成果
 
 > [繁體中文](./cookbook.md) | **简体中文** | [English](./cookbook.en.md)
 
-> Stage 5（Claude Code 生态）跟 [`mcp-skills-catalog.zh-Hans.md`](mcp-skills-catalog.zh-Hans.md) 讲“概念”跟“有哪些工具”。这份 cookbook 补中间缺的：“**怎么动手做出来**”。每个 recipe 是一份 step-by-step + sample code + 常见 pitfall，~30-50 分钟做完一个。
->
-> 不是 reference 也不是 tutorial——是 recipe，挑你需要的那道煮就好。
+<!-- freshness: canonical=resources/cookbook.md; verified_on=2026-08-30; scope=skills,mcp,documents,gemini-notebook,zotero,local-runtime,cli-tools; max_age_days=90 -->
 
----
+这份 Cookbook 不要求你一次读完。先选一个想做的成果，复制它的第一个动作；需要更多步骤时，再打开选单。
 
-## 📋 目录
+如果名词还不熟，先回 [Stage 5：Claude Code 生态系统](../stages/05-claude-code-ecosystem.zh-Hans.md)。想比较 OpenRouter、Pi、OpenCode 与 Ollama，直接看[完整 CLI Agent 指南](cli-agents-guide.zh-Hans.md)。
 
-1. [写你的第一个 Skill（SKILL.md anatomy）](#1-写你的第一个-skill)
-2. [写你的第一个 MCP server（Python SDK）](#2-写你的第一个-mcp-server)
-3. [Word / Excel / PowerPoint workflow](#3-office-docs-workflow)
-4. [NotebookLM workflow](#4-notebooklm-workflow)
-5. [Zotero workflow](#5-zotero-workflow)
-6. [本地 LLM + CLI Agent 快速 walkthrough](#6-本地-llm--cli-agent-快速-walkthrough)
+## 📌 这份 Cookbook 帮你做什么
+
+**Recipe（实践配方）**是一条从“我想做什么”走到“我怎么知道完成了”的短路线。完成任一份 Recipe，你都会得到一个可以检查的成果，而不是只看懂一段说明：
+
+- 一张可重复使用的操作卡。
+- 一个能被 Agent 调用的小工具。
+- 一份文件、研究笔记或文献流程。
+- 一个在自己电脑上运行的 CLI Agent。
+
+你还会看到 **Skill（操作卡）**、**MCP Server（工具转接站）**和 **Coding Agent（程序代理）**。它们分别告诉 Agent 怎么做、替 Agent 接上工具，以及代替你读档、改档和检查结果。
+
+## 🎯 先选一份 recipe
+
+| 你想完成什么 | 从哪里开始 | 主要风险 |
+|---|---|---|
+| 让 Claude 记住固定做法 | [1. 第一个 Skill](#1-写你的第一个-skill) | 规则写得太模糊 |
+| 让 Agent 调用自己的 Python 工具 | [2. 第一个 MCP server](#2-写你的第一个-mcp-server) | 把不该开放的权限交出去 |
+| 生成 Word／Excel／PowerPoint／PDF | [3. Office Docs Workflow](#3-office-docs-workflow) | 没有打开成品进行人工检查 |
+| 从自己的资料得到有引用的答案 | [4. Gemini Notebook Workflow](#4-gemini-notebook-workflow) | 社区集成可能突然失效 |
+| 从 Zotero 搜索或整理文献 | [5. Zotero Workflow](#5-zotero-workflow) | 写入前没有预览变更 |
+| 用本地模型协助修改程序 | [6. 本地 LLM＋CLI Agent](#6-本地-llm--cli-agent-快速-walkthrough) | 模型能力或电脑内存不足 |
+
+## 🧩 六个核心词
+
+- **Recipe（实践配方）**：一条从“我想做什么”走到“我怎么知道完成了”的短路线。
+- **Skill（操作卡）**：放在 `SKILL.md` 里的可重复指令。Agent 需要时才读它。
+- **MCP Server（工具转接站）**：把程序、资料或服务包装成 Agent 能看懂的 tool、resource 或 prompt。
+- **Community Integration（社区集成）**：不是产品官方提供的桥接工具。可以很好用，但上游一改就可能坏。
+- **Model Runtime（模型运行环境）**：真正加载并运行模型的程序，例如 Ollama；它不是 Coding Agent。
+- **Coding Agent（程序代理）**：读档、改档、跑指令并反复检查结果的助手，例如 Claude Code、OpenCode、Pi 或 Aider。
+
+<details markdown="1">
+<summary>⏱️ 展开：时间、环境与安全底线</summary>
+
+- 每份 recipe 约 20–50 分钟；先完成最短路径，再做进阶选项。
+- 建议准备 Git、Python 3.11+、Node.js 20+；只有用到对应 recipe 才安装。
+- 练习只用测试资料。不要把密码、API key、未公开论文或私人文件贴进不信任的工具。
+- 任何会删除、寄送、发布或大量改档的动作，都要先看 diff 或 preview。
+
+</details>
 
 ---
 
 ## 1. 写你的第一个 Skill
 
-> Skill = 一个文件夹含 `SKILL.md`，Claude Code 启动时自动 discover、按情境自动加载。最小 viable 版本 50 行就能跑。
->
-> 📚 **这份是“30 分钟跑出第一个”实作版。想看“Skill 怎么写得好”深度讨论** → [Hello-Agents Extra08：如何写出好的 Skill](https://github.com/datawhalechina/hello-agents/blob/main/Extra-Chapter/Extra08-如何写出好的Skill.md)（中文最完整的 Skill 最佳实践，讨论 description 写法、references / scripts 设计等）。两份互补：先用本 recipe 跑出第一个，再读那份 polish 写法。
+**成果：**做出一张项目内可共用的操作卡，并亲手触发一次。
 
-### 为什么
-
-写 Skill 跟“在 prompt 里加几段 instruction”差别在于：
-
-- Skill 是 **per-domain** 的，不会污染所有 conversation
-- 可以打包跨 project / team 共用
-- Claude 自己决定何时加载（看 description match 不 match）
-
-### 步骤
-
-#### Step 1：创建 skill 文件夹
-
-两个位置可以放（看你要 user 级还是 project 级）：
+先建立文件夹：
 
 ```bash
-# user 级（所有 project 共用）
-mkdir -p ~/.claude/skills/my-first-skill
-cd ~/.claude/skills/my-first-skill
-
-# 或 project 级（只在这个 repo 触发）
-mkdir -p .claude/skills/my-first-skill
-cd .claude/skills/my-first-skill
+mkdir -p .claude/skills/summarize-changes
 ```
 
-#### Step 2：写 `SKILL.md`
+<details markdown="1">
+<summary>展开完整步骤、测试与常见问题</summary>
 
-最小可 work 的模板：
+创建 `.claude/skills/summarize-changes/SKILL.md`：
 
 ```markdown
 ---
-name: my-first-skill
-description: When the user asks for [SPECIFIC SITUATION], use this skill to [WHAT IT DOES]. Examples include [2-3 trigger phrases]. Do NOT use for [WHAT IT'S NOT FOR].
+description: Summarize uncommitted changes and flag risks. Use when the user asks what changed or requests a diff review.
 ---
 
-# My First Skill
+## Instructions
 
-You are now in the [domain] context.
-
-## When the user asks X, do these steps:
-
-1. First, [action A]
-2. Then, [action B]
-3. Verify with [check]
-
-## Don't do:
-
-- [anti-pattern 1]
-- [anti-pattern 2]
-
-## Reference
-
-- (optional) link to a doc / paper / API spec
+1. Read the current git diff.
+2. Explain the change in three short bullets.
+3. List risks, missing tests, and files that should not be committed.
+4. If there is no diff, say so. Do not invent changes.
 ```
 
-具体例子：“整理 Python 代码的 import 顺序”
+启动 Claude Code 后输入：
 
-```markdown
----
-name: python-import-organizer
-description: When the user pastes Python code or asks to clean up imports / format code / sort imports, organize the imports following PEP 8 + isort order: stdlib first, then third-party, then local. Do NOT use for non-Python code.
----
-
-# Python Import Organizer
-
-When the user wants Python imports cleaned up:
-
-1. Group imports into 3 sections: stdlib / third-party / local
-2. Within each group, sort alphabetically
-3. Add a blank line between groups
-4. Remove unused imports (only if user explicitly asks; otherwise just sort)
-
-## Don't:
-- Don't change function code, only the import block
-- Don't auto-remove imports without asking
+```text
+/summarize-changes
 ```
 
-#### Step 3：测试
+也可以问“我刚刚改了什么？”来测试自动触发。Claude Code 会立即检测现有 skill 目录里的 `SKILL.md` 变更，通常不用重启；只有 session 开始时整个 `.claude/skills/` 还不存在，才需要重启一次。
 
-```bash
-# 重启 Claude Code（让它重新 discover skills）
-# 在 conversation 里丢一个触发句
-# e.g.「帮我整理一下这段 Python 的 imports」
-# 观察 Claude 有没有按照 SKILL.md 的步骤做
-```
+成功标准：回答真的根据当前 diff，而且说明了“哪里可能出错”。
 
-#### Step 4（进阶）：加 evals
+常见问题：
 
-在 skill folder 内加 `evals/evals.json`：
+| 症状 | 先检查什么 |
+|---|---|
+| `/summarize-changes` 不存在 | 路径是否正好是 `.claude/skills/summarize-changes/SKILL.md` |
+| 经常误触发 | `description` 是否清楚写出“何时使用” |
+| 指令太长 | 把背景资料移到同一文件夹的参考文件，需要时再读 |
 
-```json
-{
-  "evals": [
-    {
-      "input": "整理一下这段 Python 的 imports: import os
-import requests
-from mypackage import foo",
-      "expected_behavior": ["按 stdlib / third-party / local 分组", "alphabetical 排序"]
-    }
-  ]
-}
-```
+先使用 project Skill 最安全：它只跟随这个 repo。确认多个项目都需要同一套做法后，才放到 personal path `~/.claude/skills/<name>/SKILL.md`。
 
-之后可以用 promptfoo 之类工具 batch 跑。
-
-### 常见 pitfall
-
-| 症状 | 原因 | 解法 |
+| 容易混淆的东西 | 它解决什么 | 何时使用 |
 |---|---|---|
-| Claude 从不触发我的 skill | description 写得太笼统，匹配不到 user query | description 加 2-3 个具体 trigger phrase（"when the user asks X / Y / Z"） |
-| 触发了但行为不对 | SKILL.md 步骤太抽象 | 改成 numbered list、每步明确动作 |
-| 触发了不该触发 | description 太宽，匹配到不相关 query | 加 "Do NOT use for X" 收敛 |
+| 一次性 Prompt | 只交代眼前这一次任务 | 做法不会重复使用 |
+| **Skill** | 保存“遇到这类工作该怎么做” | 同一做法会在项目里反复出现 |
+| **MCP Server** | 提供新的 typed tool、数据或服务 | Agent 需要调用外部程序或 API |
 
-### 进一步
+Skill 可以指挥 Agent 使用已有工具，但 Skill 本身不是新的 API。不要再用“Skill 不能读文件、MCP 才能读文件”这种过度简化来区分两者。
 
-- 看 [Stage 5.3](../stages/05-claude-code-ecosystem.zh-Hans.md#53--skillsclaude-code-的行为层-claude-code-生态最关键的一层) 的 Skill anatomy 详解
-- 看 [`anthropics/skills`](https://github.com/anthropics/skills) 官方 skill 模板（docx / xlsx / pptx 等）的写法
-- 多个 skill 打包成 plugin → [Stage 5.4](../stages/05-claude-code-ecosystem.zh-Hans.md#54--plugins-与-marketplaces)
+想做正式 eval，可用固定的“应触发／不应触发”句子测试 description，再检查回答是否遵守四个步骤。
+
+</details>
 
 ---
 
 ## 2. 写你的第一个 MCP server
 
-> MCP server = 一个独立 process，跑起来提供 tool / resource / prompt 给 LLM host（Claude Desktop / Claude Code）。最小可 run 版 < 50 行 Python。
+**成果：**做出一个两数相加的 MCP tool，并让 Claude Code 看见它。
 
-### 为什么
-
-- Skill 是给 Claude 的“角色 + 规则”；MCP 是给 Claude 的“**外部 function**”
-- Skill 不能读档、不能调用 API；MCP 可以（任何 tool 你写得出来）
-- Skill 只在 Claude Code 跑；MCP 任何 LLM host（包括 Cursor、自写 agent）都能接
-
-### 步骤
-
-#### Step 1：安装官方 SDK
+先在干净的 Python 环境安装目前稳定的 MCP SDK：
 
 ```bash
-pip install "mcp>=2,<3"
+python -m pip install "mcp>=2,<3"
 ```
 
-> ⚠️ **一定要锁版本**。官方 Python SDK 于 **2026-07-28 发布 v2.0.0**，是破坏性改版（`FastMCP` 改名 `MCPServer`、低阶 `Server` 的 handler 从 decorator 改成构造函数参数）。裸写 `pip install mcp` 会装到 2.x，**网上 2025 年写的 v1 教程会在 import 那行就失败**。
-> 手上有 v1 旧 code 还不想改？锁 `pip install "mcp>=1,<2"`（v1.x 仍在维护模式、只收安全性修补）。迁移对照表：[官方 migration guide](https://py.sdk.modelcontextprotocol.io/migration/)。
+<details markdown="1">
+<summary>展开 server 程序、连接方式与错误排查</summary>
 
-#### Step 2：写 `server.py`
-
-最小模板——一个会回 echo 的 tool：
+创建 `server.py`：
 
 ```python
-# server.py
-from mcp.server.mcpserver import MCPServer
+from mcp.server import MCPServer
 
-app = MCPServer("hello-mcp")
+mcp = MCPServer("hello-mcp")
 
-@app.tool()
-async def echo(text: str) -> str:
-    """Echo the input text back to the user."""
-    return f"Echo: {text}"
+
+@mcp.tool()
+def add(a: int, b: int) -> int:
+    """Add two integers."""
+    return a + b
+
 
 if __name__ == "__main__":
-    app.run(transport="stdio")
+    mcp.run()
 ```
 
-> 💡 **为什么这么短**：v2 从 **type hints 自动生成 inputSchema**（`text: str` → 必填的 string 参数）、用 **docstring 当 tool description**、返回值也自动包成 MCP content——这三件事在 v1 都要手写。所以 schema 设计的功夫现在花在“参数命名 + type hint + docstring 写清楚”上。
+这段程序很短，是因为 MCP v2 会从 **type hint** 生成 input schema、把 **docstring** 当作 tool description，并把返回值包装成 MCP content。参数名称、类型或 docstring 写错，Agent 就可能选错工具或传错数据。
 
-#### Step 3：在 Claude Desktop / Code 设置
-
-**Claude Desktop**：编辑 `~/Library/Application Support/Claude/claude_desktop_config.json`（macOS）或 `%APPDATA%\Claude\claude_desktop_config.json`（Windows）：
-
-```json
-{
-  "mcpServers": {
-    "hello-mcp": {
-      "command": "python",
-      "args": ["/绝对路径/到/server.py"]
-    }
-  }
-}
-```
-
-**Claude Code**：用 `claude mcp add` 指令：
+把这个本地 stdio server 加进 Claude Code：
 
 ```bash
-claude mcp add hello-mcp --scope project -- python /绝对路径/到/server.py
+claude mcp add --transport stdio hello-mcp -- python server.py
+claude mcp get hello-mcp
 ```
 
-#### Step 4：重启 Claude Desktop / Code、测试
+进入 Claude Code 后问：“用 `add` 计算 27 + 15。”成功时应得到 `42`，而且你能在 tool call 记录中看见参数。
 
-```
-你问：echo "hello world" 给我
-Claude 回（会显示 tool call icon）：Echo: hello world
-```
+MCP v2 的高层 class 是 `MCPServer`，正确 import 是 `from mcp.server import MCPServer`。旧的 `FastMCP` 教程与旧 import 路径不要混用。
 
-### 常见 pitfall
+安全底线：
 
-| 症状 | 原因 | 解法 |
+- tool 只收完成任务需要的参数。
+- 文件工具要限制可读写目录。
+- 写入、付款、寄信或删除动作先要求人工核准。
+- 第三方 MCP server 会接触你的资料；安装前先看来源与权限。
+
+| Transport | 适合哪里 | 验证提醒 |
 |---|---|---|
-| Claude Desktop 没看到 tool | server.py 启动失败 | 终端直接 `python server.py` 跑、看 stderr 哪里爆 |
-| tool 列出但 call 失败 | 参数 type hint 没写（v2 靠它产 schema）、或类型对不上 | 每个参数都补 type hint；看 [`schema-design-cheatsheet.zh-Hans.md`](schema-design-cheatsheet.zh-Hans.md) |
-| Claude 不主动叫 tool | docstring（= tool description）太笼统 | docstring 改成“When the user asks X, use this tool”式的具体 trigger |
-| `ImportError` / `AttributeError` 在 import 那行 | 混到 v1 写法（`from mcp.server import Server`、`@app.list_tools()`）跑在 v2 上 | 用上面的 v2 写法，或锁 `mcp>=1,<2` 留在 v1 |
-| stdio 跟 HTTP 哪个用？ | 本地桌面集成用 **stdio**；远程用 **Streamable HTTP**（旧的 HTTP+SSE transport 已于 2025-03-26 deprecated、别再用） | 第一个 server 一律用 stdio |
-| stdio server 要不要做 OAuth？ | 不用。spec 明写 authorization 整体是 optional，HTTP transport 才 SHOULD 遵循，**stdio SHOULD NOT 用 authorization** | 凭证从**环境变量**取（例如 `os.environ["API_KEY"]`），不要在 server 里实现登录流程 |
+| **stdio** | 同一台电脑上的 Claude Code／desktop host | 第一个 server 用这条；通常不在 transport 内做 OAuth |
+| **Streamable HTTP** | 远端、多人或服务化部署 | 按现行 MCP authorization 规范设计身份验证；不要照抄旧 HTTP＋SSE 教程 |
 
-### 进一步
+需要 API key 时，从环境变量读取；不要把 secret 写进 `server.py`、配置文件示例或 Git。
 
-- 看 [Stage 5.2](../stages/05-claude-code-ecosystem.zh-Hans.md#52--mcpmodel-context-protocol-基础) 的 MCP 完整介绍
-- 看 [`modelcontextprotocol/servers`](https://github.com/modelcontextprotocol/servers) 官方 reference server（现有 7 个：everything / fetch / filesystem / git / memory / sequentialthinking / time；github、sqlite 已移到 `servers-archived`）。官方 README 自述这些是 reference implementation、**不是 production-ready**，要找实际能用的 server 走 [官方 Registry](https://registry.modelcontextprotocol.io)（仍在 preview）
-- 写 production server 看 [Stage 5.2“练习：MCP in production”](../stages/05-claude-code-ecosystem.zh-Hans.md#52--mcpmodel-context-protocol-基础) 跟 [`anthropics/claude-code`](https://github.com/anthropics/claude-code) 的 `~/.claude/skills/`
+若 `claude mcp get` 显示失败，先直接跑 `python server.py` 看 import error，再确认 `--` 后面的启动指令与 Python 环境一致。
+
+</details>
 
 ---
 
 ## 3. Office Docs Workflow
 
-> 用 Claude 读写 Word / Excel / PowerPoint / PDF 不用装额外 tool——[`anthropics/skills`](https://github.com/anthropics/skills) 官方 repo 已经内建好。
+**成果：**用一份测试数据生成文件，再用真正的 Office／PDF 阅读器打开检查。
 
-### 为什么
-
-最常见场景：
-
-- 把 Markdown / 大纲 → 自动生成 Word / PPT
-- 读一堆 PDF / Excel → 整理摘要 / 提取数字
-- 改别人传来的 docx → 加 track changes、或重排格式
-- 把表格 cross-reference 写成报告
-
-不需要自己 parse XML、不需要找 python-docx / openpyxl 教学——anthropics/skills 已经包好。
-
-### 步骤
-
-#### Step 1：安装 skills
-
-最简单：clone Anthropic 官方 skills repo 到 user-level skill 目录：
+先取得 Anthropic 的官方参考实现：
 
 ```bash
-# user 级（所有 project 用）
-git clone https://github.com/anthropics/skills.git ~/.claude/skills/anthropic-skills
+git clone --depth 1 https://github.com/anthropics/skills.git anthropic-skills-reference
 ```
 
-或者用 `claude plugin install`（如果有打包成 plugin）。
+<details markdown="1">
+<summary>展开 skill 安装、示例 prompt 与质量检查</summary>
 
-#### Step 2：重启 Claude Code
+`anthropics/skills` 里的 `docx`、`xlsx`、`pptx`、`pdf` 是 Anthropic 生产环境使用的复杂 skill 参考。这四个文件夹是 **source-available**，不是 Apache-2.0 开源示例；先读各自授权与 `SKILL.md`。
 
-- skills/docx/ → docx 读写
-- skills/xlsx/ → Excel 读写
-- skills/pptx/ → PowerPoint 读写
-- skills/pdf/ → PDF 读
+要在项目内试一个 skill，请把那个 skill 本身放到正确层级，不要把整个 repo 多包一层：
 
-Claude 会根据 user query 自动加载合适的 skill。
-
-#### Step 3：实用 prompt 模板
-
-**从大纲生 PPT**：
-```
-读我写的 outline.md，照这个结构生一份 PPT：
-- 封面 1 页
-- 每个 H2 一页，bullet points 从 H3 内容浓縮
-- 结语 1 页
-
-存成 ./output/presentation.pptx
+```bash
+mkdir -p .claude/skills
+cp -R anthropic-skills-reference/skills/docx .claude/skills/docx
 ```
 
-**读 Excel 整理数字**：
-```
-读 ./data/sales-2023.xlsx 第一张 sheet，把每个 region 的 Q4 总额算出来，
-写进 ./output/q4-summary.md（用 markdown table 格式）。
+PowerShell 可改用：
+
+```powershell
+New-Item -ItemType Directory -Force .claude/skills
+Copy-Item -Recurse anthropic-skills-reference/skills/docx .claude/skills/docx
 ```
 
-**改 docx**：
-```
-读 ./doc/draft.docx，把繁中词汇转成简中（譬如“软体”→“软件”），
-存成 ./doc/draft.zh-Hans.docx，保留原本的 track changes。
-```
+四个文件夹不是同一件事。先只安装你要练习的那一个：
 
-**读 PDF 提取信息**：
-```
-读 ./papers/research.pdf，把 abstract、main contributions、limitations
-分别写进三个 markdown section，存到 ./notes/research-summary.md。
-```
-
-### 常见 pitfall
-
-| 症状 | 原因 | 解法 |
+| Skill | 第一个小任务 | 完成时要检查 |
 |---|---|---|
-| skill 没被触发 | repo 路径放错 | 确认 SKILL.md 在 `~/.claude/skills/anthropic-skills/skills/docx/SKILL.md` 这种层级 |
-| pptx 生出来样式丑 | 没给设计参考 | prompt 加“参考 ./template.pptx 的样式” |
-| 大 PDF 读不完 | context 爆 | 改用 [`SylphxAI/pdf-reader-mcp`](https://github.com/SylphxAI/pdf-reader-mcp)（5-10× 快） |
-| Excel 公式被吃掉 | docx skill 不处理 formulas | 开档前 prompt 明说“保留 formula 不要 hard-code” |
+| `docx` | 把测试数据做成一页摘要 | 标题、段落、表格与分页 |
+| `xlsx` | 算出一小张表的合计并保留公式 | 公式、单元格类型与数值 |
+| `pptx` | 按 3 点大纲做 3 张幻灯片 | 文字不溢出，图片与来源正确 |
+| `pdf` | 从公开 PDF 摘出 3 个主张 | 页码、引用与原文能对上 |
 
-### 进一步
+可直接复制的 DOCX 任务：
 
-- catalog 2 [`mcp-skills-catalog.zh-Hans.md` 2 办公文件](mcp-skills-catalog.zh-Hans.md#2-办公文件word--excel--powerpoint--pdf)：补强版 office skill / Excel / PPT 专用 MCP
-- 中文圈 office workflow：[`leemysw/feishu-docx`](https://github.com/leemysw/feishu-docx) 飞书 / Lark docs ↔ Markdown
+```text
+用我提供的测试数据做一份一页 DOCX 摘要。
+保留标题、三个重点与来源栏；没有资料就标“待补”，不要猜。
+完成后重新打开文件，确认没有截字、空白页或坏掉的表格。
+```
+
+检查顺序：内容正确 → 公式／数字正确 → 版面没有溢出 → 文件能重新打开。只看到“文件已创建”不算完成。
+
+如果 skill 没出现，确认路径是 `.claude/skills/docx/SKILL.md`。Claude 产品内置的文件能力与你 clone 下来的参考版本可能不同，所以不要声称两者一定生成完全相同的结果。
+
+</details>
 
 ---
 
-## 4. NotebookLM Workflow
+## 4. Gemini Notebook Workflow
 
-> NotebookLM 是 Google 的 RAG-on-your-docs 工具。**Claude Code 没有官方 NotebookLM 集成**，但社群有 2 个成熟方案。
+**成果：**放入自己的来源，取得有引用、可以回头核对的答案。
 
-### 为什么
-
-NotebookLM 强的地方：
-
-- 上传 50 份 PDF 自动建索引
-- Q&A 带 citation（每个答案都标出来自哪份文件第几页）
-- 生成 summary / mind map / podcast-style audio overview
-
-弱点：要在 NotebookLM 网页里用，跟你的其他 workflow（Claude Code、Obsidian、Zotero）断开。
-
-两个方案桥接：
-
-1. **PleasePrompto/notebooklm-skill**（Skill，browser automation）
-2. **teng-lin/notebooklm-py**（Python API + CLI）
-
-### 两个方案怎么选
-
-| 场景 | 选哪个 | 为什么 |
-|---|---|---|
-| 偶尔从 Claude Code 查一下 NotebookLM | `PleasePrompto/notebooklm-skill` | Claude Code 内 prompt 一句话就跑、setup 简单 |
-| 批次操作（建 100 个 notebook、批次导入文件） | `teng-lin/notebooklm-py` | Python API，可程序化跑 |
-| 不想 Google 政策变动就坏 | （等 Google 出官方 API） | 两个都是 unofficial、会有风险 |
-
-### 方案 A：PleasePrompto/notebooklm-skill
-
-#### Step 1：clone 到 skills 目录
+Google 已把 NotebookLM 更名为 **Gemini Notebook**；部分套件与网址仍保留旧名。先从官方网页完成一次：
 
 ```bash
-git clone https://github.com/PleasePrompto/notebooklm-skill ~/.claude/skills/notebooklm
+python -m webbrowser https://notebooklm.google.com
 ```
 
-#### Step 2：第一次跑会要 Google login（浏览器自动化）
+上传两份公开文件后问：“这两份来源同意什么？不同意什么？每点附来源。”先点开引用，确认真的对得上原文，再考虑自动化。
 
-照 repo README 设置 OAuth / 登录 cookie。
+<details markdown="1">
+<summary>展开社区 CLI 自动化路径：notebooklm-py</summary>
 
-#### Step 3：实用 prompt
-
-```
-查我 NotebookLM 内“LLM Agents 2024”这个 notebook，
-找出所有提到 "tool use" 的段落，整理成一份比较表，
-带上每个来源文件名跟页数。
-```
-
-### 方案 B：teng-lin/notebooklm-py
+Google 目前没有提供这套自动化的公开官方 API。`notebooklm-py` 是社区项目，使用未公开接口，适合个人研究与 prototype；正式流程要准备它突然失效时的替代路径。
 
 ```bash
-pip install notebooklm-py
+uv tool install "notebooklm-py[browser]"
+notebooklm login
+notebooklm auth check --test --json
+notebooklm create "My Research"
+notebooklm use NOTEBOOK_ID
+notebooklm source add ./paper.pdf
+notebooklm ask "列出三个主要主张，每点附来源。"
 ```
 
-示例：
+要让 Claude Code 或其他支持 Agent Skills 的工具使用它：
 
-```python
-from notebooklm import NotebookLM
-nlm = NotebookLM() # OAuth 流程
-
-# 建一个 notebook
-nb = nlm.create_notebook("My Research")
-
-# 批次导入 PDF
-for pdf in glob.glob("papers/*.pdf"):
-    nb.add_source(pdf)
-
-# Q&A
-answer = nb.query("What are the main contributions?")
-print(answer.text)
-print(answer.citations)
+```bash
+notebooklm skill install
 ```
 
-### 常见 pitfall
+登录会打开浏览器并保存验证状态。不要把 cookie、token 或个人浏览器资料提交进 Git。
 
-| 症状 | 原因 | 解法 |
-|---|---|---|
-| 突然不能用 | Google 改了内部 API | 检查 issue tracker、等社群更新 |
-| Q&A 答案模糊 | 上传文件太多、retrieve 失准 | 拆成几个 notebook（每个 < 50 source）|
-| 中文支持不好 | 预设 UI 设成英文 | NotebookLM 设置改 zh-Hant |
+</details>
 
-### 进一步
+<details markdown="1">
+<summary>展开另一个浏览器 skill 与排错提醒</summary>
 
-- catalog 1 [`mcp-skills-catalog.zh-Hans.md` 1 笔记 / 知识库](mcp-skills-catalog.zh-Hans.md#1-笔记--知识库)
-- 完整 research workspace：用 [`WenyuChiou/research-hub`](https://github.com/WenyuChiou/research-hub) 集成 NotebookLM + Zotero + Obsidian
+[`PleasePrompto/notebooklm-skill`](https://github.com/PleasePrompto/notebooklm-skill) 通过浏览器自动查询 notebook。它同样不是 Google 官方集成，而且必须在浏览器完成登录。
+
+选择方式：
+
+| 需求 | 较适合的入口 |
+|---|---|
+| 只想可靠阅读与人工核对 | Gemini Notebook 官方网页 |
+| 想批量新增来源、问答或导出 | `notebooklm-py` CLI |
+| 已使用 Claude Code，想用 skill 调用浏览器 | `notebooklm-skill` |
+
+遇到登录失效，先回官方网页确认账号能正常使用，再按社区项目自己的 auth 指令重新登录。不要用大量重试绕过 Google 的限制。
+
+</details>
 
 ---
 
 ## 5. Zotero Workflow
 
-> Zotero 管文献，加上 [`WenyuChiou/zotero-skills`](https://github.com/WenyuChiou/zotero-skills) 后 Claude Code 能直接搜 / 加 / 分类 / 标 references。
+**成果：**从本地 Zotero 找到文献；需要写入时，先预览并批准变更。
 
-### 为什么
-
-研究流程经典痛点：
-
-- “我那篇 paper 在哪？”——Zotero 有，但要切换窗口
-- “给我所有讲 transformer 的 paper 摘要”——要自己 select、export、丢给 LLM
-- “这篇 paper 该打什么 tag？”——人工
-
-zotero-skills 把这些变成 Claude Code 内一句 prompt 就跑。
-
-### 跟 zotero-gpt 差别
-
-| 工具 | 角色 | 适合 |
-|---|---|---|
-| [`MuiseDestiny/zotero-gpt`](https://github.com/MuiseDestiny/zotero-gpt) | Zotero plugin（在 Zotero **内部** chat） | 边读 paper 边问 LLM、不切换窗口 |
-| [`WenyuChiou/zotero-skills`](https://github.com/WenyuChiou/zotero-skills) | Claude Code skill（从 **外部** 操作 Zotero） | 写 paper / 整理文献时，Claude Code 为主 |
-
-互补不冲突，可以两个都装。
-
-### 步骤
-
-#### Step 1：开启 Zotero local API
-
-Zotero 桌面版默认不开 API。打开：
-
-- **Edit → Preferences → Advanced → Config Editor**
-- 找 `extensions.zotero.httpServer.enabled`，设 `true`
-- 找 `extensions.zotero.httpServer.port`，默认 `23119`
-
-#### Step 2：clone zotero-skills
+在 Zotero 打开“Settings → Advanced → Allow other applications on this computer to communicate with Zotero”，再测试：
 
 ```bash
-git clone https://github.com/WenyuChiou/zotero-skills ~/.claude/skills/zotero-skills
+curl http://localhost:23119/api/
 ```
 
-照 repo README 设置（包含 API key 给 Web API 写操作用）。
+<details markdown="1">
+<summary>展开搜索、Zotero 10+ 写入授权与安全做法</summary>
 
-#### Step 3：实用 prompt
+本地 API 在 `http://localhost:23119/api/`，离线可用且没有 Web API rate limit。Zotero 10+ 的本地 API 支持 `POST`、`PUT`、`PATCH`、`DELETE`；过去把它当成只读接口的教程已不适用。
 
-**搜文献**：
-```
-搜我 Zotero library 内所有 2023 年之后、跟 multi-agent 相关的 paper，
-按 cited count 排序、输出成 markdown table。
-```
+写入权限不会被偷偷打开。应用程序必须先向 `/api/local/authorize` 获取 **local API key**，Zotero 会显示批准窗口。这个 key 和 zotero.org Web API key 不同，而且能写入你有权编辑的 library，所以：
 
-**自动分类**：
-```
-看我 collection "Inbox" 里的 50 篇 paper，按主题自动建 sub-collection
-（譬如 "RAG"、"Tool Use"、"Multi-Agent"），把 paper 移进去。
-```
+1. 第一次只做读取与搜索。
+2. 写入前列出预计新增、移动或删除的项目。
+3. 让用户在 Zotero 窗口批准。
+4. 练习后到 Settings → Advanced 按 **Clear Write Authorizations** 撤销 remembered key。
 
-**标 tag**：
-```
-读我 Zotero 内这篇 paper（attached PDF 看完），
-从 abstract 提取 5 个 keyword 当 tag 加上去。
+配合 [`WenyuChiou/zotero-skills`](https://github.com/WenyuChiou/zotero-skills) 时，可先复制这句：
+
+```text
+只搜索，不要修改：找出我 Zotero 里 2024 年后与 multi-agent evaluation 有关的文献。
+列出 title、year、DOI 和 Zotero item key；找不到的字段标“未提供”。
 ```
 
-**写 paper 引用整理**：
+第二次才试写入，而且先要求 preview：
+
+```text
+准备把刚才的结果加入“agent-evals”collection。
+先列出会移动的 item key，不要执行；等我批准后再写入。
 ```
-我的 paper draft 在 ./paper/v3.tex，
-找出所有 \cite{} 对应的 BibTeX entry，跟 Zotero library 对比，
-把缺的 export 出 .bib 给我。
-```
 
-### 常见 pitfall
+`403` 通常是本地 API 未启用；`401` 是写入 key 不存在或失效；`428` 代表写入缺少正确的 `Zotero-Server-ID`。
 
-| 症状 | 原因 | 解法 |
-|---|---|---|
-| skill 触发但 query 失败 | Zotero 没在跑 / API 没开 | 开 Zotero 桌面版 + 确认 port 23119 listening |
-| 写操作（add / move）失败 | local API 是 read-only，要用 Web API | 设置 Web API key（[zotero.org/settings/keys](https://www.zotero.org/settings/keys)） |
-| collection 结构乱 | 自动分类 prompt 没给目录结构 | prompt 给 Claude 看现有 collection tree、再决定怎么分 |
-
-### 进一步
-
-- 完整 research workspace：[`WenyuChiou/research-hub`](https://github.com/WenyuChiou/research-hub) 集成 Zotero + Obsidian + NotebookLM
-- 学术论文写作：[`WenyuChiou/academic-writing-skills`](https://github.com/WenyuChiou/academic-writing-skills)
-- 14 个研究流程 skill 集：[`WenyuChiou/ai-research-skills`](https://github.com/WenyuChiou/ai-research-skills)
+</details>
 
 ---
 
 ## 6. 本地 LLM + CLI Agent 快速 walkthrough
 
-> 30 分钟把 Stage 1 的本地模型接到 Stage 5 的 CLI agent：离线、隐私资料、不想用 API 额度时，可以先用这条路线做 end-to-end 验证。
+**成果：**让 Coding Agent 使用你电脑上的模型，完成一个可用 Git 撤销的小改动。
 
-### 为什么
-
-Stage 1 教你用 Ollama / llama.cpp / vLLM 跑本地 LLM；Stage 5 教 Claude Code、MCP、Skills、Plugins 的 agent 生态。中间常见的误会是：**Claude Code 不是本地 LLM runner**。Claude Code 需要 Anthropic OAuth / API key，不能直接把 model endpoint 改成 Ollama 或其他本地 endpoint。
-
-如果目标是“本地 LLM + CLI agent”，选择支持 BYO LLM 的 CLI 会更直接：**OpenCode / goose / Aider / Hermes Agent** 都能接 OpenAI-compatible endpoint 或 Ollama provider。这个 recipe 用一个短流程让你先跑通 model、agent、任务三件事。
-
-### 步骤
-
-#### Step 1：Ollama + model（10 分钟）
+先安装 [Ollama](https://ollama.com/) 并下载目前的轻量模型：
 
 ```bash
-# 安装 Ollama：https://ollama.com
-ollama pull qwen2.5:3b
-# RAM 16GB+ 可以改试：ollama pull qwen2.5:7b
-ollama serve
+ollama pull gemma4:e4b
 ```
 
-确认 OpenAI-compatible API 有响应：
+先分清它们是什么：
+
+| 名称 | 它的工作 | 它不是什么 |
+|---|---|---|
+| **Ollama** | 在本地加载并运行模型的 runtime | 不会自己读 repo、改文件或跑测试 |
+| **OpenRouter** | 用一个 API 账号路由多家云端模型与 provider | 不是本地模型，也不是终端 Coding Agent |
+| **OpenCode／Pi／Aider** | 读文件、改文件、跑指令的 Coding Agent | 本身不是模型；仍要接本地或云端模型 |
+| **Claude Code** | 使用 Claude 的 Coding Agent | 官方路径不能直接把模型切成 Ollama |
+
+<details markdown="1">
+<summary>展开主要路径：OpenCode＋Ollama</summary>
+
+OpenCode 是会读文件、改文件和跑指令的 Coding Agent；Ollama 是在本地运行模型的 runtime。先安装 OpenCode，再用 `opencode` 启动：
 
 ```bash
-curl http://localhost:11434/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"qwen2.5:3b","messages":[{"role":"user","content":"用 3 句话解释 ReAct agent。"}]}'
-```
-
-#### Step 2：选一个 CLI agent 接 Ollama（10 分钟）
-
-**OpenCode**：适合想切换多 provider、又要接本地模型的人。
-
-```bash
-npm install -g opencode-ai
-opencode auth login # provider 选 Ollama，endpoint 设 http://localhost:11434/v1
+curl -fsSL https://opencode.ai/install | bash
 opencode
 ```
 
-**goose**：内置 Ollama provider，适合先做本地 agent 试跑。
+OpenCode 会自动寻找 `http://127.0.0.1:11434` 的 Ollama。进入 TUI 后选 `ollama/gemma4:e4b`，再到一个已经用 Git 管理的练习 repo，贴上：
 
-```bash
-# 安装方式看 https://block.github.io/goose
-goose configure # provider 选 Ollama，model 设 qwen2.5:3b
-goose session start
+```text
+只修改 README.md：新增一行“Local agent test”。
+先说你要改哪里；修改后显示 diff，不要 commit。
 ```
 
-**Aider**：git-native，适合在 repo 内做小型代码修改。
+成功标准：只有 README 被改、diff 符合要求、`git status` 没有陌生文件。模型小时，任务也要小；一次只改一件事。
+
+</details>
+
+<details markdown="1">
+<summary>展开 Aider 替代路径、Pi／OpenRouter入口与排错</summary>
+
+Aider 官方建议使用 `aider-install`，Ollama model prefix 使用 `ollama_chat/`：
 
 ```bash
-pip install aider-chat
-aider --model ollama/qwen2.5:3b --no-show-model-warnings
+python -m pip install aider-install
+aider-install
+aider --model ollama_chat/gemma4:e4b
 ```
 
-**Hermes Agent**：适合跑在 VPS，让 Telegram / Slack / Discord 变成 agent 入口。
+其他入口：
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
-hermes model set ollama:qwen2.5:3b
-hermes
-```
+- [Pi](https://github.com/earendil-works/pi) 是可扩展的 Agent harness 与 Coding Agent；它默认继承启动者权限，敏感项目要另外使用 sandbox 或 container。
+- [OpenRouter](https://openrouter.ai/docs/quickstart) 提供多模型统一 API 与 provider routing；它会产生云端费用，资料政策也取决于所选 provider。
+- [完整 CLI Agent 指南](cli-agents-guide.zh-Hans.md) 说明何时选 Claude Code、OpenCode、Pi、Aider、OpenRouter 或本地 runtime。
 
-#### Step 3：跑一个真实小任务（10 分钟）
+常见问题：
 
-不要只问“hello world”。挑一个会碰到文件、摘要、表格或搜索的小任务：
+| 症状 | 先做什么 |
+|---|---|
+| 找不到 Ollama model | 跑 `ollama list`，确认 tag 正好是 `gemma4:e4b` |
+| 回答很慢或内存不足 | 改用 `gemma4:e2b`，并缩小任务与 context |
+| Agent 改太多文件 | 立即停止，查看 `git diff`；把任务缩成一个文件的一处改动 |
+| tool calling 不稳 | 改用 Stage 3 建议、且确认支持 tool calling 的模型 |
 
-- 从 `~/Downloads` 找 5 个 PDF，抽出每篇 paper 的 1 句 summary 与 method。
-- 读 `data.csv` 前 3 列，输出 Markdown table 并指出列问题。
-- 搜 `~/notes/` 里 7 天内提到 `agent safety` 的段落，整理成 checklist。
-
-观察三件事：
-
-- **Speed**：本地小模型常比 API 慢 2-5 倍。
-- **Quality**：3B / 7B 模型的 reasoning、长 context、复杂代码能力通常不如 Claude。
-- **Cost**：token 成本是 `$0`，但会吃本地 RAM / VRAM 与电力。
-
-#### Step 4：跟 Claude Code 的差异（5 分钟）
-
-| 面向 | Claude Code | OpenCode + Ollama |
-|---|---|---|
-| LLM | Anthropic hosted | 本地模型 |
-| 成本 | 订阅或 per-token | `$0` token cost |
-| 速度 | 通常较稳 | 看硬件，常慢 2-5 倍 |
-| 隐私 | 内容送 Anthropic | 内容留在本地 |
-| Reasoning 上限 | Claude 4.8+ 较强 | 取决于本地模型 |
-| 适合 use case | 复杂 codebase、长 context、可靠推理 | 隐私资料、离线 demo、低成本反复试 |
-
-### 重要限制：Claude Code 不能直接用本地 LLM
-
-Claude Code 目前需要 Anthropic OAuth / API key，没有官方设置可以把模型切成 Ollama 或本地 endpoint。网上可能有 proxy 或 API shim 做实验，但这不是官方支持路径，稳定性与兼容性要自己承担。
-
-要用本地 LLM，建议把“Claude Code”和“支持 BYO LLM 的 CLI agent”分开看：Claude Code 用在需要 Claude 质量的工作；OpenCode / goose / Aider / Hermes 用在本地、离线、隐私或低成本实验。
-
-### 常见 pitfall
-
-| 问题 | 原因 | 解法 |
-|---|---|---|
-| `connection refused` | Ollama server 没在后台跑 | 开另一个 terminal 跑 `ollama serve` |
-| model output 断句怪、逻辑弱 | 3B 模型能力有限 | 改用 `qwen2.5:7b` 或 `deepseek-r1:7b` |
-| CLI agent 没改到文件 | 本地模型太弱，或 prompt 太模糊 | 缩小任务、指定文件与成功条件 |
-| memory / OOM | 模型吃掉 RAM / VRAM | 先用 `qwen2.5:3b`，再升到 7B；必要时开 swap |
-
-### 进一步
-
-- Stage 1 [Local LLM 练习](../stages/01-llm-basics.zh-Hans.md#练习-6local-llm)：Ollama / llama.cpp / vLLM 的差异
-- [`cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md)：8 个 CLI agent 怎么选
-- Hermes Agent README：多平台 gateway（Telegram / Discord / Slack）与 provider 设置
+</details>
 
 ---
 
-## 找不到你要的 recipe？
+## 📚 必读
 
-- 看 [Stage 5](../stages/05-claude-code-ecosystem.zh-Hans.md) 完整概念
-- 看 [`mcp-skills-catalog.zh-Hans.md`](mcp-skills-catalog.zh-Hans.md) 完整工具清单
-- 看 [`schema-design-cheatsheet.zh-Hans.md`](schema-design-cheatsheet.zh-Hans.md) 写 tool schema 的细节
-- 看 [`cli-agents-guide.zh-Hans.md`](cli-agents-guide.zh-Hans.md) 8 个主流 CLI agent 比较
+这些是上面指令的事实来源，不需要一次读完；做哪份 recipe，就先读那一列。
 
-要新 recipe → 开 issue 或直接 PR 一份。recipe 格式：**为什么 + 步骤 + 范本 prompt + 常见 pitfall + 进一步**。
+<small>资料核查：2026-08-30 UTC</small>
+
+| 来源 | 先看什么 | 编辑评分 |
+|---|---|---|
+| [Claude Code — Skills](https://code.claude.com/docs/en/slash-commands) | 路径、触发方式与 live change detection | ⭐⭐⭐⭐⭐ |
+| [MCP Python SDK v2 — What’s new](https://github.com/modelcontextprotocol/python-sdk/blob/main/docs/whats-new.md) | `MCPServer` import 与 v1→v2 差异 | ⭐⭐⭐⭐⭐ |
+| [Anthropic Skills](https://github.com/anthropics/skills) | Skill 结构与文件 skill 的授权 | ⭐⭐⭐⭐⭐ |
+| [Google — NotebookLM is now Gemini Notebook](https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/) | 产品新名称与延续关系 | ⭐⭐⭐⭐⭐ |
+| [Zotero Local API](https://www.zotero.org/support/dev/web_api/v3/local_api) | 本地 API、写入授权与撤销 | ⭐⭐⭐⭐⭐ |
+| [OpenCode](https://opencode.ai/docs/) | 安装、`opencode` 指令与本地模型连接 | ⭐⭐⭐⭐⭐ |
+| [Aider＋Ollama](https://aider.chat/docs/llms/ollama.html) | 正确安装与 `ollama_chat/` prefix | ⭐⭐⭐⭐⭐ |
+| [Ollama — Gemma 4](https://ollama.com/library/gemma4) | `e2b`／`e4b` tag 与硬体选择 | ⭐⭐⭐⭐⭐ |
+
+## ⭐ 精选 Projects 与学习资源
+
+评分代表本项目的教学适用度，不是 GitHub stars，也不是永久分数。
+
+<table>
+  <thead><tr><th scope="col">分类</th><th scope="col">Project／资源</th><th scope="col">适合做什么</th><th scope="col">限制</th><th scope="col">评分</th></tr></thead>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="2">Skills</th><td><a href="https://agentskills.io">Agent Skills standard</a></td><td>理解跨工具共用的 skill 格式</td><td>各产品仍有自己的扩展字段</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/anthropics/skills">anthropics/skills</a></td><td>阅读成熟 skill 示例</td><td>文件 skills 是 source-available</td><td>⭐⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="2">MCP</th><td><a href="https://modelcontextprotocol.io/specification">MCP specification</a></td><td>查 protocol 的正式定义</td><td>入门不用从头读完</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/modelcontextprotocol/python-sdk">MCP Python SDK</a></td><td>用 Python 写 server／client</td><td>注意 v1 与 v2 教程不可混用</td><td>⭐⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="2">文件</th><td><a href="https://github.com/anthropics/skills/tree/main/skills/docx">Anthropic DOCX skill</a></td><td>学复杂文件 skill 的结构</td><td>使用前确认授权与 runtime</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/anthropics/skills/tree/main/skills/xlsx">Anthropic XLSX skill</a></td><td>学习电子表格分析与输出流程</td><td>成品仍要用电子表格软件检查</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="2">Gemini Notebook</th><td><a href="https://github.com/teng-lin/notebooklm-py">notebooklm-py</a></td><td>批量来源、问答与 artifact 导出</td><td>非官方、未公开 API 可能改变</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/PleasePrompto/notebooklm-skill">notebooklm-skill</a></td><td>从 Claude Code 用浏览器查询 notebook</td><td>非官方且依赖浏览器登录</td><td>⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="3">Zotero</th><td><a href="https://github.com/WenyuChiou/zotero-skills">zotero-skills</a></td><td>从 Agent 搜索与整理 Zotero</td><td>写入前一定先 preview</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/WenyuChiou/research-hub">research-hub</a></td><td>串接 Zotero、Obsidian 与研究流程</td><td>比单一 recipe 更进阶</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/MuiseDestiny/zotero-gpt">zotero-gpt</a></td><td>在 Zotero 内阅读时对话</td><td>plugin 路径和外部 Agent 不同</td><td>⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="3">本地／CLI</th><td><a href="https://github.com/anomalyco/opencode">OpenCode</a></td><td>连接本地或云端模型修改程序</td><td>先检查 provider 和 permission 设置</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/earendil-works/pi">Pi</a></td><td>可扩展的 coding harness／CLI</td><td>默认没有内置权限隔离</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/Aider-AI/aider">Aider</a></td><td>以 Git 为中心结对编程</td><td>小模型的编码质量可能不足</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>
+</table>
+
+## ✅ 完成检查与下一站
+
+- [ ] 我完成至少一份 recipe，而且能指出生成的文件、tool 或回答。
+- [ ] 我看过成功路径，也看过一次失败讯息或错误输出。
+- [ ] 我没有提交 token、cookie、个人文件或未公开资料。
+- [ ] 我知道使用的是官方功能还是 Community Integration。
+- [ ] 任何写入或大量改动都有 preview、diff 或人工批准。
+
+接着回 [Stage 5](../stages/05-claude-code-ecosystem.zh-Hans.md) 选下一个能力；要找更多工具，进入 [MCP／Skills Catalog](mcp-skills-catalog.zh-Hans.md)。

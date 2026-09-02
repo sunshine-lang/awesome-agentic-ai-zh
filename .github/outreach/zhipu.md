@@ -7,7 +7,7 @@
 
 **Why this target**: 智譜 (Zhipu) 是大陸頭部 AI lab 之一（GLM 系列模型）。我們的 §11 中文圈專用目前**沒有 Zhipu 的條目**——主要是因為他們官方的 agent SDK 沒有一個 active + Apache-licensed 的 canonical repo。
 
-**Pitch angle (邀請式，不是推銷式)**: 我們是中文 agentic AI 的 8 階段學習地圖；§11 已經收了 Qwen-Agent + Coze，缺 Zhipu。**邀請他們 PR 一個官方推薦的 Zhipu agent 教材 / SDK / cookbook**——他們在我們 catalog 站 §11 的位置，他們的開發者透過我們學 Zhipu 之外的整個 agentic 生態。
+**Pitch angle (邀請式，不是推銷式)**: 我們是中文 agentic AI 的 10 站學習地圖（8 個主題 Stage + Stage 0 準備關 + Stage 7.5 閱讀站）；§11 已經收了 Qwen-Agent + Coze，缺 Zhipu。**邀請他們 PR 一個官方推薦的 Zhipu agent 教材 / SDK / cookbook**——他們在我們 catalog 站 §11 的位置，他們的開發者透過我們學 Zhipu 之外的整個 agentic 生態。
 
 **Their counter-value**: 中文圈的 entrant developers 有結構化路線可學；GLM/AutoGLM 的曝光。
 
@@ -22,7 +22,7 @@
 如果智譜的同學 / 熱心開發者覺得有官方推薦的 GLM agent cookbook / SDK 該收進來，
 歡迎 PR：github.com/WenyuChiou/awesome-agentic-ai-zh
 
-240+ projects · 三語齊全 · MIT · ★525
+分組整理的 projects · 三語齊全 · MIT
 ```
 
 ## Variant 2 — Discussion / 知乎文章 (200-300 字)
@@ -35,8 +35,8 @@
 你好智譜社群，
 
 我维护 [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh)
-——一份中文 agentic AI 的 8 阶段三语学习地图（zh-TW canonical / zh-Hans / en，240+
-projects，MIT，★525 第一周）。
+——一份中文 agentic AI 的 10 站三语学习地图（8 个主题 Stage + Stage 0 准备关 + Stage 7.5 阅读站；zh-TW canonical / zh-Hans / en，分组整理的
+projects，MIT）。
 
 **§11 中文圈专用** 已经收了：
 - QwenLM/Qwen-Agent（阿里巴巴）
@@ -64,8 +64,8 @@ projects，MIT，★525 第一周）。
 ```
 你好智谱社群，
 
-我是 awesome-agentic-ai-zh 的维护者 Wenyu。这份是中文 agentic AI 的 8 阶段三语
-学习地图（240+ projects，三语齐全，MIT，★525 第一周）。
+我是 awesome-agentic-ai-zh 的维护者 Wenyu。这份是中文 agentic AI 的 10 站三语
+学习地图（分组整理的 projects，三语齐全，MIT）。
 
 §11 中文圈专用 已经收阿里 Qwen-Agent + 字节 Coze，缺智谱的 entry。如果有官方推荐
 的 GLM agent SDK / cookbook 我应该收进来，请告诉我；或者直接 PR 到 §11。收录原则
@@ -80,7 +80,7 @@ projects，MIT，★525 第一周）。
 ## Notes
 
 - **Tone**: 邀請式（"Want to be listed? Send PR"），不是 sales（"買我們服務"）
-- 避免提 "★ 525" 太多次——對 ★1k+ partners 是小數字
+- 不放 stars、forks 或流量快照；它們會漂移，也不能證明教學品質
 - 如果 Zhipu 沒有合適 repo，**不要硬 fit**——保留 §11 的品質
 - 如果有合適 PR 進來，注意 license 跟維護節奏（避免 archived / 246d-stale 的 MetaGLM/glm-cookbook 重蹈覆轍）
 - Zhipu 中國大陸主要使用 知乎 + 微信 + 釘釘，GitHub Issues 是次要 channel

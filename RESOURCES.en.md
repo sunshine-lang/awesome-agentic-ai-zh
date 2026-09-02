@@ -4,102 +4,103 @@
 
 > [← Back to main README](README.en.md)
 
-This file collects: term definitions, daily-tool MCP/Skill highlights, topic-based awesome lists, Chinese-community resources. Pulled out of the main README to keep that page focused.
+## 📌 Choose what you want to do now
 
-> 💡 **Don't know a term?** (LLM, agent, RAG, token, vector DB, …) → [`resources/glossary.en.md`](resources/glossary.en.md) — 30+ common terms with 30–80-word definitions
->
-> 🍳 **Want to build something but don't know where to start?** (writing a Skill / an MCP server / wiring up Word / NotebookLM / Zotero / a local LLM) → [`resources/cookbook.en.md`](resources/cookbook.en.md) — 6 step-by-step recipes, 30-50 minutes each
+You do not need to read the whole list. Pick the task you want to do now:
 
----
+| I want to… | Start here | Editorial rating |
+|---|---|---|
+| Learn AI agents from the beginning | [Stage 0](stages/00-foundations.en.md) | ⭐⭐⭐⭐⭐ |
+| Understand how models learn and how they are used | [Model training guide](resources/model-training-guide.en.md) | ⭐⭐⭐⭐⭐ |
+| Look up an unfamiliar term | [Glossary](resources/glossary.en.md) | ⭐⭐⭐⭐ |
+| Choose a CLI agent | [CLI Agents Guide](resources/cli-agents-guide.en.md) | ⭐⭐⭐⭐⭐ |
+| Connect an Agent to external tools | [MCP / Skills Catalog](resources/mcp-skills-catalog.en.md) | ⭐⭐⭐⭐⭐ |
+| Build a small project step by step | [Cookbook](resources/cookbook.en.md) | ⭐⭐⭐⭐⭐ |
 
-## Three core terms: MCP / Skills / Plugins
+<a id="three-core-terms-mcp--skills--plugins"></a>
+## 🧩 Three core terms: MCP, Skill, and Plugin
 
-The README and stages reference these three Claude Code ecosystem terms a lot. Quick definitions:
+**MCP (Model Context Protocol)**: an open protocol that lets AI applications connect to external data and tools through a shared method. What it can do still depends on the server, account permissions, and user approval.
 
-- **MCP (Model Context Protocol)** — Anthropic's open protocol that lets any LLM host (Claude Code, other IDEs, your own agent) talk to any external tool server (filesystem, DB, API, your service) through one interface. Think "USB for LLMs". See [Stage 5.2](stages/05-claude-code-ecosystem.en.md#52--mcp-model-context-protocol--foundation).
-- **Skills** — Claude Code's "behavior bundles". A Skill is a `SKILL.md` describing "in what context, do what, can call which MCP tools". Claude Code auto-discovers them. See [Stage 5.3](stages/05-claude-code-ecosystem.en.md#53--skills-claude-codes-behavior-layer--the-most-critical-layer-of-the-claude-code-ecosystem).
-- **Plugins / Marketplaces** — package Skills, slash commands, hooks, and MCP configs into a distribution unit installable by your team or community. A marketplace is a catalog of plugins. See [Stage 5.4](stages/05-claude-code-ecosystem.en.md#54--plugins--marketplaces).
+**Skill**: a reusable package of instructions that may also include scripts, templates, and references. Different products place and load Skills differently.
 
-Hands-on exercises live in [Stage 5](stages/05-claude-code-ecosystem.en.md), with Track A's [A3](tracks/cli/A3-cli-production.en.md) covering production integration.
+**Plugin**: an installable package provided by a host. It may bundle Skills, commands, hooks, or MCP configuration; Plugins are not part of the MCP specification.
 
----
+For a hands-on example, go to [Stage 5](stages/05-claude-code-ecosystem.en.md). To separate Apps / Connectors, CLI Agents, and MCP Servers, see the [CLI Agents Guide](resources/cli-agents-guide.en.md).
 
-## Daily-tool integrations: MCP servers + Skills
+## 📚 Five safe starting points
 
-Connect Claude Code (or any other CLI agent) to the apps you already use, without window-hopping. Mature picks below:
+Start with official entry points or complete learning materials, then evaluate community projects. These are editorial ratings, not GitHub stars.
 
-### Notes / Knowledge Base
+| Starting point | Learn first | Editorial rating |
+|---|---|---|
+| [Official MCP Registry](https://registry.modelcontextprotocol.io/) | Find published MCP Servers; still check the maintainer, permissions, and source | ⭐⭐⭐⭐⭐ |
+| [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) | See educational reference implementations; they are not a production recommendation | ⭐⭐⭐⭐⭐ |
+| [anthropics/skills](https://github.com/anthropics/skills) | See how Agent Skill folders, instructions, and resources fit together | ⭐⭐⭐⭐⭐ |
+| [github/github-mcp-server](https://github.com/github/github-mcp-server) | Learn OAuth, tool groups, and repository permissions from an official implementation | ⭐⭐⭐⭐⭐ |
+| [datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) | Learn Agent principles and implementation through a Chinese-language course | ⭐⭐⭐⭐⭐ |
 
-- [**MarkusPfundstein/mcp-obsidian**](https://github.com/MarkusPfundstein/mcp-obsidian) ★ 4.2k+ — Obsidian REST API plugin lets the LLM read/write your vault
-- [**makenotion/notion-mcp-server**](https://github.com/makenotion/notion-mcp-server) ★ 4.4k+ — Notion **official** MCP, query/create pages, manipulate databases
-- [**PleasePrompto/notebooklm-skill**](https://github.com/PleasePrompto/notebooklm-skill) ★ 7.3k+ — NotebookLM Skill, citation-backed answers from your uploaded docs
-- [**teng-lin/notebooklm-py**](https://github.com/teng-lin/notebooklm-py) ★ 18k+ — unofficial NotebookLM Python API + CLI, plays well with Claude Code / Codex
+> ⚠️ **Start with fewer keys**: an MCP Server may read, create, send, or delete real data. Begin with read-only access, least privilege, and a test workspace; keep **Human Approval** before write, send, or delete actions.
 
-### Office Documents (Word / Excel / PowerPoint / PDF)
+<a id="daily-tool-integrations"></a>
+<a id="daily-tool-integrations-mcp-servers--skills"></a>
+## 🔌 Common integration groups
 
-- [**anthropics/skills**](https://github.com/anthropics/skills) ★ 165k+ — Anthropic **official** Skills with built-in docx / xlsx / pptx / pdf processing
-- [**tfriedel/claude-office-skills**](https://github.com/tfriedel/claude-office-skills) ★ 800 — Office skills with automation workflows on top of the official ones
+The table below shows selected projects and official entry points directly. Start with the group you need; only the longer supplemental list is collapsed.
 
-### Google Workspace (Gmail / Docs / Drive / Calendar)
+<div class="resource-table-scroll" role="region" tabindex="0" aria-label="Selected resources table (scroll horizontally)">
+<table class="resource-table">
+<thead><tr><th scope="col">Group</th><th scope="col">Resource</th><th scope="col">What it helps with</th><th scope="col">Status / limits</th><th scope="col">Editorial rating</th></tr></thead>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">Notes / Knowledge Bases</th><td><a href="https://developers.notion.com/guides/mcp/overview">Notion MCP</a></td><td>Search, create, and update Notion content</td><td>Official hosted MCP; user OAuth required and permissions follow the signed-in user</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/MarkusPfundstein/mcp-obsidian">MarkusPfundstein/mcp-obsidian</a></td><td>Read and write an Obsidian vault</td><td>Community project; grant only the vault and write scope needed</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://support.google.com/gemininotebook/answer/16164461">Gemini Notebook (formerly NotebookLM)</a></td><td>Summarize and ask questions about your own sources</td><td>Google service; availability varies by region, account, and feature</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/teng-lin/notebooklm-py">teng-lin/notebooklm-py</a></td><td>Operate Gemini Notebook through Python / CLI</td><td>Unofficial interface; Google changes may break it</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">Office Documents</th><td><a href="https://github.com/anthropics/skills">anthropics/skills</a></td><td>Read Agent Skill examples and document workflows</td><td>Official examples; built-in Skills vary by Claude surface</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/tfriedel/claude-office-skills">tfriedel/claude-office-skills</a></td><td>Extend Office document automation workflows</td><td>Community Skills; back up files and verify outputs</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://developers.google.com/workspace/guides/configure-mcp-servers">Google Workspace MCP</a></td><td>Connect Gmail, Drive, Docs, Sheets, Slides, Calendar, and Chat</td><td>Official <strong>Developer Preview</strong>; each product has a dedicated server, with OAuth 2.0 and user / organization governance</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">Dev Collaboration</th><td><a href="https://github.com/github/github-mcp-server">GitHub MCP Server</a></td><td>Query and work with issues, PRs, and repositories</td><td>Official MCP; use OAuth or a least-privilege token and approve high-impact writes</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/">Atlassian Rovo MCP</a></td><td>Search or update Jira, Confluence, and Bitbucket</td><td>Official hosted remote MCP; OAuth 2.1 and signed-in user permissions apply; require human approval before writing real data</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://linear.app/docs/mcp">Linear MCP</a></td><td>Search and update Linear issues / projects</td><td>Official hosted remote MCP over Streamable HTTP; an official read-only option exists</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://docs.slack.dev/ai/mcp-overview/">Slack MCP</a></td><td>Search Slack, send messages, and manage canvases</td><td>Official MCP; it is not read-only, so confirm before sending or changing content</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">Research Workflow</th><td><a href="https://github.com/WenyuChiou/ai-research-skills">WenyuChiou/ai-research-skills</a></td><td>Turn research steps into reusable Skills</td><td>Community project; install only Skills relevant to the current task</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/research-hub">WenyuChiou/research-hub</a></td><td>Connect Zotero, Obsidian, and research workflows</td><td>Community workspace; check data location, backups, and permissions</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/zotero-skills">WenyuChiou/zotero-skills</a></td><td>Organize Zotero data with Skills</td><td>Community Skill; back up the library before batch changes</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/codex-delegate">WenyuChiou/codex-delegate</a></td><td>Delegate clearly scoped repetitive work to another Agent</td><td>Community tool; lock files, acceptance criteria, and stop conditions first</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="1">Chinese Ecosystem</th><td><a href="https://github.com/leemysw/feishu-docx">leemysw/feishu-docx</a></td><td>Convert between Feishu (Lark) documents and Markdown</td><td>Community tool; confirm sharing and write permissions</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+</table>
+</div>
 
-- [**taylorwilsdon/google_workspace_mcp**](https://github.com/taylorwilsdon/google_workspace_mcp) ★ 2.9k+ — full Workspace stack (Gmail, Calendar, Docs, Sheets, Slides, Drive) in one server
+<a id="research-workflow"></a>
+<a id="research-workflow-by-the-repo-maintainer"></a>
+<a id="topic-awesome-lists"></a>
+<a id="topic-based-awesome-lists"></a>
+<details markdown="1">
+<summary>Expand more lists, courses, and design tools</summary>
 
-### Dev Collaboration
+- [MCP Registry](https://registry.modelcontextprotocol.io/): the official discovery entry point for published Servers.
+- [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers): browse community Servers by category; review before installing.
+- [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code): Claude Code community resources.
+- [travisvn/awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills): Agent Skills community list.
+- [Canva MCP](https://www.canva.dev/docs/mcp/): official remote MCP; features, plans, and permissions depend on the account, so no fixed tool count is stated.
+- [Course list](resources/courses.en.md): choose courses by learning goal; a certificate is not a degree.
+- [Agent paradigms](resources/agent-paradigms.en.md): compare common Agent shapes with diagrams.
 
-- [**github/github-mcp-server**](https://github.com/github/github-mcp-server) ★ 31k+ — GitHub **official** MCP for issues / PRs / repos
-- [**atlassian/atlassian-mcp-server**](https://github.com/atlassian/atlassian-mcp-server) ★ 908 — Atlassian **official** Remote MCP (Jira, Confluence)
-- [**jerhadf/linear-mcp-server**](https://github.com/jerhadf/linear-mcp-server) ★ 340+ — Linear MCP
-- [**korotovsky/slack-mcp-server**](https://github.com/korotovsky/slack-mcp-server) ★ 1.7k+ — Slack MCP, works without admin permissions
+</details>
 
-### Research Workflow (by the repo maintainer)
+<a id="what-else"></a>
+## ✅ Next stop
 
-- [**WenyuChiou/ai-research-skills**](https://github.com/WenyuChiou/ai-research-skills) ★ 182 — 14 research-workflow skills as a 5-plugin marketplace
-- [**WenyuChiou/research-hub**](https://github.com/WenyuChiou/research-hub) ★ 42 — Zotero + Obsidian + NotebookLM integration workspace
-- [**WenyuChiou/zotero-skills**](https://github.com/WenyuChiou/zotero-skills) ★ 45 — Zotero CLI skill
-- [**WenyuChiou/codex-delegate**](https://github.com/WenyuChiou/codex-delegate) ★ 62 [**gemini-delegate-skill**](https://github.com/WenyuChiou/gemini-delegate-skill) ★ 34 (⚠️ archived) — multi-LLM delegation pair (for the Gemini lane, use Gemini CLI directly)
-
-### Chinese-language Ecosystem
-
-- [**leemysw/feishu-docx**](https://github.com/leemysw/feishu-docx) ★ 235 — Feishu (Lark) docs / sheet / bitable ↔ Markdown with Claude Skills support
-
-> The above is just the highlights. **Full 77+ entry catalog by category** (incl. databases, browser automation, Figma, Excalidraw, Cloudflare, Stripe, academic-writing / multi-LLM delegation, etc.) lives in [`resources/mcp-skills-catalog.en.md`](resources/mcp-skills-catalog.en.md).
-
-> Looking for more MCP server catalogs? See [`wong2/awesome-mcp-servers`](https://github.com/wong2/awesome-mcp-servers) / [`punkpeye/awesome-mcp-servers`](https://github.com/punkpeye/awesome-mcp-servers) (categorized). **Canva** now ships an official MCP ([canva.dev/docs/mcp](https://www.canva.dev/docs/mcp/), endpoint `mcp.canva.com`, ~32 tools, works on any plan, supports Claude / ChatGPT / Cursor / VS Code).
-
----
-
-## Topic-based awesome lists
-
-This repo **doesn't replace** flat awesome lists. When you already know which tool you want, these are more direct:
-
-### MCP-related
-
-- [**modelcontextprotocol/servers**](https://github.com/modelcontextprotocol/servers) — official reference servers (7 today: everything, fetch, filesystem, git, memory, sequentialthinking, time; github and sqlite have moved to `servers-archived`)
-- [**wong2/awesome-mcp-servers**](https://github.com/wong2/awesome-mcp-servers) — community MCP server catalog, by category (150+)
-- [**punkpeye/awesome-mcp-servers**](https://github.com/punkpeye/awesome-mcp-servers) — another MCP server catalog
-
-### Claude Code / Skills / Plugins-related
-
-- [**hesreallyhim/awesome-claude-code**](https://github.com/hesreallyhim/awesome-claude-code) — Claude Code resources (currently restructuring)
-- [**travisvn/awesome-claude-skills**](https://github.com/travisvn/awesome-claude-skills) — Claude Skills catalog
-- [**anthropics/claude-plugins-official**](https://github.com/anthropics/claude-plugins-official) — Anthropic's official plugin marketplace template; start here when packaging your own plugin
-
-### Chinese-speaking community
-
-- [**datawhalechina/hello-agents**](https://github.com/datawhalechina/hello-agents) — Datawhale systematic agent tutorial (zh-Hans)
-- [**WangRongsheng/awesome-LLM-resources**](https://github.com/WangRongsheng/awesome-LLM-resources) — comprehensive zh-Hans LLM resources (8k+ stars)
-- [**AiHubCN/Awesome-Chinese-LLM**](https://github.com/AiHubCN/Awesome-Chinese-LLM) — open-source Chinese LLM catalog
-- [**hardness1020/awesome-agent-architecture**](https://github.com/hardness1020/awesome-agent-architecture) — section-by-section teardown of modern agent harnesses (loop engineering, tools, permissions, context, memory, evaluation) studied through systems such as Claude Code and Hermes Agent, with a runnable Python demo per section (trilingual: EN / zh-TW / zh-Hans)
-
-### Online courses / MOOCs (certificate comparison)
-
-- [**resources/courses.en.md**](resources/courses.en.md) — 10 credible, certificate-granting online AI agent courses (EN + ZH), tiered; with an honest "completion certificate ≠ a degree" caveat
-
----
-
-## What else?
-
-- Main README: [README.en.md](README.en.md)
-- Full MCP / Skill catalog: [resources/mcp-skills-catalog.en.md](resources/mcp-skills-catalog.en.md)
-- CLI agent comparison guide: [resources/cli-agents-guide.en.md](resources/cli-agents-guide.en.md)
-- Style guide / contributing: [resources/style-guide.en.md](resources/style-guide.en.md), [CONTRIBUTING.en.md](CONTRIBUTING.en.md)
+- Unclear term: open [`resources/glossary.en.md`](resources/glossary.en.md).
+- Want to build now: open [`resources/cookbook.en.md`](resources/cookbook.en.md).
+- Want to understand training choices: open [`resources/model-training-guide.en.md`](resources/model-training-guide.en.md).
+- Want to contribute or translate: read [`resources/style-guide.en.md`](resources/style-guide.en.md) and [`CONTRIBUTING.en.md`](CONTRIBUTING.en.md).

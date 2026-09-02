@@ -1,12 +1,10 @@
-name: Lint (link rot + banned words + schema)
+name: Lint (content, freshness, and schema)
 
 on:
   # 刻意「不」加 paths 過濾。這是 blocking gate，將來可能被設成 required status check；
   # 而 GitHub 對「required 但從未回報」的 check 是無限期等待，PR 會永遠卡在
   # 「Expected — Waiting for status to be reported」。paths 過濾會讓整個 workflow 不觸發、
   # 連 check 物件都不產生，正是那個死鎖。
-  # （job 層的 `if:` 不一樣——被 skip 的 job 仍然會回報一個 skipped 的 check，GitHub 視為
-  # 通過，所以本檔的 link-rot / star-drift 那種 guard 是安全的，不必動。）
   # 這個 filter 原本讓 130 / 473 個 tracked 檔案觸發不了任何一次執行（examples/ 114、
   # .github/ 9、root 6、docs/ 1）。它也會跳過只動 CITATION.cff 的 chore(release) commit
   # ——全部 12 個 release commit 裡有 9 個是這種；另外 3 個只是因為同時改了 CHANGELOG.md
@@ -18,18 +16,17 @@ on:
   # 2026-08-03 的實例：一個 overclaim 片語在 main 上紅了約 15 小時沒人發現
   #（47c9682 07:06 EDT 引入 → c0f2bbe 22:07 EDT 修掉），而且不是我們自己抓到的，
   # 是靠一個外部 PR 照出來的——因為 GitHub 的 PR 檢查跑的是「合併後」的結果，不是分支本身。
-  # link-rot / star-drift 兩個 job 有 `if: schedule || workflow_dispatch` 的 guard，
-  # 不會被 push 觸發，所以 push 只跑 banned-words + freshness-tests（實測 17s + 9s）。
+  # push 跑的是 banned-words + freshness-tests
+  #（實測 17s + 9s）+ anchor-slug-parity。最後那個是這份檔案裡第一個要裝
+  # 非 stdlib 依賴的 job（`requirements-docs.txt`，因為它需要真正的 mkdocs
+  # config loader 才能問出網站實際會用哪個 slugify），所以會比另外兩個久一些。
   push:
     branches: [main]
-  schedule:
-    # 每月 1 號 UTC 03:00 跑完整檢查（catch link rot + star drift）
-    - cron: '0 3 1 * *'
   workflow_dispatch:
 
 # 這個 workflow 只讀 repo、不寫回任何東西。pull_request 事件下 GitHub 對 fork 一律
 # 發唯讀 token，但 push 事件的權限來自 repo 設定，未來被改掉就會靜默放寬，所以明寫。
-# 跟 anchor-validator / stage-template-check / freshness-2026 一致。
+# 跟 anchor-validator / stage-template-check / Required gate 一致。
 permissions:
   contents: read
 
@@ -38,7 +35,7 @@ jobs:
     name: Banned-word audit (zh-Hans slips + overclaim phrases)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check zh-Hans slips in zh-TW canonical files
         run: |
@@ -69,10 +66,22 @@ jobs:
       - name: Check zh-TW residue in zh-Hans files (warning only)
         run: |
           # 反向檢查：zh-Hans 檔混入 zh-TW 用詞代表翻譯沒翻完。
+          # `_build/` 是本機 mkdocs 產物（.gitignore 第 15 行），內容是 docs/ 的
+          # 副本。CI 全新 checkout 沒有它，所以這行對 CI 是 no-op；但本機跑同一段
+          # 指令時它會把每個命中重複計一次，而且那份副本可能是修正前的舊建置——
+          # 2026-08-14 實測，同一段指令在本機吐出的命中數約是 tracked 檔案的三倍多
+          # （確切數字無法重現：`_build/` 不進版控，所以那次測量沒有人能重跑）。
+          # 一個「本機與 CI 不同調」的檢查，會讓人不信任正確的那一邊。
           # **僅 warning 模式**——不擋 PR、不要求完美。zh-Hans 翻譯是漸進的，
           # 殘留是常態；這個 check 只是提示哪幾個詞還可以順手修。
           # 不掃：style-guide / glossary（會引用對照詞當例子）、.ai/、book/。
-          BANNED_TW=("使用者" "軟體" "硬體" "資訊" "品質" "資料" "專案" "腳本" "預設" "影片" "演算法" "應用程式" "網路" "連結" "服務" "範例" "範本" "設定" "註解" "終端機" "命令列" "編輯器" "瀏覽器" "客戶端" "伺服器" "倉儲" "必修閱讀" "飛書")
+          # 「影片」刻意不在這張表裡：它現在由 blocking gate
+          # (zh-hans-localize.py 的 GUARDED_VOCAB) 負責,而且那條規則帶守衛——
+          # 「投影片」是合法的、不該被改。這裡是 `grep -F`,沒有守衛的概念,
+          # 留著只會對唯一一個正確的「投影片」永遠開火。
+          # **一個永遠在叫的假警報,跟沒有警報一樣糟**,而且它剛好會削弱這次
+          # 修好的那條規則的可信度。
+          BANNED_TW=("使用者" "軟體" "硬體" "資訊" "品質" "資料" "專案" "腳本" "預設" "演算法" "應用程式" "網路" "連結" "服務" "範例" "範本" "設定" "註解" "終端機" "命令列" "編輯器" "瀏覽器" "客戶端" "伺服器" "倉儲" "必修閱讀" "飛書")
           FOUND=0
           for word in "${BANNED_TW[@]}"; do
             if grep -rn --include="*.zh-Hans.md" \
@@ -80,6 +89,7 @@ jobs:
                   | grep -v "^./resources/style-guide.zh-Hans.md" \
                   | grep -v "^./resources/glossary.zh-Hans.md" \
                   | grep -v "^./.ai/" \
+                  | grep -v "^./_build/" \
                   | grep -v "^./book/"; then
               echo "::warning::zh-TW word found in zh-Hans file: $word"
               FOUND=$((FOUND+1))
@@ -232,6 +242,12 @@ jobs:
       - name: check-image-locale.py detection unit tests
         run: python3 scripts/test_image_locale.py
 
+      - name: Check teaching-image delivery budget (blocking)
+        run: python3 scripts/check-image-delivery.py
+
+      - name: Image delivery hook and budget unit tests
+        run: python3 scripts/test_image_delivery.py
+
       - name: Check MCP catalog counts are consistent (blocking)
         run: |
           # Blocking gate: the catalog's Index per-section counts and the
@@ -290,50 +306,66 @@ jobs:
         # (scripts/test_pr_link_audit.py). stdlib-only, network-free.
         run: python3 scripts/test_pr_link_audit.py
 
-  link-rot:
-    name: Link rot check (GitHub URLs)
-    runs-on: ubuntu-latest
-    # 只在 schedule 跟 workflow_dispatch 跑——PR 跑會太慢
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-
-      - name: Install requests
-        run: pip install requests
-
-      - name: Run link-check (--fast = GitHub URLs only)
-        run: python scripts/check-links.py --fast --quiet
-
-  star-drift:
-    name: Star drift detection
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-
-      - name: Install requests
-        run: pip install requests
-
-      - name: Run refresh-stars (warn only, don't fail CI)
-        # gh CLI 已內建在 ubuntu-latest runner，GH_TOKEN 自動 set
-        # 高門檻 (50%) 才警告，避免每月誤報
+      - name: Repository freshness unit tests and snapshot coverage
+        # Network-free. The live changed-link check runs in its own workflow;
+        # this pins classification and proves every tracked repo has a row.
         run: |
-          # 用 --check 才會在 drift 時退 1；用 || 接 ::warning:: 退 0
-          if ! python scripts/refresh-stars.py --threshold 50 --check; then
-            echo "::warning::Star drift detected (>=50%). 跑 'python scripts/refresh-stars.py' 看哪些 entry 要更新。"
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          python3 scripts/test_repository_freshness.py
+          python3 scripts/check-repository-freshness.py verify-snapshot
+
+      - name: check-links.py classification unit tests
+        # Pins issue #94: the checker reported 14 failures of which 5 were real.
+        # It identified itself in the UA (hosts refuse that), trusted HEAD (widely
+        # mis-implemented), and filed 401/403/429 refusals as dead links. A gate
+        # that is 64% wrong stops being read, and the real rot hides in the noise.
+        # Network-free — every request is faked.
+        run: python3 scripts/test_check_links.py
+
+      - name: check-links.py mutation test (can the suite go red?)
+        # Pins issue #102. The suite above was 10/10 green while
+        # `sys.exit(1 if failures else 0)` -> `sys.exit(0)` survived: the gate
+        # could have been made permanently green with no test noticing. Green is
+        # not evidence a test can fail, so this runs the suite against 22 known
+        # defects and requires every one to be caught. Network-free; restores
+        # check-links.py in a finally block.
+        run: python3 scripts/mutate_check_links.py
+
+      - name: check-duplicate-repos.py (same repo listed twice in one table)
+        # 2026-08-23: microsoft/agent-framework was added to the Stage 4 table
+        # as new when it had been in that same table since 2026-06-13. Stars,
+        # license and push date were verified; the slug was never grepped, and
+        # all six content gates stayed green because the only entry-counting
+        # gate is scoped to resources/mcp-skills-catalog.* and cannot see a
+        # stage's prose table. Compares within one table or list only, using
+        # each row's first link, so cross-references and monorepo subdirectory
+        # entries are not reported. stdlib-only, network-free.
+        run: python3 scripts/check-duplicate-repos.py --quiet
+
+      - name: check-duplicate-repos.py unit tests
+        run: python3 scripts/test_duplicate_repos.py
+
+      - name: zh-hans-localize.py substitution rule tests
+        # This gate REWRITES tracked files, and until 2026-08-14 nothing tested
+        # its substitution logic — the #102 shape. The cost was concrete:
+        # 影片→视频 was dropped from VOCAB because 影片 is a substring of 投影片
+        # (slides) and a blanket replace yields 投视频, so five genuine Taiwan
+        # residues sat in tracked files while the gate reported "clean". The
+        # rule is now guarded by a separator run that stops at a paragraph
+        # break (a bare lookbehind was tried first and is NOT enough — ordinary
+        # markdown like 投**影片** defeats literal adjacency). These tests pin
+        # BOTH halves: the term is localized AND the host word is not corrupted.
+        # stdlib-only, network-free.
+        run: python3 scripts/test_zh_hans_localize.py
+
+      - name: check-anchors.py fenced-code-block parser tests
+        # Pins issue #95: strip_code_blocks used to toggle on any ``` line,
+        # which disagrees with CommonMark and therefore with the renderer that
+        # publishes the site. Four headings were rendering as code in
+        # examples/stage-4/04-codeact-vs-json-tool/README.* while every gate
+        # read green. check-anchors.py itself CANNOT catch that — under the old
+        # parser it still exits 0 — so these unit tests are the only guard.
+        # stdlib-only, network-free.
+        run: python3 scripts/test_check_anchors.py
 
   freshness-tests:
     name: Freshness gate unit tests
@@ -342,10 +374,10 @@ jobs:
     # guard), so the freshness-gate coverage can't silently regress the way it
     # did in 2026-07.
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.11'
 
@@ -356,3 +388,47 @@ jobs:
         # Pins the 2026-07 coverage fixes: mirror-locale scanning +
         # DeepSeek space-form regex (scripts/test_freshness.py).
         run: python scripts/test_freshness.py
+
+      - name: Enforce freshness facts and page markers
+        # Structural marker errors and unqualified stale facts block PRs.
+        # Age-only findings remain annotations, so an unrelated PR cannot fail
+        # merely because a verified page crossed its review interval.
+        run: python scripts/check-2026-freshness.py
+
+  anchor-slug-parity:
+    name: Anchor slug parity (site vs check-anchors)
+    runs-on: ubuntu-latest
+    # Its own job because it needs the real mkdocs config loader — it asks
+    # mkdocs.yml what slugify the SITE will use, rather than assuming. The
+    # other lint steps are stdlib-only and must not pay for that install.
+    #
+    # Guards issue #93: check-anchors.py validates GitHub's slug rules while
+    # the site used python-markdown's default, which strips non-ASCII. The
+    # gate read green while 151 fragments were dead on the published site.
+    # Runs on every PR — docs.yml would be too late, it only fires on push
+    # to main, i.e. after the merge.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install docs dependencies
+        # The same requirement set the site build installs, so the slugify
+        # under test is the one that will actually render the site. Note
+        # pymdown-extensions is pinned explicitly in requirements-docs.txt
+        # precisely because toc.slugify resolves through it.
+        run: pip install -r requirements-docs.txt
+
+      - name: Stage content tree
+        # mkdocs.yml sets docs_dir: _build/docs, which is gitignored. The test
+        # reads the real config via mkdocs.config.load_config, and load_config
+        # VALIDATES docs_dir existence — so on a fresh checkout it aborts before
+        # the parity assertion ever runs. Locally this passed only because a
+        # previous build had left _build/docs behind.
+        run: python scripts/build-docs-tree.py
+
+      - name: Site and gate must agree on every heading slug
+        run: python scripts/test_anchor_slug_parity.py

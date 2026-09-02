@@ -2,178 +2,196 @@
 
 > **繁體中文** | [简体中文](./for-everyday-users.zh-Hans.md) | [English](./for-everyday-users.en.md)
 
-> 🚀 **日常使用者可直接從 Tier 0 開始**（網頁 / 手機 App）、**不需要任何 setup**。只有當你想跑本地 LLM（Tier 3）或用 CLI 自動化（Tier 2）時、才需要看 [`resources/setup-guide.md` A-C](../resources/setup-guide.md)（30 分鐘從零裝好）。
+> [← 回主路線](../README.md) · 你不必先學會寫程式，也不必走完整條主幹。
 
-> [← 回主路線 README](../README.md) · 你**不一定要走完整條主幹**才能從這裡開始——這條分支是給「**只想 USE AI、不一定要 BUILD agent**」的人。
+<!-- freshness: canonical=branches/for-everyday-users.md; verified_on=2026-08-29; scope=chat-apps,connectors,cli-agents,local-runtimes,privacy,project-status; max_age_days=90 -->
 
-## 使用情境（生活場景 × AI 怎麼幫）
+<a id="使用情境生活場景--ai-怎麼幫"></a>
+## 📌 這條路幫你做什麼
 
-下表把日常使用者一天會遇到的 7 個情境拆開——多數場景在網頁版（Tier 0）就能搞定：
+這條路教你把 AI 當成「先幫忙寫草稿的助手」。你先給它資料和要求，它先做一版；最後仍由你對照原文、修正並決定要不要使用。
 
-| 場景 | 你常遇到的痛點 | AI 能幫的部分 | 推薦工具 |
-|---|---|---|---|
-| **寫 email / cover letter** | 卡在「該怎麼開頭」 | 起草 + 改語氣 + 多版本對比 | Claude.ai / ChatGPT |
-| **學新技能** | 教材太正式、沒人問問題 | 個人化 tutor、可隨時打斷問 | Claude.ai / ChatGPT |
-| **練語言** | 沒對話對象、不知文法錯哪 | 語音對話、即時糾錯 | ChatGPT Voice / Gemini |
-| **查資料 / 比較** | 不知該信哪個來源 | 多源搜尋 + 附引用 | Perplexity |
-| **整理生活流程** | 食譜 / 行程 / 待辦清單散落 | 整合 + 結構化 | Claude.ai / ChatGPT |
-| **批次整理檔案** | 100 個 PDF / 圖片不知怎麼分 | 重命名 + 分類 + 摘要 | Claude Desktop / Claude Code |
-| **隱私敏感 chat** | 醫療 / 法律 / 財務筆記不想送雲 | 本地跑 LLM | Ollama + qwen2.5 |
+你可以直接從第一個練習開始。不要先放真實姓名、密碼、病歷、合約或公司機密。
 
-> 💡 **不要被催著升級**：前 5 個場景都可以停在 Tier 0（網頁版）。只有要「重複跑同一個流程」或「資料絕對不能送雲」才需要 Tier 1-3。
+## 🎯 學習目標
 
-## 起步：你應該從哪一層進來？
+完成這一頁後，你可以：
 
-按「**動手願意度**」分 4 層，從低到高：
+1. 把要做的事、可用資料和輸出格式說清楚。
+2. 分清聊天介面、**App／Connector**、**CLI Agent** 與本地模型執行環境。
+3. 在連接帳號、開放檔案或執行指令前先看權限。
+4. 對照 **Source** 檢查 AI 草稿，不把流暢文字當成正確答案。
 
+## 🧩 九個核心詞
+
+- **Prompt（提示）**：你交給 AI 的要求。像寫一張工作小紙條，要說要做什麼、可以用什麼資料、結果長什麼樣。
+- **Source（來源）**：你要 AI 依照的原文、圖片或資料。最後要回來對照它，不能只相信 AI 的記憶。
+- **Private Data（私人資料）**：不該隨便交給別人的資料，例如密碼、身分證號、未公開公司文件或他人的個資。
+- **Hallucination（幻覺）**：AI 不知道答案時，仍可能寫出一段很像真的內容。句子好看不代表事實存在。
+- **Human Review（人工審查）**：由人把草稿和 Source 一項一項比對，修正後才決定是否使用。
+- **App／Connector（服務連接器）**：聊天服務通往 Gmail、Drive 或其他服務的一扇門。它能做什麼，取決於產品和你給的權限。
+- **CLI Agent（命令列 Agent）**：在終端機裡工作的助手。它可能讀寫檔案或執行指令，所以動手前要先看計畫與 diff。
+- **Local LLM／Runtime（本地模型／執行環境）**：讓模型在自己的電腦上執行的軟體。Runtime 負責跑模型，不等於聊天 App，也不等於 CLI Agent。
+- **Approval Gate（人工核准關卡）**：真正寄信、改檔或執行高影響動作前，先停下來讓人確認。
+
+## 🛠 第一個練習：把虛構訊息變成可核對的提醒
+
+這題只用**虛構**資料。把下面整段直接貼到你正在使用的聊天工具：
+
+```text
+來源訊息：
+「小安說星期五前會把海報草稿交給小美。活動日期是 9 月 12 日。訊息沒有寫交付時間。」
+
+請幫我寫一段簡短提醒。只能使用來源訊息裡的事實，不要猜。
+請輸出：
+1. Draft
+2. Facts copied
+3. Needs confirmation
+
+不要替我傳送訊息。
 ```
-Tier 0：網頁 / 手機 App（推薦從這裡開始）
-   ↓
-Tier 1：Desktop App（要處理本機檔案再升級）
-   ↓
-Tier 2：CLI Agent（願意學一點命令列，能自動化日常流程）
-   ↓
-Tier 3：本地 LLM（隱私敏感、API 費用敏感、想 offline）
-```
 
-**多數人停在 Tier 0 / Tier 1 就夠用了**——Tier 2-3 是給有特殊需求或想學的人。
+完成後，自己做三個檢查：
 
----
+1. `Facts copied` 能不能逐句在 Source 找到？
+2. 沒有寫出的交付時間，有沒有放進 `Needs confirmation`？
+3. 工具有沒有只產生 Draft，而沒有自行傳送？
 
-## 🎯 精選 Projects
+<a id="起步你應該從哪一層進來"></a>
+<a id="給日常使用者的層級建議"></a>
+## 🚪 按工作選四扇門
 
-### Tier 0 — 網頁 / 手機 App ⭐ 入門
+**這四扇門不是等級。需要哪一扇才開哪一扇。** 多數單次任務只要第一扇；不是工具越多，結果就越好。
 
-#### [Claude.ai](https://claude.ai) ⭐⭐⭐⭐⭐
-Anthropic 官方介面。長文章、深度討論、複雜問題很適合用——回答風格較收斂、不太瞎掰。
+<table>
+  <thead><tr><th>入口</th><th>五歲也懂的說法</th><th>適合什麼</th><th>動手前先做什麼</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Chat surface</strong></td><td>打開一個對話框，請它先寫草稿</td><td>寫信、解釋文章、整理公開資料</td><td>移除 Private Data；準備可核對的 Source</td></tr>
+    <tr><td><strong>App／Connector</strong></td><td>幫聊天工具開一扇通往其他服務的門</td><td>搜尋已授權的郵件、檔案或行事曆</td><td>看清讀取與寫入權限；寫入動作保留人工確認</td></tr>
+  </tbody>
+</table>
 
-#### [ChatGPT](https://chatgpt.com) ⭐⭐⭐⭐⭐
-OpenAI 官方介面。生態最廣（GPTs、Custom Instructions、Voice mode）。一般用途的標準選擇。
+<a id="tier-2--cli-agent願意學命令列的進階使用者"></a>
+<table>
+  <thead><tr><th>入口</th><th>五歲也懂的說法</th><th>適合什麼</th><th>動手前先做什麼</th></tr></thead>
+  <tbody>
+    <tr><td><strong>CLI Agent</strong></td><td>在終端機裡工作的助手</td><td>重複整理檔案或執行多步驟任務</td><td>限定資料夾，先看 preview／dry-run、command 與 diff，再批准</td></tr>
+    <tr><td><strong>Local LLM／Runtime</strong></td><td>模型在自己的電腦裡跑</td><td>離線實驗，或不想把指定資料交給雲端模型</td><td>確認選的是 local model；cloud model、web search 或雲端功能仍會連網</td></tr>
+  </tbody>
+</table>
 
-#### [Gemini](https://gemini.google.com) ⭐⭐⭐⭐
-Google 出品。長 context（一次能讀很長文件、約一本厚書的量）特別適合丟整本 PDF 進去問問題；仍要自己檢查引用與摘要是否正確。整合 Google 服務（Gmail、Docs）。
+如果你只想聊天，不需要安裝 CLI Agent 或本地 Runtime。想學命令列時再去 [Track A 第一站](../tracks/cli/A1-cli-intro.md)；想了解模型時再去 [Stage 1](../stages/01-llm-basics.md)。
 
-#### [Perplexity](https://perplexity.ai) ⭐⭐⭐⭐
-搜尋引擎 × LLM——每個答案都附引用來源。比 ChatGPT 適合「需要查最新資訊」的場景。
+<a id="必修閱讀"></a>
+## 📖 必修閱讀
 
----
+先讀這六個短入口；它們分別回答「怎麼問、能接什麼、資料會去哪裡」：
 
-### Tier 1 — Desktop App
+1. [OpenAI — Prompt engineering best practices for ChatGPT](https://help.openai.com/en/articles/10032626-how-do-i-prompt-chatgpt-effectively)：學會把要求與 context 說清楚。
+2. [Anthropic — Get started with Claude](https://support.claude.com/en/articles/8114491-get-started-with-claude)：用一般對話方式開始，再逐步補充限制。
+3. [OpenAI — Apps in ChatGPT](https://help.openai.com/en/articles/11487775-connectors-in)：Apps 的能力會因方案、地區、workspace 與管理員設定而不同。
+4. [Anthropic — When to use desktop and web connectors](https://support.claude.com/en/articles/11725091-when-to-use-desktop-and-web-connectors)：分清 remote connector 與本機 desktop extension。
+5. [Google — Gemini Apps Privacy Hub](https://support.google.com/gemini/answer/13594961?hl=en)：連接資料前先看 activity、人工審查與第三方政策。
+6. [Ollama — FAQ](https://docs.ollama.com/faq)：分清本機執行、cloud model、web search 與 `local-only` 設定。
 
-#### [Claude Desktop](https://claude.ai/download) ⭐⭐⭐⭐⭐
-比網頁版多了：拖檔案進去、本機檔案讀取、保留長期對話脈絡。**也是進入 AI 工具整合生態（MCP）的入口**——可以接 Slack / Gmail / 行事曆，讓你在 Claude 裡直接操作這些服務。
+想系統學 Prompt、zero-shot、one-shot、few-shot 與查證方法，再進 [Stage 2 — Prompt Engineering](../stages/02-prompt-engineering.md)。
 
-#### [ChatGPT Desktop](https://openai.com/chatgpt/desktop) ⭐⭐⭐⭐
-ChatGPT 桌面版。可以對螢幕截圖問問題、語音對話、跟其他 App 整合。
+<a id="-精選-projects"></a>
+## ⭐ 精選 Projects 與學習資源
 
----
+星等是本專案依「初學者價值、文件品質與安全邊界」給的編輯評分，不是 GitHub stars。狀態與限制查核於 `2026-08-29 UTC`。
 
-### Tier 2 — CLI Agent（願意學命令列的進階使用者）
+<table>
+  <thead><tr><th scope="col">分類</th><th scope="col">入口／專案</th><th scope="col">它是什麼</th><th scope="col">適合做什麼</th><th scope="col">狀態／授權</th><th scope="col">先知道的限制</th><th scope="col">評分</th></tr></thead>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="4">聊天介面</th><td><a href="https://claude.ai">Claude</a></td><td>雲端 Chat surface</td><td>閱讀、寫作與反覆討論</td><td>正式可用；商業雲端服務</td><td>功能依方案與地區；重要內容仍要對照 Source</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://chatgpt.com">ChatGPT</a></td><td>雲端 Chat surface</td><td>一般問答、語音與多種工作入口</td><td>正式可用；商業雲端服務</td><td>仍會出錯；高影響結果要 Human Review</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://gemini.google.com">Gemini</a></td><td>Google 的雲端 Chat surface</td><td>問答與符合資格的 Google 服務連接</td><td>正式可用；商業雲端服務</td><td>先看 activity 與人工審查設定，不放機密資料</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://perplexity.ai">Perplexity</a></td><td>帶來源入口的雲端搜尋助手</td><td>找候選來源與建立查證起點</td><td>正式可用；商業雲端服務</td><td>引用不等於內容正確；要逐一打開來源</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="4">官方入門與安全指南</th><td><a href="https://help.openai.com/en/articles/10032626-how-do-i-prompt-chatgpt-effectively">OpenAI Prompt Guide</a></td><td>ChatGPT 官方指引</td><td>學清楚、具體與逐步改寫 Prompt</td><td>現行；官方指引</td><td>好 Prompt 不能保證正確，仍要查證</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://support.claude.com/en/articles/8114491-get-started-with-claude">Claude Get Started</a></td><td>Claude 官方入門</td><td>第一次聊天與基本操作</td><td>現行；官方指引</td><td>方案有使用限制；不要假設所有功能都可用</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://help.openai.com/en/articles/11487775-connectors-in">Apps in ChatGPT</a></td><td>App／Connector 官方說明</td><td>了解搜尋、同步與外部 action</td><td>商業；商業雲端服務</td><td>能力與權限不同；高影響 action 保留人工確認</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://support.google.com/gemini/answer/13594961?hl=en">Gemini Privacy Hub</a></td><td>Gemini 官方隱私指引</td><td>連接 Google 或第三方資料前檢查設定</td><td>現行；官方隱私指引</td><td>可能處理敏感內容；不要連接不願交給 reviewer 的機密資料</td><td>⭐⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="4">CLI Agent</th><td><a href="https://github.com/anthropics/claude-code">Claude Code</a></td><td>Anthropic CLI Agent</td><td>在指定工作區讀檔、改檔與執行任務</td><td>活躍；商業服務；repo 未標示標準開源授權</td><td>先設定 permission，批准前先看 command／diff</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/openai/codex">Codex</a></td><td>OpenAI coding agent</td><td>app／CLI／IDE／cloud 工作</td><td>活躍；repo 程式碼為 Apache-2.0，app／cloud 依服務條款</td><td>用 approval 限制寫檔、命令與外部 action</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/anomalyco/opencode">OpenCode</a></td><td>可連多種 provider 的 coding agent／harness</td><td>在終端機或 desktop 使用模型做多步驟任務</td><td>活躍；MIT</td><td>provider 仍需帳號／API key；用 permission 與 AGENTS.md 限定範圍</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/google-gemini/gemini-cli">Gemini CLI</a></td><td>Google CLI Agent</td><td>在終端機使用 Gemini 與工具</td><td>活躍；Apache-2.0</td><td>修改前看 diff／command；sandbox 只能降低風險</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="2">Local LLM Runtime</th><td><a href="https://github.com/ollama/ollama">Ollama</a></td><td>本地模型執行環境</td><td>下載並在自己的電腦執行模型</td><td>活躍；MIT</td><td>確認使用 local model；cloud model 與 web search 不是本機推論</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://lmstudio.ai/">LM Studio</a></td><td>圖形化本地模型執行環境</td><td>用桌面介面載入已下載模型</td><td>商業；商業桌面應用程式</td><td>本地功能可離線；cloud models、搜尋等雲端功能仍會連網</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>
+  <tbody>
+    <tr><th scope="rowgroup" rowspan="1">Prompt 素材</th><td><a href="https://github.com/f/prompts.chat">prompts.chat</a></td><td>社群 Prompt 範例庫</td><td>找句型，再改成自己的任務</td><td>活躍；MIT／CC0</td><td>範例品質不一；不要直接貼 Private Data</td><td>⭐⭐⭐⭐</td></tr>
+  </tbody>
+</table>
 
-> 這些工具雖然定位給開發者，但**日常使用者也能用**——例如批次重新命名檔案、整理下載資料夾、自動寫每週回顧、把 PDF 摘要存成 Markdown。
->
-> 想看詳細比較？見 [`resources/cli-agents-guide.md`](../resources/cli-agents-guide.md)（8 個主流 CLI agent 並列、依 use case 推薦、常見坑、實用搭配）。
->
-> 想要 step-by-step 上手？見 [`tracks/cli/A1-cli-intro.md`](../tracks/cli/A1-cli-intro.md)（Track A 第一站，從安裝到第一個任務）。
->
-> 想把 CLI agent 接到你的 Notion / Obsidian / Excel / Google 文件等日常工具？見 [`resources/mcp-skills-catalog.md`](../resources/mcp-skills-catalog.md)（按分類整理 77+ 個 MCP server / Skill）。
+<details markdown="1">
+<summary>🔐 帳號、資料、權限與費用</summary>
 
-#### [anthropics/claude-code](https://github.com/anthropics/claude-code) ⭐⭐⭐⭐⭐
-★ 138k+ — Anthropic 官方的 CLI agent。能讀寫檔案、執行指令、做多步驟任務。**日常使用者最容易上手的 CLI 工具**。
+- App／Connector 是否出現，會受**方案、地區、workspace**、裝置與管理員設定影響。沒有看到功能，不代表你操作錯了。
+- 連接前先問：它會讀什麼？會把什麼送給哪個服務？能不能寫回？怎麼撤銷？
+- 搜尋和草擬通常是低影響動作；寄信、改行事曆、刪檔或購買是寫入動作，必須保留 Approval Gate 與人工確認。
+- 雲端產品的免費額度、訂閱與 API 費用會變；操作前直接看產品目前顯示的方案，不在教材保存固定價格。
+- 不確定能不能上傳時，先不要上傳。公開可讀也不等於你有權把別人的內容交給第三方服務處理。
 
-#### [openai/codex](https://github.com/openai/codex) ⭐⭐⭐⭐⭐
+</details>
 
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 100k+ |
-| License | Apache-2.0 |
+<details markdown="1">
+<summary>🧪 CLI Agent 與本地模型進階步驟</summary>
 
-**教什麼**：OpenAI 出品的終端機 agent——可以在命令列幫你整理檔案、批次處理文字、執行多步驟任務；寫程式只是其中一種用途。跟 Claude Code 同類、但用的是 OpenAI 的模型。
+CLI Agent 的安全起手式：
 
-**適合誰**：已經訂 ChatGPT Plus / Pro，想在終端機用同一個帳號做事的人。
+1. 在測試資料夾放幾個可還原的虛構檔案。
+2. 先要求 read-only plan 或 preview／dry-run。
+3. 把可讀寫範圍限制在那個資料夾。
+4. 看清 command 與 diff，再批准小步驟。
+5. 執行後人工檢查；不要一開始就讓它寄信、刪檔、付款、push 或 deploy。
 
-#### [sst/opencode](https://github.com/sst/opencode) ⭐⭐⭐⭐⭐
+官方邊界：
 
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 187k+ |
-| License | MIT |
+- [Gemini CLI tools](https://geminicli.com/docs/reference/tools/) 會在修改工具前顯示 action；[sandbox 文件](https://geminicli.com/docs/cli/sandbox/) 也提醒 sandbox 不是零風險保證。
+- [OpenCode permissions](https://opencode.ai/docs/agents/) 可對 edit、bash 與外部資料夾設定 ask／allow／deny；[provider 文件](https://opencode.ai/docs/providers/) 顯示模型連線仍需要對應帳號、OAuth、API key 或環境設定。
+- Ollama 可以啟用 [cloud models](https://docs.ollama.com/cloud)。只要純本機模式時，依 FAQ 設定 `disable_ollama_cloud` 或 `OLLAMA_NO_CLOUD=1`。
+- LM Studio 的[離線說明](https://lmstudio.ai/docs/app/offline)指出，已下載模型、chat、文件與 local server 可以離線使用；[隱私說明](https://lmstudio.ai/app-privacy)區分本地處理與 cloud models／web search。
 
-**教什麼**：開源版的 coding agent，**不綁特定 LLM provider**——可以用 Claude、GPT、Gemini、本地 Ollama 任何一個。社群維護、迭代速度快。
+</details>
 
-**適合誰**：想 self-host、不想被 API provider 綁住，或要在多個 LLM 之間切換的人。
+<a id="可以建的流程按使用頻率"></a>
+<details markdown="1">
+<summary>🧰 更多流程、替代方案與疑難排解</summary>
 
-#### [google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli) ⭐⭐⭐⭐
+可以慢慢加入的低風險流程：
 
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 103k+ |
-| License | Apache-2.0 |
+- **語言練習**：請 AI 扮演對話伙伴；每次只糾正兩個錯誤，最後由你核對教材。
+- **週記草稿**：只用你願意放進工具的筆記；先列事實，再寫摘要。
+- **公開文章摘要**：附上原文，要求每個重點指出 Source 段落；自己打開原文檢查。
+- **虛構檔案整理**：先在測試資料夾 preview 新檔名，人工批准後才改名。
 
-**教什麼**：Google 官方的 Gemini CLI agent。把 Gemini 的長 context 跟 Google 生態整合到終端機。
+常見問題：
 
-**適合誰**：Google 生態的重度使用者（Gmail、Drive、Docs）。
+- 回答猜了不存在的資料：縮短任務，明寫「不知道就放進 Needs confirmation」。
+- Connector 找不到資料：先檢查原服務權限、方案、workspace 管理員與支援 surface。
+- 本地模型很慢：先換較小模型；不要把「跑得動」誤當成「回答一定正確」。
+- 不知道選哪個入口：先用 Chat surface 完成第一題；真的需要讀外部服務、改檔或離線時再開其他門。
 
----
+</details>
 
-### Tier 3 — 本地 LLM（隱私 / 離線 / 省錢）
+<a id="社群備註"></a>
+## ✅ 完成檢查與下一站
 
-#### [Ollama](https://github.com/ollama/ollama) ⭐⭐⭐⭐⭐
-★ 170k+ — 一行指令跑本地 LLM。隱私敏感資料（病歷、合約、家人對話）不適合送去雲端時用這個。詳見 [Stage 1 — Local LLM 執行](../stages/01-llm-basics.md)。
+- [ ] 我能說出 Chat surface、App／Connector、CLI Agent 與 Local LLM／Runtime 的差別。
+- [ ] 我知道 AI 會產生 Hallucination，會回到 Source 做 Human Review。
+- [ ] 我不會把 Private Data 直接貼進不清楚資料政策的服務。
+- [ ] 寄出、改檔、執行命令或其他高影響動作前，我會保留 Approval Gate。
 
-#### [LM Studio](https://lmstudio.ai/)
-非開源但對非開發者最友善——拖拉介面、不用 command line。Mac / Windows / Linux 都有。
+下一站依你的需要選：
 
----
-
-### Prompt 素材庫
-
-#### [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts) ⭐⭐⭐⭐
-★ 161k+ — 社群維護的 prompt 大全。「act as 翻譯家 / 履歷顧問 / 廚師...」幾百種角色。**不知道怎麼開頭時從這裡找靈感**。
-
----
-
-## 必修閱讀
-
-1. [**Anthropic — How to write effective prompts**](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) — 不用程式碼也能讀的 prompt 寫法
-2. [**OpenAI — Prompting Guide**](https://platform.openai.com/docs/guides/prompt-engineering) — 對位的官方文件
-3. [**ChatGPT 怎麼用得最好（中文）**](https://www.runoob.com/) — 各家中文部落格的整理（runoob 等等）
-
-如果有興趣再深入，看 [Stage 2 — Prompt 設計](../stages/02-prompt-engineering.md)，那邊有正式系統性教學。
-
-## 可以建的流程（按使用頻率）
-
-下表 5 條是模板、配合你自己的場景調整：
-
-| 頻率 | 流程 | 怎麼做（≤ 3 步） | 推薦工具 |
-|---|---|---|---|
-| **每天** | Email 分流 | (1) 早上把待回信件貼進 Claude<br>(2) 請它分類「立即回 / 今天回 / 這週回 / 不用回」<br>(3) 草擬回信讓你 review | Claude.ai / ChatGPT |
-| **每天** | 練語言（口說） | (1) 打開 ChatGPT Voice 模式<br>(2) 對話練英 / 日<br>(3) 請它指出文法錯誤 | ChatGPT Voice / Gemini |
-| **每週** | 週記整理 | (1) 跟 Claude 講這週做什麼<br>(2) 請它整理成週記 + 下週重點<br>(3) 存到 Obsidian / Notion | Claude.ai |
-| **不定期** | 批次整理檔案 | (1) Claude Code 進 Downloads 資料夾<br>(2) 按日期 + 主題重命名<br>(3) 自動分到子資料夾 | Claude Code |
-| **隱私場景** | 本地醫療 / 法律 / 財務筆記 | (1) Ollama 跑 qwen2.5:7b<br>(2) 整理個人筆記、資料不送雲<br>(3) ⚠️ 保護的是**隱私**、不是**正確性**——具體診斷 / 法律判斷 / 投資決策仍需專業人士 | Ollama + qwen2.5 |
-
-> 💡 **新手起手式**：先把「每天 Email 分流」+「練語言」做一個月、習慣 AI 在日常的位置、再加其他流程。
-
-## 給日常使用者的層級建議
-
-下表是建議的進階路徑：
-
-| Tier | 工具 | 適合誰 | 學習成本 |
-|---|---|---|---|
-| **Tier 0** | Claude.ai / ChatGPT / Gemini / Perplexity（網頁版） | 90% 的場景都在這裡——免安裝、免付費 | 0（會用瀏覽器就行） |
-| **Tier 1** | Claude Desktop / ChatGPT Desktop + MCP | 要處理本機檔案、保留對話歷史、接 Gmail / Notion | 半小時裝好 |
-| **Tier 2** | Claude Code / opencode（CLI） | 有重複自動化需求（每天做同樣的事 100 次） | 1-2 天上手 |
-| **Tier 3** | Ollama 本地 LLM | 隱私敏感資料不能送雲、API 費用敏感、想 offline | 半天設定 |
-
-> **不要被人催著升級**——多數人 Tier 0 就夠用了。Tier 2-3 是工具、不是身份地位。
-
-## 社群備註
-
-這條分支也歡迎社群貢獻：
-
-- 推薦特定領域的 prompt template（料理、運動、學語言）
-- 中文友善的 chat tools（國產 LLM、本地化 wrapper）
-- 隱私 / 安全相關的最佳實踐（什麼資料能送 / 不能送）
-
-詳見 [CONTRIBUTING.md](../CONTRIBUTING.md)。
+- 想把 Prompt 寫得更清楚：進 [Stage 2](../stages/02-prompt-engineering.md)。
+- 想安全使用 CLI Agent：進 [Track A1](../tracks/cli/A1-cli-intro.md)。
+- 想分清 App、Connector、MCP 與自動化：進 [知識工作者路線](./for-knowledge-worker.md)。
+- 想協助改善這條路：看 [CONTRIBUTING.md](../CONTRIBUTING.md)。

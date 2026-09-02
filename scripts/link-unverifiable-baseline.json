@@ -1,0 +1,14 @@
+{
+  "_comment": "URLs whose host answers but refuses this checker (401/403/429/451, or a host-level block). Not dead links. Regenerate with: python scripts/check-links.py --update-baseline",
+  "unverifiable": [
+    "https://academy.langchain.com/",
+    "https://academy.langchain.com/courses/intro-to-langgraph",
+    "https://claude.ai",
+    "https://developer.meta.com/ai/models/muse-glimmer/",
+    "https://effortlessacademic.com/claude-code-and-cowork-for-academics-beginner-guide-part-1/",
+    "https://www.llama.com/",
+    "https://www.make.com/",
+    "https://www.w3.org/International/",
+    "https://www.w3.org/International/articles/language-tags/"
+  ]
+}

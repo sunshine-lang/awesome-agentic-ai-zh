@@ -4,8 +4,8 @@
 
 # 練習 5：Tool 錯誤處理
 
-對應 [Stage 3 — Tool Use & Agent 入門](../../../stages/03-tool-use-and-hello-agent.md) 練習 5。
-> 🎓 **學習模式**：這份 `starter.py` 是**完整解答**、不是 TODO skeleton。建議用**主動模式**——`mv starter.py starter_reference.py`、看 signature 不看 body、自己重寫一份 `starter.py`、跑 `python test.py` 驗證；卡 20 分鐘再回去對照 reference。完整方法論看 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
+對應 [Stage 3 — 工具使用與第一個 Agent Loop](../../../stages/03-tool-use-and-hello-agent.md) 練習 5。
+> 🎓 **學習模式**：先執行提供的 `starter.py`（`python starter.py`），再只改一個小地方，然後重新執行既有測試 `python test.py`。如果測試失敗，就撤銷或修正這一個改動，再試一次。不需要改名檔案，也不需要整份解答重寫。完整方法看 [`docs/HOW_TO_USE.md`](../../../docs/HOW_TO_USE.md)。
 
 > 📚 **想要 chapter-length 深入版？** 本 folder 的 starter 是 70-150 行 illustrative 版、聚焦 `核心 pattern + 兩條 SDK path`，不是進階深度教材。深度教材推薦：
 > - [`datawhalechina/hello-agents`](https://github.com/datawhalechina/hello-agents) ⭐ 中文圈最完整、章節式 + 16 種 production 能力。**本練習對應 hello-agents 的 Extra Chapter 錯誤處理 / circuit breaker**
@@ -23,24 +23,24 @@
 
 ### Path A（默認、本機免費）
 
-```bash
+```powershell
 pip install -r requirements.txt
 ollama pull qwen2.5:3b
 ollama serve
 python starter.py
 ```
 
-預算：**$0**。3 輪 loop ≈ 10-60 秒。
+預算：**$0 API 費用**；不包含硬體、記憶體與電力成本。
 
-### Path B（Anthropic、想看 cloud 高品質）
+### Path B（Anthropic、雲端比較）
 
-```bash
+```powershell
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
+$env:ANTHROPIC_API_KEY = "your-key"
 python starter_anthropic.py
 ```
 
-預算：每次 ≈ **$0.003**（claude-haiku-4-5、3 輪 messages 累積）。
+預算：每次先保留 **$0.05**。實際費用依 `輸入 tokens × $1 / 1,000,000 + 輸出 tokens × $5 / 1,000,000` 計算，Tool Use 還會加入 prompt tokens；價格查核日：`2026-08-27`。
 
 預期看到（Path A、本機，理想 retry 走法）：
 
@@ -56,7 +56,7 @@ python starter_anthropic.py
 
 ## 不花錢驗證程式邏輯（mock-based）
 
-```bash
+```powershell
 python test.py # 驗 Path A (Ollama) starter.py 邏輯
 python test_anthropic.py # 驗 Path B (Anthropic) starter_anthropic.py 邏輯
 ```
@@ -77,26 +77,26 @@ python test_anthropic.py # 驗 Path B (Anthropic) starter_anthropic.py 邏輯
 
 ## 兩個 path 觀察重點
 
-**附加觀察**：小 model（qwen2.5:3b）對 `retry_hint` 的 follow-up 可能不如 Claude 精細——可能會直接放棄、或無視 hint 重複同一個錯。**這恰好是教學點**：production 寫好 retry pattern 後，不同 model 對結構化 error 的「閱讀力」差距，是選 model 的考量之一（Stage 7 production tier 會再回來討論）。
+**附加觀察**：不同 model 對 `retry_hint` 的 follow-up 反應可能不同，可能直接放棄、無視 hint 或重複同一個錯。固定 prompt、error 與測試題，用 eval 記錄結構化 error 的處理行為；這也是 production 選 model 的依據（Stage 7 production tier 會再回來討論）。
 
 | 觀察項 | Anthropic Claude haiku | Ollama qwen2.5:3b |
 |---|---|---|
-| 看到 retry_hint 就 retry | 高機率 | 中機率（可能直接放棄） |
-| 連續失敗後 graceful end | 穩定 | 可能再 retry 第 3 次 |
-| 錯誤類型分流（transient vs permanent） | 較細緻 | 較粗略 |
+| 看到 retry_hint 就 retry | 用固定 eval 測量 | 用固定 eval 測量 |
+| 連續失敗後 graceful end | 用固定 eval 測量 | 用固定 eval 測量 |
+| 錯誤類型分流（transient vs permanent） | 用固定 eval 測量 | 用固定 eval 測量 |
 
 ## 想看更聰明的答案？
 
-預設用 `claude-haiku-4-5`（最便宜）。改成 sonnet：
+預設用固定 ID `claude-haiku-4-5-20251001`。想比較 sonnet 時：
 
-```bash
-MODEL=claude-sonnet-5 python starter_anthropic.py
+```powershell
+$env:MODEL = "claude-sonnet-5"; python starter_anthropic.py
 ```
 
 或 Ollama path 換更大 model：
 
-```bash
-MODEL=qwen2.5:7b python starter.py
+```powershell
+$env:MODEL = "qwen2.5:7b"; python starter.py
 ```
 
 ## 延伸

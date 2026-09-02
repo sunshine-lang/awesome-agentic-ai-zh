@@ -4,102 +4,103 @@
 
 > [← 回主路線 README](README.md)
 
-這份檔案集中放：用語說明、常用 MCP / Skill 整合 highlight、同主題 awesome list、中文社群資源。從主 README 抽出來避免主頁過長。
+## 📌 先選你現在要做的事
 
-> 💡 **不懂某個詞**（LLM、agent、RAG、token、向量資料庫⋯）→ [`resources/glossary.md`](resources/glossary.md)（用語小辭典，30 多個詞每個 30-80 字解釋）
->
-> 🍳 **想動手做但不知怎麼開始**（寫 Skill / 寫 MCP server / 接 Word / 接 NotebookLM / 接 Zotero / 接本機 LLM）→ [`resources/cookbook.md`](resources/cookbook.md)（6 個 step-by-step recipe，每個 30-50 分鐘做完）
+不用把整份清單讀完。先選一件現在要做的事：
 
----
+| 我現在想要…… | 從這裡開始 | 編輯評分 |
+|---|---|---|
+| 從頭學 AI Agent | [Stage 0](stages/00-foundations.md) | ⭐⭐⭐⭐⭐ |
+| 分清模型怎麼學會與怎麼被使用 | [模型訓練與調整指南](resources/model-training-guide.md) | ⭐⭐⭐⭐⭐ |
+| 查一個不懂的詞 | [Glossary](resources/glossary.md) | ⭐⭐⭐⭐ |
+| 選一個 CLI Agent | [CLI Agents Guide](resources/cli-agents-guide.md) | ⭐⭐⭐⭐⭐ |
+| 把 Agent 接到外部工具 | [MCP／Skills Catalog](resources/mcp-skills-catalog.md) | ⭐⭐⭐⭐⭐ |
+| 跟著步驟做一個小作品 | [Cookbook](resources/cookbook.md) | ⭐⭐⭐⭐⭐ |
 
-## 三個核心用語：MCP / Skills / Plugins
+<a id="三個核心用語mcp--skills--plugins"></a>
+## 🧩 三個核心詞：MCP、Skill、Plugin
 
-主 README 跟各 stage 會頻繁提到這三個 Claude Code 生態的關鍵詞，先快速說明：
+**MCP（Model Context Protocol）**：讓 AI 應用用共同方法連接外部資料與工具的開放協定。像一種共用插座；連上後能做什麼，仍由 server、帳號權限和使用者核准決定。
 
-- **MCP（Model Context Protocol）** — Anthropic 推的開放協定，讓任何 LLM host（Claude Code、其他 IDE、自寫 agent）都能用同一套介面去呼叫外部 tool server（檔案、DB、API、自家服務）。把它想成「LLM 的 USB 接口」。詳見 [Stage 5.2](stages/05-claude-code-ecosystem.md#52--mcpmodel-context-protocol-基礎)。
-- **Skills** — Claude Code 的「行為包」。一個 Skill 就是一份 `SKILL.md`，描述「在什麼情境要做什麼、可以呼叫哪些 MCP tool」。寫好之後 Claude Code 會自動 discover。詳見 [Stage 5.3](stages/05-claude-code-ecosystem.md#53--skillsclaude-code-的行為層-claude-code-生態最關鍵的一層)。
-- **Plugins / Marketplaces** — 把 Skills、slash commands、hooks、MCP 設定打包成一個發佈單位給 team 或社群安裝。Marketplace 就是 plugin 的 catalog。詳見 [Stage 5.4](stages/05-claude-code-ecosystem.md#54--plugins-與-marketplaces)。
+**Skill**：一包可重複使用的做事方法，通常包含指令，也可以附腳本、範本和參考資料。不同產品放置與載入 Skill 的方式可能不同。
 
-對應的 動手練習都在 [Stage 5](stages/05-claude-code-ecosystem.md)，Track A 的 [A3](tracks/cli/A3-cli-production.md) 也會用到。
+**Plugin**：某個 host 提供的安裝包。它可以一起帶入 Skill、指令、hook 或 MCP 設定；Plugin 不是 MCP 規格的一部分，各產品的格式也不一定相同。
 
----
+想親手做一次，前往 [Stage 5](stages/05-claude-code-ecosystem.md)。想先分清 App／Connector、CLI Agent 與 MCP Server，查看 [CLI Agents Guide](resources/cli-agents-guide.md)。
 
-## 接日常工具：常用 MCP server / Skill
+## 📚 五個安全起點
 
-把 Claude Code（或其他 CLI agent）接到你已經在用的 app，省掉手動切換的成本。下面幾個是社群 / 官方比較成熟的：
+先從官方入口或完整教材開始，再挑社群專案。星等是本專案的編輯評分，不是 GitHub stars。
 
-### 筆記 / 知識庫
+| 起點 | 先學什麼 | 編輯評分 |
+|---|---|---|
+| [Official MCP Registry](https://registry.modelcontextprotocol.io/) | 找已發布的 MCP Server；安裝前仍要檢查維護者、權限與來源 | ⭐⭐⭐⭐⭐ |
+| [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) | 看 MCP 功能怎麼實作；這些是教學用 reference servers，不等於 production 推薦 | ⭐⭐⭐⭐⭐ |
+| [anthropics/skills](https://github.com/anthropics/skills) | 看 Agent Skill 的資料夾、指令與資源怎麼組在一起 | ⭐⭐⭐⭐⭐ |
+| [github/github-mcp-server](https://github.com/github/github-mcp-server) | 用官方實作認識 OAuth、工具組與 repository 權限 | ⭐⭐⭐⭐⭐ |
+| [datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) | 用中文教材系統學 Agent 原理與實作 | ⭐⭐⭐⭐⭐ |
 
-- [**MarkusPfundstein/mcp-obsidian**](https://github.com/MarkusPfundstein/mcp-obsidian) ★ 4.2k+ — 透過 Obsidian REST API plugin 讓 LLM 讀寫你的 Obsidian vault
-- [**makenotion/notion-mcp-server**](https://github.com/makenotion/notion-mcp-server) ★ 4.4k+ — Notion **官方** MCP server，可查詢／建立 page、database
-- [**PleasePrompto/notebooklm-skill**](https://github.com/PleasePrompto/notebooklm-skill) ★ 7.3k+ — NotebookLM Skill（瀏覽器自動化），用 Claude Code 直接查你 NotebookLM 裡的文件，回答帶 citation
-- [**teng-lin/notebooklm-py**](https://github.com/teng-lin/notebooklm-py) ★ 18k+ — 非官方 NotebookLM Python API + CLI，支援 Claude Code / Codex 等 agent 整合
+> ⚠️ **先少給鑰匙**：MCP Server 可能讀取、建立、傳送或刪除真實資料。先用 read-only、最小權限和測試 workspace；write、send、delete 前保留 **Human Approval（人工核准）**。
 
-### 辦公文件（Word / Excel / PowerPoint / PDF）
+<a id="daily-tool-integrations"></a>
+<a id="接日常工具常用-mcp-server--skill"></a>
+## 🔌 常用整合分類
 
-- [**anthropics/skills**](https://github.com/anthropics/skills) ★ 165k+ — Anthropic **官方** Skills 集合，docx / xlsx / pptx / pdf 處理直接內建
-- [**tfriedel/claude-office-skills**](https://github.com/tfriedel/claude-office-skills) ★ 800 — 補強版 Office skills（PPTX/DOCX/XLSX/PDF），含自動化 workflow
+下面直接顯示精選專案與官方入口。從你需要的分類開始看；更長的補充清單才放在收合選單。
 
-### Google Workspace（Gmail / Docs / Drive / Calendar）
+<div class="resource-table-scroll" role="region" tabindex="0" aria-label="精選資源表（可左右捲動）">
+<table class="resource-table">
+<thead><tr><th scope="col">分類</th><th scope="col">資源</th><th scope="col">能幫你什麼</th><th scope="col">狀態／限制</th><th scope="col">編輯評分</th></tr></thead>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">筆記／知識庫</th><td><a href="https://developers.notion.com/guides/mcp/overview">Notion MCP</a></td><td>搜尋、建立與更新 Notion 內容</td><td>官方 hosted MCP；需要使用者 OAuth，權限跟著登入者</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/MarkusPfundstein/mcp-obsidian">MarkusPfundstein/mcp-obsidian</a></td><td>透過 Obsidian REST API 讀寫 vault</td><td>社群專案；只授予需要的 vault 與寫入範圍</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://support.google.com/gemininotebook/answer/16164461">Gemini Notebook（舊名 NotebookLM）</a></td><td>用自己的來源做摘要、問答與學習材料</td><td>Google 服務；地區、帳號與功能可用性會變</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/teng-lin/notebooklm-py">teng-lin/notebooklm-py</a></td><td>用 Python／CLI 操作 Gemini Notebook</td><td>非官方介面；Google 改版時可能失效</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">辦公文件</th><td><a href="https://github.com/anthropics/skills">anthropics/skills</a></td><td>閱讀 Agent Skills 範例與文件工作流程</td><td>官方範例；各 Claude surface 可用的內建 Skill 不完全相同</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/tfriedel/claude-office-skills">tfriedel/claude-office-skills</a></td><td>補充 Office 文件自動化流程</td><td>社群 Skills；檔案寫入前先備份與核對輸出</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://developers.google.com/workspace/guides/configure-mcp-servers">Google Workspace MCP</a></td><td>連接 Gmail、Drive、Docs、Sheets、Slides、Calendar 與 Chat</td><td>官方 <strong>Developer Preview</strong>；每個產品有獨立 server，使用 OAuth 2.0，並受使用者／組織治理</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">開發協作</th><td><a href="https://github.com/github/github-mcp-server">GitHub MCP Server</a></td><td>查詢與處理 issue、PR 與 repository</td><td>官方 MCP；使用 OAuth 或最小權限 token，高影響寫入前要人工核准</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/">Atlassian Rovo MCP</a></td><td>搜尋或更新 Jira、Confluence 與 Bitbucket 工作</td><td>官方 hosted remote MCP；使用 OAuth 2.1，權限跟著登入者；寫入真實資料前要人工核准</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://linear.app/docs/mcp">Linear MCP</a></td><td>搜尋與更新 Linear issue／project</td><td>官方 hosted remote MCP，使用 Streamable HTTP；另有官方 read-only 選項</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://docs.slack.dev/ai/mcp-overview/">Slack MCP</a></td><td>搜尋 Slack，也能傳訊息與管理 canvas</td><td>官方 MCP；傳送或改動內容前要求人工確認</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">研究工作流</th><td><a href="https://github.com/WenyuChiou/ai-research-skills">WenyuChiou/ai-research-skills</a></td><td>把研究步驟整理成可重用 Skills</td><td>社群專案；只安裝與目前任務有關的 Skill</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/research-hub">WenyuChiou/research-hub</a></td><td>串接 Zotero、Obsidian 與研究流程</td><td>社群 workspace；先看資料位置、備份與權限</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/zotero-skills">WenyuChiou/zotero-skills</a></td><td>用 Skill 整理 Zotero 資料</td><td>社群 Skill；批次修改前先備份 library</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/codex-delegate">WenyuChiou/codex-delegate</a></td><td>把範圍清楚的重複工作交給另一個 Agent</td><td>社群工具；委派前鎖定檔案、驗收與停止條件</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="1">中文生態</th><td><a href="https://github.com/leemysw/feishu-docx">leemysw/feishu-docx</a></td><td>在飛書（Lark）文件與 Markdown 間轉換</td><td>社群工具；先確認文件分享與寫入權限</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+</table>
+</div>
 
-- [**taylorwilsdon/google_workspace_mcp**](https://github.com/taylorwilsdon/google_workspace_mcp) ★ 2.9k+ — 一個 server 包整套 Google Workspace（Gmail、Calendar、Docs、Sheets、Slides、Drive）
+<a id="research-workflow"></a>
+<a id="研究工作流本-repo-維護者出品"></a>
+<a id="topic-awesome-lists"></a>
+<a id="同主題的清單型-awesome-lists"></a>
+<details markdown="1">
+<summary>展開更多清單、課程與設計工具</summary>
 
-### 開發協作
+- [MCP Registry](https://registry.modelcontextprotocol.io/)：找已發布 Server 的官方 discovery 入口。
+- [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)：依分類瀏覽社群 Server；安裝前自行審查。
+- [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code)：Claude Code 社群資源。
+- [travisvn/awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills)：Agent Skills 社群清單。
+- [Canva MCP](https://www.canva.dev/docs/mcp/)：官方 remote MCP；功能、方案與權限依帳號而異，不先記固定工具數。
+- [課程清單](resources/courses.md)：按學習目標挑課程，不把證書當成學位。
+- [Agent paradigms](resources/agent-paradigms.md)：用圖比較常見 Agent 形狀。
 
-- [**github/github-mcp-server**](https://github.com/github/github-mcp-server) ★ 31k+ — GitHub **官方** MCP，issue / PR / repo 操作
-- [**atlassian/atlassian-mcp-server**](https://github.com/atlassian/atlassian-mcp-server) ★ 908 — Atlassian **官方** Remote MCP（Jira、Confluence）
-- [**jerhadf/linear-mcp-server**](https://github.com/jerhadf/linear-mcp-server) ★ 340+ — Linear MCP server
-- [**korotovsky/slack-mcp-server**](https://github.com/korotovsky/slack-mcp-server) ★ 1.7k+ — Slack MCP，無 admin 權限也能用
+</details>
 
-### 研究工作流（本 repo 維護者出品）
+<a id="還有什麼"></a>
+## ✅ 下一站
 
-- [**WenyuChiou/ai-research-skills**](https://github.com/WenyuChiou/ai-research-skills) ★ 182 — 14 個研究流程 skill，5-plugin marketplace
-- [**WenyuChiou/research-hub**](https://github.com/WenyuChiou/research-hub) ★ 42 — Zotero + Obsidian + NotebookLM 整合 workspace
-- [**WenyuChiou/zotero-skills**](https://github.com/WenyuChiou/zotero-skills) ★ 45 — Zotero CLI skill
-- [**WenyuChiou/codex-delegate**](https://github.com/WenyuChiou/codex-delegate) ★ 62 [**gemini-delegate-skill**](https://github.com/WenyuChiou/gemini-delegate-skill) ★ 34（⚠️ 已封存）— Multi-LLM delegation 對（Gemini lane 建議改用 Gemini CLI 直接做）
-
-### 中文圈常用
-
-- [**leemysw/feishu-docx**](https://github.com/leemysw/feishu-docx) ★ 235 — 飛書（Lark）docs / sheet / bitable ↔ Markdown，含 Claude Skills 支援
-
-> 上面只是 highlight。**完整 77+ 個整合的分類目錄**（含資料庫、瀏覽器自動化、Figma、Excalidraw、Cloudflare、Stripe、學術寫作 / Multi-LLM delegation 等）在 [`resources/mcp-skills-catalog.md`](resources/mcp-skills-catalog.md)。
-
-> 想找更多 MCP server catalog？看 [`wong2/awesome-mcp-servers`](https://github.com/wong2/awesome-mcp-servers) / [`punkpeye/awesome-mcp-servers`](https://github.com/punkpeye/awesome-mcp-servers)（依分類整理）。**Canva** 現有官方 MCP（[canva.dev/docs/mcp](https://www.canva.dev/docs/mcp/)、endpoint `mcp.canva.com`、~32 工具、任何方案可用、支援 Claude / ChatGPT / Cursor / VS Code）。
-
----
-
-## 同主題的清單型 awesome lists
-
-本 repo **不取代**清單型 awesome list——你已經知道在找什麼工具時，下面這些查起來更直接：
-
-### MCP 相關
-
-- [**modelcontextprotocol/servers**](https://github.com/modelcontextprotocol/servers) — 官方 MCP reference servers（現有 7 個：everything、fetch、filesystem、git、memory、sequentialthinking、time；github、sqlite 已移到 `servers-archived`）
-- [**wong2/awesome-mcp-servers**](https://github.com/wong2/awesome-mcp-servers) — 社群 MCP server 清單，按分類整理（150+ 個）
-- [**punkpeye/awesome-mcp-servers**](https://github.com/punkpeye/awesome-mcp-servers) — 另一份 MCP server 清單
-
-### Claude Code / Skills / Plugins 相關
-
-- [**hesreallyhim/awesome-claude-code**](https://github.com/hesreallyhim/awesome-claude-code) — Claude Code 相關資源清單（整理中）
-- [**travisvn/awesome-claude-skills**](https://github.com/travisvn/awesome-claude-skills) — Claude Skills 清單
-- [**anthropics/claude-plugins-official**](https://github.com/anthropics/claude-plugins-official) — Anthropic 官方 plugin 範本，要打包自己的 plugin 從這份開始
-
-### 中文社群必看
-
-- [**datawhalechina/hello-agents**](https://github.com/datawhalechina/hello-agents) — Datawhale 系統性 agent 教學（zh-Hans）
-- [**WangRongsheng/awesome-LLM-resources**](https://github.com/WangRongsheng/awesome-LLM-resources) — 完整的中文 LLM 資源整理（8k+ stars）
-- [**AiHubCN/Awesome-Chinese-LLM**](https://github.com/AiHubCN/Awesome-Chinese-LLM) — 中文開源大模型整理
-- [**hardness1020/awesome-agent-architecture**](https://github.com/hardness1020/awesome-agent-architecture) — 逐節拆解現代 agent harness（loop engineering、tools、permissions、context、memory、evaluation），以 Claude Code、Hermes Agent 等系統為案例（持續新增），每節附可執行 Python demo（繁中/简中/英文三語）
-
-### 線上課程 / MOOC（帶證書對照）
-
-- [**resources/courses.md**](resources/courses.md) — 10 門 credible、會發證書的線上 AI agent 課（英文 + 中文），分 tier；含「完成證書 ≠ 學歷」的誠實 caveat
-
----
-
-## 還有什麼？
-
-- 主 README：[README.md](README.md)
-- 完整 MCP/Skill 目錄：[resources/mcp-skills-catalog.md](resources/mcp-skills-catalog.md)
-- CLI agent 比較指南：[resources/cli-agents-guide.md](resources/cli-agents-guide.md)
-- Style guide / 貢獻規範：[resources/style-guide.md](resources/style-guide.md)、[CONTRIBUTING.md](CONTRIBUTING.md)
+- 不懂名詞：打開 [`resources/glossary.md`](resources/glossary.md)。
+- 想直接做：打開 [`resources/cookbook.md`](resources/cookbook.md)。
+- 想分清 Pre-training、Post-training 與 Fine-tuning：打開 [`resources/model-training-guide.md`](resources/model-training-guide.md)。
+- 想貢獻或翻譯：先看 [`resources/style-guide.md`](resources/style-guide.md) 與 [`CONTRIBUTING.md`](CONTRIBUTING.md)。

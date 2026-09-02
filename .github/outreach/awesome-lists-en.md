@@ -10,8 +10,8 @@
 
 | Target | Section to PR into | Notes |
 |---|---|---|
-| [kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agents) | learning / guides | Agent-specific. Verified live 2026-05-21 (★ 2.6k+, pushed 3d prior) — good fit |
-| [Shubhamsaboo/awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | tutorials / learning | ★111k reach, but it is an *apps* list — confirm it has a learning/tutorials section before PR, else it gets rejected as out-of-scope |
+| [kyrolabs/awesome-agents](https://github.com/kyrolabs/awesome-agents) | learning / guides | Agent-specific; recheck the live learning section and contribution rules before submitting |
+| [Shubhamsaboo/awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | tutorials / learning | It is an *apps* list — confirm it has a learning/tutorials section before PR, else it gets rejected as out-of-scope |
 | [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) | Tutorials | ALREADY in progress (PR #6135, see channel-partners.md #6) — don't double-submit |
 | [travisvn/awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills) | 📖 Tutorials & Guides | ALREADY tracked (channel-partners.md #9) — don't double-submit |
 
@@ -27,8 +27,8 @@ Add awesome-agentic-ai-zh — trilingual staged roadmap (LLM basics → multi-ag
 Adding **awesome-agentic-ai-zh** to the [learning/tutorials] section.
 
 What it is: a staged learning roadmap for agentic AI (not a flat list) —
-8 stages LLM-basics → multi-agent + Computer/Browser Use, 2 tracks
-(use CLI agents vs build your own), 5 audience branches, 240+ curated
+10 learning stops: 8 topic stages + Stage 0 readiness + Stage 7.5 reading, 2 tracks
+(use CLI agents vs build your own), 5 audience branches, curated
 projects, runnable exercises. MIT.
 
 Why it fits this list: it's the "where do I start / in what order"
@@ -47,7 +47,7 @@ Rendered site: https://wenyuchiou.github.io/awesome-agentic-ai-zh/
 ## Suggested one-line list entry (match each list's existing format)
 
 ```
-- [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) — Trilingual staged roadmap: LLM basics → multi-agent, 8 stages + 2 tracks + 240+ curated projects. MIT.
+- [awesome-agentic-ai-zh](https://github.com/WenyuChiou/awesome-agentic-ai-zh) — Trilingual staged roadmap: 10 learning stops (8 topic stages + Stage 0 readiness + Stage 7.5 reading) + 2 tracks + curated projects. MIT.
 ```
 
 ## Don'ts

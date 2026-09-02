@@ -2,223 +2,213 @@
 
 > **繁體中文** | [简体中文](./for-teacher.zh-Hans.md) | [English](./for-teacher.en.md)
 
-> 🚀 **大多數教師可直接從 Claude.ai（網頁版）+ NotebookLM 開始、不需要任何 setup**。只有當你要自動化重複流程（Tier 2+、例如每週生成 50 份家長信）時、才需要看 [`resources/setup-guide.md` A-C](../resources/setup-guide.md)（30 分鐘從零裝好需要的東西）。
+[← 回主路線](../README.md)
 
-> [← 回主路線 README](../README.md) · 走完 **Track A 的 A3** 或 **Track B 的 Stage 7** 後從這裡接續。把 agentic AI 應用到教學流程上。
+<!-- freshness: canonical=branches/for-teacher.md; verified_on=2026-08-29; scope=education-guidance,student-data,assessment,tool-availability,project-status; max_age_days=90 -->
 
-## 使用情境
+<a id="使用情境"></a>
+## 📌 這條路幫你做什麼
 
-教師使用 AI 的情境可以先看成三個分支：**備課與上課素材製作**、**教學現場與學習輔助**、以及**其他應用場景**。
+AI 可以先做草稿，教師負責決定能不能用。這條路教你用 AI 準備教材、設計練習與整理回饋，同時保護學生資料，不把判斷交給機器。
 
-這樣的分類參考 AI in Education 文獻中常見的行政、教學與學習應用脈絡、也加入生成式 AI 在教材生成、回饋與互動支援上的近期討論（Chen et al., 2020；Mittal et al., 2024）。閱讀時建議先理解教師把關原則與使用邊界、再依自己的教學需求挑一個分支深入。
+第一次來，先做本頁的小練習。你只需要一個**學校核准的 AI 工具**；不需要先學程式。想做大量自動化時，再走 [Track A](../tracks/cli/A1-cli-intro.md)。
+
+## 🎯 學習目標
+
+完成這一頁後，你可以：
+
+1. 先寫清楚學生要學會什麼，再請 AI 幫忙。
+2. 分清「提供提示」和「替學生完成答案」。
+3. 用人工檢查守住事實、隱私、公平與學術誠信。
+4. 從一個低風險活動開始，再決定是否擴大使用。
+
+## 🧩 八個核心詞
+
+- **Learning Objective（學習目標）**：這堂課結束時，學生應該能做出的具體行為，例如「能用自己的話解釋水循環」。
+- **Scaffolding（鷹架）**：先給提示、範例或步驟，等學生會做後再慢慢拿掉，像學騎車時的輔助輪。
+- **Rubric（評分規準）**：先寫出可觀察的判準，讓教師和學生知道作品會怎麼被看。Rubric 可以請 AI 草擬，但要由教師定稿。
+- **Formative Assessment（形成性評量）**：學習途中做的小檢查，用來決定下一步怎麼教，不是只在最後給一個分數。
+- **AI Literacy（AI 素養）**：知道 AI 能做什麼、會錯在哪裡，並能負責任地使用和說明它。
+- **Student Data（學生資料）**：能直接或間接認出學生的資料，例如姓名、學號、作品、成績、聲音或行為紀錄。
+- **Human Review（人工審查）**：人真的讀過輸出、核對來源並做決定，不是只按一下「接受」。
+- **Academic Integrity（學術誠信）**：清楚說明哪些協助可以用、哪些必須自己完成，以及何時要揭露或引用 AI。
+
+<a id="教師使用-ai-輔助時要注意什麼"></a>
+<a id="隱私--倫理重要"></a>
+## 🛡 先守住五條安全線
+
+1. **先看校方政策**：學校規則、核准工具與家長／學生通知要求，比這份學習地圖優先。
+2. **不要放學生資料**：練習先用虛構內容。未經校方核准，不把姓名、作品、成績或可辨識紀錄貼進工具。
+3. **教師保留決定權**：AI 可以草擬回饋與 Rubric；成績、紀律、升學或特殊教育等重大決定由合格的人員負責。
+4. **每次都要 Human Review**：核對事實、引用、偏見、年齡適切性、無障礙需求與課程目標。
+5. **把使用規則說清楚**：讓學生知道什麼可以用、如何揭露，以及哪些學習證據必須自己完成。
+
+![教師把關 AI 教材的五步循環](../resources/diagrams/teacher-ai-review-loop.png)
+
+## 🛠 第一個練習：做一份可檢查的課堂活動草稿
+
+這是**虛構情境**，不要放學生資料。把下面整段複製到學校核准的 AI 工具：
+
+```text
+這是一個虛構的課堂情境，不含真實學生資料。
+
+你要幫我草擬一個 15 分鐘的國小高年級活動，主題是「為什麼影子會變長或變短」。
+請提供：
+1. 一個可觀察的 Learning Objective。
+2. 一個只用紙、筆和手電筒就能做的活動。
+3. 兩層 Scaffolding：先給小提示，再給較明確提示；不要直接說答案。
+4. 一題 Formative Assessment。
+5. 一張 Exit Ticket，只有兩個短問題。
+6. 列出教師使用前必須核對的三個科學事實。
+
+用簡短句子。不要替真實學生評分，也不要假裝知道學生的能力或需求。
+```
+
+拿到草稿後，不要直接發給學生。做一次 **Human Review**：
+
+- [ ] Learning Objective 能看出學生要做什麼。
+- [ ] 科學事實能從課本或可靠來源核對。
+- [ ] 提示是在幫學生想，不是在替學生答。
+- [ ] 材料、語言和活動適合這個年齡與班級。
+- [ ] 沒有 Student Data，也沒有讓 AI 決定成績。
+
+<a id="參考文獻"></a>
+<a id="閱讀材料"></a>
+## 📚 必修閱讀
+
+1. [UNESCO — Guidance for Generative AI in Education and Research](https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research?hub=387) ⭐⭐⭐⭐⭐：先看以人為中心、資料隱私與年齡適切原則。
+2. [European Commission — Ethical Guidelines for Educators](https://education.ec.europa.eu/focus-topics/digital-education/actions/plan/ethical-guidelines-for-educators-on-using-artificial-intelligence) ⭐⭐⭐⭐⭐：用情境與問題檢查倫理、資料與 AI Act／GDPR 邊界。
+3. [TeachAI — AI Guidance for Schools Toolkit](https://www.teachai.org/toolkit) ⭐⭐⭐⭐⭐：把原則轉成校方政策、課堂規則與溝通流程。
+
+先讀自己學校的政策，再讀上面三份。官方指引告訴你要問哪些問題，不能替你的學校或所在地做法律判斷。
+
+<a id="精選-projects"></a>
+<a id="教學流程-skills"></a>
+<a id="可用的基礎元件"></a>
+<a id="教學課程素材給教師備課用"></a>
+<a id="prompt-素材庫"></a>
+## ⭐ 精選 Projects 與學習資源
+
+<small>指引、服務可用性、repository 狀態與授權於 2026-08-29 UTC 依官方頁面與 GitHub API 查核。推薦度是本學習地圖的編輯評分，不是 GitHub stars 或效能排名。</small>
+
+<table>
+<thead><tr><th scope="col">分類</th><th scope="col">官方資源／專案</th><th scope="col">先拿來做什麼</th><th scope="col">狀態／授權</th><th scope="col">先知道的限制</th><th scope="col">推薦度</th></tr></thead>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">安全與政策</th><td><a href="https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research?hub=387">UNESCO GenAI 教育指引</a></td><td>建立以人為中心的校內原則</td><td>現行；官方指引</td><td>全球原則仍要配合所在地規則與年齡要求</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://education.ec.europa.eu/focus-topics/digital-education/actions/plan/ethical-guidelines-for-educators-on-using-artificial-intelligence">European Commission 教師倫理指引</a></td><td>檢查資料、透明度與課堂風險</td><td>現行；官方指引</td><td>AI Act／GDPR 說明以歐盟情境為主</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://www.teachai.org/toolkit">TeachAI School Toolkit</a></td><td>草擬學校 AI guidance 與溝通材料</td><td>現行；教育工具包</td><td>範本不是可直接複製的校方政策，仍需利害關係人審查</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">需由學校核准的教師雲端工具</th><td><a href="https://www.anthropic.com/news/claude-for-teachers">Claude for Teachers</a></td><td>備課、標準對照與教師工作流</td><td>限區可用；雲端服務</td><td>目前面向通過驗證的美國 K-12 教師；不能把產品方案當全球通用</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://openai.com/index/chatgpt-for-teachers/">ChatGPT for Teachers</a></td><td>在學校管理的 workspace 草擬教材</td><td>限區可用；雲端服務</td><td>目前面向通過驗證的美國 K-12 教育工作者；仍須遵守校方 Student Data 規則</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://support.google.com/gemininotebook/answer/16337734?hl=en">Gemini Notebook（原 NotebookLM）</a></td><td>用指定來源做摘要、提問與 citation 回查</td><td>正式可用；雲端服務</td><td>分享、保存與資料使用依帳號而異；先看學校政策和 Workspace for Education 條款</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">可改編課程</th><td><a href="https://github.com/huggingface/agents-course">huggingface/agents-course</a></td><td>改編成 Agent 入門課或工作坊</td><td>活躍；Apache-2.0</td><td>它教人建立 Agent，不是教師日常工具</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/datawhalechina/hello-agents">datawhalechina/hello-agents</a></td><td>使用中文章節與實作教 Agent</td><td>活躍；CC BY-NC-SA 4.0</td><td>非商業授權；改編與散布前先讀完整條款</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/microsoft/ai-agents-for-beginners">microsoft/ai-agents-for-beginners</a></td><td>挑選短課程、notebook 與練習</td><td>活躍；MIT</td><td>工具與 SDK 版本變動快，授課前先重跑範例</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">模板與進階流程</th><td><a href="https://github.com/anthropics/skills">anthropics/skills</a></td><td>參考文件、投影片與 spreadsheet Skills</td><td>活躍；各資料夾授權</td><td>不是整個 repository 一張授權；重用前逐資料夾讀授權</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/obra/superpowers">obra/superpowers</a></td><td>參考 planning、寫作與 review 工作流</td><td>活躍；MIT</td><td>通用 workflow 仍要加校方政策與人工 gate</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/f/prompts.chat">f/prompts.chat</a></td><td>比較不同 prompt 寫法</td><td>活躍；MIT／CC0 雙軌</td><td>社群內容品質不一；先挑選、核對，再拿進課堂</td><td>⭐⭐⭐</td></tr>
+</tbody>
+</table>
+
+<a id="也適用其他分支"></a>
+## ✅ 完成檢查與下一站
+
+- [ ] 我先讀過校方政策，知道哪些工具可以用。
+- [ ] 我能說明 Scaffolding、Formative Assessment 與 Rubric 的差別。
+- [ ] 我用虛構內容完成一個活動草稿，並逐項 Human Review。
+- [ ] 我沒有上傳 Student Data，也沒有把成績或重大決定交給 AI。
+
+下一站：做日常自動化可走 [Track A](../tracks/cli/A1-cli-intro.md)；自己建立教學 Agent 可走 [Stage 3](../stages/03-tool-use-and-hello-agent.md)；要做教材知識庫可走 [Stage 6](../stages/06-memory-rag.md)；也做研究則看 [研究人員路線](./for-researcher.md)。
+
+<a id="給教師的層級建議"></a>
+<details markdown="1">
+<summary>⏱ 展開：時間、工具、費用與怎麼開始</summary>
+
+第一個練習約 20–30 分鐘。先用學校核准的聊天工具與虛構資料，不需要 API、CLI 或付費方案。
+
+- 只做一次備課：停在網頁工具即可。
+- 需要用自己的來源：先確認學校帳號的檔案、分享、保存與訓練條款，再使用來源型 notebook。
+- 每週重跑相同流程：讀 [Track A](../tracks/cli/A1-cli-intro.md)，但先和校方 IT 確認帳號、權限與資料邊界。
+- 價格與方案會變；本頁不保存固定費用或「幾分鐘一定完成」的承諾。
+
+</details>
+
+<a id="備課與上課素材製作"></a>
+<a id="教學現場與學習輔助"></a>
+<a id="其他應用場景"></a>
+<details markdown="1">
+<summary>🧪 展開：三類教學使用情境</summary>
 
 ![教師與 AI agent 使用情境總覽](../resources/diagrams/teacher-ai-use-cases-overview.png)
 
-### 教師使用 AI 輔助時要注意什麼
+### 備課與教材
 
-AI 可以幫忙準備和輔助，但不應該直接取代教師判斷。近期 AI in Education 與生成式 AI 教育研究也提醒，教師設計 AI agent 時要保留清楚的教學目標、安全邊界與人工把關（Chen et al., 2020；Mittal et al., 2024）。
+AI 可以草擬教案、題目、Rubric、投影片大綱與多語版本。教師要核對課綱、事實、難度、授權與無障礙需求。
 
-- **保留教師最後判斷**：牽涉學生資料、成績、教學決策等重大判斷時，教師仍要負責最後確認。
-- **避免直接給答案**：如果要讓學生與 AI agent 互動，可以設計成蘇格拉底式對話，在多輪互動中引導學生說出理由。
-- **貼合教學目標**：用固定提示詞、檢查清單、或學校核准的工具設定、限制 AI 的角色與任務、避免學生互動脫離課程目標。
-- **調整學生提問**：如果學生年齡較低，例如國小或國中，可以把學生問題先改寫成更清楚的提問，再交給 agent 回答。
+### 課堂與學習支援
 
-### 備課與上課素材製作
+AI 可以扮演練習對象、提出蘇格拉底式問題、提供分層提示或整理常見錯誤。不要讓它假裝診斷學生，也不要因一次回答就決定能力、需求或成績。
 
-這類情境偏向「幫老師準備材料」，輸出通常會被老師再改寫、挑選、檢查。
+### 行政與溝通
 
-- **教案生成**：依課綱、單元目標與學生程度，整理課程大綱、時間分配、活動設計、討論提示與補充學習指南。
-- **Quiz / 評分量表（rubric）建立**：依文本、課文或學術文章，產生選擇題、簡答題、申論題、參考答案與評分規準。
-- **投影片準備、課程地圖、多媒體與視覺化素材**：把課本章節或教師筆記轉成投影片大綱、講義架構、週次安排、先備知識、評量節點、圖像、3D 物件、影片腳本、GIF 或課堂展示素材。
-- **學生回饋整理分析**：彙整學生作答、作業或課堂反應，找出常見迷思、需要補救的概念與下一步練習。
-- **多語系教材翻譯與轉化**：把教材改寫或翻譯成不同語言版本，也可以產生語音合成素材。
-- **互動式遊戲與活動、虛擬模擬場景的素材**：準備教學遊戲、押韻兒歌、任務卡、角色卡、情境文本或模擬場景背景；若要設計實際互動流程或課堂活動，請參考下一節「教學現場與學習輔助」。
+AI 可以草擬家長信、會議摘要與常見問題。寄出前刪除不必要的個資、核對語氣與事實，並由負責的人批准。
 
-### 教學現場與學習輔助
+</details>
 
-![教學現場與學習輔助應用場景](../resources/diagrams/teacher-ai-classroom-use-cases.png)
+<a id="可以建的流程按教學階段"></a>
+<a id="3-個可直接複製的-prompt-範本"></a>
+<details markdown="1">
+<summary>🧪 展開：兩個額外的可複製模板</summary>
 
-這類情境偏向「幫學生理解、練習、互動」，AI 比較像教學助教或活動輔助工具。特別注意：不需要在單一教學活動中加入所有要素，而是挑選適合的環節加入 AI agent 設計。
+### Rubric 草稿
 
-- **沉浸式學習體驗與真實情境演練**：用真實情境模擬、角色扮演或外語口說模擬，讓學生在接近實作的情境中練習，降低認知負荷與退縮感。
-- **激發好奇心與提問能力**：透過蘇格拉底式追問與多輪互動，引導學生提出更清楚的問題、說明理由，進一步訓練批判性思考與後設認知。
-- **即時批改與深度回饋**：讓學生從錯誤中學習，AI 可以指出錯誤、說明原因、建議修正方向，而不是只給分數或答案。
-- **智慧家教與虛擬助教**：協助回答提問、解釋術語、給提示，讓學生在課堂內外都能獲得適度支援。
-- **適性教學與動態路徑**：依學生程度提供對應難度內容，並透過學習表現推測近側發展區，提供合適的鷹架與補救素材。
+```text
+這是虛構作業，不含學生資料。
+學習目標：[貼上 2–3 條]
+請草擬一份四級 Rubric。每一級都要使用可觀察的行為，不要只寫「很好」或「不好」。
+最後列出教師需要自己決定的地方，不要替學生評分。
+```
 
-### 其他應用場景
+### 常見錯誤整理
 
-這類情境不一定直接發生在課堂中，但會影響教師工作、學生支援與教育系統運作。
+```text
+以下是我自己寫的三個虛構錯誤例子：[貼上例子]
+請把錯誤分組，說明每組可能缺少哪個概念，並各給一個不直接說答案的提示。
+不要推測學生身分、能力、健康或特殊教育需求。
+```
 
-- **特殊教育支援**：透過語音轉文字、文字轉語音等方式，協助不同需求的學生參與課程。
-- **親師溝通與家庭教育**：整理學生進度報告，並提供家庭可延伸的輔助學習活動建議。
-- **行政管理與學術誠信**：整理學習軌跡、產生報告，或協助進行抄襲與作弊風險檢查。
-- **職涯與技能發展輔導**：協助職涯探索、培訓清單規劃，並依弱點推薦練習題。
-- **教師專業發展**：摘要教學方法、教育科技趨勢與研究重點，協助教師持續更新。
-- **高階研究分析**：輔助文獻分析、快速理解論文研究中提出的教學法或教育心理學。
-- **隱私保護與合成資料**：在不直接使用真實個資的前提下，產生匿名合成資料。
+</details>
 
-### 參考文獻
+<details markdown="1">
+<summary>⚙️ 展開：進階自動化與替代方案</summary>
 
-- Chen, L., Chen, P., & Lin, Z. (2020). [Artificial Intelligence in Education: A Review](https://doi.org/10.1109/ACCESS.2020.2988510). *IEEE Access*, 8, 75264-75278.
-- Mittal, U., Sai, S., Chamola, V., & Sangwan, D. (2024). [A Comprehensive Review on Generative AI for Education](https://doi.org/10.1109/ACCESS.2024.3468368). *IEEE Access*, 12, 142733-142759.
+大量處理教材、Email 或表單時，先把流程切成：`選取資料 → 移除不必要資訊 → AI 草擬 → 人工檢查 → 批准 → 發布`。每一步都要能停下來。
 
-## 精選 Projects
+- 文件與投影片：先看 [anthropics/skills](https://github.com/anthropics/skills) 的資料夾邊界和個別授權。
+- 課程 Agent：先完成 [Stage 3](../stages/03-tool-use-and-hello-agent.md)，再加工具；不要一開始就接 LMS 寫入權限。
+- 私有教材知識庫：看 [Stage 6](../stages/06-memory-rag.md)，並先確認教材授權、保存位置與刪除方式。
+- 找不到核准的雲端工具：改用不含學生資料的離線草稿流程，或請校方 IT 提供合規環境。
 
-### 教學流程 Skills
+</details>
 
-（大多數還沒有做成 skill marketplace。這個分支最有社群貢獻空間——見 CONTRIBUTING.md。）
+<a id="社群備註"></a>
+<details markdown="1">
+<summary>🤝 展開：法規提示、排錯與社群貢獻</summary>
 
-### 可用的基礎元件
+法規與政策依地區、年齡、機構和工具合約不同。FERPA、GDPR、台灣《個人資料保護法》或其他規則是否適用，應由校方與合格人員判斷；本頁不是法律意見。
 
-#### [obra/superpowers](https://github.com/obra/superpowers) ⭐⭐⭐⭐
-通用的寫作 / 腦力激盪 skill。可改用在備課上。
-
-#### 進階自動化：[Claude Code](https://github.com/anthropics/claude-code)（搭配自訂 CLAUDE.md）⭐⭐⭐⭐⭐
-★ 138k+ — **教師的基礎工具是 Claude.ai（網頁版）+ NotebookLM + Google Classroom / LMS 整合**、先從這裡開始。**只有當你已有會重複跑的批次流程**（如每週生成 50 份家長信、每學期跑學生反饋分析）才升級到 Claude Code、需要學一點 CLI。
-
-### 教學課程素材（給教師備課用）
-
-#### [huggingface/agents-course](https://github.com/huggingface/agents-course) ⭐⭐⭐⭐
-
-| 欄位 | 內容 |
+| 問題 | 先怎麼做 |
 |---|---|
-| Stars | ★ 30k+ |
-| License | Apache-2.0 |
+| AI 草稿看起來很完整 | 要求列出待核對事實，再逐條回到課本或可靠來源 |
+| 不確定能不能貼學生作品 | 先不要貼；查校方政策、家長／學生通知和工具條款 |
+| 活動只會讓學生抄答案 | 改成分層提示、要求說理由，並保留不用 AI 也能完成的路徑 |
+| 工具不支援你的地區或帳號 | 不繞過限制；換校方核准工具或只使用公開、虛構內容 |
 
-**教什麼**：Hugging Face 官方的 agent 課程——notebook、練習、結業認證。是一份**現成的「AI agent 教學」素材**。
+歡迎貢獻學科專用模板、年齡適切案例、LMS 安全整合與經過教師實測的工作流。請見 [CONTRIBUTING.md](../CONTRIBUTING.md)。
 
-**適合誰**：要在學校 / 工作坊開「AI agent 入門」課程的老師，可以直接拿來當教材或改編。
-
-**備註**：注意這是「教 AI agent 怎麼建」的教材，不是「老師用 AI 教書」的工具。
-
----
-
-#### [datawhalechina/llm-universe](https://github.com/datawhalechina/llm-universe) ⭐⭐⭐⭐（中文）
-
-| 欄位 | 內容 |
-|---|---|
-| 語言 | 中文（zh-Hans） |
-| Stars | ★ 13k+ |
-| License | NOASSERTION |
-
-**教什麼**：Datawhale 出品的中文 LLM 應用開發課程——含 RAG、agent、章節練習。中文教師備課的現成模板。
-
-**適合誰**：中文教師要找現成可改的 LLM 教材底稿、再針對自己學生程度調整。
-
-**備註**：跟 hf agents-course 一樣，是「教學生建 LLM 應用」的教材，不是「教師端的 AI 助教」。
-
----
-
-### Prompt 素材庫
-
-#### [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts) ⭐⭐⭐⭐
-
-| 欄位 | 內容 |
-|---|---|
-| Stars | ★ 161k+ |
-| License | NOASSERTION（CC0 / public domain 風格，但未提供 SPDX） |
-
-**教什麼**：社群維護的 prompt 大全——「act as X」型樣板涵蓋幾百種角色（老師、面試官、stand-up comedian、辯論者⋯）。教師可以拿來當「prompt 寫法範例」教給學生，或直接借用其中合適的當作課堂示範。
-
-**適合誰**：要教學生「prompt engineering」的老師，找現成例子比較不同寫法的差異。
-
-**備註**：品質不一致——當作素材庫挑選用，不是「全部直接拿去教」。
-
----
-
-### 閱讀材料
-
-#### [The Effortless Academic — Beginner Guides](https://effortlessacademic.com/claude-code-and-cowork-for-academics-beginner-guide-part-1/)
-寫給學術工作者導入 Claude Code 的多篇指南，教師也適用。
-
-## 可以建的流程（按教學階段）
-
-下表 5 條是模板——配合你的學科自行調整：
-
-| 階段 | 流程 | 怎麼做（≤ 3 步） | 推薦工具 | 注意 |
-|---|---|---|---|---|
-| **備課前** | 教案生成器 | (1) 課綱 + 主題提示 → 大綱<br>(2) 大綱 → 投影片<br>(3) 投影片 → 評量題目 | Claude.ai / NotebookLM | 教師最後審 |
-| **備課中** | Rubric 建立 | (1) 給學生作業樣本 + 學習目標<br>(2) 請 AI 草擬 4 級 rubric<br>(3) 教師調整級距 | Claude.ai | 避免「品質好」這種模糊詞 |
-| **改作業** | 個別化回饋 | (1) 學生作業 + rubric → AI 寫回饋初稿<br>(2) 教師逐份審 + 改<br>(3) 寄回 | Claude.ai | **AI 輔助 ≠ AI 評分**，最終分數一定人工 |
-| **課堂活動** | 情境模擬 | (1) 教學目標 + 角色設定 → 對話腳本<br>(2) 課堂演練<br>(3) 反思問題 | Claude.ai | 蘇格拉底式追問、不直接給答案；學生輸入**不含個資** |
-| **課後補救** | 個別化補救教材 | (1) 整理學生常見錯誤<br>(2) 依學生程度 → 小練習 + 提示<br>(3) 延伸挑戰題 | Claude.ai | 注意學生個資匿名化 |
-
-> 💡 **新手起手式**：先做「備課前的教案生成器」一個學期、習慣後再加 rubric / 回饋流程。⚠️ 所有跟學生個資 / 評分相關的步驟都要回頭看下面的 §隱私 + 倫理（重要）章節。
-
-### 3 個可直接複製的 prompt 範本
-
-**1. 教案大綱生成**（複製到 Claude.ai 即可用）：
-```
-你是一位 [學科] 老師。我要給 [年級] 學生上一堂 [時長] 分鐘的課，主題是「[主題]」。
-學生先備知識：[簡述]。請產出：
-1. 學習目標（3-4 條，用 Bloom's taxonomy 動詞）
-2. 課程大綱（含時間分配）
-3. 1 個課堂活動 / 討論題
-4. 1 個課後評量題
-不要產生超出我給的主題範圍的內容。
-```
-
-**2. Rubric 草稿生成**：
-```
-我有一份 [作業類型] 作業，學生年級 [年級]，主題 [主題]。
-學習目標：[列 2-3 條]。
-請產出一份 4 級 rubric（卓越 / 熟練 / 發展中 / 待改進），
-每級在「內容深度」「組織結構」「論證 / 計算」「表達清晰度」4 個面向各給一段描述。
-描述要具體可觀察，不用「品質好」這種模糊詞。
-```
-
-**3. 學生回饋整理**：
-```
-以下是 [N] 份學生作業片段：
-[貼上文本]
-
-請：
-1. 摘要這批作業共同的 3 個強項
-2. 摘要 3 個共同弱點
-3. 針對最常見弱點，建議 1-2 個下次上課該加強的環節
-不要做個別化評語——我會自己針對個人寫。
-```
-
-## 隱私 + 倫理（重要）
-
-教師端用 LLM 跟一般 user 不同，**牽涉學生資料**——以下是 hard rule：
-
-- **不要把學生個資丟進公開 LLM**（姓名、學號、聯絡方式、成績）。需要的話先匿名化（用「學生 A / B / C」）
-- **AI 輔助 ≠ AI 評分**：用 LLM 草擬回饋 / rubric 沒問題，但**最終評分一定要人工把關**——LLM 對複雜思考的評估還不可靠
-- **告知學生**：如果課堂材料是 AI 輔助生成，建議向學生揭露（比照論文揭露 AI 工具使用）。教學誠信很重要
-- **檢查事實**：LLM 會編造引用、學者名字、研究資料。專業領域內容**必須核對**才能上課
-- **學生作品的著作權**：不要把學生作品用 LLM 大量分析後上傳到第三方 service、**可能涉及所在地個資法、學校政策、第三方服務條款**——在**美國**另需留意 FERPA（學生紀錄保護法）、在**歐盟**需留意 GDPR、在**台灣**則需注意《個資法》與校方公告。實際適用範圍請以該地法規與學校 IT 政策為準
-
-如果你的學校 / 機構有 AI 使用政策，**那份比這份優先**。
-
-## 給教師的層級建議
-
-下表是建議的進階路徑——大多數教師應該停在 Tier 0-1：
-
-| Tier | 工具 | 適合誰 | 學習成本 |
-|---|---|---|---|
-| **Tier 0** | Claude.ai 網頁版聊天 | 偶爾備課、單次任務、出題、寫信。複製上面的 prompt 範本填入主題即可 | 0（會用瀏覽器就行） |
-| **Tier 1** | Claude Desktop / [NotebookLM](https://notebooklm.google.com/) | 批改 / 整理一整學期資料、做課程地圖、整批匯入課本 PDF 後問問題 | 半小時裝好 |
-| **Tier 2+** | Claude Code / CLI / SDK | 有重複自動化需求（例：每週收 30 份作業 → 自動生成回饋初稿） | 1 週上手；不熟程式可找學校 IT / 學生 RA 幫忙設定 |
-
-> **多數教師停在 Tier 0-1 就夠了**。升級到 Tier 2+ 就建議走 [Track A — CLI Power User](../tracks/cli/A1-cli-intro.md)。
-
-## 也適用其他分支
-
-很多老師同時是研究員 / 知識工作者，這幾個分支重疊：
-
-- **也做研究**（找文獻、寫 paper、整理 references）→ [研究員分支](./for-researcher.md)
-- **要寫報告 / 整理會議記錄 / 跨工具整合**（Notion、Excel、Email）→ [知識工作者分支](./for-knowledge-worker.md)
-- **要把 AI 接到 Notion / Obsidian / 飛書** 等日常工具 → [`resources/mcp-skills-catalog.md`](../resources/mcp-skills-catalog.md)
-
-## 社群備註
-
-這個分支目前是精選內容最少的一塊。特別歡迎以下貢獻：
-
-- 教案生成 skill
-- 學科專屬的 prompt library（國文老師的 prompts、數學老師的 prompts、英文老師的 prompts ⋯）
-- 教師專屬的 MCP server（成績冊整合、LMS 串接如 Canvas / Moodle / Google Classroom）
-- **某學科 + 某年級的完整 case study**（例如「我用 AI 帶國中數學一個學期，這是我的 workflow」）
-
-請見 [CONTRIBUTING.md](../CONTRIBUTING.md)。
+</details>

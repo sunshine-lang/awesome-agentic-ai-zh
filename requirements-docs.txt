@@ -1,6 +1,14 @@
 # Docs site (GitHub Pages) build dependencies — used by .github/workflows/docs.yml
 # and for local preview: pip install -r requirements-docs.txt && mkdocs serve
 # Explicit base pin so a future mkdocs 2.x can't silently break CI.
-mkdocs>=1.6,<2
-mkdocs-material==9.5.44
+mkdocs>=1.6.1,<2
+mkdocs-material==9.7.7
 mkdocs-static-i18n==1.2.3
+# Pinned explicitly even though mkdocs-material pulls it in transitively:
+# mkdocs.yml resolves toc.slugify through pymdownx.slugs, so every heading id
+# on the published site IS this package's behaviour. Left unpinned it would
+# resolve to whatever is latest at install time, independently in the lint run
+# and the deploy run. scripts/test_anchor_slug_parity.py asserts it still
+# matches scripts/check-anchors.py, so a drift fails closed rather than
+# silently re-breaking every CJK anchor.
+pymdown-extensions==11.0.2

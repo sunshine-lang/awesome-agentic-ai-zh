@@ -39,7 +39,7 @@ before you tweet — X's card scraper caches aggressively:
 ### A — EN-lead, broad AI audience (recommended)
 
 ```
-An AI agent learning map — curates 240+ repos across the agentic-AI
+An AI agent learning map — curates repos across the agentic-AI
 ecosystem (MCP / skills / frameworks / agents), from LLM basics to
 multi-agent. Trilingual (EN / 繁中 / 简中); branches for researcher /
 dev / teacher / knowledge worker.
@@ -51,7 +51,7 @@ github.com/WenyuChiou/awesome-agentic-ai-zh
 
 ```
 PhD student doing agent-based flood-adaptation modeling. Open-sourced
-the AI agent learning map I built for my own learning — 240+ curated
+the AI agent learning map I built for my own learning — curated
 repos across the agentic-AI ecosystem, LLM basics → multi-agent.
 Trilingual (EN / 繁中 / 简中).
 
@@ -61,7 +61,7 @@ github.com/WenyuChiou/awesome-agentic-ai-zh
 ### C — bilingual lead (CJK AI-Twitter circle: 寶玉 / AK / 向阳乔木)
 
 ```
-做了個 AI Agent 學習地圖 —— 蒐集 240+ 個 repo(MCP / skills / frameworks / agents),從 LLM 基本概念一路走到 multi-agent 系統,三語維護(繁中 / 简中 / EN)。對 researcher / 開發者 / 老師 / 知識工作者各有分支。
+做了個 AI Agent 學習地圖 —— 蒐集分組整理的 repo(MCP / skills / frameworks / agents),從 LLM 基本概念一路走到 multi-agent 系統,三語維護(繁中 / 简中 / EN)。對 researcher / 開發者 / 老師 / 知識工作者各有分支。
 
 An AI agent learning map — github.com/WenyuChiou/awesome-agentic-ai-zh
 ```

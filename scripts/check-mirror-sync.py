@@ -22,10 +22,16 @@ import argparse
 import os
 import subprocess
 import sys
-from pathlib import Path
+from collections.abc import Sequence
+from pathlib import Path, PurePath
 
 
 MIRROR_SUFFIXES = ['.en.md', '.zh-Hans.md']
+
+
+def normalize_repo_path(path: PurePath) -> str:
+    """Return one Git-style spelling on Windows, macOS, and Linux."""
+    return str(path).replace('\\', '/')
 
 
 def get_changed_files(base_ref: str) -> list[Path]:
@@ -61,18 +67,18 @@ def is_canonical_md(path: Path) -> bool:
 
 
 def detect_sync_gaps(
-    changed: list[Path], repo_root: Path
+    changed: Sequence[PurePath], repo_root: Path
 ) -> list[tuple[str, list[str]]]:
     """
     Return list of (canonical_file_changed, [missing_mirror_files]) tuples.
     Only flag canonical files whose mirrors EXIST in repo (so contributor
     isn't asked to create a new mirror from scratch).
     """
-    changed_set = {str(p) for p in changed}
+    changed_set = {normalize_repo_path(path) for path in changed}
     gaps: list[tuple[str, list[str]]] = []
 
     for f in changed:
-        s = str(f).replace('\\', '/')  # normalize for Windows
+        s = normalize_repo_path(f)
         if not is_canonical_md(Path(s)):
             continue
 
@@ -86,8 +92,7 @@ def detect_sync_gaps(
             if not cand_full.exists():
                 continue  # no mirror exists yet — don't pressure contributor
             # Mirror exists. Check if it was also changed in this PR.
-            normalized = candidate_path.replace('\\', '/')
-            if normalized not in changed_set and candidate_path not in changed_set:
+            if candidate_path not in changed_set:
                 missing.append(candidate_path)
 
         if missing:

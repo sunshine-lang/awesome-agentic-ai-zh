@@ -35,7 +35,7 @@
 - [ ] **A2 — CLI Workflow Patterns** · [`tracks/cli/A2-cli-workflow.md`](tracks/cli/A2-cli-workflow.md)
 - [ ] **Stage 5 — Claude Code 生態(兩軌共用)** · [`stages/05-claude-code-ecosystem.md`](stages/05-claude-code-ecosystem.md)
 - [ ] **A3 — Integration & Production** · [`tracks/cli/A3-cli-production.md`](tracks/cli/A3-cli-production.md)
-- [ ] **Stage 8 — Agent 操作介面(兩軌共用)** · [`stages/08-agent-interfaces.md`](stages/08-agent-interfaces.md)
+- [ ] **Stage 8 — Agent 操作介面（建議；不擋 Track A Capstone 入場）** · [`stages/08-agent-interfaces.md`](stages/08-agent-interfaces.md)
 
 ---
 
@@ -43,11 +43,11 @@
 
 > 你想「**自己 build** agent / 框架 / 多 agent 系統」。
 
-- [ ] **Stage 3 — 工具使用與第一個 Agent** ⭐ · [`stages/03-tool-use-and-hello-agent.md`](stages/03-tool-use-and-hello-agent.md)
-- [ ] **Stage 4 — Agent 框架** · [`stages/04-agent-frameworks.md`](stages/04-agent-frameworks.md)
+- [ ] **Stage 3 — 工具使用與第一個 Agent Loop** ⭐ · [`stages/03-tool-use-and-hello-agent.md`](stages/03-tool-use-and-hello-agent.md)
+- [ ] **Stage 4 — Workflow Graph 與 Agent 框架** · [`stages/04-agent-frameworks.md`](stages/04-agent-frameworks.md)
 - [ ] **Stage 5 — Claude Code 生態** ⭐⭐(兩軌共用)· [`stages/05-claude-code-ecosystem.md`](stages/05-claude-code-ecosystem.md)
 - [ ] **Stage 6 — 上下文管理:RAG 與 Memory** · [`stages/06-memory-rag.md`](stages/06-memory-rag.md)
-- [ ] **Stage 7 — Multi-Agent · 進階應用** · [`stages/07-multi-agent-production.md`](stages/07-multi-agent-production.md)
+- [ ] **Stage 7 — Agent Production Engineering：Harness、Loop 與 Graph** · [`stages/07-multi-agent-production.md`](stages/07-multi-agent-production.md)
 - [ ] **Stage 7.5 — 進階 Agentic 概念** · [`stages/07.5-advanced-agentic-concepts.md`](stages/07.5-advanced-agentic-concepts.md)
 - [ ] **Stage 8 — Agent 操作介面(兩軌共用)** · [`stages/08-agent-interfaces.md`](stages/08-agent-interfaces.md)
 
@@ -78,7 +78,7 @@
 
 不想自己排?照這個走,大約能在最少繞路下到「能動手做事」:
 
-`Stage 0 → Stage 1 → Stage 2 →` 選軌道 `→`(Track A: `A1 → A2 → Stage 5 → A3`;Track B: `Stage 3 → Stage 4 → Stage 5 → Stage 6`)`→` 你的 branch `→`(進階,Track B 適用:`Stage 7 → 7.5 → 8`;Track A 的 Stage 8 已在上方主線)`→` 你那軌的 **Capstone**(見 [`CAPSTONE.md`](CAPSTONE.md))
+`Stage 0 → Stage 1 → Stage 2 →` 選軌道 `→`（Track A：`A1 → A2 → Stage 5 → A3 → Stage 8`；Track B：`Stage 3 → Stage 4 → Stage 5 → Stage 6 → Stage 7 → 7.5 → 8`）`→` 你的 branch `→` 你那軌的 **Capstone**（見 [`CAPSTONE.md`](CAPSTONE.md)）。Track A 做完 A3 就能開始 Capstone；Stage 8 建議完成，但不擋入場。
 
 ---
 

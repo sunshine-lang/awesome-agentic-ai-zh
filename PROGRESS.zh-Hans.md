@@ -35,7 +35,7 @@
 - [ ] **A2 — CLI Workflow Patterns** · [`tracks/cli/A2-cli-workflow.zh-Hans.md`](tracks/cli/A2-cli-workflow.zh-Hans.md)
 - [ ] **Stage 5 — Claude Code 生态(两轨共用)** · [`stages/05-claude-code-ecosystem.zh-Hans.md`](stages/05-claude-code-ecosystem.zh-Hans.md)
 - [ ] **A3 — Integration & Production** · [`tracks/cli/A3-cli-production.zh-Hans.md`](tracks/cli/A3-cli-production.zh-Hans.md)
-- [ ] **Stage 8 — Agent 操作界面(两轨共用)** · [`stages/08-agent-interfaces.zh-Hans.md`](stages/08-agent-interfaces.zh-Hans.md)
+- [ ] **Stage 8 — Agent 操作界面（建议；不影响 Track A Capstone 入场）** · [`stages/08-agent-interfaces.zh-Hans.md`](stages/08-agent-interfaces.zh-Hans.md)
 
 ---
 
@@ -43,11 +43,11 @@
 
 > 你想“**自己 build** agent / 框架 / 多 agent 系统”。
 
-- [ ] **Stage 3 — 工具使用与第一个 Agent** ⭐ · [`stages/03-tool-use-and-hello-agent.zh-Hans.md`](stages/03-tool-use-and-hello-agent.zh-Hans.md)
-- [ ] **Stage 4 — Agent 框架** · [`stages/04-agent-frameworks.zh-Hans.md`](stages/04-agent-frameworks.zh-Hans.md)
+- [ ] **Stage 3 — 工具使用与第一个 Agent Loop** ⭐ · [`stages/03-tool-use-and-hello-agent.zh-Hans.md`](stages/03-tool-use-and-hello-agent.zh-Hans.md)
+- [ ] **Stage 4 — Workflow Graph 与 Agent 框架** · [`stages/04-agent-frameworks.zh-Hans.md`](stages/04-agent-frameworks.zh-Hans.md)
 - [ ] **Stage 5 — Claude Code 生态** ⭐⭐(两轨共用)· [`stages/05-claude-code-ecosystem.zh-Hans.md`](stages/05-claude-code-ecosystem.zh-Hans.md)
 - [ ] **Stage 6 — 上下文管理：RAG 与 Memory** · [`stages/06-memory-rag.zh-Hans.md`](stages/06-memory-rag.zh-Hans.md)
-- [ ] **Stage 7 — Multi-Agent · 进阶应用** · [`stages/07-multi-agent-production.zh-Hans.md`](stages/07-multi-agent-production.zh-Hans.md)
+- [ ] **Stage 7 — Agent Production Engineering：Harness、Loop 与 Graph** · [`stages/07-multi-agent-production.zh-Hans.md`](stages/07-multi-agent-production.zh-Hans.md)
 - [ ] **Stage 7.5 — 进阶 Agentic 概念** · [`stages/07.5-advanced-agentic-concepts.zh-Hans.md`](stages/07.5-advanced-agentic-concepts.zh-Hans.md)
 - [ ] **Stage 8 — Agent 操作界面(两轨共用)** · [`stages/08-agent-interfaces.zh-Hans.md`](stages/08-agent-interfaces.zh-Hans.md)
 
@@ -78,7 +78,7 @@
 
 不想自己排？照这个走，大约能在最少绕路下到“能动手做事”：
 
-`Stage 0 → Stage 1 → Stage 2 →` 选轨道 `→`（Track A: `A1 → A2 → Stage 5 → A3`;Track B: `Stage 3 → Stage 4 → Stage 5 → Stage 6`）`→` 你的 branch `→`（进阶，Track B 适用：`Stage 7 → 7.5 → 8`;Track A 的 Stage 8 已在上方主线）`→` 你那轨的 **Capstone**（见 [`CAPSTONE.zh-Hans.md`](CAPSTONE.zh-Hans.md)）
+`Stage 0 → Stage 1 → Stage 2 →` 选轨道 `→`（Track A：`A1 → A2 → Stage 5 → A3 → Stage 8`；Track B：`Stage 3 → Stage 4 → Stage 5 → Stage 6 → Stage 7 → 7.5 → 8`）`→` 你的 branch `→` 你那轨的 **Capstone**（见 [`CAPSTONE.zh-Hans.md`](CAPSTONE.zh-Hans.md)）。Track A 做完 A3 就能开始 Capstone；Stage 8 建议完成，但不影响入场。
 
 ---
 

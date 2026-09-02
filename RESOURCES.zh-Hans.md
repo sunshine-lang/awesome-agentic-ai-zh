@@ -4,102 +4,103 @@
 
 > [← 返回主路线 README](README.zh-Hans.md)
 
-这份文件集中放：用语说明、常用 MCP / Skill 集成 highlight、同主题 awesome list、中文社群资源。从主 README 抽出避免主页过长。
+## 📌 先选你现在要做的事
 
-> 💡 **不懂某个词**（LLM、agent、RAG、token、向量数据库⋯）→ [`resources/glossary.zh-Hans.md`](resources/glossary.zh-Hans.md)（用语小词典，30 多个词每个 30-80 字解释）
->
-> 🍳 **想动手做但不知怎么开始**（写 Skill / 写 MCP server / 接 Word / 接 NotebookLM / 接 Zotero / 接本机 LLM）→ [`resources/cookbook.zh-Hans.md`](resources/cookbook.zh-Hans.md)（6 个 step-by-step recipe，每个 30-50 分钟做完）
+不用把整份清单读完。先选择你现在要做的事：
 
----
+| 我现在想要…… | 从这里开始 | 编辑评分 |
+|---|---|---|
+| 从头学习 AI Agent | [Stage 0](stages/00-foundations.zh-Hans.md) | ⭐⭐⭐⭐⭐ |
+| 分清模型怎么学会与怎么被使用 | [模型训练与调整指南](resources/model-training-guide.zh-Hans.md) | ⭐⭐⭐⭐⭐ |
+| 查一个不懂的词 | [Glossary](resources/glossary.zh-Hans.md) | ⭐⭐⭐⭐ |
+| 选择一个 CLI Agent | [CLI Agents Guide](resources/cli-agents-guide.zh-Hans.md) | ⭐⭐⭐⭐⭐ |
+| 把 Agent 接到外部工具 | [MCP / Skills Catalog](resources/mcp-skills-catalog.zh-Hans.md) | ⭐⭐⭐⭐⭐ |
+| 跟着步骤做一个小项目 | [Cookbook](resources/cookbook.zh-Hans.md) | ⭐⭐⭐⭐⭐ |
 
-## 三个核心用语：MCP / Skills / Plugins
+<a id="三个核心用语mcp--skills--plugins"></a>
+## 🧩 三个核心词：MCP、Skill、Plugin
 
-主 README 跟各 stage 会频繁提到这三个 Claude Code 生态的关键词，先快速说明：
+**MCP（Model Context Protocol）**：让 AI 应用用共同方法连接外部数据和工具的开放协议。它能做什么仍取决于 server、账号权限和用户批准。
 
-- **MCP（Model Context Protocol）** — Anthropic 推的开放协定，让任何 LLM host（Claude Code、其他 IDE、自写 agent）都能用同一套接口去调用外部 tool server（文件、DB、API、自家系统）。把它想成“LLM 的 USB 接口”。详见 [Stage 5.2](stages/05-claude-code-ecosystem.zh-Hans.md#52--mcpmodel-context-protocol-基础)。
-- **Skills** — Claude Code 的“行为包”。一个 Skill 就是一份 `SKILL.md`，描述“在什么场景要做什么、可以调用哪些 MCP tool”。写好之后 Claude Code 会自动 discover。详见 [Stage 5.3](stages/05-claude-code-ecosystem.zh-Hans.md#53--skillsclaude-code-的行为层-claude-code-生态最关键的一层)。
-- **Plugins / Marketplaces** — 把 Skills、slash commands、hooks、MCP 设置打包成一个发布单位给 team 或社群安装。Marketplace 就是 plugin 的 catalog。详见 [Stage 5.4](stages/05-claude-code-ecosystem.zh-Hans.md#54--plugins-与-marketplaces)。
+**Skill**：一包可重复使用的做事方法，也可以包含脚本、模板和参考资料。不同产品放置和加载 Skill 的方式可能不同。
 
-对应的 **动手练习都在 [Stage 5](stages/05-claude-code-ecosystem.zh-Hans.md)，Track A 的 [A3](tracks/cli/A3-cli-production.zh-Hans.md) 也会用到。
+**Plugin**：某个 host 提供的安装包，可以一起带入 Skill、命令、hook 或 MCP 设置；Plugin 不是 MCP 规范的一部分。
 
----
+想亲手做一次，前往 [Stage 5](stages/05-claude-code-ecosystem.zh-Hans.md)。想先分清 App / Connector、CLI Agent 和 MCP Server，查看 [CLI Agents Guide](resources/cli-agents-guide.zh-Hans.md)。
 
-## 接日常工具：常用 MCP server / Skill
+## 📚 五个安全起点
 
-把 Claude Code（或其他 CLI agent）接到你已经在用的 app，省掉手动切换的成本。下面几个是社群 / 官方比较成熟的：
+先从官方入口或完整教材开始，再评估社群项目。这里是本项目的编辑评分，不是 GitHub stars。
 
-### 笔记 / 知识库
+| 起点 | 先学什么 | 编辑评分 |
+|---|---|---|
+| [Official MCP Registry](https://registry.modelcontextprotocol.io/) | 找已发布的 MCP Server；安装前仍要检查维护者、权限和来源 | ⭐⭐⭐⭐⭐ |
+| [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) | 看 MCP 功能如何实现；这是教学用 reference implementations，不等于 production 推荐 | ⭐⭐⭐⭐⭐ |
+| [anthropics/skills](https://github.com/anthropics/skills) | 看 Agent Skill 的文件夹、指令和资源如何组合 | ⭐⭐⭐⭐⭐ |
+| [github/github-mcp-server](https://github.com/github/github-mcp-server) | 通过官方实现了解 OAuth、工具组和 repository 权限 | ⭐⭐⭐⭐⭐ |
+| [datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) | 用中文教材系统学习 Agent 原理和实现 | ⭐⭐⭐⭐⭐ |
 
-- [**MarkusPfundstein/mcp-obsidian**](https://github.com/MarkusPfundstein/mcp-obsidian) ★ 4.2k+ — 透过 Obsidian REST API plugin 让 LLM 读写你的 Obsidian vault
-- [**makenotion/notion-mcp-server**](https://github.com/makenotion/notion-mcp-server) ★ 4.4k+ — Notion **官方** MCP server，可查询／建立 page、database
-- [**PleasePrompto/notebooklm-skill**](https://github.com/PleasePrompto/notebooklm-skill) ★ 7.3k+ — NotebookLM Skill（浏览器自动化），用 Claude Code 直接查你 NotebookLM 里的文件，回答带 citation
-- [**teng-lin/notebooklm-py**](https://github.com/teng-lin/notebooklm-py) ★ 18k+ — 非官方 NotebookLM Python API + CLI，支持 Claude Code / Codex 等 agent 集成
+> ⚠️ **先少给钥匙**：MCP Server 可能读取、创建、发送或删除真实数据。先用只读、最小权限和测试 workspace；write、send、delete 前保留 **Human Approval（人工批准）**。
 
-### 办公文件（Word / Excel / PowerPoint / PDF）
+<a id="daily-tool-integrations"></a>
+<a id="接日常工具常用-mcp-server--skill"></a>
+## 🔌 常用集成分类
 
-- [**anthropics/skills**](https://github.com/anthropics/skills) ★ 165k+ — Anthropic **官方** Skills 集合，docx / xlsx / pptx / pdf 处理直接内建
-- [**tfriedel/claude-office-skills**](https://github.com/tfriedel/claude-office-skills) ★ 800 — 补强版 Office skills（PPTX/DOCX/XLSX/PDF），含自动化 workflow
+下面直接显示精选项目和官方入口。从你需要的分类开始看；只有更长的补充清单才会收合。
 
-### Google Workspace（Gmail / Docs / Drive / Calendar）
+<div class="resource-table-scroll" role="region" tabindex="0" aria-label="精选资源表（可左右滚动）">
+<table class="resource-table">
+<thead><tr><th scope="col">分类</th><th scope="col">资源</th><th scope="col">能帮你什么</th><th scope="col">状态 / 限制</th><th scope="col">编辑评分</th></tr></thead>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">笔记 / 知识库</th><td><a href="https://developers.notion.com/guides/mcp/overview">Notion MCP</a></td><td>搜索、创建和更新 Notion 内容</td><td>官方 hosted MCP；需要用户 OAuth，权限跟随登录用户</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/MarkusPfundstein/mcp-obsidian">MarkusPfundstein/mcp-obsidian</a></td><td>通过 Obsidian REST API 读写 vault</td><td>社群项目；只授予需要的 vault 和写入范围</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://support.google.com/gemininotebook/answer/16164461">Gemini Notebook（旧名 NotebookLM）</a></td><td>用自己的来源做摘要、提问和学习</td><td>Google 服务；地区、账号和功能可用性会变化</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/teng-lin/notebooklm-py">teng-lin/notebooklm-py</a></td><td>用 Python / CLI 操作 Gemini Notebook</td><td>非官方接口；Google 改版时可能失效</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="3">办公文件</th><td><a href="https://github.com/anthropics/skills">anthropics/skills</a></td><td>阅读 Agent Skill 示例与文档工作流</td><td>官方示例；不同 Claude surface 可用的内建 Skill 不完全相同</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/tfriedel/claude-office-skills">tfriedel/claude-office-skills</a></td><td>补充 Office 文件自动化流程</td><td>社群 Skills；写入前先备份文件并核对输出</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://developers.google.com/workspace/guides/configure-mcp-servers">Google Workspace MCP</a></td><td>连接 Gmail、Drive、Docs、Sheets、Slides、Calendar 和 Chat</td><td>官方 <strong>Developer Preview</strong>；每个产品都有专用 server，并遵循 OAuth 2.0 和用户 / 组织治理</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">开发协作</th><td><a href="https://github.com/github/github-mcp-server">GitHub MCP Server</a></td><td>查询和处理 issue、PR 与 repository</td><td>官方 MCP；使用 OAuth 或最小权限 token，高影响写入需人工批准</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/">Atlassian Rovo MCP</a></td><td>搜索或更新 Jira、Confluence 和 Bitbucket 工作</td><td>官方 hosted remote MCP；使用 OAuth 2.1，权限跟随登录用户；写入真实数据前要人工批准</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://linear.app/docs/mcp">Linear MCP</a></td><td>搜索和更新 Linear issue / project</td><td>官方 hosted remote MCP，使用 Streamable HTTP；提供官方只读选项</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://docs.slack.dev/ai/mcp-overview/">Slack MCP</a></td><td>搜索 Slack、发送消息并管理 canvas</td><td>官方 MCP；它不只是读操作，发送或修改内容前要先确认</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="4">研究工作流</th><td><a href="https://github.com/WenyuChiou/ai-research-skills">WenyuChiou/ai-research-skills</a></td><td>把研究步骤整理成可复用的 Skill</td><td>社群项目；只安装与当前任务有关的 Skill</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/research-hub">WenyuChiou/research-hub</a></td><td>连接 Zotero、Obsidian 和研究工作流</td><td>社群 workspace；先检查数据位置、备份和权限</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/zotero-skills">WenyuChiou/zotero-skills</a></td><td>用 Skill 整理 Zotero 数据</td><td>社群 Skill；批量修改前先备份 library</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://github.com/WenyuChiou/codex-delegate">WenyuChiou/codex-delegate</a></td><td>把范围清楚的重复工作交给另一个 Agent</td><td>社群工具；委派前锁定文件、验收标准和停止条件</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="rowgroup" rowspan="1">中文生态</th><td><a href="https://github.com/leemysw/feishu-docx">leemysw/feishu-docx</a></td><td>在飞书（Lark）文档和 Markdown 之间转换</td><td>社群工具；先确认文档分享和写入权限</td><td>⭐⭐⭐⭐</td></tr>
+</tbody>
+</table>
+</div>
 
-- [**taylorwilsdon/google_workspace_mcp**](https://github.com/taylorwilsdon/google_workspace_mcp) ★ 2.9k+ — 一个 server 包整套 Google Workspace（Gmail、Calendar、Docs、Sheets、Slides、Drive）
+<a id="research-workflow"></a>
+<a id="研究工作流本-repo-维护者出品"></a>
+<a id="topic-awesome-lists"></a>
+<a id="同主题的清单型-awesome-lists"></a>
+<details markdown="1">
+<summary>展开更多清单、课程和设计工具</summary>
 
-### 开发协作
+- [MCP Registry](https://registry.modelcontextprotocol.io/)：已发布 Server 的官方 discovery 入口。
+- [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)：按分类浏览社群 Server；安装前自行审查。
+- [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code)：Claude Code 社群资源。
+- [travisvn/awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills)：Agent Skills 社群清单。
+- [Canva MCP](https://www.canva.dev/docs/mcp/)：官方 remote MCP；功能、方案和权限取决于账号，不写固定工具数。
+- [课程清单](resources/courses.zh-Hans.md)：按学习目标挑课程，不把证书当成学位。
+- [Agent paradigms](resources/agent-paradigms.zh-Hans.md)：用图比较常见 Agent 形态。
 
-- [**github/github-mcp-server**](https://github.com/github/github-mcp-server) ★ 31k+ — GitHub **官方** MCP，issue / PR / repo 操作
-- [**atlassian/atlassian-mcp-server**](https://github.com/atlassian/atlassian-mcp-server) ★ 908 — Atlassian **官方** Remote MCP（Jira、Confluence）
-- [**jerhadf/linear-mcp-server**](https://github.com/jerhadf/linear-mcp-server) ★ 340+ — Linear MCP server
-- [**korotovsky/slack-mcp-server**](https://github.com/korotovsky/slack-mcp-server) ★ 1.7k+ — Slack MCP，无 admin 权限也能用
+</details>
 
-### 研究工作流（本 repo 维护者出品）
+<a id="what-else"></a>
+## ✅ 下一站
 
-- [**WenyuChiou/ai-research-skills**](https://github.com/WenyuChiou/ai-research-skills) ★ 182 — 14 个研究流程 skill，5-plugin marketplace
-- [**WenyuChiou/research-hub**](https://github.com/WenyuChiou/research-hub) ★ 42 — Zotero + Obsidian + NotebookLM 集成 workspace
-- [**WenyuChiou/zotero-skills**](https://github.com/WenyuChiou/zotero-skills) ★ 45 — Zotero CLI skill
-- [**WenyuChiou/codex-delegate**](https://github.com/WenyuChiou/codex-delegate) ★ 62 [**gemini-delegate-skill**](https://github.com/WenyuChiou/gemini-delegate-skill) ★ 34（⚠️ 已封存）— Multi-LLM delegation 对（Gemini lane 建议改用 Gemini CLI 直接做）
-
-### 中文圈常用
-
-- [**leemysw/feishu-docx**](https://github.com/leemysw/feishu-docx) ★ 235 — 飞书（Lark）docs / sheet / bitable ↔ Markdown，含 Claude Skills 支持
-
-> 上面只是 highlight。**完整 77+ 个集成的分类目录**（含数据库、浏览器自动化、Figma、Excalidraw、Cloudflare、Stripe、学术写作 / Multi-LLM delegation 等）在 [`resources/mcp-skills-catalog.zh-Hans.md`](resources/mcp-skills-catalog.zh-Hans.md)。
-
-> 想找更多 MCP server catalog？看 [`wong2/awesome-mcp-servers`](https://github.com/wong2/awesome-mcp-servers) / [`punkpeye/awesome-mcp-servers`](https://github.com/punkpeye/awesome-mcp-servers)（按分类整理）。**Canva** 现有官方 MCP（[canva.dev/docs/mcp](https://www.canva.dev/docs/mcp/)、endpoint `mcp.canva.com`、~32 工具、任何方案可用、支持 Claude / ChatGPT / Cursor / VS Code）。
-
----
-
-## 同主题的清单型 awesome lists
-
-本 repo **不取代清单型 awesome list——你已经知道在找什么工具时，下面这些查起来更直接：
-
-### MCP 相关
-
-- [**modelcontextprotocol/servers**](https://github.com/modelcontextprotocol/servers) — 官方 MCP reference servers（现有 7 个：everything、fetch、filesystem、git、memory、sequentialthinking、time；github、sqlite 已移到 `servers-archived`）
-- [**wong2/awesome-mcp-servers**](https://github.com/wong2/awesome-mcp-servers) — 社群 MCP server 清单，按分类整理（150+ 个）
-- [**punkpeye/awesome-mcp-servers**](https://github.com/punkpeye/awesome-mcp-servers) — 另一份 MCP server 清单
-
-### Claude Code / Skills / Plugins 相关
-
-- [**hesreallyhim/awesome-claude-code**](https://github.com/hesreallyhim/awesome-claude-code) — Claude Code 相关资源清单（整理中）
-- [**travisvn/awesome-claude-skills**](https://github.com/travisvn/awesome-claude-skills) — Claude Skills 清单
-- [**anthropics/claude-plugins-official**](https://github.com/anthropics/claude-plugins-official) — Anthropic 官方 plugin 范本，要打包自己的 plugin 从这份开始
-
-### 中文圈必看
-
-- [**datawhalechina/hello-agents**](https://github.com/datawhalechina/hello-agents) — Datawhale 系统性 agent 教学（zh-Hans）
-- [**WangRongsheng/awesome-LLM-resources**](https://github.com/WangRongsheng/awesome-LLM-resources) — 完整的中文 LLM 资源整理（8k+ stars）
-- [**AiHubCN/Awesome-Chinese-LLM**](https://github.com/AiHubCN/Awesome-Chinese-LLM) — 中文开源大模型整理
-- [**hardness1020/awesome-agent-architecture**](https://github.com/hardness1020/awesome-agent-architecture) — 逐节拆解现代 agent harness（loop engineering、tools、permissions、context、memory、evaluation），以 Claude Code、Hermes Agent 等系统为案例（持续新增），每节附可运行 Python demo（繁中/简中/英文三语）
-
-### 线上课程 / MOOC（带证书对照）
-
-- [**resources/courses.zh-Hans.md**](resources/courses.zh-Hans.md) — 10 门 credible、会发证书的线上 AI agent 课（英文 + 中文），分 tier；并诚实标注完成证书不是学历
-
----
-
-## 还有什么？
-
-- 主 README：[README.zh-Hans.md](README.zh-Hans.md)
-- 完整 MCP/Skill 目录：[resources/mcp-skills-catalog.zh-Hans.md](resources/mcp-skills-catalog.zh-Hans.md)
-- CLI agent 比较指南：[resources/cli-agents-guide.zh-Hans.md](resources/cli-agents-guide.zh-Hans.md)
-- Style guide / 贡献规范：[resources/style-guide.zh-Hans.md](resources/style-guide.zh-Hans.md)、[CONTRIBUTING.zh-Hans.md](CONTRIBUTING.zh-Hans.md)
+- 不懂名词：打开 [`resources/glossary.zh-Hans.md`](resources/glossary.zh-Hans.md)。
+- 想直接做：打开 [`resources/cookbook.zh-Hans.md`](resources/cookbook.zh-Hans.md)。
+- 想了解训练选择：打开 [`resources/model-training-guide.zh-Hans.md`](resources/model-training-guide.zh-Hans.md)。
+- 想贡献或翻译：先看 [`resources/style-guide.zh-Hans.md`](resources/style-guide.zh-Hans.md) 和 [`CONTRIBUTING.zh-Hans.md`](CONTRIBUTING.zh-Hans.md)。

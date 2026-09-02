@@ -34,6 +34,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from md_fences import strip_code_blocks  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 EXCLUDE_DIRS = {".git", ".github", ".claude", ".ai", "_build", "node_modules", "book", ".venv"}
 LOCALES = [(".en.md", "*.en.md"), (".zh-Hans.md", "*.zh-Hans.md")]
@@ -51,7 +54,6 @@ SWITCHER_RE = re.compile(
     r"繁體中文|简体中文|\[English\]|\*\*English\*\*"
     r"|[(（]\s*zh(-Hans|-TW)?\s*[)）].*[(（]\s*en\s*[)）]"
 )
-FENCE_RE = re.compile(r"^\s*(```|~~~)")
 HEADING_RE = re.compile(r"^#{1,6}\s+(.*?)\s*$")
 
 # Reuse the repo's canonical slugger instead of re-implementing it. A second
@@ -69,13 +71,10 @@ slugify = _check_anchors.slugify
 
 def anchors_of(fp: Path) -> set[str]:
     """All heading anchors in a markdown file, ignoring fenced code."""
-    found, in_fence = set(), False
-    for line in fp.read_text(encoding="utf-8").split("\n"):
-        if FENCE_RE.match(line):
-            in_fence = not in_fence
-            continue
-        if in_fence:
-            continue
+    found = set()
+    for line in strip_code_blocks(
+        fp.read_text(encoding="utf-8"), source=str(fp)
+    ).split("\n"):
         m = HEADING_RE.match(line)
         if m:
             found.add(slugify(m.group(1)))
@@ -98,13 +97,14 @@ def iter_mirror_files(root: Path):
 
 def scan_file(suffix: str, fp: Path):
     """Yield (line_no, whole_link, target, fixed_target) for each fixable link."""
-    lines = fp.read_text(encoding="utf-8").split("\n")
-    in_fence = False
+    # Fenced code blanked by the shared parser (md_fences), not a local toggle —
+    # see #95/#97. This gate REWRITES link targets, so a false positive creates a
+    # dead link; a sample link inside a ```markdown template must stay untouched.
+    lines = strip_code_blocks(
+        fp.read_text(encoding="utf-8"), source=str(fp)
+    ).split("\n")
     for i, line in enumerate(lines, start=1):
-        if FENCE_RE.match(line):
-            in_fence = not in_fence
-            continue
-        if in_fence or SWITCHER_RE.search(line):
+        if SWITCHER_RE.search(line):
             continue
         for m in LINK_RE.finditer(line):
             target, anchor = m.group(3), m.group(4)
