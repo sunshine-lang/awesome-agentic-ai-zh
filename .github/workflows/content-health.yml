@@ -155,6 +155,12 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           MODE: ${{ steps.mode.outputs.mode }}
         run: |
+          set -euo pipefail
+          issues_enabled="$(gh api "repos/$REPOSITORY" --jq '.has_issues')"
+          if [ "$issues_enabled" = false ]; then
+            echo 'Issues are disabled; evidence remains in the job summary and artifacts.'
+            exit 0
+          fi
           title='[automation] Content health needs review'
           number="$(gh issue list --repo "$REPOSITORY" --state open \
             --search "in:title $title" --json number,title \
