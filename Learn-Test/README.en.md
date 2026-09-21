@@ -1,6 +1,6 @@
 # Learn-Test
 
-[中文](README.md) | English
+[繁體中文](README.md) | [简体中文](README.zh-Hans.md) | **English**
 
 This directory contains local practice scripts for Stage 0-2 of the agentic AI learning path.
 

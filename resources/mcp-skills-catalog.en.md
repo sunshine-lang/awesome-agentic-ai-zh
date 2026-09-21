@@ -82,7 +82,7 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **Audience**: heavy Obsidian users wanting Claude Code to organize daily notes, auto-link, search across files.
 **Notes**: requires the [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) plugin in Obsidian.
 
-### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) ⭐⭐⭐⭐
+### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) (archived, historical reference)
 
 | Field | Value |
 |---|---|
@@ -91,7 +91,7 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 
 **What it does**: a Claude Code Skill that uses browser automation to query Gemini Notebook (formerly NotebookLM), with citation-backed answers.
 **Audience**: people who manage papers / research notes in Gemini Notebook (formerly NotebookLM) but want to query from Claude Code in one prompt.
-**Notes**: requires Google account auth.
+**Notes**: As of 2026-09-21, the repository is archived. Keep it as a historical implementation reference, not a recommendation for new installs. The original implementation requires Google account authentication.
 
 ### [teng-lin/notebooklm-py](https://github.com/teng-lin/notebooklm-py) ⭐⭐⭐⭐
 
@@ -115,16 +115,16 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **Audience**: Logseq users automating daily journals, cross-page links, backlink queries.
 **Notes**: enable Logseq's HTTP API (Settings → Features → HTTP API).
 
-### [skridlevsky/graphthulhu](https://github.com/skridlevsky/graphthulhu) ⭐⭐⭐
+### skridlevsky/graphthulhu (historical entry, source unavailable)
 
 | Field | Value |
 |---|---|
 | License | MIT |
-| Rating | ⭐⭐⭐ (covers both Logseq + Obsidian) |
+| Status | Historical reference; installation recommendation suspended |
 
 **What it does**: a broad tool set across navigation, search, analysis, writing, journals, flashcards, whiteboards.
 **Audience**: people using both Logseq and Obsidian who don't want two MCP servers.
-**Notes**: community project; broad tool surface but each tool is relatively basic.
+**Notes**: As of 2026-09-21, the original GitHub repository returns 404; no official migration address has been verified. The description above records the former entry, not current installability. A same-named repository is not evidence of project continuity.
 
 ### [ankimcp/anki-mcp-server](https://github.com/ankimcp/anki-mcp-server) ⭐⭐⭐
 
@@ -874,7 +874,7 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 
 **What it does**: Uses a hosted remote MCP to read US Treasury yields and income-asset analysis, while showing the connection shape of hosted versus self-hosted MCP.
 **Audience**: learners who want to observe MCP requests and results with test finance questions; it is not an automatic trading entry point.
-**Notes**: the [live endpoint](https://api.intuitek.ai/yield/mcp) is provided by the MIT [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace) repository. Data timing, methods, authentication, and pricing can change; check current service documentation and original market data before use. Not investment advice.
+**Notes**: The former endpoint `api.intuitek.ai/yield/mcp` returned 404 to an HTTP GET check on 2026-09-21. Connection recommendations are suspended pending verification; this does not establish that MCP POST requests or the entire service have stopped. The original implementation is provided by the MIT [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace) repository. Data timing, methods, authentication, and pricing can change; check current service documentation and original market data before use. Not investment advice.
 
 ### [ComposioHQ/composio](https://github.com/ComposioHQ/composio) ⭐⭐⭐⭐⭐
 

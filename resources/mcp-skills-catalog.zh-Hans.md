@@ -81,7 +81,7 @@
 **适合谁**：Obsidian 重度用户，想用 Claude Code 整理 daily note、自动 link、跨文件搜索。
 **备注**：要先在 Obsidian 装 [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) plugin。
 
-### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) ⭐⭐⭐⭐
+### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) （已归档，历史参考）
 
 | 栏位 | 内容 |
 |---|---|
@@ -90,7 +90,7 @@
 
 **教什么**：Claude Code Skill，用浏览器自动化操作 Gemini Notebook（旧名 NotebookLM）、查询上传文件，回复带 citation。
 **适合谁**：用 Gemini Notebook（旧名 NotebookLM）管 paper 跟研究笔记，但想在 Claude Code 一条 prompt 直接查的人。
-**备注**：需要 Google 账号登录授权。
+**备注**：截至 2026-09-21，仓库已归档；仅保留作历史实现参考，不作新安装推荐。原实现需要 Google 账号登录授权。
 
 ### [teng-lin/notebooklm-py](https://github.com/teng-lin/notebooklm-py) ⭐⭐⭐⭐
 
@@ -114,16 +114,16 @@
 **适合谁**：Logseq 用户要自动化 daily journal、跨页 link、查询 backlinks。
 **备注**：需要 Logseq 开启 HTTP API（Settings → Features → HTTP API）。
 
-### [skridlevsky/graphthulhu](https://github.com/skridlevsky/graphthulhu) ⭐⭐⭐
+### skridlevsky/graphthulhu（历史条目，来源暂不可用）
 
 | 栏位 | 内容 |
 |---|---|
 | License | MIT |
-| 推荐度 | ⭐⭐⭐（同时支持 Logseq + Obsidian） |
+| 状态 | 历史参考；暂停安装推荐 |
 
 **教什么**：一组 tool，覆盖 navigation、search、analysis、writing、journals、flashcards、whiteboards。
 **适合谁**：同时用 Logseq 跟 Obsidian、不想装两套 MCP server 的人。
-**备注**：community project，工具数多但每个工具相对基本。
+**备注**：截至 2026-09-21，原 GitHub 仓库返回 404，尚未核实官方迁移地址。以上为原条目描述，不代表目前仍可安装；同名仓库不能直接视为原项目的延续。
 
 ### [ankimcp/anki-mcp-server](https://github.com/ankimcp/anki-mcp-server) ⭐⭐⭐
 
@@ -875,7 +875,7 @@
 
 **教什么**：用 hosted remote MCP 读取美国国债收益率与收益型资产分析，并比较 hosted 与 self-hosted MCP 的连接形状。
 **适合谁**：想用测试问题观察金融分析 MCP request / result 的学习者；它不是自动下单入口。
-**备注**：[Live endpoint](https://api.intuitek.ai/yield/mcp) 由 [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace)（MIT）提供。数据时间、方法、认证与费用可能改变；使用前查看当前服务文档并核对原始市场数据。非投资建议。
+**备注**：原服务端点 `api.intuitek.ai/yield/mcp` 在 2026-09-21 的 HTTP GET 检查中返回 404；目前暂停连接推荐，未据此判定 MCP POST 请求或整个服务已停止。原实现由 [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace)（MIT）提供。数据时间、方法、认证与费用可能改变；使用前查看当前服务文档并核对原始市场数据。非投资建议。
 
 ### [ComposioHQ/composio](https://github.com/ComposioHQ/composio) ⭐⭐⭐⭐⭐
 

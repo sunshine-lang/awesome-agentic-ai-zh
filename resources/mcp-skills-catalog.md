@@ -83,7 +83,7 @@
 **適合誰**：Obsidian 重度使用者，想用 Claude Code 整理 daily note、自動 link、跨檔搜尋。
 **備註**：要先在 Obsidian 裝 [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) plugin。
 
-### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) ⭐⭐⭐⭐
+### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) （已封存，歷史參考）
 
 | 欄位 | 內容 |
 |---|---|
@@ -92,7 +92,7 @@
 
 **教什麼**：Claude Code Skill，用瀏覽器自動化操作 Gemini Notebook（舊名 NotebookLM）、查詢上傳文件，回覆帶 citation。
 **適合誰**：用 Gemini Notebook（舊名 NotebookLM）管 paper 跟研究筆記，但想在 Claude Code 用一條 prompt 直接查的人。
-**備註**：需要 Google 帳號登入授權。
+**備註**：截至 2026-09-21，倉庫已封存；僅保留作歷史實作參考，不作新安裝推薦。原實作需要 Google 帳號登入授權。
 
 ### [teng-lin/notebooklm-py](https://github.com/teng-lin/notebooklm-py) ⭐⭐⭐⭐
 
@@ -116,16 +116,16 @@
 **適合誰**：Logseq 使用者要自動化 daily journal、跨頁 link、查詢 backlinks。
 **備註**：需要 Logseq 開啟 HTTP API（Settings → Features → HTTP API）。
 
-### [skridlevsky/graphthulhu](https://github.com/skridlevsky/graphthulhu) ⭐⭐⭐
+### skridlevsky/graphthulhu（歷史條目，來源暫不可用）
 
 | 欄位 | 內容 |
 |---|---|
 | License | MIT |
-| 推薦度 | ⭐⭐⭐（同時支援 Logseq + Obsidian） |
+| 狀態 | 歷史參考；暫停安裝推薦 |
 
 **教什麼**：把 navigation、search、analysis、writing、journals、flashcards 與 whiteboards 等操作包成工具。
 **適合誰**：同時用 Logseq 跟 Obsidian、不想裝兩套 MCP server 的人。
-**備註**：community project，工具數多但每個工具相對基本。
+**備註**：截至 2026-09-21，原 GitHub 倉庫返回 404，尚未核實官方遷移地址。以上為原條目描述，不代表目前仍可安裝；同名倉庫不能直接視為原專案的延續。
 
 ### [ankimcp/anki-mcp-server](https://github.com/ankimcp/anki-mcp-server) ⭐⭐⭐
 
@@ -909,7 +909,7 @@ Observability 工具能看見 trace 與 log；不要把 secret、個資或完整
 
 **教什麼**：用 hosted remote MCP 讀取美國國債殖利率與收益型資產分析，並比較 hosted 與 self-hosted MCP 的連線形狀。
 **適合誰**：想用測試問題觀察金融分析 MCP request／result 的學習者；它不是自動下單入口。
-**備註**：[Live endpoint](https://api.intuitek.ai/yield/mcp) 由 [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace)（MIT）提供。資料時間、方法、認證與費用可能改變；使用前查看現行服務文件並核對原始市場資料。非投資建議。
+**備註**：原服務端點 `api.intuitek.ai/yield/mcp` 在 2026-09-21 的 HTTP GET 檢查中返回 404；目前暫停連線推薦，未據此判定 MCP POST 請求或整個服務已停止。原實作由 [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace)（MIT）提供。資料時間、方法、認證與費用可能改變；使用前查看現行服務文件並核對原始市場資料。非投資建議。
 
 ### [ComposioHQ/composio](https://github.com/ComposioHQ/composio) ⭐⭐⭐⭐⭐
 
