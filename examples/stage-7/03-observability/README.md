@@ -6,7 +6,7 @@
 
 **Observability（可觀測性）**像幫 Agent 裝儀表板：它慢了、錯了或花太多 token 時，你知道是哪一步。
 
-對應 [Stage 7 — Agent Production Engineering：Harness、Loop 與 Graph](../../../stages/07-multi-agent-production.md) 核心練習 2。
+對應 [Stage 7 — Agent 上線工程：可測、可看、可停、可恢復](../../../stages/07-multi-agent-production.md) 核心練習 2。
 
 ## 🎯 學習目標
 
@@ -109,7 +109,7 @@ request_id
 ## 📚 必讀與學習資源
 
 - ⭐⭐⭐⭐⭐ [Langfuse](https://github.com/langfuse/langfuse)：開源 traces、evals 與 prompt 管理。
-- ⭐⭐⭐⭐⭐ [Arize Phoenix](https://github.com/Arize-ai/phoenix)：OpenTelemetry 導向的開源觀測工具。
+- ⭐⭐⭐⭐⭐ [Arize Phoenix](https://github.com/Arize-ai/phoenix)：OpenTelemetry 導向的觀測工具；Elastic License 2.0（ELv2）限制對外提供託管服務。
 - ⭐⭐⭐⭐⭐ [datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents)：章節式中文 Agent 教材，適合補完整背景。
 - ⭐⭐⭐⭐ [LangSmith](https://smith.langchain.com/)：適合 LangChain／LangGraph 生態。
 - ⭐⭐⭐⭐ [Helicone](https://www.helicone.ai/)：可用 proxy 方式收集 LLM 請求資料。

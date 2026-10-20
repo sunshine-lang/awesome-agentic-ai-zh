@@ -28,13 +28,16 @@
 | 想看大量可執行程式 | [Microsoft AI Agents for Beginners](https://github.com/microsoft/ai-agents-for-beginners) | 每課都有文字、影片與程式；但範例偏 Microsoft Agent Framework。 |
 | 想讀完整中文教材 | [Datawhale Hello-Agents](https://github.com/datawhalechina/hello-agents) | 從原理一路走到 RAG、Multi-Agent、MCP 與部署。 |
 | 想先學不綁框架的設計方法 | [DeepLearning.AI Agentic AI](https://www.deeplearning.ai/courses/agentic-ai/) | 從零實作 reflection、tool use、planning、eval 與 multi-agent。 |
-| 想補觀測與評估 | [W&B AI Engineering: Agents](https://wandb.ai/site/courses/agents/) | 把 accuracy、latency 與 cost 一起放進可重跑的 Eval。 |
 | 已決定用 Claude／LangGraph | [Claude Academy](https://academy.claude.com/)／[LangChain Academy](https://academy.langchain.com/courses/intro-to-langgraph) | 直接學供應商的現行工具；記得把通用觀念和產品按鈕分開。 |
+| 想整理程式代理拿到的規則與工具 | [Hugging Face Context Course](https://huggingface.co/learn/context-course/unit0/introduction) | 用**情境工程（context engineering）**整理知識，讓代理在需要時找到正確內容。 |
+| 已會 Agent 基礎，想練較深的工作拆分 | [LangChain Project: Deep Agents](https://academy.langchain.com/courses/deep-agents-with-langgraph) | 用工作清單、檔案與**子代理（Subagents）**完成一個較完整的 Agent。 |
 | 主要目標是系列證書 | [IBM](https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai)／[Vanderbilt](https://www.coursera.org/specializations/ai-agents) | 是較長的付費系列課；先確認費用、語言與專案是否符合需要。 |
 
 ## 🎯 精選課程與學習路線
 
 星等是本專案的**編輯推薦度**，不是證書排名：⭐⭐⭐⭐⭐ 適合當主線；⭐⭐⭐⭐ 很值得讀，但較偏特定工具或目的；⭐⭐⭐ 適合已確定使用該供應商的人。
+
+<small>新增課程查核：2026-10-15 UTC；範圍只含 Hugging Face Context Course 與 LangChain Project: Deep Agents。</small>
 
 <table>
   <thead>
@@ -46,10 +49,11 @@
     <tr><td><a href="https://github.com/datawhalechina/hello-agents">Datawhale — Hello-Agents</a></td><td>簡體中文；免費開源</td><td>從 Agent 原理與經典 pattern，一路做到 RAG、記憶、Multi-Agent、MCP 與完整專案。</td><td>沒有完成證書；章節很多，請按自己的問題選讀，不必一次讀完。</td><td>⭐⭐⭐⭐⭐</td></tr>
   </tbody>
   <tbody>
-    <tr><th scope="rowgroup" rowspan="5">建構與上線</th><td><a href="https://www.deeplearning.ai/courses/agentic-ai/">DeepLearning.AI — Agentic AI</a></td><td>英文；影片可免費旁聽</td><td>從零實作 reflection、tool use、planning、Multi-Agent、錯誤分析與 component Eval。</td><td>測驗、graded assignments 與證書需要 Pro；免費旁聽不含證書。</td><td>⭐⭐⭐⭐⭐</td></tr>
-    <tr><td><a href="https://wandb.ai/site/courses/agents/">Weights &amp; Biases — AI Engineering: Agents</a></td><td>英文；免費</td><td>做 deterministic workflow、單 Agent、記憶、多 Agent 與 accuracy／latency／cost Eval。</td><td>約兩小時；現行公開頁未明示證書條件，註冊前不要先假定一定發證。</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><th scope="rowgroup" rowspan="6">建構與上線</th><td><a href="https://www.deeplearning.ai/courses/agentic-ai/">DeepLearning.AI — Agentic AI</a></td><td>英文；影片可免費旁聽</td><td>從零實作 reflection、tool use、planning、Multi-Agent、錯誤分析與 component Eval。</td><td>測驗、graded assignments 與證書需要 Pro；免費旁聽不含證書。</td><td>⭐⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://academy.claude.com/">Claude Academy</a></td><td>英文；免費</td><td>依需要學 Claude API、Claude Code、MCP、Agent Skills 與 Subagents。</td><td>通過課程 quiz 可取得免費完成徽章；它是 Claude 產品路線，不取代通用 Agent 基礎。</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://huggingface.co/learn/context-course/unit0/introduction">Hugging Face — Context Course</a></td><td>英文；課程教材免費，外部 API 或 Agent 訂閱可能付費</td><td>把可重用指引做成 <strong>Skill（規則包）</strong>，並用 <strong>MCP（工具連接協定）</strong>接工具。再把 <strong>Plugin（工具套件）</strong>與 <strong>Subagent（分工代理）</strong>組進流程。用 <strong>Hook（事件觸發動作）</strong>守住流程，再看 <strong>Nano Harness（迷你執行架構）</strong>如何運作。</td><td>官方頁列出兩級證書，但進階證書需要尚待直播公布的 capstone；不要視為已可完成。</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://academy.langchain.com/courses/intro-to-langgraph">LangChain Academy — Introduction to LangGraph</a></td><td>英文；免費</td><td>做 graph、state、memory、HITL、subgraph、deployment 與 long-term memory。</td><td>偏 LangGraph／LangSmith；現行公開課程頁沒有清楚列出證書門檻。</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://academy.langchain.com/courses/deep-agents-with-langgraph">LangChain Project: Deep Agents</a></td><td>英文；課程免費，模型／API 用量可能付費；30 課，約 2 小時影片</td><td>用 <strong>Todo list（工作清單）</strong>拆解規劃，再加入檔案與 Subagents，組成完整 Agent。</td><td>適合已學 Agent 基礎的人；偏 LangGraph／Deep Agents，公開頁未列證書門檻。</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://www.kaggle.com/learn-guide/5-day-agents">Google × Kaggle — 5-Day AI Agents Intensive</a></td><td>英文；免費自學</td><td>按模型、工具、orchestration、memory 與 Eval 理解 Agent，再做 capstone。</td><td>原本是限時 intensive，現在以自學 guide 使用；不要把 cohort 活動資格當成永久證書。</td><td>⭐⭐⭐⭐</td></tr>
   </tbody>
   <tbody>
@@ -97,6 +101,8 @@ Agent 可以使用的工具：
 - 不列只有行銷頁、無法確認課綱或把一般完成證書包裝成執照的項目。
 - repository 的 stars 只用來發現社群關注，不寫進正文；維護狀態要看是否封存、最近更新與現行文件。
 - 費用、證書與 cohort 有變動時，三語內容與測試要一起更新。
+
+- 2026-10-02：W&B AI Engineering: Agents 暫移出現行推薦。舊入口回傳 404，新入口目前無法開啟。這不代表永久停課；確認可用的官方課程入口後再評估。
 
 </details>
 

@@ -6,6 +6,8 @@ This stage does one thing: let the model fill out a “tool work order,” then 
 
 <!-- freshness: canonical=stages/03-tool-use-and-hello-agent.md; verified_on=2026-08-27; scope=models,pricing,tool-apis,security; max_age_days=90 -->
 
+> **Cloud example compatibility**: Existing Anthropic examples deliberately retain a **Haiku 4.5 compatibility baseline**, rather than claiming the latest or lowest-price model. Before adopting the fixed ID `claude-haiku-5-5`, follow the [Haiku 5.5 migration guide](https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide); changing only the model ID is insufficient. Handle default adaptive thinking, select text using `type == "text"`, omit `temperature`/`top_p`/`top_k`, and recount tokens, output limits, and budget. Tool loops must preserve thinking blocks unchanged and keep history append-only; passing offline tests does not validate live model quality.
+
 ## 📌 Learning Objectives
 
 By the end, you can:
@@ -31,6 +33,8 @@ When a model needs external data or an action, it first makes a tool request. It
 The model returns a function name and arguments in an agreed format. It is like filling out a work order with fixed fields. This chapter uses it to turn a natural-language question into a request that a program can read. Message formats are not identical across providers.
 
 ### **Tool Schema**
+
+**JSON** (JavaScript Object Notation) is a text format for sharing data.
 
 A schema is a tool’s information card: its name, purpose, fields, and data types. It is like a menu telling a customer what can be ordered. This chapter describes tools with JSON Schema. A schema constrains the shape, but the program must still validate values, permissions, and business rules.
 
@@ -147,7 +151,7 @@ If you prefer working from files, open the [complete Exercise 1 folder](../examp
 **First action**: Copy and run `ollama pull qwen2.5:3b`. Then expand Path A and copy the complete program into `hello_tool.py`.
 
 <details markdown="1">
-<summary>Path A: Complete copyable Ollama example (API cost `$0`)</summary>
+<summary>Path A: Complete copyable Ollama example (API cost <code>$0</code>)</summary>
 
 ```python
 import json
@@ -229,7 +233,7 @@ If the model does not call the tool, keep the question, model, and schema unchan
 </details>
 
 <details markdown="1">
-<summary>Path B: Complete Anthropic round trip (reserve `$0.05` first per run)</summary>
+<summary>Path B: Complete Anthropic round trip (reserve <code>$0.05</code> first per run)</summary>
 
 ```python
 import json
@@ -502,7 +506,7 @@ Complete one five-star route first: official docs → Exercises 1–3 → one fr
     <tr><td><a href="https://arxiv.org/abs/2210.03629">ReAct paper</a></td><td>Read the abstract and method diagram first.</td><td>Original paper; arXiv</td><td>⭐⭐⭐⭐</td></tr>
   </tbody>
   <tbody>
-    <tr><th scope="rowgroup" rowspan="4">Official courses and examples</th><td><a href="https://github.com/anthropics/courses">Anthropic Courses — Tool Use</a></td><td>Complete the Tool Use notebook.</td><td>Official course; upstream provides no SPDX</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><th scope="rowgroup" rowspan="4">Official courses and examples</th><td><a href="https://github.com/anthropics/courses">Anthropic Courses — Tool Use</a></td><td>Read the older Tool Use notebook; use the Cookbook in the next row when building.</td><td>Archived official course; upstream provides no SPDX</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://github.com/anthropics/claude-cookbooks/tree/main/tool_use">Anthropic Tool Use Cookbook</a></td><td>Move from one tool to parallel tools.</td><td>Maintained; MIT</td><td>⭐⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://github.com/anthropics/claude-quickstarts">Anthropic Quickstarts</a></td><td>After the exercises, see how a full app connects tools.</td><td>Maintained; MIT</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://github.com/microsoft/ai-agents-for-beginners">Microsoft AI Agents for Beginners</a></td><td>Choose a chapter if you want another complete course.</td><td>Maintained; MIT</td><td>⭐⭐⭐⭐</td></tr>

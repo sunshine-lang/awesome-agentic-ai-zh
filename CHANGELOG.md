@@ -6,6 +6,134 @@ Format: `YYYY-MM-DD · category · 1-line summary (commit-sha)`.
 
 ---
 
+## 2026-10-16
+
+- **content / Personal Agents** · 三語日常使用者路線新增 Instinct、Tab、Tomo 與 Poke，個人 Agent 表由 3 筆增為 7 筆；補充可用資格、隱私與動作核准邊界，產品細節移入收合區。查核依官方文件，未實測產品（#328）。 (cd2f4eb)
+
+- **resources / TencentDB Agent Memory** · 三語 Memory 資源加入 TencentDB Agent Memory，15 筆依 `8／3／4` 分組；說明四種資產的分工、固定版本授權來源、自架連網與服務驗證限制。同步更新 267 筆 GitHub API 快照，保留 API 的 `NOASSERTION` 授權值；未實測效能或隔離（#328）。 (cd2f4eb)
+
+- **release / optional PDFs / v2026.10.16** · 依維護者決定，Release 預設只發布繁中、簡中與英文版本說明；新增預設關閉的 `include_pdf`，只在需要時建置、驗證並上傳完整三語 PDF。正文、健康掃描、人工批准與 SHA 鎖定仍是必要關卡。本版不附 PDF，也不把先前取消的候選版算成正式發布。
+
+## 2026-10-15
+
+- **release / PDF rendering** · 發布前抽查攔下繁中／簡中 PDF 的粗體星號殘留。改用能辨識中文相鄰粗體的 Pandoc reader，保留表格、任務清單與程式碼；轉檔時直接阻擋正文未解析的粗體，並在安裝實際 Pandoc 後重跑三語回歸測試。不改寫教材正文，也不發布有問題的候選附件。
+
+- **release preparation / v2026.10.15** · 三語發布摘要整理上次正式版後的模型、Memory／Skills、免費課程、兩欄模型詳表、CLI 安全、Stage 8 與授權修正。同步加入摘要與現行 API ID 的回歸檢查，避免帶回過時的模型存取說明。正式發布仍須通過完整健康掃描、三語 PDF、main／Pages SHA 與 release Environment 關卡。
+
+- **content / Stage 1 / model reference layout** · 三語將八欄模型詳表改為 18 個家族的收合選單，各用兩欄表呈現。型號各列一行，以真正的 `rowspan` 合併欄名；完整保留規格、價格條件、限制、來源與原查核日期。可見選型主線、必讀與評分資源不變，並同步更新結構與模型事實回歸測試。
+
+- **resources / courses and setup** · 三語加入 Hugging Face Context Course 與 LangChain Project: Deep Agents，分清免費教材、模型／API 費用與尚未完成開放的證書條件。13 筆課程維持展開與編輯評分，以 `3／6／2／2` 合併分類；同步更新來源、設計與測試規格，修正 NVIDIA NIM 三語官方入口。
+
+- **resources / Memory and Skills** · 三語加入 Hindsight、OpenViking 與 Vercel Skills，保留可見選擇入口與編輯星等。說清記憶測試、授權、安裝信任與匿名使用紀錄限制；Memory 的 14 筆資源依 `7／3／4` 合併分類。只記錄這三項的查核日期，並同步更新來源包、閱讀驗證與回歸測試。
+
+- **content / Stage 1 / scoped model refresh** · 三語更新 Argon 正式 API、Muse Wonder、Mistral Large 4 Preview 與 Jev 1.14。分清長輸出、促銷價格、開放權重與訂閱產品限制。加入 GPT Ultrafast／Decisions 選讀，保留本機練習預設。查核日期只更新這些項目，不重標整張表。
+
+- **CI / document rendering** · 將文件站的 Markdown 解析器鎖定為既有 reader-UX 清單相同的 3.11，避免兩次安裝間漂移到 3.11.1，讓中文核心詞的粗體顯示成星號。新增實際使用 MkDocs 擴充套件的三語粗體與收合選單回歸測試，並檢查文件依賴、reader-UX lock 與執行中解析器一致；未關閉顯示檢查，也未批次改寫教材。
+
+## 2026-10-13
+
+- **metadata / Stage 8 / repository snapshot** · 合併 Cortex 後，以 GitHub API 查核完整 263 筆 repository；保留 Cortex 與主線既有的 `getsentry/toolkit` 記錄，並通過離線 snapshot coverage 驗證。
+
+## 2026-10-11
+
+- **content / CLI safety and release channels** · A3 三語補上升級後的安全重驗：拒絕工具呼叫只擋住該呼叫，管理者設定的 `PreToolUse` hook 同時回傳 `"continue": false` 才要求停止回合；並保留 MCP、唯讀與人工批准案例。CLI 指南建議新手選官方穩定版，標明所引用 Codex alpha 與 Gemini nightly 是預發布版本；只局部查核發布通道，不改整表原查核日期，也不宣稱實際工具測試已通過。
+
+## 2026-10-08
+
+- **content / Haiku 5.5** · 依官方 2026-10-07 公告更新三語模型選擇、規格與分級價格；同步 Sonnet 5.5 快取讀取降價。Stage 1 的首次呼叫與成本練習改用 5.5，按區塊類型取文字並保留思考預算；跨模型成本明示為單價示意。temperature 與跨章工具範例保留 Haiku 4.5 相容基線，附遷移界線，不批次改寫歷史紀錄。只更新 Anthropic 查核日期；未執行付費模型測試。
+
+## 2026-10-05
+
+- **content health / license boundaries** · 依七個上游 README／LICENSE 原文修正三語授權界線：Phoenix ELv2、Weaviate 與 Langfuse 的企業目錄、NirDiamant 非商業限制、Anthropic 文件 Skills 的 source-available 條款，以及 Sentry FSL。保留資源、推薦星等與既有 freshness 日期；API 未識別 SPDX 不改寫成「沒有授權」。來源 blob 與三語回歸獨立記錄，不把人工查核冒充完整機器健康通過。
+
+## 2026-10-02
+
+- **content / first-use terminology** · 三語在九組已查核頁面補齊 52 組術語／頁面組合的首次全稱與簡短意思，包含微調方法、檢索指標及圖中先出現的 CLI／MCP／訓練方法。原標題 anchor、程式碼、來源 URL、圖檔與資源事實保留。新增有限範圍的讀者可見回歸案例；Stage 1 與術語表六個字元上限只提高到實際新增說明的長度，不宣稱全站所有縮寫已查完。
+
+- **release preparation / v2026.10.02** · 三語發布摘要整理已合併的模型、個人 Agent、託管協作與 Memory 更新。也記錄官方來源豁免界線、封存課程提示、Sentry 來源搬移、目前無法使用的 W&B 推薦暫移除與文件建置依賴與寬表格 PDF 修正。未合併的專案提案不列入。本筆是發布準備；正式版本仍須通過完整健康掃描、三語 PDF 查核與 release Environment 批准。
+
+- **release tooling / PDF tables** · 三語 PDF 的八欄以上表格使用 A4 橫向頁，保留原本 8.5pt 表格字級與內容。發布檢查新增每頁文字邊界檢查，阻擋超出紙張的裁切；字格重疊、圖片與閱讀效果仍須看實際渲染。
+
+- **release health / unavailable course entrance** · W&B AI Engineering: Agents 舊入口回傳 404，候選官方入口在查核環境與讀者端目前皆無法開啟。三語選課與資源表暫移除推薦，維護說明保留原因與可重新評估條件，不宣稱永久停課。其餘 11 筆課程的 URL、說明與評分不變；群組 rowspan、fact pack、reader-UX 與回歸測試同步更新，全課程原查核日期不改。
+
+- **content / Stage 1 / model update** · 三語將 Sol 代表型號更新為 `gpt-6.1-sol`。依官方文件改用 US$0.10／百萬快取讀取 token。工具呼叫須用 Responses API。Gemini 詳表加入 4 Argon 的 Fairwind 限制開放、公告輸出上限與未來介紹價。保留目前可實作的 3.8 Flash。不猜公開 API ID，也不把供應商評測當本專案結果。GPT／Gemini 個別查核日期、來源與回歸測試同步更新。全表原日期與 Ollama 起點維持不變。
+
+## 2026-09-29
+
+- **content / Stage 8 / Cortex** · 三語完整資源表新增 Cortex，說明將 API spec 轉成 typed MCP tools 的用途，並註明 gRPC 只提供 schema 資源、不產生可呼叫方法；維持三星教學推薦度。同步將 reader-UX 標題、連結與評分下限更新為 22 筆，Executor／framework 分組改為 6 筆。
+
+## 2026-09-28
+
+- **content / Stage 1 / Claude Sonnet 5.5** · 依 Anthropic 官方模型與價格頁，三語選型主線、18 家族詳表和價格練習改用 `claude-sonnet-5-5`（1M context、128K 最大輸出，Claude API 每百萬輸入／輸出 token 為 US$2／US$10，快取讀取 US$0.20）。簡單 API 起點同步更新；跨章工具實作暫留仍可使用的 Sonnet 5，標明升級需先檢查工具指定與參數差異，並改為按區塊類型讀取文字，避免 thinking 區塊造成錯誤。只重新查核 Claude 一列，沒有把全表日期誤寫成今天；fact pack、reader-UX 規則、測試計畫和回歸測試同步更新。同時修正 Content Health issue #286 指出的三語 Llama 官方文件入口誤導向首頁。
+
+- **content / archived course status** · 依 GitHub 官方 API 查核，`anthropics/courses` 已封存；Stage 1／2／3 三語資源列保留原連結、順序與五星編輯推薦，但明示它是舊範例，實作應對照同表現行 Quickstart、文件或 Cookbook。移除 Stage 2 錯誤的「維護中」描述，加入九處回歸檢查。
+
+## 2026-09-27
+
+- **content / resources / Agent memory** · 三語 Memory layer 加入 **deja-vu**（MIT）：直接用 coding agent 已寫在磁碟上的 session 檔案做 episodic memory。明確區分預設、不需 embedding 的詞彙檢索（BM25）與可選的 `deja embed` 語意召回，並註明設定遠端 embedding 端點時，已遮蔽憑證的索引文字會送到該端點；本機 Ollama 或 LM Studio 則不離開本機。Memory layer 群組列數與 rowspan、reader-UX 列數測試同步更新；重新查核全部 262 個仍被引用的 repo 並更新機器快照。
+
+## 2026-09-23
+
+- **content / Stage 1 / GPT-6 models** · 官方 API 文件已列出 GPT-6 Sol 與 Luna；三語選型主線及 18 家族詳表同步更新型號 ID、context、Standard 輸入／快取讀寫／輸出價格和長上下文計費條件。GPT-5.6 Terra／Luna 不再列作現行推薦；全表原查核日期與本次 GPT 查核日期分開標示，更新官方來源與回歸測試，初學者的 Ollama 起點維持不變。
+
+## 2026-09-22
+
+- **content / Stage 1 / Agent models** · 三語模型詳表由 16 增為 18 家族：按官方 API 規格加入 Grok 4.7 與 MiMo V2.6 Pro；更新 Claude Opus 5.5 的型號與價格、DeepSeek V4.1 Flash 的新 ID／尖峰離峰價格與舊名界線、Muse Spark 1.3 的 Preview／Standard／Contributor 方案，並區分 Muse Glimmer 開放權重與個人 Agent 產品。Gemini 3.8 Live 只作語音 Agent 選讀；MiniMax M3 補 cache 與長上下文價、Yi 改列歷史，不宣稱供應商 benchmark 為跨模型排名。繁中、簡中、英文事實標記與回歸測試同步更新；可見選模型主線、必讀、精選資源、五星與完成條件未收合。
+
+- **content / everyday-user route / personal Agent** · 三語日常使用者路線短介 Meta Muse 在美國逐步開放的個人 Agent，明確區分 Muse 產品、Muse Spark API 模型和 Muse Code，提醒連接帳號與重要動作須由人確認。未新增第三方 GitHub 專案，也未更動其他 Stage 或概念圖。
+
+- **release health / links and repositories** · 發布前完整掃描修正 Strands Agents 官方 quickstart 的 404 舊路徑、將 Open Slide 三語目錄連結改成現行 `open-slide/open-slide`，並移除已更名為 Citra、目前低於 1,000 GitHub stars 的舊 PDF 推薦及無來源速度比較。重新查核 261 個仍被引用的 repo 並更新機器快照；原有編輯星等不當成 GitHub stars。
+
+## 2026-09-19
+
+- **content / Stage 1 / typed decisions** · 依 TypeSafe AI 官方文件與發布說明，三語新增 **Jev**：先用白話把它定位成不寫自由文字的型別化決策模型，再說明 Choice、Score、Noul、機率、門檻與 fallback。完整模型表由 15 家增為 16 家，列出 Jev 1.13、`jev-1.13.0`／`jev-latest`、TypeSafe direct 的 64K request／32K `state` 加最長 question 與 $0.042／百萬 input token；Cloudflare 的 `typesafe/jev` route 另列 32K context，價格以其 dashboard 為準。服務仍為 early access；不把 Jev 寫成聊天 LLM，也不讓高風險動作只靠模型機率自動通過。
+
+- **governance / resource curation** · 新收錄的第三方 GitHub repo 統一要求查核時至少 1,000 stars；這只是進入候選名單的門檻，仍須檢查教學角色、維護、License、安全與相關性。官方文件、標準、model card 與不可替代的 canonical source 不套第三方 repo 門檻，公開頁面也不保存會漂移的 star 數字。三語 MCP／Skills 目錄移除舊的「不使用 stars 門檻」例外，PR link audit 會標出低於 1,000 stars 的新 repo，但仍只做初評，由 maintainer 判斷官方來源例外與最終是否收錄。
+
+## 2026-09-14
+
+- **site / rendered Markdown** · 修正 Stage 6 五組範例共 15 份三語頁面未啟用 `<details markdown="1">`，造成收合區塊裡的粗體、清單、行內程式碼與連結被當成純文字的問題；CLI 工具表與 Stage 3 摘要裡不會由 Markdown 解析的反引號改用 `<code>`，另修正一筆舊 CHANGELOG 的不平衡粗體記號。`check-rendered-site.py` 現在會從實際 HTML 阻擋可見的 `**...**`，以及 details 裡未解析的清單、連結、標題、引用與行內程式碼，同時排除程式碼範例。
+
+- **release / v2026.09.14** · 將三語 README 動畫入口收斂、Stage 6 顯示修正、Stage 7 上線工程基礎重整，以及 Stage 7.5「有證據才增加複雜度」進階選讀整理成同一份三語正式版。Release workflow 會鎖定合併後的 main SHA，重跑內容、連結、圖片與三語文件 gate，建置並驗證繁中／簡中／英文三份 PDF，再經 release Environment 後發布。
+
+## 2026-09-13
+
+- **content / Stage 7.5 / advanced choices** · 三語 Stage 7.5 改為「有證據才增加複雜度」的進階 reading-map，章首保留返回 Stage 7 的入口，不再重教 Harness、Loop、Graph 與 Eval 基礎。可見主線把 Evaluator–Optimizer／Agent-as-Judge、Failure Injection／Chaos Eval、Autonomy Gradients／Trust Layers、Model–Harness Fit 放進一張 `2／2` 真正合併的核心詞表，先給白話與技術界線，再用四段補充限制與來源；三語 style guide 同步把「四詞以上／兩組以上」定為新建或輪到閱讀體驗重整頁面的可見合併表標準，其餘既有頁面依 stacked PR 順序遷移。其後短表保留 Parallel Exploration、Hierarchical Delegation、Multi-Agent Handoff、Plan–Act–Reflect、Dynamic Workflows；必修閱讀、五筆精選、24 筆 `5／5／5／5／4` 合併資源表與完成條件均保持展開。Dynamic Workflows 依 2026-09-13 官方文件重查，移除已無必要的舊最低版本說法，保留方案、`v2.1.203+` ultracode、16 concurrent／1,000 total 與安全限制。兩組三語 `1672×941` 亮色 PNG 以同一構圖呈現「失敗證據 → 最小做法」及 Model–Harness Fit；舊 `concept-cluster`、`reading-decision-tree` 六張無引用圖由 Git 歷史保留。PNG inventory 由 70 降為 67，總量由 85,297,164 降為 81,574,946 bytes，圖片容量 gate 同步下調；本層維持 stacked Draft PR，未經使用者確認不合併或清理 branch。
+
+- **content / Stage 7 / production concepts and Eval placement** · 三語 Stage 7 改名為「Agent 上線工程：可測、可看、可停、可恢復」，用同一個「查三個來源、整理摘要、送出前問人」案例，依 Agent Harness → Agent Loop → Workflow Graph → Eval → Observability → Approval／Checkpoint／Resume／Recovery 漸進講解；19 個核心詞以單一 `6／7／6` 合併表保持展開，Grader 正式放在 Trajectory 與 Evaluation Harness 之間，並刪除表格前重複的 19 行速記。必修閱讀、21 筆五星資源、練習成果與完成條件也不收合。Eval 固定先教 Outcome，再把 Eval Case 拆成 Input、Initial State、Success Criteria、Forbidden Actions、Optional Reference Answer、Grader、Case Metadata，之後才教 Eval Suite、Reviewed Eval Set 與 Golden／Reference Set 外部名稱，明確阻擋把 Golden Set 誤當 input、訓練資料或 Few-shot。新增兩組三語 `1672×941` 亮色 PNG；刪除九張已無正文引用的舊控制問題、Graph 與 Eval 圖，PNG inventory 由 73 降為 70、總量由 89,659,368 降為 85,297,164 bytes，圖片容量與 rendered-site gate 同步下調。README、Glossary、Roadmap、Stage 6 出口、導覽與六組 Stage 7 範例只同步新章名／責任說法，既有深連結由相容 anchor 保留；Stage 7.5 去重留給下一層 stacked Draft PR。
+
+- **reader UX / README banner links** · 三語 README 的 banner 下方移除重複的靜態 PNG 與文件站捷徑，文件站仍可從下方徽章與手機閱讀提示進入；動畫 SVG 本身在不播放時仍顯示完整構圖，PNG 也繼續供文件站減少動態／無 JavaScript fallback 與三語 PDF 使用。
+
+- **release health / unavailable hosted MCP** · 正式發布掃描確認 YIELD INTELLIGENCE 的 `/yield`、`/yield/mcp` 與 `/pricing` 皆回傳 404；三語 MCP 精選目錄移除目前無法使用的 hosted service，相關 0-reference repository snapshot 一併刪除，總數由 263 改為 262。GitHub repository 仍未封存且 README 仍宣稱服務 live，但教材以實際端點結果為準，不保留失效入口。
+
+- **release / v2026.09.13** · 將 `v2026.09.10` 之後已合併的角色分流動畫試版、三語貢獻契約、Stage 7 Eval 基礎與可執行 Eval 證據整理成同一份三語正式版；Release Notes 明列舊角色圖三語文字尚未完全對齊，校正前以保持展開的角色表為準。Release workflow 會重新鎖定 main SHA、執行完整內容與連結健康檢查、建置並驗證繁中／簡中／英文三份 PDF，通過 `release` Environment 後才建立 tag 與發布附件。
+
+- **examples / Stage 7 / executable Eval evidence** · `02-eval` 從寫死在 Python 的 5 題示範改為 8 題版本化 JSON（5 題 development、3 題 holdout），Ollama 與 Anthropic 共用同一資料與 provider-neutral runner。CLI 預設只跑 development 一次且不寫檔；讀者可明確選 `--split`、1–20 次 `--trials`、`--save-report` 與 `--baseline`。報告保存 dataset version、split、provider、model、逐次與分類結果、失敗案例及 improved／same／regressed；baseline 或 dataset schema 不相容時會在任何模型呼叫前停止，同一路徑也不可同時當 baseline 與新報告。空輸出一律失敗，兩條 provider 路徑的 LLM Judge 都只接受完整 `PASS`／`FAIL`。三語 README 直接教讀者修改 `eval_cases.json`，必讀、五星資源、核心詞與成功檢查維持展開；離線測試不連網、不讀 API key。
+
+- **content / Stage 7 / Eval foundations** · 三語 Stage 7 在進入條件前加入可見的九個 Eval 基礎積木，以真正合併的 `3／3／3` rowgroup 分清 Case／Task、Suite、Golden／Reference Set、Reference Solution／Criteria、Trial、Grader、Baseline、Regression 與 Holdout Set；Golden Set 明確不是訓練資料或 few-shot 範例，開發案例與凍結 holdout 分開使用，回歸判斷需依多次 trials、預先門檻與失敗複查，不因一次隨機失敗就阻擋發布。Paper Summary Bot 與 Capstone 同步記錄 dataset version、split、grader、trial 次數與 baseline，並以 development／holdout 分割避免邊調邊偷看考卷。新增三語同版亮色 Eval 證據迴圈圖、完整 Glossary 定義、官方 Anthropic／OpenAI 來源、reader-UX／內容 regression 與 2026-09-13 freshness fact pack；圖片 inventory 實測為 73 張、89,659,368 bytes，容量 ceiling 僅保留 2% headroom。必讀、精選資源、核心詞及完成條件仍保持展開。
+
+- **governance / trilingual contribution contract** · 貢獻指南、PR template、角色路線 DESIGN 與 launch checklist 不再拒收簡中，也不再要求以會自然漂移的 GitHub stars 當新增資源欄位；公開教材改為繁中先定稿、英文與簡中同一 PR 同步，三語概念、URL、數字、評分與安全限制一致。過時資源回報改走 repository freshness 證據。同步把 `CLAUDE.md` 的 2026-05 課程快照與已解決 follow-up 收斂為現行課程契約，將 `docs/TESTING_PLAN.md` 的 `28/30` 明確標回歷史批次，並修正已完成的 Stage 6 executable-hardening 狀態；2026-09-13 實際 inventory 為 58 個 `scripts/test_*.py` 模組、1,145 個可收集測試，後續仍以 Required gate 與即時 collection 為準。
+
+## 2026-09-10
+
+- **reader UX / role diagram draft** · README 下方三語角色分流圖沿用原版構圖、配色、字型與圖示，只讓五個角色圖示輪流輕動；18 秒循環，文字、卡片與接線固定，16–18 秒完全靜止。新增可重製產生器與原畫雜湊，三語 SVG／同版 PNG 共 2,596,276 bytes（原三張 PNG 共 3,176,510 bytes），不提高容量上限。文件站保留 lazy／async、圖片及 caption 原圖入口、三語停止／播放與減少動態；無 JavaScript、靜態入口與 PDF 使用 PNG。同步更新 DESIGN、三語 style guide、來源紀錄及測試。本次只作 Draft，不合併或納入 Release；舊英文角色名稱等三語文字差異需在採用前校正，舊 learning-map 的順序問題也尚未動畫化。
+
+- **release health / resources** · 正式發布的全站掃描發現 `PleasePrompto/notebooklm-skill` 當日已封存，以及 Graphthulhu 原入口回傳 404。三語 catalog／Cookbook 將前者明確列為歷史範例、不再推薦新流程使用；後者移除失效連結但保留歷史名稱、錨點與評分，授權改標目前無法核對。同步移除 snapshot 中不再有正文引用的單筆 Graphthulhu 記錄，數量改為 263；其餘記錄與查核時間不動。保留原編輯星級，不新增替代專案，也不把 403／429 當成失效。三語 Release Notes 同步記錄修正。
+
+- **release / v2026.09.10** · 使用者批准 PR #256 的原版 Banner 動畫合併與發布；準備同一 calendar tag 的繁中、簡中、英文摘要與三份 PDF，同步引用版本。PDF 操作範例與三語摘要測試改讀發布清單中的版本，測試亦支援不同變更共用同一來源連結。三語 Notes 同步記錄 GitHub 減少動態偏好尚未確認，以及下方舊學習地圖的 Track A 順序／Stage 7.5 待修問題；本版不把舊圖動畫化，也不納入其他 PR。下方角色分流動畫另作試版審查。
+
+- **reader UX / README / animated banner experiment** · 三語 README 頂部以自包含 SVG 內嵌各自原版插圖，加入 18 秒循環的路線光點、節點外框及代表性圖示動作，不重畫字體、圖示、配色、構圖或底部四格。每語言 13 個裁切區域重用同一底圖：CLI 游標輸入、工具輕轉、Hub 箭頭旋轉、清單確認與角色回饋；活動時蓋住原位置避免重影，文字與卡片固定，最後 2 秒完全靜止。沿用 `1672×941` 畫布、共用基礎、兩條 Track、Stage 5／8 Hub 與五條角色路線；三語路線順序與動畫時間相同，覆蓋層依各自原圖接線對齊。原圖以 WebP quality 95 高品質壓縮後內嵌，再解碼成同版 PNG；六個檔共 2,756,321 bytes（原三張 PNG 為 3,733,651 bytes），未提高容量上限，圖示動作不改靜態 PNG。新增靜態圖與文件站入口、停止／播放、減少動態與無 JavaScript 的靜態 fallback、手機分流提示及 PDF 的 PNG 替換；圖片 gate 納入 SVG 與靜態引用，同步更新 DESIGN、三語 style guide、來源紀錄與回歸測試。原以 Draft PR 提供檢查，使用者現已批准合併與發布；下方學習地圖、角色圖與章節正文不在本次修改內。
+
+## 2026-09-08
+
+- **maintenance / GitHub Pages / deployment reliability** · 將官方 `actions/deploy-pages` 從 `v5.0.0` 更新至 `v5.0.1`，並繼續鎖定完整 commit SHA；新版為部署狀態輪詢加入 backoff 與 jitter，降低暫時性服務問題造成的重試壓力。PR 的 Required gate、dependency review 與合併後 Pages 部署皆通過。（f9213cb）
+
+## 2026-09-04
+
+- **content / Stage 1 / current model guide** · 依 15 個模型家族的官方模型、價格、公告或 model card 重新查核三語主流模型表：OpenAI 推薦欄更新為 **GPT-6 Astra**，並保留 GPT-5.6 Terra／Luna 的一般與省成本路線；清楚標示 Astra 仍分批開放、1.05M context、128K 最大輸出、$10/$50，以及超過 272K 輸入後整次請求的 2× 輸入／cache 與 1.5× 輸出費率，GPT-5.6 Sol 則仍可用但未列在目前推薦型號欄。同次查核也把 Gemini 更新為穩定版 3.8 Flash、DeepSeek V4 改為現行峰谷價與 384K 最大輸出、Hy3 補上 256K 與規格來源並將舊 preview 改為已下線、MiniMax M3 改列開放權重且標明永久 50% API 折扣與 MiniMax Community License；Stage 1 freshness fact pack 與回歸測試同步更新至 GitHub API UTC `2026-09-04`。（985c03b）
+- **content / Stage 4 / AI gateway** · 將 Bifrost 與 LiteLLM 並列為 AI gateway 學習資源，說清楚 gateway 負責統一模型入口、routing、fallback 與 load balancing，不是替 Agent 決定下一步的 Agent framework；開源與 enterprise 功能邊界分開標示。（dce3048）
+- **maintenance / MCP catalog / archived resource** · 三語資源表將已封存的 Graphthulhu 改列為歷史學習範例；保留原有 ⭐⭐⭐ 編輯推薦度，同時明確提醒新專案應選擇仍在維護的替代方案。（a3b29b1）
+
 ## 2026-09-01
 
 - **content / Stage 1 / Claude models** · 依 Anthropic 於 2026-09-01 發布的官方公告與模型頁，三語主流模型表更新為 **Claude Fable 5.1**（`claude-fable-5-1`）與 **Claude Mythos 5.1**（`claude-mythos-5-1`）：兩者皆為 1M context、128K 最大輸出、$10/$50（每百萬輸入／輸出 token），cache read 降為 $0.25。教材明確區分 Fable 5.1 一般可用；Mythos 5.1 是同一模型，但只提供給通過審核的資安與生命科學使用者。Stage 1 freshness 查核日與官方來源、專案模型白名單、Release Notes 及 citation 版本同步更新。
@@ -293,7 +421,7 @@ Format: `YYYY-MM-DD · category · 1-line summary (commit-sha)`.
 - **chore** · **這次 refactor 真的有代價,而且是我原本說錯的那個代價**。上一批我說「不共用是因為每支 gate 都彼此不 import」——那是錯的。真正的代價在別的地方:`test_mirror_parity` 與 `test_image_locale` 會把待測腳本複製到暫存目錄跑,而腳本現在多了一個相依,所以那四個 harness 全部 ImportError、31 條測試裡有 19 條為了錯誤的理由失敗。修法是 harness 一起複製 `md_fences.py`。**gate 本身全綠、只有單元測試紅**——如果我當時只看 gate 就以為沒事,這個問題會一路帶進 CI。
 
 - **fix** · **有一頁的四個標題在網站上是以「程式碼」的樣子呈現的,三個語系都一樣([#95](https://github.com/WenyuChiou/awesome-agentic-ai-zh/issues/95))**。`examples/stage-4/04-codeact-vs-json-tool` 想示範「LLM 回一段 Python」,所以在一個 code block 裡面又放了一個 ` ```python `。但 **CommonMark 規定收尾的 fence 不可以帶語言標籤**,所以那個 ` ```python ` 不會收尾、只是內容;真正收尾的是下一個裸 fence,而再下一個裸 fence 反而**又開了一個新的 block**——把後面〈CodeAct vs JSON tool 對照〉〈兩個 path 觀察重點〉〈常見坑〉〈想看更聰明的答案?〉整段吞進去。修法是把外層 fence 加長成四個反引號:**CommonMark 允許 block 內含較短的 fence**,這正是這種「示範用巢狀 fence」該有的寫法。三語都修,12 個標題全部回來。
-- **fix** · **`check-anchors.py` 的 `strip_code_blocks` 以前是「看到 ``` 就翻轉狀態」**,那既不是 CommonMark、也就跟真正在發布網站的 renderer 不一致。**gate 跟 renderer 對「哪幾行是程式碼」的認知不同,gate 就是在驗一份沒人發布的文件**。已改成照 CommonMark 判斷:記住開頭 fence 的字元與長度,收尾必須同字元、不短於開頭、而且不能帶語言標籤;另外支援 `~~~`、允許最多三格縮排、拒絕把 ` ```foo`bar ` 當成 fence(兩個 renderer 都不當)、以及**未收尾的 fence 會發警告**——那種情況 gate 會靜靜跳過檔案剩下的部分,然後照樣印「All internal anchors valid」。改完 repo 全域找到的 anchor link **零筆差異(689 → 689)**,因為 fence 已經先修好了,所以這次純粹是防未來。
+- **fix** · `check-anchors.py` 的 `strip_code_blocks` 以前是「看到 ``` 就翻轉狀態」,那既不是 CommonMark、也就跟真正在發布網站的 renderer 不一致。**gate 跟 renderer 對「哪幾行是程式碼」的認知不同,gate 就是在驗一份沒人發布的文件**。已改成照 CommonMark 判斷:記住開頭 fence 的字元與長度,收尾必須同字元、不短於開頭、而且不能帶語言標籤;另外支援 `~~~`、允許最多三格縮排、拒絕把 ` ```foo`bar ` 當成 fence(兩個 renderer 都不當)、以及**未收尾的 fence 會發警告**——那種情況 gate 會靜靜跳過檔案剩下的部分,然後照樣印「All internal anchors valid」。改完 repo 全域找到的 anchor link **零筆差異(689 → 689)**,因為 fence 已經先修好了,所以這次純粹是防未來。
 - **chore** · **但要講清楚:這只修了六個之中的一個,不是「根因修好了」**。`scripts/` 底下還有五支各自寫了同一套「看到 fence 就翻轉」的邏輯——`check-hans-chars`、`check-image-locale`、`check-links`、`check-locale-links`(兩處)、`zh-hans-localize`(它只處理 `.zh-Hans.md`,涵蓋範圍與其他幾支不同),`check-mirror-parity` 則是認得 marker 但仍然忽略長度與語言標籤規則。實測那幾支用 `^\s*` 形式的今天把**同樣 3 個檔案的 12 行**判成散文而非程式碼,那 12 行沒有任何 URL、anchor 或標題,所以現在沒壞。**但這一批同時在推薦巢狀 fence 這種寫法**,等於替它們埋了地雷——而且這不是假設:實測在 `.zh-Hans.md` 裡放一個含 `# 這是繁體註解` 的巢狀 ` ```python `,`check-hans-chars` 就會把那段程式碼當散文掃、回報繁體殘留、擋下合法內容。已開 [#97](https://github.com/WenyuChiou/awesome-agentic-ai-zh/issues/97) 追,沒有在這一批一起改,理由是**六支 CI gate 的重構值得自己一輪 review**——順帶更正我原本寫的理由:我以為「每支 gate 都彼此不 import」是這個 repo 的現有性質,那是錯的,`check-locale-links.py:62` 早就用 importlib 載入 `check-anchors.py` 來共用 slugify,而且它上面那段註解講的正是「第二份拷貝一定會飄」——跟 #97 要做的事情同一個論證。我當初的 grep 看得到 `import importlib.util` 那一行,但看不出它載入的是**同目錄的另一支 gate**——我只掃了 import 陳述句、沒有去看它載入什麼。
 - **test** · 新增 `scripts/test_check_anchors.py`(14 條)。關鍵是**它必須抓得到退版**:把解析器換回舊的翻轉式寫法,14 條裡有 **8 條**失敗,包含直接編碼 #95 原始形狀的那條。**而同一時間 `check-anchors.py --strict` 還是回報綠燈**——這正是重點:gate 自己看不見這個缺陷,只有這些單元測試看得見。已掛進 lint job(純 stdlib)。
 - **test** · **review 在這批測試裡挑出三個洞,每個都是「綠燈但沒在測」**:①有一條只斷言「後面的標題看得到」,而拿掉長度規則之後它照樣通過——因為 fence 只是重新配對、尾巴仍然落在外面;現在改成斷言**否定面**(區塊內的標題必須看不到)。②唯一擋得住那個變異的,竟然是那條「檔案不存在就 `return`」的端到端測試——**一次改名就會無聲刪掉那條規則的唯一覆蓋**;現在改成硬性斷言檔案存在、而且三個語系四個標題全查。③`rest.strip()` 改成 `rest == ''`(收尾 fence 後面多一個空格就不算收尾)整條測試套件毫無反應;現在補上了。後來又補了兩條:未收尾 fence 的警告本身沒被測(刪掉它,**當時那 12 條**照樣全過——現在補上之後刪掉就會紅),以及那條「反引號 info string」規則不可以外溢到 `~~~`。
@@ -477,7 +605,7 @@ Format: `YYYY-MM-DD · category · 1-line summary (commit-sha)`.
 - **tooling** · **圖片語系 gate:跟 main 上的同類 gate 收斂成一支**。這條分支原本自己寫了 `check-locale-images.py`(RETARGET / MISSING 兩類 + `--apply` 自動改引用),但合併時發現 `main` 已經先有功能等價的 `check-image-locale.py`(白名單式 `KNOWN_MISSING`,新缺口會擋 build),而且已接進 CI。**兩支併存等於每次 CI 跑兩次同樣的檢查**,所以撤掉本分支這支,保留 main 的。本分支真正不可替代的產出是那 13 張圖與 6 個 script 的 false-green 修復,gate 本身是重複投資。撤除時把唯一會流失的東西留下來:`check-locale-images.py` 的測試裡有 EXCLUDE_DIRS 相對路徑的 regression,而 main 的 `test_image_locale.py` **零覆蓋**這個 bug class——已改寫成獨立的 `scripts/test_repo_scan_excludes.py`,涵蓋範圍比原本更廣(7 個 walker + 原始碼層防再犯)。**這次收斂確實損失一項能力,照實記**:被撤掉那支有 `--apply` 可以把「指錯語系」的引用自動改好,main 這支只偵測不修正——下次遇到失敗要手改 markdown。目前 fixable 是 0,影響是未來式。順帶把 main 的 `KNOWN_MISSING` 白名單**清空**:那 9 筆全指向已經不存在的 `.jpg` 路徑(圖都補齊且改成 `.png` 了),是永遠不會命中的死資料;清空後任何新缺口會直接擋 build,比留著 9 筆過期豁免更嚴格。對應的測試從「必須是 9 筆」改成「必須是空的」。
 - **docs** · **這批圖的生成流程與教訓寫成文件**:[`resources/diagrams/locale-variant-prompts.md`](resources/diagrams/locale-variant-prompts.md)。上一批記錄「圖是貼 prompt 到 ChatGPT image-gen 手動生成、repo 內沒有 source 檔」——這份把那個缺口補上,但**實際做法跟原本設想的不同**:不是貼到 ChatGPT 網頁,而是**委派 Codex CLI 的內建 image-gen 工具**,brief 裡指定 repo 內既有圖當風格參考(Codex 能直接讀圖檔)並附完整逐字文字表,`.ai/` 下留 brief 當稽核紀錄。文件內容包含:五張圖各自的處理結果、風格基準檔、四次假成功的完整清單、以及三個可操作的驗收方法(CJK 繁簡要裁切放大＋已知good對照、長寬比當客觀對齊指標、「重新生成」比「改圖」可靠)。**未竟事項也照實寫在裡面**——`rag-pipeline-overview` 與 `chunking-strategies` 兩組視覺等級不如 teacher 兩組,含後續再挑戰的三個建議與「原始 .jpg 仍在 git 歷史可還原」。順帶查出繁中原圖本身有 3 個既有拼字錯誤(`hybird` / `Rewrite qustion` / `Learning form error`),新圖已全部修正。**時效性另記一筆**:`multi-llm-delegation-composition` 把中間 lane 標成 `gemini-delegate`,那個 skill repo 已於 2026-07 封存,但圖說明的概念沒過時——緊接在圖後面那段仍在教三方分工,repo 的立場是「workflow 還能用、只是 skill repo 封存了」,所以是**概念現行、標籤過時**;這批的 `.zh-Hans` 忠實比照現有兩張(先解決簡中讀者看到繁體字的當下問題),「三張一起改標成 Gemini CLI」列為後續選項。該圖畫了廠商 logo,牴觸 `concept-prompts.md` 自己的禁令——既有不一致,不是這次造成的。
 - **fix** · **簡中版對貢獻者講的收錄政策,跟繁中/英文是相反的**(本批最重要的一項)。`mcp-skills-catalog.zh-Hans.md` 的開頭「收錄原則」跟結尾「維護備註」兩段,是 rewrite 前的舊版被留下來,而且不是翻譯腔差異、是**語意相反的政策**:簡中寫「**★ 100+ 起跳**:除非是官方,社群 repo **至少 100 stars 才收录**」,繁中/英文寫的是「**stars 看一下就好**……但『小眾但好用』也歡迎送 PR 解釋為什麼要收」;簡中寫「過時的會在**每季 review** 時更新」「**stars < 1k 且 < 3 个 entry 的分类先别开**」,繁中/英文寫的是「**有空 review 一輪就好——不用排定期程**」「新分類**有 1-2 個值得收的就可以先開**」;簡中還缺了整句定調的「**不是 SLA,是「能做就做」的方向**」跟第 5 條「用詞、格式不一致 → 不要苛求,PR 進來能讀懂優先」,標題也從「給未來想幫忙的人」變成較生硬的「给未来的 maintainer」。**實際影響是會勸退人**:一個讀簡中的貢獻者會以為自己的 repo 沒有 100 stars 就不用送 PR,而專案的真實立場正好相反。三語現在一致。同段另修:`为什么 JIA`(拼音沒轉回中文的損壞字串)→ `为什么要加`;`style-guide` 連結的**顯示文字**還寫著繁中檔名(連結本身指向簡中);`tavily-mcp` 的推薦度少了註記「(新手第一選擇)」,補回後三語帶註記的推薦度儲存格都是 49 個。
-- **fix** · **簡中版 style-guide 有大約 200 行在網站上根本沒顯示**。`resources/style-guide.zh-Hans.md` 的 entry 範本裡有一組**巢狀 code fence 沒有跳脫**——繁中/英文都寫成 `\`\`\`bash`(跳脫過),簡中是裸的 ```` ```bash ````,於是內層 fence 提早關掉外層,從第 49 行到第 246 行(「必填字段」一路到「6. Stage 页面模板」)整段被吞進同一個 code block。用 python-markdown 實測:修前簡中版只渲染出 **7 個 h2 / 8 個 h3 / 0 個表格**,修後是 **12 / 17 / 5**,與繁中完全一致。原始碼裡的標題數三語一直都是 23,所以任何只看原始碼的檢查都看不出問題——這也是它能存活這麼久的原因。
+- **fix** · **簡中版 style-guide 有大約 200 行在網站上根本沒顯示**。`resources/style-guide.zh-Hans.md` 的 entry 範本裡有一組**巢狀 code fence 沒有跳脫**——繁中/英文都寫成 `` \`\`\`bash ``(跳脫過),簡中是裸的 ```` ```bash ````,於是內層 fence 提早關掉外層,從第 49 行到第 246 行(「必填字段」一路到「6. Stage 页面模板」)整段被吞進同一個 code block。用 python-markdown 實測:修前簡中版只渲染出 **7 個 h2 / 8 個 h3 / 0 個表格**,修後是 **12 / 17 / 5**,與繁中完全一致。原始碼裡的標題數三語一直都是 23,所以任何只看原始碼的檢查都看不出問題——這也是它能存活這麼久的原因。
 - **content** · **簡中版補回缺的內容,catalog 三語終於真的對齊**。上一批收尾時已知簡中版少了「三個 skill 的組合」這個說明段落,這次一併把整份 catalog 的三語結構比對做完,實際找到三處而不是一處:① **缺整個說明段落**——`## 14. Multi-LLM Delegation Skills` 開頭那段「這 3 個 skill 是設計成一起用的」連同分工圖,繁中/英文都有、簡中沒有;② **兩個條目的翻譯是舊的短版**——`codex-delegate` 跟 `gemini-delegate-skill` 在繁中/英文各有 `何時用` / `何時不用` 兩行(全 catalog 76 個條目裡只有這 2 個有這兩行),簡中版整個缺,而且 `適合誰` 那行是語意較弱的舊譯;③ **兩條多出來的分隔線**——簡中版在 `discord-mcp` 跟 `mcp_excalidraw` 後面各多一條 section 內的 `---`,繁中/英文都沒有,結果只有簡中讀者會看到兩條莫名其妙的水平線。修完後三語的 `---` 數量都是 19、條目 body 行數零落差。標籤沿用 corpus 既有的 `何时用` / `何时不用`(全 repo 已用 22 / 19 次),不自創新寫法。
 - **content** · **這批的已知缺口:簡中版的分工圖沿用繁中圖檔**。`resources/diagrams/` 的慣例是有做語系變體的圖就做滿三個,但 `multi-llm-delegation-composition` **只有 `.png`(繁中)跟 `.en.png`,沒有 `.zh-Hans.png`**——清點後它是**唯一一張只做了三分之二的圖**(20 張三個語系齊全、6 張是本來就只有單一語系的素材如 `.jpg` 教學圖,只有這張卡在 2/3)。附帶確認:那 20 組的三個變體都是不同圖檔、不是複製同一張改檔名,所以缺的這張沒辦法用複製混過去。圖裡有三處繁中字串(「機械式批次」「長 context」「平行時用」),簡中讀者看得懂但不是正確在地化。這些圖是把 prompt 貼到 ChatGPT image-gen 手動生成的、repo 內沒有 source 檔(`resources/diagrams/concept-prompts.md` 也只涵蓋 Stage 7.5 那三張),所以**沒有辦法在這批裡忠實重製**——與其生一張風格不一致或 CJK 文字糊掉的圖冒充,先讓簡中段落指向繁中圖檔,缺口寫在這裡,補圖列為後續手動工作。
 - **audit** · **順著上面那個缺口查下去,發現它不是單一個案而是一整類(9 處)**。目前**沒有任何 gate 在管「圖片素材的語系」**——`check-locale-links.py` 只驗 `.md` 連結、正則明確只吃 `.md` 結尾,圖片路徑完全在它的視野外。全 repo 掃過之後,除了這次的 composition 圖,另有 **8 處既有的錯配**:`stages/06-memory-rag` 的 `rag-pipeline-overview.jpg` 與 `chunking-strategies.jpg`、`branches/for-teacher` 的 `teacher-ai-use-cases-overview.jpg` 與 `teacher-ai-classroom-use-cases.jpg`,這 4 張**只有繁中一個版本**,卻同時被英文版與簡中版頁面引用——而且 **alt text 有在地化、圖檔沒有**,所以讀者看到的是「英文說明配一張整張都是繁體字的圖」。這 8 處是既有問題、不是這次改動造成的,補圖同樣需要手動重製素材,**這批不動**,先把清單記在這裡免得又被忘掉。

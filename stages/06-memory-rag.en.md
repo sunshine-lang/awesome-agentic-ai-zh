@@ -1,5 +1,7 @@
 # Stage 6 — RAG and Memory: find the source first, then remember what matters
 
+**RAG** (Retrieval-Augmented Generation): retrieve relevant material, then answer using it.
+
 > [繁體中文](./06-memory-rag.md) | [简体中文](./06-memory-rag.zh-Hans.md) | **English**
 
 <!-- freshness: canonical=stages/06-memory-rag.md; verified_on=2026-08-30; scope=rag,retrieval,embeddings,vector-stores,memory,evaluation,project-status; max_age_days=90 -->
@@ -208,7 +210,7 @@ These are advanced Stage 6 branches, not new prerequisites. Complete the basic e
 
 ### [Advanced RAG: find the broken step before adding new techniques](../resources/advanced-rag.en.md)
 
-For people who have built a minimal RAG system but face missed documents, bad ranking, or hard cross-document relationships. It explains **Hybrid Search**, **Reranking**, **HyDE**, **Multi-Query**, **RAG Fusion**, **Contextual Retrieval**, **GraphRAG**, **Self-RAG**, **CRAG**, **Adaptive RAG**, **Agentic RAG**, **RAPTOR**, and **DSPy**, with required reading and the rated resource table kept visible.
+For people who have built a minimal RAG system but face missed documents, bad ranking, or hard cross-document relationships. It explains **Hybrid Search**, **Reranking**, **HyDE**, **Multi-Query**, **RAG Fusion**, **Contextual Retrieval**, **GraphRAG**, **Self-RAG**, **CRAG** (Corrective Retrieval Augmented Generation, correct the query or source when retrieval is inadequate), **Adaptive RAG**, **Agentic RAG**, **RAPTOR**, and **DSPy**, with required reading and the rated resource table kept visible.
 
 ### [Agent Memory: save only what is useful, permitted, and removable](../resources/agent-memory.en.md)
 
@@ -232,7 +234,7 @@ This table keeps only the tools needed for a Stage 6 baseline. Advanced techniqu
   <tbody>
     <tr><th scope="rowgroup" rowspan="4">Vector data</th><td><a href="https://github.com/chroma-core/chroma">Chroma</a></td><td>⭐⭐⭐⭐⭐</td><td>First local vector search</td><td>collections, add, query</td><td>Apache-2.0; practice and production settings differ</td></tr>
     <tr><td><a href="https://github.com/qdrant/qdrant">Qdrant</a></td><td>⭐⭐⭐⭐⭐</td><td>Teams needing self-hosted or managed service</td><td>dense, sparse, hybrid queries</td><td>Apache-2.0; plan service operation and backups</td></tr>
-    <tr><td><a href="https://github.com/weaviate/weaviate">Weaviate</a></td><td>⭐⭐⭐⭐</td><td>Teams needing schema and hybrid search</td><td>BM25 + vector search</td><td>BSD-3-Clause; start with a small baseline</td></tr>
+    <tr><td><a href="https://github.com/weaviate/weaviate">Weaviate</a></td><td>⭐⭐⭐⭐</td><td>Teams needing schema and hybrid search</td><td>BM25 + vector search</td><td>BSD-3-Clause outside wl/; wl/ requires a separate enterprise license; start small</td></tr>
     <tr><td><a href="https://github.com/pgvector/pgvector">pgvector</a></td><td>⭐⭐⭐⭐</td><td>Teams already using PostgreSQL</td><td>SQL and vectors in one database</td><td>PostgreSQL extension; still needs indexes and tuning</td></tr>
   </tbody>
   <tbody>
@@ -250,4 +252,4 @@ This table keeps only the tools needed for a Stage 6 baseline. Advanced techniqu
 - [ ] I can compare changes with a small question set instead of one attractive answer.
 - [ ] Memory saves only necessary, permitted data and lets users view, change, and delete it.
 
-When you can do these, go to [Stage 7 — Agent Production Engineering: Harness, Loops, and Graphs](07-multi-agent-production.en.md).
+When you can do these, go to [Stage 7 — Agent Production Engineering: Testable, Observable, Stoppable, and Recoverable](07-multi-agent-production.en.md).

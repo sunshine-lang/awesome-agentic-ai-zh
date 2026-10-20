@@ -7,6 +7,11 @@ on:
         description: Calendar tag, for example v2026.08.31 or v2026.08.31-2
         required: true
         type: string
+      include_pdf:
+        description: Also build and attach all three offline PDFs (optional)
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -17,9 +22,12 @@ concurrency:
 
 jobs:
   prepare:
-    name: Build and verify three release candidates
+    name: Verify trilingual release candidate
     runs-on: ubuntu-24.04
     timeout-minutes: 90
+    permissions:
+      contents: read
+      actions: read
     outputs:
       version: ${{ steps.lock.outputs.version }}
       sha: ${{ steps.lock.outputs.sha }}
@@ -65,10 +73,7 @@ jobs:
             echo "Release version $INPUT_VERSION does not match GitHub API UTC date $official_version" >&2
             exit 1
           fi
-          environment_json="$(curl -fsSL --retry 3 \
-            -H 'Accept: application/vnd.github+json' \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/$REPOSITORY/environments/release")"
+          environment_json="$(gh api "repos/$REPOSITORY/environments/release")"
           reviewer_count="$(jq '[.protection_rules[]? | select(.type == "required_reviewers") | .reviewers[]?] | length' <<<"$environment_json")"
           if [ "$reviewer_count" -lt 1 ]; then
             echo "The release Environment must exist and require at least one reviewer" >&2
@@ -128,6 +133,8 @@ jobs:
             --freshness-exit "$freshness_code" \
             --freshness-ran true \
             --mode release \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --source-sha "$(git rev-parse HEAD)" \
             --markdown /tmp/content-health.md \
             --json /tmp/content-health.json
           summary_code=$?
@@ -136,13 +143,19 @@ jobs:
           exit "$summary_code"
 
       - name: Install PDF build dependencies
+        if: ${{ inputs.include_pdf }}
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             pandoc weasyprint poppler-utils \
             fonts-dejavu-core fonts-noto-cjk fonts-noto-color-emoji
 
+      - name: Test the installed PDF reader with all three locales
+        if: ${{ inputs.include_pdf }}
+        run: python -m pytest scripts/test_release_manifest.py -q
+
       - name: Build all three PDFs from the same page order
+        if: ${{ inputs.include_pdf }}
         env:
           RELEASE_VERSION: ${{ steps.lock.outputs.version }}
         run: |
@@ -151,6 +164,7 @@ jobs:
           done
 
       - name: Verify PDF text, coverage, and filenames
+        if: ${{ inputs.include_pdf }}
         env:
           RELEASE_VERSION: ${{ steps.lock.outputs.version }}
         run: |
@@ -188,7 +202,7 @@ jobs:
 
       - name: Upload release candidates and evidence
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-candidate-${{ steps.lock.outputs.version || github.run_id }}
           path: release-candidate/
@@ -201,6 +215,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment: release
+    env:
+      INCLUDE_PDF: ${{ inputs.include_pdf }}
     permissions:
       contents: write
     steps:
@@ -220,12 +236,12 @@ jobs:
         run: python -m pip install --disable-pip-version-check PyYAML==6.0.3
 
       - name: Download the approved candidate
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: release-candidate-${{ needs.prepare.outputs.version }}
           path: candidate
 
-      - name: Recheck main and the three assets before writing
+      - name: Recheck main and requested assets before writing
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
@@ -241,10 +257,12 @@ jobs:
           fi
           python scripts/release_manifest.py validate --strict-urls --version "$RELEASE_VERSION"
           python scripts/release_manifest.py validate-version --version "$RELEASE_VERSION"
-          for locale in zh-TW zh-Hans en; do
-            name="$(python scripts/release_manifest.py asset-name --version "$RELEASE_VERSION" --locale "$locale")"
-            test -s "candidate/dist/$name"
-          done
+          if [ "$INCLUDE_PDF" = true ]; then
+            for locale in zh-TW zh-Hans en; do
+              name="$(python scripts/release_manifest.py asset-name --version "$RELEASE_VERSION" --locale "$locale")"
+              test -s "candidate/dist/$name"
+            done
+          fi
           test -s candidate/release-body.md
 
       - name: Create or refresh a Draft Release
@@ -266,7 +284,9 @@ jobs:
               --draft --target "$LOCKED_SHA" --title "$title" \
               --notes-file candidate/release-body.md
           fi
-          gh release upload "$RELEASE_VERSION" --repo "$REPOSITORY" --clobber candidate/dist/*.pdf
+          if [ "$INCLUDE_PDF" = true ]; then
+            gh release upload "$RELEASE_VERSION" --repo "$REPOSITORY" --clobber candidate/dist/*.pdf
+          fi
 
       - name: Verify the Draft Release before publishing
         env:
@@ -283,11 +303,14 @@ jobs:
           jq -r '.body' /tmp/release.json | grep -Fx '## 繁體中文'
           jq -r '.body' /tmp/release.json | grep -Fx '## 简体中文'
           jq -r '.body' /tmp/release.json | grep -Fx '## English'
-          printf '%s\n' \
-            "awesome-agentic-ai-zh-$RELEASE_VERSION-en.pdf" \
-            "awesome-agentic-ai-zh-$RELEASE_VERSION-zh-Hans.pdf" \
-            "awesome-agentic-ai-zh-$RELEASE_VERSION-zh-TW.pdf" \
-            > /tmp/expected-assets.txt
+          : > /tmp/expected-assets.txt
+          if [ "$INCLUDE_PDF" = true ]; then
+            printf '%s\n' \
+              "awesome-agentic-ai-zh-$RELEASE_VERSION-en.pdf" \
+              "awesome-agentic-ai-zh-$RELEASE_VERSION-zh-Hans.pdf" \
+              "awesome-agentic-ai-zh-$RELEASE_VERSION-zh-TW.pdf" \
+              > /tmp/expected-assets.txt
+          fi
           jq -r '.assets[].name' /tmp/release.json | sort > /tmp/actual-assets.txt
           diff -u /tmp/expected-assets.txt /tmp/actual-assets.txt
 

@@ -1,6 +1,15 @@
 # 語系變體圖 — 生成流程與教訓
 
-> 姊妹檔：[`concept-prompts.md`](concept-prompts.md)（Stage 7.5 兩組三語概念圖的 Image 2.0 重產規格）。
+## 2026-09-10：角色分流原畫動畫試版
+
+- 原圖固定在 commit `20dc3fb50e3cc605c28d1847701b467f7300e477` 的三語 `branch-decision-tree.png`；繁中、簡中為 `1600×900`，英文為 `1672×941`。不統一重畫、不更換字型、色彩、圖示或構圖。
+- `scripts/build-role-map.py` 以 WebP quality 95 內嵌原圖，固定來源 PNG 與壓縮 payload SHA-256。這是高品質有損壓縮，不宣稱與舊 PNG bytes 相同；新靜態 PNG 與 SVG 底圖像素一致。
+- 五個裁切區域依序做小動作：顯微鏡傾斜、電腦確認、學士帽輕轉、圖表伸縮、人物上移；各自兩秒，間隔一秒，18 秒循環，16–18 秒完全靜止。活動時以角落取色遮住原位置，避免重影。文字與接線不動，不表示必須依序學完五條角色路線。
+- 重製：`python scripts/build-role-map.py --png`；唯讀驗證：`python scripts/build-role-map.py --check`。首次匯入用 `--import-original --png`，之後不需要讀舊 commit。
+- 文件站保留 lazy／async、兩個原圖入口與三語停止／播放控制；README 有靜態圖連結，PDF 使用 PNG。上方與下方動畫共用停止狀態，減少動態或無 JavaScript 時顯示 PNG。
+- 試版已知限制：保留的英文原圖把知識工作者寫成較窄的 `Analysts`，三語文字亦有歷史差異。正式採用前要校正，不能以此試版宣稱三語圖中文字已完全一致。下方 `learning-map` 的舊順序另行修正後再動畫化。
+
+> 姊妹檔：[`concept-prompts.md`](concept-prompts.md)（Stage 7.5 兩組三語概念圖的可重產文字與構圖規格）。
 > 這份記錄的是 **2026-08-02 那批 5 張圖 × 3 語系** 是怎麼產出來的，以及過程中踩到的坑。
 
 ## 2026-08-29：Stage 5 的 5.1–5.7 關係與資料流
@@ -43,50 +52,37 @@ verification 混成同一件事。箭頭表示每次 action 會依序接受檢�
 `scripts/test_stage08_content.py` 鎖住六張 PNG 的最小尺寸、不同 hash 與三語正文引用；
 `scripts/check-image-locale.py` 再檢查全站 locale 圖不會串錯。
 
-## 2026-08-28：Stage 7.5 問題分組圖與閱讀決策樹
+## 2026-09-13：Stage 7.5 進階選擇圖
 
-重畫 `concept-cluster.{png,en.png,zh-Hans.png}` 與
-`reading-decision-tree.{png,en.png,zh-Hans.png}`。兩組都採 16:9 暖白底、亮色卡片、
-深藍大字與固定三語版面；每張圖都由 Codex 內建 Image 2.0 獨立生成後人工逐字檢查。
+以 Codex 內建圖片生成工具建立 `advanced-agentic-decision-map.{png,en.png,zh-Hans.png}`。
+工具未提供可驗證的引擎版本，因此紀錄不宣稱特定 Image 型號。三語使用同一個
+`1672×941` 構圖：上方是已重現的失敗，中間四張平行概念卡，底部是五個只有出現
+對應證據才選的候選模式。四張卡不畫先後箭頭，避免把它們誤讀成固定階梯。
 
-概念圖不再把 12 個概念硬塞進 `Service／Repo／Config／Types` 矩陣。那組層級來自
-OpenAI 某個 codebase 的架構案例，不是通用 Agent stack。新版只按讀者會遇到的四種問題
-分組：邊界與契約、規劃與合作、檢查與學習、控制與復原；每組三張卡，中央提醒每次只選
-1–2 個。
+四張平行概念卡固定為 Evaluator–Optimizer／Agent-as-Judge、Failure Injection／Chaos Eval、
+Autonomy Gradients／Trust Layers、Model–Harness Fit；五個候選模式固定為 Parallel
+Exploration、Hierarchical Delegation、Multi-Agent Handoff、Plan–Act–Reflect、Dynamic
+Workflows。舊 `concept-cluster` 與 `reading-decision-tree` 六張圖在正文引用轉移後刪除，
+仍可由 Git 歷史恢復。
 
-決策樹也不再把容易過期的文章名稱與閱讀時間畫進圖裡，只保留五個症狀與兩個入口群組。
-正文的官方來源和 24 筆資源可以更新，圖不必跟著每次重畫。舊的 `stack-4layer`、
-`failure-lifecycle`、`principle-dependency` 三組共九張圖已完成引用掃描後移除；它們仍可從
-Git 歷史復原。
+## 2026-09-13：Stage 7.5 Model–Harness Fit 圖
 
-三語圖必須各自引用 locale 檔，並由 `scripts/test_stage075_content.py` 鎖住六張 PNG 的尺寸、
-不同 hash 與正文引用。完整文字表與重產限制在 [`concept-prompts.md`](concept-prompts.md)。
+重畫 `model-harness-fit.png`、`.en.png`、`.zh-Hans.png`。第一列依序是選一個 Harness
+元件、做刪除或簡化測試、重跑同一組品質／安全／成本／延遲 Eval；第二列是 Keep、
+Simplify、Remove 三張等大的平行結果卡。三個判斷是平行結果，不是成熟度階梯（no
+maturity ladder），彼此之間沒有箭頭。底部固定保留 permission、sandbox、audit log、
+人工核准與 rollback 這些長期責任。
 
-## 2026-08-29：Stage 7.5 Model–Harness Fit 判斷圖
-
-新增 `model-harness-fit.png`、`.en.png`、`.zh-Hans.png`。圖先讓一個 Harness 元件跑同一組 Eval，再分成平行的 Keep／Simplify／Remove 三個結果；三者不是成熟度階梯，也不暗示所有元件最後都應移除。底部固定提醒「模型變強不等於安全邊界自動過時」與「一次只改一個元件，再測一次」。
-
-初版繁中圖雖然文字正確，但 imagegen 自行加上紅色印章、山水、竹子與雲紋，不符合技術教材 house style，也違反無 watermark 約束；最終版移除全部裝飾與印章，改用暖白底、細電路線、深藍大字與藍／橘／綠三張平行卡。英語與簡中以通過人工檢查的最終繁中版作構圖 reference，各自換入完整逐字文字表。獨立 review 發現第一張簡中圖仍殘留「保護／步驟」兩個繁體詞，因此重新產圖並逐字複查；最終簡中橘卡人工逐字確認為「保护仍然需要，但步骤可以更少」。PNG 內文目前仍由人工圖文稽核，不能把一般文字檢查誤稱為 OCR。
-
-共同 prompt 約束：
-
-> Show one Harness component, run the same Eval, then branch into three equal
-> parallel outcomes: KEEP when removing it restores a repeatable failure,
-> SIMPLIFY when the protection still matters but fewer steps are enough, and
-> REMOVE when a deletion test passes without quality loss. State that a stronger
-> model does not automatically obsolete safety boundaries and that only one
-> component changes before retesting. Warm off-white modern technical-textbook
-> style, flat vector icons, no arrow between outcomes, no maturity ladder, no
-> model/version/price/ranking/vendor fact, no logo, seal, stamp, signature, or
-> watermark, and only the supplied locale text.
+三語版本都以最終繁中圖作構圖 reference，只替換文字。人工逐張確認文字、icon、箭頭和
+邊框無重疊；英文沒有 CJK，簡中正式術語未被誤譯。完整逐字文字表與重產限制在
+[`concept-prompts.md`](concept-prompts.md)。
 
 人工驗收逐張確認：
 
-- 三個結果都從同一個 Eval 分出去，彼此之間沒有箭頭。
-- 繁中圖沒有印章或山水裝飾；英語圖沒有中文；簡中圖沒有繁體字。
-- 圖沒有把 prompt workaround 與 permission／sandbox／log／Eval／recovery 畫成同一種可隨意刪除的東西。
-- 九張 Stage 7.5 圖維持不同 hash，三語正文各自引用 locale 檔。
-
+- 六張圖都是 `1672×941`，構圖相同而 hash 不同。
+- 四張概念卡、五個候選模式、三步測試與三個平行結果數量正確。
+- 圖不放產品版本、價格、ranking、模型能力或其他易變資訊。
+- 正文先解釋圖中名詞，圖片只整理關係，不負責第一次定義。
 ## 2026-08-28：Stage 6 RAG 與 Memory 三路圖
 
 新增 `rag-memory-map.png`、`.en.png`、`.zh-Hans.png`。三張都使用 16:9 亮色白底卡片，固定畫出三條互不串線的路：文件切成 Chunk、轉成 Embedding 並寫進 Vector Database；問題取回相關片段、經 Reranking 後產生有來源的答案；重要狀態寫進 Memory，下一次再讀回來。每條箭頭只在自己的色框內由左往右，不暗示 Vector Database 會自動寫入 Memory。
@@ -253,9 +249,20 @@ python scripts/check-image-locale.py
 > the teacher observes and revises. No autonomous grading, diagnosis, learner
 > score, product logo, badge, extra caption, mixed language, or watermark.
 
+## 2026-09-10：README Banner 動畫 SVG 試版例外
+
+- 來源：直接使用 commit `ca75de9814a321fb3a3e8db606f082b2c2422124` 中既有三語 banner。使用者再次確認「只把原版變成動畫」，因此不採用重新設計的向量圖。原圖的字型、實心圖示、紫色 Hub、藍／橘路線、底部四格及各語言既有位置全部保留。
+- 可編輯來源：`scripts/build-banner.py` 的路線、節點、圖示座標與語意動作；SVG 自包含原圖的 WebP quality 95 資料，payload SHA-256 固定在產生器。這是高品質有損壓縮，不宣稱與原 PNG 位元相同；底圖沒有縮放、裁切、改字或重畫。動畫以 13 個局部裁切重用底圖的代表性圖示，沒有新增圖像資料或替換畫風；活動時以角落取色的底色蓋住原位置，再移動裁切副本，避免重影。首次以 `--import-original --png` 從固定 commit 匯入；平常用 `python scripts/build-banner.py --png` 重製覆蓋層與同名靜態 PNG，`--check` 比對來源與成品。
+- 靜態輸出：PNG 直接解碼同版 SVG 的內嵌原圖，像素與該底圖一致。減少動態時覆蓋層全部隱藏；不載入外部圖片、字型或 JavaScript。
+- 原文字、完整箭頭、圖示與卡片始終可見；光點沿各語言原圖的既有通道移動，共用 Hub 不跨錯分支。共用時間軸：基礎 0–2 秒、A 2–8 秒、B 8–16 秒、全圖停留 16–18 秒，持續循環。Stage 7.5 進階選讀與五條角色依需求選讀寫入替代說明，不為動畫重排原圖或改動底部文字。
+- 圖示動作：基礎堆疊輕抬、兩處 CLI 游標輸入、兩處工具輕轉、Stage 5／8 循環箭頭旋轉、清單確認，以及研究燒瓶輕晃、開發電腦確認、教師帽輕轉、知識圖表伸展與日常人物輕抬。三語 13 區意義與時段一致，座標各自貼齊原圖；不動 GitHub 標誌。16–18 秒不動，減少動態與停止模式仍顯示完整原圖。
+- README 三語 SVG 各有同語 PNG 靜態入口，文件站有停止／播放與減少動態效果支援，PDF 自動使用 PNG。GitHub README 是否動畫與原圖預覽分開實測；不支援時不改 GIF。
+- 不修改下方 learning-map、角色圖或章節正文；不提高圖片容量上限。
+
 ## 2026-08-30：首頁學習路徑 Banner
 
 `banner.png`、`.en.png`、`.zh-Hans.png` 以 Image 2.0 重新產生，取代含固定週數的舊版。
+
 三語共用 `1672×941` 橫式母版、奶油白背景、深藍字、亮藍／橘兩條路、紫色共用 hub、
 圓角卡與大留白。路徑固定為：
 
@@ -279,6 +286,21 @@ GitHub stars 或其他容易漂移的指標。箭頭只能落在卡片／節點�
 > the five role paths. Replace mutable duration metrics with
 > stable Track A, Track B, and one-result-per-stop guidance. Every arrow must land
 > on a card or node edge. No text, icon, border, node, or arrow may overlap.
+
+## 2026-09-13 · Stage 7 Eval 證據迴圈
+
+新增：
+
+- `eval-evidence-loop.png`
+- `eval-evidence-loop.en.png`
+- `eval-evidence-loop.zh-Hans.png`
+
+[OpenAI 官方模型頁](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst)在產圖前確認 **GPT-Image-2.5 Sunburst** 是現行最強的生成／精準編輯模型；但本次 Codex 內建 image generation 沒有暴露可選 model ID，因此只記錄「使用目前內建 image generation」，不宣稱手動指定了 Sunburst。
+
+繁中先以 `agent-engineering-control-questions.png` 作為 house-style 參考建立新構圖，英文與簡中再以繁中成品保持相同格線。三張固定為 `1672×941`：上排用 `3 × 3` 卡片分開 Case／Suite／Golden Set、Reference Solution／Criteria／Trial／Grader、Baseline／Regression／Holdout Set；下排只畫一條 `真實需求 → Development Cases → Trials + Graders → Baseline → Release Candidate → Frozen Holdout` 路線，失敗案例沿底部留白回到下一版 Suite。
+
+人工逐張檢查標題、九個詞、回程箭頭、警告與 footer。文字、icon、arrowhead、卡片和邊框沒有重疊；三語各用自己的圖檔，沒有價格、stars、模型版本、benchmark 分數或供應商標誌。圖中明確保留「Golden Set 不是訓練資料／Few-shot 範例」以及 dataset version、split、trial、grader、Outcome、Trajectory；不把 holdout 畫成平常反覆調整的資料。
+
 # Model lifecycle to Agent (`model-lifecycle-to-agent*`)
 
 - Canvas: 1672×941 PNG, warm cream background, deep navy text, bright gentle accents, rounded cards, shared grid, simple line icons, and one left-to-right reading direction.
@@ -287,3 +309,18 @@ GitHub stars 或其他容易漂移的指標。箭頭只能落在卡片／節點�
 - Keep the Post-training chips SFT, DPO, and RLHF／RL, plus the bottom comparison between methods that change weights and systems that usually do not.
 - Locale variants must preserve every card position, icon, arrow route, border, spacing, number, and technical English term. Only the explanatory prose changes language.
 - Arrows must use whitespace lanes. Text, icons, arrowheads, borders, and chips must never overlap.
+
+## 2026-09-13 · Stage 7 上線工程關係與 Eval Case
+
+新增兩組三語 PNG：
+
+- `agent-production-relationship.{png,en.png,zh-Hans.png}`
+- `eval-case-anatomy.{png,en.png,zh-Hans.png}`
+
+內建圖片生成工具沒有暴露可選 model ID，因此只記錄實際使用的內建圖片生成工具，不宣稱手動指定某個模型版本。兩組圖皆以本專案既有的 `1672×941`、奶油白背景、深藍文字、亮色圓角卡、簡單代表性圖示與大留白為共同畫風。繁中先定稿，英文與簡中沿用相同格線、卡片位置、箭頭路徑與色彩角色，只替換文字。
+
+`agent-production-relationship` 只回答「Harness、Loop、Graph、Eval 各在哪裡」：Workflow Graph 是帶條件的分支路線，Harness 可以是路線中的工作環境，Harness 裡可以執行 Loop，Eval 則橫跨整套系統。三語固定同一組三分支與接線，只替換文字。Eval 區不再放「量尺／第四步」口號，改以 Outcome、Trajectory、Grader 三個實際評測元素說明它會看什麼。圖中不把四者畫成線性世代，也不宣稱 `Harness + Eval = Loop`。
+
+`eval-case-anatomy` 只回答「完整 Eval Case 有哪些部分」：Input、Initial State、Success Criteria、Forbidden Actions、Optional Reference Answer、Grader 與 Case Metadata 是七個同層欄位。Input 只是完整 Eval Case 的其中一格。下方再整理 `Eval Suite → Reviewed Eval Set`，並註明 Golden／Reference Set 是需回到來源確認定義的外部名稱，不只是 input，也不等於訓練資料或 few-shot 範例。
+
+人工逐張檢查三語標題、七個欄位、箭頭、警告與 footer；文字、圖示、箭頭、邊框沒有重疊。圖中不放價格、stars、模型版本、benchmark 分數或供應商標誌。

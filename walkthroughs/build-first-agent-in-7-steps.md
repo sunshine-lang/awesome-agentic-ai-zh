@@ -1,6 +1,6 @@
 > **繁體中文** | [简体中文](./build-first-agent-in-7-steps.zh-Hans.md) | [English](./build-first-agent-in-7-steps.en.md)
 
-<!-- freshness: canonical=walkthroughs/build-first-agent-in-7-steps.md; verified_on=2026-08-31; scope=models,frameworks,evals,observability,human-approval,interfaces; max_age_days=90 -->
+<!-- freshness: canonical=walkthroughs/build-first-agent-in-7-steps.md; verified_on=2026-09-13; scope=models,frameworks,evals,observability,human-approval,interfaces; max_age_days=90 -->
 
 # 7 步打造你的第一個 AI Agent
 
@@ -48,7 +48,7 @@
 - ⭐⭐⭐⭐⭐ [Langfuse — LangChain／LangGraph integration](https://langfuse.com/integrations/frameworks/langchain)：看 callback 如何記錄 model、tool、步驟與輸入／輸出。
 - ⭐⭐⭐⭐⭐ [Stage 8 — Agent 操作介面](../stages/08-agent-interfaces.md)：學會先用 API／Fetch，真的需要時才升級到 Browser、Computer 或 Sandbox。
 
-<small>官方文件與介面查核：2026-08-31 UTC。</small>
+<small>官方文件與介面查核：2026-09-13 UTC。</small>
 
 ---
 
@@ -97,7 +97,7 @@ response = client.messages.create(
     }]
 )
 
-print(response.content[0].text)
+print("".join(block.text for block in response.content if block.type == "text"))
 print(f"\n--- Tokens: input={response.usage.input_tokens}, "
       f"output={response.usage.output_tokens} ---")
 ```
@@ -106,7 +106,7 @@ print(f"\n--- Tokens: input={response.usage.input_tokens}, "
 
 **學到什麼**：API call 的長相、`messages` 結構、`usage` 怎麼算 token。
 
-這裡的 `claude-sonnet-5` 是現行 Claude API ID；型號有生命週期，實作前仍要對照 [Anthropic Model IDs and versioning](https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions)。
+這份實作用仍可使用的 `claude-sonnet-5` 固定範例；目前較新的 Sonnet 是 `claude-sonnet-5-5`。舊程式不能只改型號：工具指定和參數有變，升級前先看 [Sonnet 5.5 遷移指南](https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide)。
 
 ---
 
@@ -148,7 +148,7 @@ if __name__ == "__main__":
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": PAPER_TEXT}]
     )
-    print(response.content[0].text)
+    print("".join(block.text for block in response.content if block.type == "text"))
 ```
 
 **學到什麼**：system prompt 跟 user message 分工、明確格式要求、防 hallucinate 的「不知道就說沒提到」。
@@ -672,6 +672,10 @@ if __name__ == "__main__":
 - **Checkpoint／Resume（檢查點／續跑）**：把可信狀態存好；中斷後從那裡繼續，不用整件重做。
 - **Idempotency（冪等）**：同一個動作即使重試，也只真正執行一次。
 
+Eval 也有自己的小積木：一個 **Case／Task** 是一道題，很多題合成有版本的 **Suite**；人先檢查過的代表題常叫 **Golden Set／Reference Set**。每題要有 **Reference Solution／Criteria**，每跑一次叫 **Trial**，照規則打分的是 **Grader**。修改前先存 **Baseline**；若新版本超過門檻地退步，就是 **Regression**。最後留一小份平常不看的 **Holdout Set**，只在準備發布時打開。
+
+Golden Set 是常見實務名稱，不是各家共用的正式規格，也不是拿去訓練模型或塞進 Few-shot Prompt 的範例。開發時用 development cases；holdout 不能在每次調整時偷看。
+
 ### 7.1 Eval (`promptfoo`)
 
 > 不用全域安裝；直接使用現行 CLI：`npx promptfoo@latest`。
@@ -725,16 +729,16 @@ tests:
 
 跑：`npx promptfoo@latest eval && npx promptfoo@latest view`
 
-上面兩題只是 smoke test，不足以證明能上線。先準備 20 題小型 Eval 集：
+上面兩題只是 smoke test，不足以證明能上線。先準備一份有版本的 20 題小型 Eval suite；每類 4 題放 development、1 題放 frozen holdout：
 
-| 類別 | 數量 | 要檢查什麼 |
-|---|---:|---|
-| 正常論文 | 5 | 三段摘要、五個關鍵詞、來源一致 |
-| 無效／撤回／讀不到 | 5 | 說明限制並安全停止，不猜內容 |
-| 惡意或像指令的論文文字 | 5 | 當成資料，不改寫系統規則、不洩漏 secret |
-| 邊界案例 | 5 | 超長、空結果、重複請求與格式錯誤 |
+| 類別 | Development | Holdout | 要檢查什麼 |
+|---|---:|---:|---|
+| 正常論文 | 4 | 1 | 三段摘要、五個關鍵詞、來源一致 |
+| 無效／撤回／讀不到 | 4 | 1 | 說明限制並安全停止，不猜內容 |
+| 惡意或像指令的論文文字 | 4 | 1 | 當成資料，不改寫系統規則、不洩漏 secret |
+| 邊界案例 | 4 | 1 | 超長、空結果、重複請求與格式錯誤 |
 
-每一題同時記錄 **Outcome**（最後結果）與 **Trajectory**（中間 tool／決定）。失敗案例要留下來，成為下一次 regression。
+每一題同時記錄 **Outcome**（最後結果）與 **Trajectory**（中間 tool／決定）。先在 16 題 development cases 上調整；準備 release candidate 時才跑 4 題 holdout。模型可能每次回答不同，重要 cases 要跑多個 trials。失敗案例去識別化後留下來，成為下一版 regression suite；報告記 dataset version、split、grader、trial 次數與 baseline。
 
 ### 7.2 Observability (`langfuse`)
 

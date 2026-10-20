@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pytest
 
+from test_first_use_acronyms import assert_first_reader_expansion
+
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE1 = {
@@ -47,6 +49,15 @@ ADAPTATION_TERMS = (
     "Distillation",
     "Quantization",
 )
+TRAINING_FULL_NAMES = {
+    "SFT": "Supervised Fine-Tuning",
+    "DPO": "Direct Preference Optimization",
+    "RLHF": "Reinforcement Learning from Human Feedback",
+    "RL": "Reinforcement Learning",
+    "GRPO": "Group Relative Policy Optimization",
+    "PEFT": "Parameter-Efficient Fine-Tuning",
+    "LoRA": "Low-Rank Adaptation",
+}
 OFFICIAL_URLS = (
     "https://openai.com/policies/how-chatgpt-and-our-foundation-models-are-developed/",
     "https://developers.google.com/machine-learning/crash-course/llm/tuning",
@@ -103,6 +114,18 @@ def test_training_guide_keeps_terms_resources_and_completion_visible(
     assert not re.search(r"<details\b[^>]*\bopen\b", text)
 
 
+@pytest.mark.parametrize("pages", [STAGE1, GUIDES], ids=["stage1", "training-guide"])
+@pytest.mark.parametrize("locale", ["zh-TW", "en", "zh-Hans"])
+@pytest.mark.parametrize("term,full_name", TRAINING_FULL_NAMES.items())
+def test_audited_training_terms_expand_at_first_visible_source_mention(
+    pages: dict[str, Path], locale: str, term: str, full_name: str
+) -> None:
+    """Guard seven manually audited terms; not a site-wide acronym recognizer."""
+    assert_first_reader_expansion(
+        pages[locale].read_text(encoding="utf-8"), term, full_name
+    )
+
+
 def test_model_lifecycle_images_are_real_distinct_locale_pngs() -> None:
     hashes = set()
     for name in IMAGE_NAMES.values():
@@ -133,7 +156,7 @@ def test_freshness_markers_share_one_date_and_canonical_scope() -> None:
 
     assert len(set(stage_markers)) == 1
     assert len(set(guide_markers)) == 1
-    assert "verified_on=2026-09-01" in stage_markers[0]
+    assert "verified_on=2026-09-22" in stage_markers[0]
     assert "scope=models,pricing,availability,deprecations,model-lifecycle" in stage_markers[0]
     assert "canonical=resources/model-training-guide.md" in guide_markers[0]
     assert "verified_on=2026-08-31" in guide_markers[0]

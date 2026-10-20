@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from html import unescape
 from pathlib import Path
 
 import pytest
@@ -162,6 +163,13 @@ RESOURCE_PAIRS = {
         ("https://chatgpt.com", "⭐⭐⭐⭐⭐"),
         ("https://gemini.google.com", "⭐⭐⭐⭐"),
         ("https://perplexity.ai", "⭐⭐⭐⭐"),
+        ("https://learn.chatgpt.com/docs/dots", "⭐⭐⭐"),
+        ("https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/", "⭐⭐⭐"),
+        ("https://docs.x.ai/grok-bot/overview", "⭐⭐⭐"),
+        ("https://instinct.com/", "⭐⭐⭐"),
+        ("https://tab.bot/", "⭐⭐⭐"),
+        ("https://www.tomo.ai/about", "⭐⭐⭐"),
+        ("https://poke.com/", "⭐⭐⭐"),
         ("https://help.openai.com/en/articles/10032626-how-do-i-prompt-chatgpt-effectively", "⭐⭐⭐⭐⭐"),
         ("https://support.claude.com/en/articles/8114491-get-started-with-claude", "⭐⭐⭐⭐⭐"),
         ("https://help.openai.com/en/articles/11487775-connectors-in", "⭐⭐⭐⭐⭐"),
@@ -181,7 +189,7 @@ ROWGROUPS = {
     "developer": (4, 6, 2, 2),
     "teacher": (3, 3, 3, 3),
     "knowledge-worker": (4, 4, 2, 3, 2),
-    "everyday-user": (4, 4, 4, 2, 1),
+    "everyday-user": (4, 7, 4, 4, 2, 1),
 }
 
 VISIBLE_STARTING_URLS = {
@@ -298,10 +306,17 @@ VISIBLE_LANDMARKS = {
     "developer": ("## 📌", "## 🎯", "## 🧩", "## 🛠", "## 📚", "## 📖", "## ⭐", "## ✅"),
     "teacher": ("## 📌", "## 🎯", "## 🧩", "## 🛡", "## 🛠", "## 📚", "## ⭐", "## ✅"),
     "knowledge-worker": ("## 📌", "## 🎯", "## 🧩", "## 🛠", "## 📚", "## 📖", "## ⭐", "## ✅"),
-    "everyday-user": ("## 📌", "## 🎯", "## 🧩", "## 🛠", "## 🚪", "## 📖", "## ⭐", "## ✅"),
+    "everyday-user": ("## 📌", "## 🎯", "## 🧩", "## 🛠", "## 🚪", "## 🧑", "## 📖", "## ⭐", "## ✅"),
 }
 
 RESOURCE_STATUS = {
+    "https://instinct.com/": "commercial",
+    "https://tab.bot/": "commercial",
+    "https://www.tomo.ai/about": "commercial",
+    "https://poke.com/": "free-paid-plans",
+    "https://learn.chatgpt.com/docs/dots": "commercial",
+    "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/": "limited",
+    "https://docs.x.ai/grok-bot/overview": "commercial",
     "https://notebooklm.google.com/": "available",
     "https://www.zotero.org/": "available",
     "https://github.com/Future-House/paper-qa": "active",
@@ -370,6 +385,7 @@ RESOURCE_STATUS = {
 }
 
 STATUS_TOKENS = {
+    "free-paid-plans": {"zh-TW": "免費／付費方案", "en": "Free/paid plans", "zh-Hans": "免费／付费方案"},
     "available": {"zh-TW": "正式可用", "en": "Available", "zh-Hans": "正式可用"},
     "active": {"zh-TW": "活躍", "en": "Active", "zh-Hans": "活跃"},
     "usable": {"zh-TW": "可用", "en": "Usable", "zh-Hans": "可用"},
@@ -383,6 +399,13 @@ STATUS_TOKENS = {
 }
 
 RESOURCE_LICENSE_OR_SERVICE = {
+    "https://instinct.com/": {"zh-TW": "商業服務", "en": "commercial service", "zh-Hans": "商业服务"},
+    "https://tab.bot/": {"zh-TW": "商業服務", "en": "commercial service", "zh-Hans": "商业服务"},
+    "https://www.tomo.ai/about": {"zh-TW": "商業服務", "en": "commercial service", "zh-Hans": "商业服务"},
+    "https://poke.com/": {"zh-TW": "訊息式個人代理", "en": "messaging personal agent", "zh-Hans": "消息式个人代理"},
+    "https://learn.chatgpt.com/docs/dots": {"zh-TW": "商業雲端服務", "en": "commercial cloud service", "zh-Hans": "商业云服务"},
+    "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/": {"zh-TW": "商業雲端服務", "en": "commercial cloud service", "zh-Hans": "商业云服务"},
+    "https://docs.x.ai/grok-bot/overview": {"zh-TW": "商業雲端服務", "en": "commercial cloud service", "zh-Hans": "商业云服务"},
     "https://notebooklm.google.com/": {"zh-TW": "雲端服務", "en": "cloud service", "zh-Hans": "云服务"},
     "https://www.zotero.org/": {"zh-TW": "桌面", "en": "desktop", "zh-Hans": "桌面"},
     "https://github.com/Future-House/paper-qa": "Apache-2.0",
@@ -455,6 +478,13 @@ RESOURCE_LICENSE_OR_SERVICE = {
 }
 
 RESOURCE_LIMIT_TOKENS = {
+    "https://instinct.com/": {"zh-TW": "18 歲", "en": "18+", "zh-Hans": "18 岁"},
+    "https://tab.bot/": {"zh-TW": "候補", "en": "waitlist", "zh-Hans": "候补"},
+    "https://www.tomo.ai/about": {"zh-TW": "群聊", "en": "groups include others’ data", "zh-Hans": "群聊"},
+    "https://poke.com/": {"zh-TW": "Maximum Privacy", "en": "Maximum Privacy", "zh-Hans": "Maximum Privacy"},
+    "https://learn.chatgpt.com/docs/dots": {"zh-TW": "方案", "en": "plan", "zh-Hans": "方案"},
+    "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/": {"zh-TW": "批准", "en": "approval", "zh-Hans": "批准"},
+    "https://docs.x.ai/grok-bot/overview": {"zh-TW": "共用", "en": "share", "zh-Hans": "共享"},
     "https://notebooklm.google.com/": {"zh-TW": "citation", "en": "citations", "zh-Hans": "引用"},
     "https://www.zotero.org/": {"zh-TW": "研究品質", "en": "research quality", "zh-Hans": "研究质量"},
     "https://github.com/Future-House/paper-qa": {"zh-TW": "評測", "en": "evaluate", "zh-Hans": "评测"},
@@ -1027,6 +1057,268 @@ def test_everyday_user_uses_four_job_based_doors_not_an_upgrade_ladder(locale: s
         assert url in visible
 
 
+def _personal_agent_section(locale: str) -> str:
+    visible = _without_details(PAGES["everyday-user"][locale].read_text(encoding="utf-8"))
+    return visible[visible.index("## 🧑"):visible.index("## 📖")]
+
+
+def _personal_agent_details(locale: str) -> str:
+    text = PAGES["everyday-user"][locale].read_text(encoding="utf-8")
+    summary = {
+        "zh-TW": "🔐 帳號、資料、權限與費用",
+        "en": "🔐 Accounts, data, permissions, and cost",
+        "zh-Hans": "🔐 账号、数据、权限与费用",
+    }[locale]
+    matches = [block for block in re.findall(r"<details\b[^>]*>.*?</details>", text, re.DOTALL)
+               if f"<summary>{summary}</summary>" in block]
+    assert len(matches) == 1, locale
+    assert matches[0].startswith('<details markdown="1">')
+    return matches[0]
+
+
+def _personal_agent_bullet(locale: str, provider_url: str) -> str:
+    section = _personal_agent_details(locale)
+    bullets = [line for line in section.splitlines() if line.startswith("- [") and f"]({provider_url})" in line]
+    assert len(bullets) == 1, (locale, provider_url)
+    return bullets[0]
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "en", "zh-Hans"))
+def test_everyday_user_personal_agents_are_visible_products_with_scoped_verification(locale: str) -> None:
+    text = PAGES["everyday-user"][locale].read_text(encoding="utf-8")
+    section = _personal_agent_section(locale)
+    details = _personal_agent_details(locale)
+    for term in ("Personal Agent", "Approval Gate", "2026-10-02 UTC", "2026-10-16 UTC"):
+        assert term in section, (locale, term)
+    visible = _without_details(text)
+    for url in PERSONAL_AGENT_RESOURCE_URLS:
+        assert _row_for_url(visible, url), (locale, url)
+    for term in ("dots", "Muse", "Muse Spark", "Muse Code", "Grok Bot", "Grok Build", "2026-10-16 UTC"):
+        assert term in details, (locale, term)
+    for url in (
+        "https://learn.chatgpt.com/docs/dots",
+        "https://learn.chatgpt.com/docs/whats-new/devday-2026",
+        "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/",
+        "https://about.fb.com/news/2026/09/introducing-muse-small-business/",
+        "https://docs.x.ai/grok-bot/overview",
+        "https://docs.x.ai/build/overview",
+        "https://x.ai/news/team-bots",
+    ):
+        assert url in details, (locale, url)
+    assert FRESHNESS["everyday-user"] in text
+    assert "2026-09-22" not in text
+    assert "GraphBOT" not in text and "GraphBot" not in text
+    localized = {
+        "zh-TW": ("產品", "模型", "虛構", "先不要連接帳號"),
+        "en": ("products", "model", "fictional", "without connecting accounts"),
+        "zh-Hans": ("产品", "模型", "虚构", "先不要连接账号"),
+    }[locale]
+    assert all(term in section for term in localized)
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "en", "zh-Hans"))
+def test_everyday_user_dots_keeps_rollout_plan_age_region_and_admin_limits(locale: str) -> None:
+    bullet = _personal_agent_bullet(locale, "https://learn.chatgpt.com/docs/dots")
+    for term in ("Pro 100", "Pro 200", "Pro 500", "Business Premium", "Enterprise"):
+        assert term in bullet, (locale, term)
+    required = {
+        "zh-TW": (
+            "持續工作的雲端助手", "自己的雲端電腦與瀏覽器", "逐步開放",
+            "限超過 18 歲", "在歐洲經濟區、英國與瑞士以外",
+            "Business Premium、Enterprise 在全球逐步開放",
+            "Enterprise 須由管理員啟用", "符合方案不代表帳號已收到功能",
+        ),
+        "en": (
+            "always-on cloud assistant", "own cloud computer and browser", "gradual rollout",
+            "require users over 18 outside the European Economic Area, United Kingdom, and Switzerland",
+            "Business Premium and Enterprise are rolling out worldwide",
+            "Enterprise needs administrator enablement", "An eligible plan does not mean your account has access yet",
+        ),
+        "zh-Hans": (
+            "持续工作的云助手", "自己的云电脑与浏览器", "逐步开放",
+            "限超过 18 岁", "在欧洲经济区、英国与瑞士以外",
+            "Business Premium、Enterprise 在全球逐步开放",
+            "Enterprise 须由管理员启用", "符合方案不代表账号已经获得功能",
+        ),
+    }[locale]
+    assert all(term in bullet for term in required), locale
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "en", "zh-Hans"))
+def test_everyday_user_muse_keeps_canada_business_update_and_action_approval(locale: str) -> None:
+    bullet = _personal_agent_bullet(locale, "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/")
+    for term in ("2026-09-29", "Muse for Small Business", "skills", "connectors"):
+        assert term in bullet, (locale, term)
+    required = {
+        "zh-TW": ("確認美國與加拿大可用", "Meta 表示發布、傳送與花費須先取得你的批准", "Muse 是產品；Muse Spark 是模型", "Muse Code 是在終端機工作的 coding agent"),
+        "en": ("confirms US and Canada access", "Meta says publishing, sending, and spending require your approval", "Muse is the product; Muse Spark is a model", "Muse Code is a terminal coding agent"),
+        "zh-Hans": ("确认美国与加拿大可用", "Meta 表示发布、发送与花费须先取得你的批准", "Muse 是产品；Muse Spark 是模型", "Muse Code 是在终端工作的 coding agent"),
+    }[locale]
+    assert all(term in bullet for term in required), locale
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "en", "zh-Hans"))
+def test_everyday_user_grok_bot_keeps_shared_computer_and_team_beta_boundaries(locale: str) -> None:
+    bullet = _personal_agent_bullet(locale, "https://docs.x.ai/grok-bot/overview")
+    required = {
+        "zh-TW": (
+            "持續保留狀態的雲端電腦", "瀏覽器、檔案與終端機",
+            "需付費 Cursor 方案或連結符合資格的 SuperGrok 方案",
+            "同一帳號的 Bots 共用電腦、檔案、瀏覽器工作階段與 App 登入。不能當成彼此隔離",
+            "2026-09-28 Team Bots 更新", "加入 public beta", "public beta 支援 Teams 與 Enterprise 方案", "共用 skills、工具並在 Slack 協作",
+            "Grok Bot 是產品，不是 Grok 模型名稱", "不是寫程式用的 [Grok Build]",
+        ),
+        "en": (
+            "browser, files, and terminal on a persistent cloud computer",
+            "access needs a paid Cursor plan or an eligible linked SuperGrok plan",
+            "Bots on the same account share the computer, files, browser sessions, and app logins, so do not treat them as isolated from one another",
+            "2026-09-28 Team Bots update", "public beta for Teams and Enterprise", "shared skills and tools and Slack collaboration",
+            "Grok Bot is a product, not a Grok model name or the coding agent [Grok Build]",
+        ),
+        "zh-Hans": (
+            "持续保留状态的云电脑", "浏览器、文件与终端",
+            "需付费 Cursor 方案或连接符合资格的 SuperGrok 方案",
+            "同一账号的 Bots 共享电脑、文件、浏览器会话与 App 登录。不能把它们当成彼此隔离",
+            "2026-09-28 Team Bots 更新", "加入 public beta", "public beta 支持 Teams 与 Enterprise 方案", "共享 skills、工具并在 Slack 协作",
+            "Grok Bot 是产品，不是 Grok 模型名称", "不是用于编程的 [Grok Build]",
+        ),
+    }[locale]
+    assert all(term in bullet for term in required), locale
+    row = _row_for_url(PAGES["everyday-user"][locale].read_text(encoding="utf-8"), "https://docs.x.ai/grok-bot/overview")
+    assert "beta" not in row.casefold()  # The September update qualifies Team Bots specifically.
+
+
+OFFICIAL_PERSONAL_AGENT_RESOURCE_URLS = (
+    "https://learn.chatgpt.com/docs/dots",
+    "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/",
+    "https://docs.x.ai/grok-bot/overview",
+)
+PERSONAL_AGENT_RESOURCE_URLS = OFFICIAL_PERSONAL_AGENT_RESOURCE_URLS + (
+    "https://instinct.com/",
+    "https://tab.bot/",
+    "https://www.tomo.ai/about",
+    "https://poke.com/",
+)
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "en", "zh-Hans"))
+@pytest.mark.parametrize("url,vendor,sources,boundaries", (
+    ("https://instinct.com/", "Spear Street Technology",
+     ("https://instinct.com/terms", "https://instinct.com/privacy-policy"),
+     {"zh-TW": ("18 歲", "模型訓練", "退出", "例外", "不要假設"),
+      "en": ("18+", "model training", "opt-out", "exceptions", "Do not assume"),
+      "zh-Hans": ("18 岁", "模型训练", "退出", "例外", "不要假设")}),
+    ("https://tab.bot/", "Terrasoft",
+     ("https://tab.bot/terms", "https://tab.bot/security"),
+     {"zh-TW": ("private beta", "候補不保證", "交易與批准", "密碼及卡號"),
+      "en": ("private beta", "guarantees neither", "transaction-specific approval", "passwords or card details"),
+      "zh-Hans": ("private beta", "候补不保证", "交易与批准", "密码及卡号")}),
+    ("https://www.tomo.ai/about", "Mapo Labs", ("https://www.tomo.ai/privacy",),
+     {"zh-TW": ("授權人員可能審閱對話", "群聊", "其他參與者"),
+      "en": ("authorized staff", "review conversations", "other group-chat participants"),
+      "zh-Hans": ("授权人员可能审阅对话", "群聊", "其他参与者")}),
+    ("https://poke.com/", "The Interaction Company",
+     ("https://cognition.com/blog/interaction", "https://poke.com/pricing", "https://poke.com/privacy"),
+     {"zh-TW": ("Cognition", "Maximum Privacy", "模型訓練排除", "額外費用"),
+      "en": ("Cognition", "Maximum Privacy", "model training", "additional charges"),
+      "zh-Hans": ("Cognition", "Maximum Privacy", "模型训练排除", "额外费用")}),
+))
+def test_added_personal_agents_keep_vendor_sources_and_safety_boundaries(
+    locale: str, url: str, vendor: str, sources: tuple[str, ...],
+    boundaries: dict[str, tuple[str, ...]],
+) -> None:
+    bullet = _personal_agent_bullet(locale, url)
+    for term in (vendor, *sources, *boundaries[locale]):
+        assert term in bullet, (locale, url, term)
+
+
+def _visible_chinese_sentences(text: str) -> list[str]:
+    """Count rendered prose, retaining code/identifier text and punctuation."""
+    sentences: list[str] = []
+    # A wrapped Markdown line is still one sentence. Paragraphs and list items
+    # are separate blocks; a semicolon is not a sentence-ending punctuation mark.
+    for block in re.split(r"\n\s*\n|\n(?=- \[)", text):
+        code_spans: dict[str, str] = {}
+
+        def protect_code(match: re.Match[str]) -> str:
+            token = f"\x00CODE{len(code_spans)}\x00"
+            code_spans[token] = match.group(2)
+            return token
+
+        visible = re.sub(r"(`+)(.*?)\1", protect_code, block, flags=re.DOTALL)
+        visible = re.sub(r"\[([^]]+)\]\([^)]+\)", r"\1", visible)
+        visible = re.sub(r"<[^>]+>", "", visible)
+        visible = re.sub(r"\*\*(.+?)\*\*", r"\1", visible, flags=re.DOTALL)
+        visible = re.sub(r"^\s*(?:#{1,6}|[-*])\s+", "", visible, flags=re.MULTILINE)
+        visible = re.sub(r"\s+", " ", unescape(visible)).strip()
+        for token, literal in code_spans.items():
+            visible = visible.replace(token, literal)
+        sentences.extend(
+            sentence.strip()
+            for sentence in re.findall(r"[^。！？]+[。！？]?", visible)
+            if sentence.strip()
+        )
+    return sentences
+
+
+def test_personal_agent_sentence_counter_strips_markup_but_preserves_exact_identifiers() -> None:
+    source = '<small>**請保留** [設定](https://example.com/' + 'x' * 100 + ') `OLLAMA_NO_CLOUD=1` 與 `Pro 100`。</small>'
+    expected = "請保留 設定 OLLAMA_NO_CLOUD=1 與 Pro 100。"
+    assert _visible_chinese_sentences(source) == [expected]
+    assert len(_visible_chinese_sentences("甲" * 59 + "。" )[0]) == 60
+    assert len(_visible_chinese_sentences("甲" * 60 + "。" )[0]) == 61
+
+
+def test_personal_agent_sentence_counter_does_not_hide_wrapped_or_semicolon_clauses() -> None:
+    assert _visible_chinese_sentences("甲" * 30 + "；\n" + "乙" * 30 + "。") == ["甲" * 30 + "； " + "乙" * 30 + "。"]
+    assert len(_visible_chinese_sentences("甲" * 30 + "；\n" + "乙" * 30 + "。")[0]) > 60
+    assert _visible_chinese_sentences("請保留 `A__B  C`。") == ["請保留 A__B  C。"]
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "en", "zh-Hans"))
+@pytest.mark.parametrize("url", PERSONAL_AGENT_RESOURCE_URLS)
+def test_personal_agent_resource_rows_name_an_audience_and_teaching_role(locale: str, url: str) -> None:
+    row = _row_for_url(PAGES["everyday-user"][locale].read_text(encoding="utf-8"), url)
+    audience, teaching, ordinary_users, official_form = {
+        "zh-TW": ("適合誰：", "教什麼：", "日常使用者", "官方"),
+        "en": ("For ", "Teaches ", "everyday users", "official"),
+        "zh-Hans": ("适合谁：", "教什么：", "日常用户", "官方"),
+    }[locale]
+    for term in (audience, teaching, "⭐⭐⭐"):
+        assert term in row, (locale, url, term)
+    if url in OFFICIAL_PERSONAL_AGENT_RESOURCE_URLS:
+        for term in (ordinary_users, official_form):
+            assert term in row, (locale, url, term)
+    if "muse-personal" in url:
+        assert {"zh-TW": "小商家", "en": "small-business owners", "zh-Hans": "小商家"}[locale] in row
+    assert row.count("⭐") == 3
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "en", "zh-Hans"))
+def test_personal_agent_ratings_disclose_untested_comparisons_and_documented_teaching_value(locale: str) -> None:
+    text = _without_details(PAGES["everyday-user"][locale].read_text(encoding="utf-8"))
+    intro = text[text.index("## ⭐"):text.index("<table>", text.index("## ⭐"))]
+    required = {
+        "zh-TW": ("三星代表可選的具體產品範例，適合互相對照", "未實測的參考／對照範例", "評分依官方文件的教學價值，不代表實測產品品質"),
+        "en": ("three stars as optional concrete product examples to compare", "untested reference/comparison examples", "Ratings reflect documented teaching value, not hands-on product quality"),
+        "zh-Hans": ("三星代表可选的具体产品示例，适合互相对照", "未实测的参考／对照示例", "评分依官方文档的教学价值，不代表产品的实测质量"),
+    }[locale]
+    assert all(term in intro for term in required), locale
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "zh-Hans"))
+def test_introduced_personal_agent_chinese_sentences_stay_within_sixty_visible_characters(locale: str) -> None:
+    text = PAGES["everyday-user"][locale].read_text(encoding="utf-8")
+    resource_intro = text[text.index("## ⭐"):text.index("<table>", text.index("## ⭐"))]
+    prose = [_personal_agent_section(locale), resource_intro]
+    for url in PERSONAL_AGENT_RESOURCE_URLS:
+        row = _row_for_url(text, url)
+        prose.extend(re.findall(r"<t[dh]\b[^>]*>(.*?)</t[dh]>", row, re.DOTALL))
+    for source in prose:
+        for sentence in _visible_chinese_sentences(source):
+            assert len(sentence) <= 60, (locale, len(sentence), sentence)
+
+
 @pytest.mark.parametrize("locale", ("zh-TW", "en", "zh-Hans"))
 def test_everyday_user_teaches_permission_and_local_cloud_boundaries(locale: str) -> None:
     text = PAGES["everyday-user"][locale].read_text(encoding="utf-8")
@@ -1306,3 +1598,36 @@ def test_role_pages_drop_known_stale_or_unsafe_claims(page: Path) -> None:
         "“”",
     )
     assert not any(token in text for token in forbidden)
+
+
+def _assert_new_personal_agent_english_sentences_fit_written_style(text: str) -> None:
+    start = text.index("## 🧑 Personal Agent")
+    end = text.index('<a id="required-reading">', start)
+    intro_start = text.index("The stars are this project's")
+    intro_end = text.index("\n\n", intro_start)
+    blocks = [text[start:end], text[intro_start:intro_end]]
+    for block in blocks:
+        visible = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", block)
+        visible = visible.replace("**", "").replace("`", "")
+        visible = re.sub(r"<[^>]+>", "", visible)
+        # Markdown line wrapping does not start a new rendered sentence.
+        for paragraph in re.split(r"\n\s*\n", visible):
+            lines = [line.lstrip("- ").strip() for line in paragraph.splitlines() if not line.startswith("## ")]
+            joined = " ".join(lines)
+            for sentence in re.split(r"(?<=[.!?])\s+", joined):
+                assert len(re.findall(r"\S+", sentence)) <= 30, sentence
+
+
+def test_new_personal_agent_english_sentences_fit_written_style() -> None:
+    text = PAGES["everyday-user"]["en"].read_text(encoding="utf-8")
+    _assert_new_personal_agent_english_sentences_fit_written_style(text)
+
+
+@pytest.mark.parametrize("separator", (" ", "\n"))
+def test_personal_agent_english_length_guard_rejects_wrapped_review_sentence(separator: str) -> None:
+    text = PAGES["everyday-user"]["en"].read_text(encoding="utf-8")
+    fixed = "Other resources retain their `2026-08-29 UTC` status check. Personal Agent entries were added or re-verified on `2026-10-16 UTC`. They receive three stars as optional concrete product examples to compare, rather than required tools."
+    overlong = "Other resources retain their `2026-08-29 UTC` status check; Personal Agent entries were added or re-verified on `2026-10-16 UTC`" + separator + "and receive three stars as optional concrete product examples to compare, rather than required tools."
+    assert fixed in text
+    with pytest.raises(AssertionError):
+        _assert_new_personal_agent_english_sentences_fit_written_style(text.replace(fixed, overlong))

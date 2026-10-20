@@ -180,6 +180,12 @@ Skill 的核心意思可以共用，但文件夹、权限、frontmatter 和安�
 
 如果没有范围、证据或恢复方法，就先不要提高权限。这比记住很多工具名称更重要。
 
+> **升级后重新验证安全边界：** 在一次性 demo repo 重跑负向案例：文件夹中已关闭的 MCP 在 headless session 切换目录或重新加载 plugin 后仍不启动；
+> 管理员设置（managed settings）中的 `PreToolUse`（执行工具前）hook 拒绝工具调用时，应拦住该调用；若也返回 `"continue": false`，这一回合（turn）必须停止。
+> 只拒绝调用时，Claude 仍可选择其他做法。只读模式不能写文件；需要人工批准的命令不能自动放行（包含 `BASH_ARGV0` 权限案例）。
+> Anthropic 的 [Claude Code v2.1.296 release notes（10 月 9 日）](https://github.com/anthropics/claude-code/releases/tag/v2.1.296) 提供 MCP、hook 与 `BASH_ARGV0` 的上游回归线索；
+> 这不是本 repo 或你安装版本已通过这些检查的证据。
+
 ### 📋 Playbook 4：派遣 subagent 跑独立任务
 
 **成果：** 先列出当前工具真正提供哪些 agent，再把独立、可验证的工作交出去；不要假设每台电脑都有同名 agent。
@@ -224,7 +230,7 @@ Skill 的核心意思可以共用，但文件夹、权限、frontmatter 和安�
 </tbody>
 <tbody>
 <tr><th scope="rowgroup" rowspan="4">观察与评估</th><td><code>langfuse/langfuse</code></td><td>traces、usage 和 eval</td><td>想把多次运行放在一起看</td><td>⭐⭐⭐⭐⭐</td><td><a href="https://github.com/langfuse/langfuse">GitHub repo</a></td></tr>
-<tr><td><code>Arize-ai/phoenix</code></td><td>tracing 和 evaluation</td><td>想用开放源代码观察 AI 系统</td><td>⭐⭐⭐⭐</td><td><a href="https://github.com/Arize-ai/phoenix">GitHub repo</a></td></tr>
+<tr><td><code>Arize-ai/phoenix</code></td><td>tracing 和 evaluation</td><td>想在本机观察 AI 系统</td><td>⭐⭐⭐⭐</td><td><a href="https://github.com/Arize-ai/phoenix">GitHub repo</a></td></tr>
 <tr><td><code>Helicone/helicone</code></td><td>proxy／gateway 的数据流与隐私边界</td><td>想从 gateway 收集 request 记录</td><td>⭐⭐⭐⭐</td><td><a href="https://github.com/Helicone/helicone">GitHub repo</a></td></tr>
 <tr><td><code>promptfoo/promptfoo</code></td><td>eval cases 和 CI regression</td><td>要比较改动前后是否退步</td><td>⭐⭐⭐⭐⭐</td><td><a href="https://github.com/promptfoo/promptfoo">GitHub repo</a></td></tr>
 </tbody>

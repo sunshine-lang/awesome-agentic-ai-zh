@@ -6,6 +6,8 @@
 
 <!-- freshness: canonical=stages/03-tool-use-and-hello-agent.md; verified_on=2026-08-27; scope=models,pricing,tool-apis,security; max_age_days=90 -->
 
+> **云端范例兼容性**：现有 Anthropic 范例刻意保留 **Haiku 4.5 兼容性基准**，不代表最新或最低价模型。改用固定 ID `claude-haiku-5-5` 前，先按 [Haiku 5.5 迁移指南](https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide) 调整程序，不能只换 model ID：处理默认 adaptive thinking（自适应思考）、按 `type == "text"` 提取文字、移除 `temperature`／`top_p`／`top_k`，并重新计算 tokens、输出上限与预算。工具循环须原样保留 thinking 区块并只追加历史；离线测试通过不代表已验证真实模型质量。
+
 ## 📌 学习目标
 
 完成后，你可以：
@@ -31,6 +33,8 @@
 模型按照约定格式，返回要调用的函数名称与参数。就像填写一张有固定栏位的工作单。本章用它把自然语言问题变成程序能读取的请求。不同供应商的消息格式不完全相同。
 
 ### **Tool Schema（工具纲要）**
+
+**JSON**（JavaScript Object Notation） 是程序交换数据的文本格式。
 
 Schema 是工具的说明卡：名称、用途、可填栏位和数据类型。就像菜单告诉客人能点什么。本章会用 JSON Schema 描述工具。Schema 能约束外形，但程序仍要验证数值、权限和业务规则。
 
@@ -147,7 +151,7 @@ Path A 的 **API 费用是 `$0`**；仍会使用你的硬件、内存与电力�
 **第一步**：复制并运行 `ollama pull qwen2.5:3b`。接着展开 Path A，把完整程序直接复制成 `hello_tool.py`。
 
 <details markdown="1">
-<summary>Path A：Ollama 完整可复制示例（API 费用 `$0`）</summary>
+<summary>Path A：Ollama 完整可复制示例（API 费用 <code>$0</code>）</summary>
 
 ```python
 import json
@@ -229,7 +233,7 @@ python hello_tool.py
 </details>
 
 <details markdown="1">
-<summary>Path B：Anthropic 完整来回（每次先预留 `$0.05`）</summary>
+<summary>Path B：Anthropic 完整来回（每次先预留 <code>$0.05</code>）</summary>
 
 ```python
 import json
@@ -502,7 +506,7 @@ python examples/stage-3/06-schema-design/test_anthropic.py
     <tr><td><a href="https://arxiv.org/abs/2210.03629">ReAct paper</a></td><td>先读 abstract 与方法图。</td><td>原始论文；arXiv</td><td>⭐⭐⭐⭐</td></tr>
   </tbody>
   <tbody>
-    <tr><th scope="rowgroup" rowspan="4">官方课程与示例</th><td><a href="https://github.com/anthropics/courses">Anthropic Courses — Tool Use</a></td><td>完成 Tool Use notebook。</td><td>官方课程；上游未提供 SPDX</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><th scope="rowgroup" rowspan="4">官方课程与示例</th><td><a href="https://github.com/anthropics/courses">Anthropic Courses — Tool Use</a></td><td>阅读旧版 Tool Use notebook；动手时对照下一行 Cookbook。</td><td>已归档的官方课程；上游未提供 SPDX</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://github.com/anthropics/claude-cookbooks/tree/main/tool_use">Anthropic Tool Use Cookbook</a></td><td>从单工具读到并行工具。</td><td>维护中；MIT</td><td>⭐⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://github.com/anthropics/claude-quickstarts">Anthropic Quickstarts</a></td><td>练习后看完整应用如何连接工具。</td><td>维护中；MIT</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://github.com/microsoft/ai-agents-for-beginners">Microsoft AI Agents for Beginners</a></td><td>需要另一条完整课程时选读一章。</td><td>维护中；MIT</td><td>⭐⭐⭐⭐</td></tr>

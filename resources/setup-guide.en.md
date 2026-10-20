@@ -134,7 +134,7 @@ The table below lists only current official entry points. Click the official pag
 <tbody>
 <tr><th scope="rowgroup" rowspan="7">Cloud API</th><td><a href="https://platform.openai.com/docs/quickstart">OpenAI API</a></td><td>Official SDK and API; a ChatGPT subscription is not API billing</td><td>⭐⭐⭐⭐⭐</td></tr>
 <tr><td><a href="https://ai.google.dev/gemini-api/docs/openai">Gemini API</a></td><td>Google officially documents compatibility with OpenAI libraries</td><td>⭐⭐⭐⭐⭐</td></tr>
-<tr><td><a href="https://docs.api.nvidia.com/nim/re/reference/llm-apis">NVIDIA NIM</a></td><td>Check the endpoint for its supported API shape and models</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://docs.api.nvidia.com/nim/reference/llm-apis">NVIDIA NIM</a></td><td>Check the endpoint for its supported API shape and models</td><td>⭐⭐⭐⭐</td></tr>
 <tr><td><a href="https://api-docs.deepseek.com/">DeepSeek API</a></td><td>Official documentation provides an OpenAI-compatible way to use it</td><td>⭐⭐⭐⭐</td></tr>
 <tr><td><a href="https://platform.kimi.com/docs/api/overview">Kimi API</a></td><td>Use the official Console for the region, endpoint, and models</td><td>⭐⭐⭐⭐</td></tr>
 <tr><td><a href="https://help.aliyun.com/en/model-studio/base-url">Alibaba Model Studio／Qwen</a></td><td>Use the corresponding base URL for your region; the official service provides an OpenAI-compatible endpoint</td><td>⭐⭐⭐⭐</td></tr>
@@ -234,8 +234,8 @@ load_dotenv()
 client = Anthropic()  # Read the key from ANTHROPIC_API_KEY
 
 message = client.messages.create(
-    model="claude-sonnet-5",
-    max_tokens=120,
+    model="claude-sonnet-5-5",
+    max_tokens=1024,
     messages=[{"role": "user", "content": "Introduce yourself in one sentence."}],
 )
 

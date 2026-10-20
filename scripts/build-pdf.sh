@@ -64,8 +64,10 @@ WEASYPRINT_LOG="$BUILD_DIR/weasyprint.log"
 RESOURCE_PATH="$REPO_ROOT:$REPO_ROOT/stages:$REPO_ROOT/tracks/cli:$REPO_ROOT/branches:$REPO_ROOT/walkthroughs:$REPO_ROOT/resources"
 
 echo "Building $OUT_NAME"
+# The GFM reader leaves CJK-adjacent **core terms** literal. Pandoc Markdown
+# accepts these boundaries; explicitly retain the GFM features used by our pages.
 if ! pandoc "$SOURCE_MD" \
-  --from=gfm-tex_math_dollars+raw_html \
+  --from=markdown+pipe_tables+strikeout+task_lists+autolink_bare_uris+gfm_auto_identifiers-tex_math_dollars-blank_before_header-blank_before_blockquote-markdown_in_html_blocks-smart+raw_html \
   --to=html5 \
   --standalone \
   --embed-resources \
@@ -78,6 +80,9 @@ if ! pandoc "$SOURCE_MD" \
   sed -n '1,160p' "$PANDOC_LOG" >&2
   exit 1
 fi
+
+"$PYTHON_BIN" scripts/release_manifest.py prepare-html \
+  --input "$SOURCE_HTML" --output "$SOURCE_HTML" >/dev/null
 
 if ! weasyprint "$SOURCE_HTML" "$OUT_PDF" 2>"$WEASYPRINT_LOG"; then
   echo "ERROR: WeasyPrint failed while rendering $LANG_VARIANT" >&2

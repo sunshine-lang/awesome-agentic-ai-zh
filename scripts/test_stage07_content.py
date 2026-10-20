@@ -18,40 +18,54 @@ PAGES = {
 }
 DIAGRAMS = {
     "zh-TW": (
-        ROOT / "resources/diagrams/agent-engineering-control-questions.png",
-        ROOT / "resources/diagrams/inside-a-graph.png",
+        ROOT / "resources/diagrams/agent-production-relationship.png",
+        ROOT / "resources/diagrams/eval-case-anatomy.png",
     ),
     "en": (
-        ROOT / "resources/diagrams/agent-engineering-control-questions.en.png",
-        ROOT / "resources/diagrams/inside-a-graph.en.png",
+        ROOT / "resources/diagrams/agent-production-relationship.en.png",
+        ROOT / "resources/diagrams/eval-case-anatomy.en.png",
     ),
     "zh-Hans": (
-        ROOT / "resources/diagrams/agent-engineering-control-questions.zh-Hans.png",
-        ROOT / "resources/diagrams/inside-a-graph.zh-Hans.png",
+        ROOT / "resources/diagrams/agent-production-relationship.zh-Hans.png",
+        ROOT / "resources/diagrams/eval-case-anatomy.zh-Hans.png",
     ),
+}
+EVAL_DIAGRAM_ALT_MARKERS = {
+    "zh-TW": ("完整 Eval Case", "Input 只是其中一格"),
+    "en": ("complete Eval Case", "Input is only one part"),
+    "zh-Hans": ("完整 Eval Case", "Input 只是其中一格"),
 }
 CONTROL_DIAGRAM_ALT_MARKERS = {
     "zh-TW": (
-        "Harness 內含 Agent Loop",
-        "Workflow Graph 排整條路",
-        "Loop Engineering 依證據調整",
+        "Agent Harness 是工作環境",
+        "Workflow Graph 是帶分支的路線",
+        "Eval 用 Grader 檢查 Outcome 與 Trajectory",
     ),
     "en": (
-        "Harness contains the Agent Loop",
-        "Workflow Graph arranges the route",
-        "Loop Engineering adjusts from evidence",
+        "Agent Harness is the work environment",
+        "Workflow Graph is the branching route",
+        "Eval uses a Grader to check Outcome and Trajectory",
     ),
     "zh-Hans": (
-        "Harness 内含 Agent Loop",
-        "Workflow Graph 排整条路线",
-        "Loop Engineering 根据证据调整",
+        "Agent Harness 是工作环境",
+        "Workflow Graph 是带分支的路线",
+        "Eval 用 Grader 检查 Outcome 与 Trajectory",
     ),
 }
 CORE_LABELS = {
     "zh-TW": (
-        "Eval（評測）",
+        "Agent Harness（Agent 執行架構）",
+        "Agent Loop（Agent 迴圈）",
+        "Workflow Graph（工作流程圖）",
+        "Orchestration（編排）",
+        "Multi-Agent（多 Agent）",
+        "Handoff（交接）",
+        "Evaluation／Eval（評測）",
         "Outcome（結果）",
         "Trajectory（軌跡）",
+        "Grader（評分器）",
+        "Evaluation Harness（評測執行架構）",
+        "Trace（追蹤紀錄）",
         "Observability（可觀測性）",
         "Guardrail（護欄）",
         "Human Approval（人工核准）",
@@ -59,17 +73,20 @@ CORE_LABELS = {
         "Resume（續跑）",
         "Recovery（復原）",
         "Idempotency（冪等）",
-        "Harness",
-        "Loop Engineering",
-        "Graph Engineering",
-        "Orchestration",
-        "Multi-Agent（多 Agent）",
-        "Handoff",
     ),
     "en": (
-        "Eval",
+        "Agent Harness",
+        "Agent Loop",
+        "Workflow Graph",
+        "Orchestration",
+        "Multi-Agent",
+        "Handoff",
+        "Evaluation / Eval",
         "Outcome",
         "Trajectory",
+        "Grader",
+        "Evaluation Harness",
+        "Trace",
         "Observability",
         "Guardrail",
         "Human Approval",
@@ -77,17 +94,20 @@ CORE_LABELS = {
         "Resume",
         "Recovery",
         "Idempotency",
-        "Harness",
-        "Loop Engineering",
-        "Graph Engineering",
-        "Orchestration",
-        "Multi-Agent",
-        "Handoff",
     ),
     "zh-Hans": (
-        "Eval（评测）",
+        "Agent Harness（Agent 执行架构）",
+        "Agent Loop（Agent 循环）",
+        "Workflow Graph（工作流程图）",
+        "Orchestration（编排）",
+        "Multi-Agent（多 Agent）",
+        "Handoff（交接）",
+        "Evaluation／Eval（评测）",
         "Outcome（结果）",
         "Trajectory（轨迹）",
+        "Grader（评分器）",
+        "Evaluation Harness（评测执行架构）",
+        "Trace（追踪纪录）",
         "Observability（可观测性）",
         "Guardrail（护栏）",
         "Human Approval（人工批准）",
@@ -95,23 +115,68 @@ CORE_LABELS = {
         "Resume（续跑）",
         "Recovery（恢复）",
         "Idempotency（幂等）",
-        "Harness",
-        "Loop Engineering",
-        "Graph Engineering",
-        "Orchestration",
-        "Multi-Agent（多 Agent）",
-        "Handoff",
     ),
 }
 CORE_SECTION_HEADINGS = {
-    "zh-TW": ("## 🧩 十六個核心詞（分三組讀）", "## 🚪 進入條件"),
-    "en": ("## 🧩 Sixteen Core Terms (Read Them in Three Groups)", "## 🚪 Entry Conditions"),
-    "zh-Hans": ("## 🧩 十六个核心词（分三组读）", "## 🚪 进入条件"),
+    "zh-TW": ("## 🧩 先認識十九個核心詞", "## 🚪 進入條件"),
+    "en": ("## 🧩 Meet Nineteen Core Terms First", "## 🚪 Entry Conditions"),
+    "zh-Hans": ("## 🧩 先认识十九个核心词", "## 🚪 进入条件"),
 }
+LEGACY_CORE_ANCHORS = {
+    "zh-TW": '<a id="-先認識核心詞"></a>',
+    "en": '<a id="-meet-the-core-terms-first"></a>',
+    "zh-Hans": '<a id="-先认识核心词"></a>',
+}
+CORE_TABLE_HEADERS = {
+    "zh-TW": (
+        "先解決什麼",
+        "核心詞",
+        "五歲也能懂的說法",
+        "本章用途／技術界線",
+    ),
+    "en": (
+        "What to solve first",
+        "Core term",
+        "Plain-language meaning",
+        "How this chapter uses it / technical boundary",
+    ),
+    "zh-Hans": (
+        "先解决什么",
+        "核心词",
+        "五岁也能懂的说法",
+        "本章用途／技术边界",
+    ),
+}
+EVAL_SECTION_HEADINGS = {
+    "zh-TW": (
+        "## 🧪 Eval：先說要什麼，再決定怎麼評",
+        "## 🔎 Observability：出錯時看得見是哪一步",
+    ),
+    "en": (
+        "## 🧪 Eval: State What Good Means, Then Decide How to Grade",
+        "## 🔎 Observability: See Which Step Failed",
+    ),
+    "zh-Hans": (
+        "## 🧪 Eval：先说要什么，再决定怎么评",
+        "## 🔎 Observability：出错时看得见是哪一步",
+    ),
+}
+EVAL_TEACHING_TERMS = (
+    "Outcome",
+    "Eval Case",
+    "Eval Suite",
+    "Reviewed Eval Set",
+    "Golden",
+    "Trial",
+    "Baseline",
+    "Regression",
+    "Development Set",
+    "Holdout Set",
+)
 PAGE_TITLES = {
-    "zh-TW": "# Stage 7 — Agent Production Engineering：Harness、Loop 與 Graph",
-    "en": "# Stage 7 — Agent Production Engineering: Harness, Loops, and Graphs",
-    "zh-Hans": "# Stage 7 — Agent Production Engineering：Harness、Loop 与 Graph",
+    "zh-TW": "# Stage 7 — Agent 上線工程：可測、可看、可停、可恢復",
+    "en": "# Stage 7 — Agent Production Engineering: Testable, Observable, Stoppable, and Recoverable",
+    "zh-Hans": "# Stage 7 — Agent 上线工程：可测、可看、可停、可恢复",
 }
 OLD_PAGE_TITLES = {
     "zh-TW": "# Stage 7 — Loop／Graph Engineering：多 Agent 與穩定運作",
@@ -137,6 +202,7 @@ CURRENT_FACT_URLS = {
     "https://openai.github.io/openai-agents-python/multi_agent/",
     "https://www.ibm.com/think/topics/loop-engineering",
     "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+    "https://platform.openai.com/docs/api-reference/graders?api-mode=chat",
     "https://openai.github.io/openai-agents-python/tracing/",
     "https://openai.github.io/openai-agents-python/human_in_the_loop/",
     "https://docs.langchain.com/oss/python/langgraph/persistence",
@@ -172,24 +238,25 @@ FORBIDDEN_TERMINOLOGY = (
 )
 ROUTE_MARKERS = {
     "zh-TW": (
-        "Stage 3：Agent Loop 入門",
-        "Stage 4：Workflow Graph 入門",
-        "Stage 7：Agent Production Engineering 整合",
+        "Stage 3 的 Agent Loop",
+        "Stage 4 的 Workflow Graph",
+        "本章的安全上線整合",
     ),
     "en": (
-        "Stage 3: Agent Loop entry",
-        "Stage 4: Workflow Graph entry",
-        "Stage 7: Agent Production Engineering integration",
+        "Stage 3 Agent Loop",
+        "Stage 4 Workflow Graph / Agent Framework",
+        "safe production integration in this chapter",
     ),
     "zh-Hans": (
-        "Stage 3：Agent Loop 入门",
-        "Stage 4：Workflow Graph 入门",
-        "Stage 7：Agent Production Engineering 整合",
+        "Stage 3 的 Agent Loop",
+        "Stage 4 的 Workflow Graph",
+        "本章的安全上线集成",
     ),
 }
 RESOURCE_URL_RATINGS = (
     ("https://www.anthropic.com/engineering/building-effective-agents", "⭐⭐⭐⭐⭐"),
     ("https://openai.github.io/openai-agents-python/multi_agent/", "⭐⭐⭐⭐⭐"),
+    ("https://developers.openai.com/api/docs/guides/responses-multi-agent", "⭐⭐⭐"),
     ("https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/", "⭐⭐⭐⭐"),
     ("https://github.com/langchain-ai/langgraph", "⭐⭐⭐⭐⭐"),
     ("https://platform.claude.com/docs/en/test-and-evaluate/develop-tests", "⭐⭐⭐⭐⭐"),
@@ -199,6 +266,7 @@ RESOURCE_URL_RATINGS = (
     ("https://github.com/Arize-ai/phoenix", "⭐⭐⭐⭐"),
     ("https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents", "⭐⭐⭐⭐⭐"),
     ("https://github.com/anthropics/claude-agent-sdk-python", "⭐⭐⭐⭐⭐"),
+    ("https://ai.google.dev/gemini-api/docs/antigravity-agent", "⭐⭐⭐"),
     ("https://github.com/deepseek-ai/deepseek-harness", "⭐⭐⭐"),
     ("https://openai.github.io/openai-agents-python/human_in_the_loop/", "⭐⭐⭐⭐⭐"),
     ("https://docs.langchain.com/oss/python/langgraph/interrupts", "⭐⭐⭐⭐⭐"),
@@ -246,14 +314,55 @@ def test_all_core_terms_are_bold_and_defined_before_exercises(
     core_start = text.index(core_heading)
     core_end = text.index(next_heading, core_start)
     core = text[core_start:core_end]
+    assert LEGACY_CORE_ANCHORS[locale] in text[:core_start]
+    header = "".join(
+        f'<th scope="col">{label}</th>' for label in CORE_TABLE_HEADERS[locale]
+    )
+    assert f"<thead><tr>{header}</tr></thead>" in core
     positions = []
     for label in CORE_LABELS[locale]:
         marker = f"<strong>{label}</strong>"
         assert marker in core
         positions.append(core.index(marker))
+    assert re.search(r"^- \*\*", core, flags=re.MULTILINE) is None
+    assert core.index("<strong>Grader") < core.index("<strong>Evaluation Harness")
     assert positions == sorted(positions)
-    assert re.findall(r'scope="rowgroup" rowspan="(\d+)"', core) == ["4", "6", "6"]
-    assert len(re.findall(r"<tr>", core)) == 17
+    assert re.findall(r'scope="rowgroup" rowspan="(\d+)"', core) == ["6", "7", "6"]
+    assert len(re.findall(r"<tr>", core)) == 20
+
+
+@pytest.mark.parametrize("locale,page", PAGES.items())
+def test_eval_case_is_complete_and_terms_follow_the_teaching_order(
+    locale: str, page: Path
+) -> None:
+    text = page.read_text(encoding="utf-8")
+    start_heading, next_heading = EVAL_SECTION_HEADINGS[locale]
+    start = text.index(start_heading)
+    end = text.index(next_heading, start)
+    section = text[start:end]
+    visible = _without_closed_details(section)
+    assert start_heading in visible
+    positions = [visible.index(term) for term in EVAL_TEACHING_TERMS]
+    assert positions == sorted(positions)
+    for field in (
+        "Input",
+        "Initial State",
+        "Success Criteria",
+        "Forbidden Actions",
+        "Optional Reference Answer",
+        "Grader",
+        "Case Metadata",
+    ):
+        assert field in visible
+    assert re.search(r"Golden[^\n]*(?:not input alone|不只是 input)", visible, re.I)
+    assert re.search(r"Golden[^\n]*(?:training data|訓練資料|训练数据)", visible, re.I)
+    assert "few-shot" in visible.lower()
+    assert "20–50" in text and (
+        "not a universal minimum" in text
+        or "不是所有專案的硬性最低數" in text
+        or "不是所有项目的硬性最低数" in text
+        or "不是通用最低要求" in text
+    )
 
 
 @pytest.mark.parametrize("locale,page", PAGES.items())
@@ -279,22 +388,31 @@ def test_control_questions_are_not_product_generations_or_chapter_numbering(
 
 BOUNDARY_HEADINGS = {
     "zh-TW": (
-        "## 🧭 Harness、Loop、Graph 各自管什麼？",
-        "## 🏗 Harness Engineering",
-        "## 🔁 Loop Engineering",
-        "## 🗺 Workflow Graph／Production Orchestration",
+        "## 🧭 Harness、Loop、Graph 與 Eval 怎麼合作？",
+        "## 🏗 Agent Harness：先把安全工作間準備好",
+        "## 🔁 Agent Loop：做一步、看結果，再決定",
+        "## 🗺 Workflow Graph：遇到岔路時知道往哪走",
+        "## 🧪 Eval：先說要什麼，再決定怎麼評",
+        "## 🔎 Observability：出錯時看得見是哪一步",
+        "## 🛑 Approval、Checkpoint、Resume 與 Recovery：先停，再安全繼續",
     ),
     "en": (
-        "## 🧭 What Does Harness, Loop, and Graph Each Control?",
-        "## 🏗 Harness Engineering",
-        "## 🔁 Loop Engineering",
-        "## 🗺 Workflow Graph / Production Orchestration",
+        "## 🧭 Harness, Loop, Graph, and Eval: How They Work Together",
+        "## 🏗 Agent Harness: Prepare the Safe Workspace",
+        "## 🔁 Agent Loop: Act, Observe, Then Decide",
+        "## 🗺 Workflow Graph: Know Where to Go at a Branch",
+        "## 🧪 Eval: State What Good Means, Then Decide How to Grade",
+        "## 🔎 Observability: See Which Step Failed",
+        "## 🛑 Approval, Checkpoint, Resume, and Recovery: Stop, Then Continue Safely",
     ),
     "zh-Hans": (
-        "## 🧭 Harness、Loop、Graph 各自管什么？",
-        "## 🏗 Harness Engineering",
-        "## 🔁 Loop Engineering",
-        "## 🗺 Workflow Graph／Production Orchestration",
+        "## 🧭 Harness、Loop、Graph 与 Eval 怎么合作？",
+        "## 🏗 Agent Harness：先把安全工作间准备好",
+        "## 🔁 Agent Loop：做一步、看结果，再决定",
+        "## 🗺 Workflow Graph：遇到岔路时知道往哪走",
+        "## 🧪 Eval：先说要什么，再决定怎么评",
+        "## 🔎 Observability：出错时看得见是哪一步",
+        "## 🛑 Approval、Checkpoint、Resume 与 Recovery：先停，再安全继续",
     ),
 }
 
@@ -352,9 +470,9 @@ def test_six_real_exercises_exist_and_the_four_step_core_path_is_visible(
 
 
 PRODUCTION_PATH_HEADINGS = {
-    "zh-TW": "## 🛡 上線四步：Eval → Observability → Approval／Recovery → Deploy",
-    "en": "## 🛡 Four Release Steps: Eval → Observability → Approval / Recovery → Deploy",
-    "zh-Hans": "## 🛡 上线四步：Eval → Observability → Approval／Recovery → Deploy",
+    "zh-TW": "## 🛡 完整上線路線：Eval → Observability → Approval／Recovery → Deploy",
+    "en": "## 🛡 Complete Production Route: Eval → Observability → Approval / Recovery → Deploy",
+    "zh-Hans": "## 🛡 完整上线路线：Eval → Observability → Approval／Recovery → Deploy",
 }
 
 
@@ -379,11 +497,11 @@ def test_three_locales_have_the_same_external_urls_and_current_fact_sources() ->
     assert url_lists["zh-TW"] == url_lists["en"] == url_lists["zh-Hans"]
     assert CURRENT_FACT_URLS <= set(url_lists["zh-TW"])
     for page in PAGES.values():
-        assert "2026-08-31 UTC" in page.read_text(encoding="utf-8")
+        assert "2026-09-13 UTC" in page.read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("page", PAGES.values())
-def test_resource_table_has_accessible_merged_groups_and_21_ratings(page: Path) -> None:
+def test_resource_table_has_accessible_merged_groups_and_23_ratings(page: Path) -> None:
     text = page.read_text(encoding="utf-8")
     tables = re.findall(r"<table>.*?</table>", text, flags=re.DOTALL)
     rated_tables = [table for table in tables if re.search(r"⭐{3,5}", table)]
@@ -391,7 +509,7 @@ def test_resource_table_has_accessible_merged_groups_and_21_ratings(page: Path) 
     table = rated_tables[0]
     assert len(re.findall(r'<th scope="col">', table)) == 5
     groups = re.findall(r"<tbody>(.*?)</tbody>", table, flags=re.DOTALL)
-    expected = [4, 6, 6, 5]
+    expected = [5, 6, 7, 5]
     assert len(groups) == len(expected)
     for group, rows in zip(groups, expected):
         assert len(re.findall(r"<tr>", group)) == rows
@@ -423,6 +541,10 @@ def test_static_leaderboard_and_stale_project_claims_are_absent(page: Path) -> N
         "Fable 5",
         "Mythos 5",
         "Opus 4.8",
+        "Rerun the same hold-out cases whenever you change",
+        "每次更换模型、Prompt、Tool 或 Harness，都重新运行同一组 hold-out cases",
+        "Start with five fixed questions",
+        "先用 5 个固定题目做 baseline",
         '""',
         "“”",
     )
@@ -439,25 +561,256 @@ def test_locale_diagrams_are_distinct_large_assets_and_referenced() -> None:
     for locale, diagrams in DIAGRAMS.items():
         page_text = PAGES[locale].read_text(encoding="utf-8")
         assert all(marker in page_text for marker in CONTROL_DIAGRAM_ALT_MARKERS[locale])
+        assert all(marker in page_text for marker in EVAL_DIAGRAM_ALT_MARKERS[locale])
         for diagram in diagrams:
             data = diagram.read_bytes()
             assert diagram.suffix == ".png"
             assert data.startswith(b"\x89PNG\r\n\x1a\n")
             width, height = struct.unpack(">II", data[16:24])
             assert width >= 1600 and height >= 900
-            if diagram.name.startswith("agent-engineering-control-questions"):
-                assert (width, height) == (1672, 941)
+            assert (width, height) == (1672, 941)
             hashes.add(hashlib.sha256(data).hexdigest())
             assert f"../resources/diagrams/{diagram.name}" in page_text
     assert len(hashes) == 6
 
 
-def test_control_questions_use_png_only() -> None:
+def test_new_stage7_diagrams_use_png_only() -> None:
     diagram_dir = ROOT / "resources/diagrams"
-    assert not list(diagram_dir.glob("agent-engineering-control-questions*.svg"))
+    assert not list(diagram_dir.glob("agent-production-relationship*.svg"))
+    assert not list(diagram_dir.glob("eval-case-anatomy*.svg"))
+
+
+def test_stage7_diagram_provenance_records_both_new_layouts() -> None:
+    provenance = (ROOT / "resources/diagrams/locale-variant-prompts.md").read_text(
+        encoding="utf-8"
+    )
+    section = provenance[provenance.index("## 2026-09-13 · Stage 7 上線工程關係與 Eval Case") :]
+    assert "agent-production-relationship" in section
+    assert "eval-case-anatomy" in section
+    assert "Input 只是完整 Eval Case 的其中一格" in section
+    assert "內建圖片生成工具沒有暴露可選 model ID" in section
 
 
 def test_english_page_has_no_untranslated_cjk() -> None:
     text = PAGES["en"].read_text(encoding="utf-8")
     text = text.replace("繁體中文", "").replace("简体中文", "")
     assert re.search(r"[\u3400-\u9fff]", text) is None
+
+
+OPTIONAL_READING_CLAUSES = {
+    "zh-TW": {
+        "openai": (
+            "是 Beta。支援 GPT-6.1 Sol 與所有 GPT-5.6 模型。",
+            "有各自 context，但共用請求的模型與工具。這不等於 SDK 的 manager／handoff。",
+            "`max_concurrent_subagents` 預設為 3，計算整棵樹的活躍 subagent，不含 root。",
+            "並行設定、總數與樹深沒有固定上限；分工可能增加 token。",
+            "`max_tool_calls` 不支援。`reasoning.summary` 與 `/responses/compact` 也不支援。各 Agent 改用獨立的 server-side 自動 compaction。",
+            "Hosted collaboration 由 API 執行；自訂 function call 仍由應用程式執行。",
+            "Context 分開不代表工具權限隔離；應用程式仍須核准敏感工具，並限制成本與停止條件。",
+        ),
+        "google": (
+            "Antigravity 是 Public Preview。",
+            "`antigravity-preview-09-2026` 預設用 Gemini 3.8 Flash。",
+            "跨 interaction 保留的檔案。也有程式執行、自訂 function 與 remote MCP。",
+            "網路預設不限對外連線；先設 allowlist 與最小工具權限。",
+            "搜尋與 URL 擷取不代表 GUI 瀏覽器控制；目前 `computer_use` 不支援。",
+            "Google 文件說明：以 managed credential ID 引用秘密。Egress proxy 注入秘密，不暴露在 sandbox。",
+            "Agent 能使用所提供 credential 的完整權限範圍；只授予任務需要的最小範圍。",
+        ),
+    },
+    "en": {
+        "openai": (
+            "is in Beta for GPT-6.1 Sol and all GPT-5.6 models.",
+            "subagents with separate contexts. They share the request's model and tools; this is not SDK manager / handoff orchestration.",
+            "`max_concurrent_subagents` defaults to 3 active subagents across the tree and excludes the root.",
+            "Concurrency settings, total agents, and tree depth have no fixed cap; delegation can add tokens.",
+            "`max_tool_calls`, `reasoning.summary`, and `/responses/compact` are unsupported; server-side automatic compaction runs independently for each Agent.",
+            "The API executes hosted collaboration; your application executes custom function calls.",
+            "Separate contexts do not isolate tool permissions: the application must still approve sensitive tools and enforce budgets and stop conditions.",
+        ),
+        "google": (
+            "offers Antigravity in Public Preview.",
+            "`antigravity-preview-09-2026` defaults to Gemini 3.8 Flash.",
+            "files preserved across interactions, code execution, custom functions, and remote MCP.",
+            "Outbound network access is unrestricted by default; set an allowlist and minimal tool permissions.",
+            "Search and URL fetching do not imply GUI browser control; `computer_use` is unsupported.",
+            "Google's docs describe referencing secrets by managed credential ID: the egress proxy injects them without exposing them in the sandbox.",
+            "An Agent can use the full scope of a supplied credential; grant only the minimum scope needed.",
+        ),
+    },
+    "zh-Hans": {
+        "openai": (
+            "是 Beta。支持 GPT-6.1 Sol 与所有 GPT-5.6 模型。",
+            "有各自 context，但共用请求的模型与工具。这不等于 SDK 的 manager／handoff。",
+            "`max_concurrent_subagents` 默认为 3，计算整棵树的活跃 subagent，不含 root。",
+            "并行设置、总数与树深没有固定上限；分工可能增加 token。",
+            "`max_tool_calls` 不支持。`reasoning.summary` 与 `/responses/compact` 也不支持。各 Agent 改用独立的 server-side 自动 compaction。",
+            "Hosted collaboration 由 API 运行；自定义 function call 仍由应用程序运行。",
+            "Context 分开不代表工具权限隔离；应用程序仍须批准敏感工具，并限制成本与停止条件。",
+        ),
+        "google": (
+            "Antigravity 是 Public Preview。",
+            "`antigravity-preview-09-2026` 默认用 Gemini 3.8 Flash。",
+            "跨 interaction 保留的文件。也有程序运行、自定义 function 与 remote MCP。",
+            "网络默认不限对外连接；先设 allowlist 与最小工具权限。",
+            "搜索与 URL 获取不代表 GUI 浏览器控制；目前 `computer_use` 不支持。",
+            "Google 文档说明：以 managed credential ID 引用秘密。Egress proxy 注入秘密，不暴露在 sandbox。",
+            "Agent 能使用所提供 credential 的完整权限范围；只授予任务需要的最小范围。",
+        ),
+    },
+}
+
+
+def _assert_optional_reading_boundaries(text: str, locale: str) -> None:
+    # Scope the clauses to their provider's optional notes, so a correct phrase
+    # elsewhere cannot mask a reversed limit or execution responsibility here.
+    openai_start = text.index("- **" + OPTIONAL_READING_LABELS[locale])
+    google_start = text.index("- [Google Managed Agents]", openai_start)
+    notes_end = text.index("\n</details>", google_start)
+    for provider, notes in (
+        ("openai", text[openai_start:google_start]),
+        ("google", text[google_start:notes_end]),
+    ):
+        for clause in OPTIONAL_READING_CLAUSES[locale][provider]:
+            assert clause in notes, f"{locale}/{provider}: missing boundary: {clause}"
+
+
+OPTIONAL_READING_LABELS = {
+    "zh-TW": "選修官方文件",
+    "en": "Optional official docs",
+    "zh-Hans": "选修官方文档",
+}
+
+
+@pytest.mark.parametrize("locale,page", PAGES.items())
+def test_optional_managed_readings_are_dated_and_keep_security_boundaries(
+    locale: str, page: Path
+) -> None:
+    text = page.read_text(encoding="utf-8")
+    visible = _without_closed_details(text)
+    assert "2026-10-02 UTC" in visible
+    assert "verified_on=2026-09-13" in text
+    assert "https://developers.openai.com/api/docs/guides/responses-multi-agent" in visible
+    assert "https://ai.google.dev/gemini-api/docs/antigravity-agent" in visible
+    assert "https://ai.google.dev/gemini-api/docs/agents" in text
+    _assert_optional_reading_boundaries(text, locale)
+    # The provider's orchestration is a reading option, not a new runnable path.
+    assert "client.beta.responses" not in text
+    assert "client.interactions.create" not in text
+    assert "Gemini 4 Argon" not in text
+
+
+@pytest.mark.parametrize("locale,page", PAGES.items())
+@pytest.mark.parametrize("provider", ("openai", "google"))
+def test_optional_boundary_checks_reject_direction_and_number_mutations(
+    locale: str, page: Path, provider: str
+) -> None:
+    text = page.read_text(encoding="utf-8")
+    # Exercise every requirement clause in memory without editing the checkout.
+    for clause in OPTIONAL_READING_CLAUSES[locale][provider]:
+        mutation = clause.replace("3 active", "13 active").replace("為 3，", "為 13，").replace("为 3，", "为 13，")
+        if mutation == clause:
+            mutation = clause.replace("unsupported", "supported").replace("不支援", "支援").replace("不支持", "支持")
+        if mutation == clause:
+            mutation = clause.replace("independently", "jointly").replace("獨立", "共同").replace("独立", "共同")
+        if mutation == clause:
+            mutation = clause[:-1] + " [reversed boundary]"
+        assert mutation != clause
+        with pytest.raises(AssertionError, match=f"{locale}/{provider}"):
+            _assert_optional_reading_boundaries(text.replace(clause, mutation), locale)
+
+
+
+def test_optional_resource_reviews_do_not_relabel_the_full_fact_pack() -> None:
+    import yaml
+
+    pack = yaml.safe_load(
+        (ROOT / "scripts/freshness-models.yml").read_text(encoding="utf-8")
+    )["stage07_fact_pack"]
+    assert pack["verified_on"] == "2026-09-13"
+    assert pack["resource_updates"] == {
+        "openai_responses_multi_agent": "2026-10-02",
+        "google_managed_agents": "2026-10-02",
+    }
+    assert pack["official_sources"]["openai_responses_multi_agent"] == (
+        "https://developers.openai.com/api/docs/guides/responses-multi-agent"
+    )
+    assert pack["official_sources"]["google_managed_agents"] == (
+        "https://ai.google.dev/gemini-api/docs/agents"
+    )
+    assert pack["official_sources"]["google_antigravity_agent"] == (
+        "https://ai.google.dev/gemini-api/docs/antigravity-agent"
+    )
+
+
+@pytest.mark.parametrize("locale,page", PAGES.items())
+def test_new_official_reading_rows_state_audience_and_form(locale: str, page: Path) -> None:
+    text = page.read_text(encoding="utf-8")
+    audience, form = {
+        "zh-TW": ("已完成單 Agent 者", "官方文件"),
+        "zh-Hans": ("已完成单 Agent 者", "官方文档"),
+        "en": ("Readers with a single-Agent baseline", "official docs"),
+    }[locale]
+    for url in ("https://developers.openai.com/api/docs/guides/responses-multi-agent", "https://ai.google.dev/gemini-api/docs/antigravity-agent"):
+        row = next(line for line in text.splitlines() if "<tr>" in line and f'href="{url}"' in line)
+        assert audience in row
+        assert form in row
+
+
+def _modified_chinese_prose(text: str, locale: str, scope: str) -> str:
+    if scope == "optional-notes":
+        start = text.index("- **" + OPTIONAL_READING_LABELS[locale])
+        return text[start:text.index("\n</details>", start)]
+    if scope == "intro":
+        start = text.index("-->", text.index("<!-- freshness:")) + 3
+        ending = "先記住上線順序" if locale == "zh-TW" else "先记住上线顺序"
+        return text[start:text.index(ending, start)]
+    assert scope == "receipt"
+    return next(paragraph for paragraph in text.split("\n\n") if "**execution receipt" in paragraph)
+
+
+def _assert_short_chinese_sentences(prose: str) -> None:
+    # Count visible sentences, excluding link destinations and Markdown
+    # decoration, while preserving exact technical identifier characters.
+    prose = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", prose)
+    prose = prose.replace("**", "").replace("`", "")
+    for line in prose.splitlines():
+        if line.startswith("#"):
+            continue
+        for sentence in re.split(r"(?<=[。！？])", line.lstrip("- ")):
+            if sentence.strip():
+                assert len(sentence.strip()) <= 60, sentence
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "zh-Hans"))
+@pytest.mark.parametrize("scope", ("optional-notes", "intro", "receipt"))
+def test_modified_chinese_prose_fits_written_sentence_style(locale: str, scope: str) -> None:
+    text = PAGES[locale].read_text(encoding="utf-8")
+    _assert_short_chinese_sentences(_modified_chinese_prose(text, locale, scope))
+
+
+@pytest.mark.parametrize("locale", ("zh-TW", "zh-Hans"))
+@pytest.mark.parametrize("scope", ("intro", "receipt"))
+def test_sentence_style_rejects_rejoined_intro_and_receipt(locale: str, scope: str) -> None:
+    text = PAGES[locale].read_text(encoding="utf-8")
+    prose = _modified_chinese_prose(text, locale, scope)
+    if scope == "intro":
+        boundary = "可恢復。這稱為" if locale == "zh-TW" else "可恢复。这称为"
+    else:
+        boundary = "**。記下" if locale == "zh-TW" else "**。记下"
+    assert boundary in prose
+    with pytest.raises(AssertionError):
+        _assert_short_chinese_sentences(prose.replace(boundary, boundary.replace("。", "，")))
+
+
+@pytest.mark.parametrize("locale,page", PAGES.items())
+def test_new_reading_ratings_are_document_based_and_live_apis_are_untested(locale: str, page: Path) -> None:
+    text = page.read_text(encoding="utf-8")
+    paragraph = next(line for line in text.splitlines() if "GitHub stars" in line and not line.startswith("<"))
+    basis, untested = {
+        "zh-TW": ("三星依文件教學價值", "未實跑 API"),
+        "zh-Hans": ("三星依文档教学价值", "未实跑 API"),
+        "en": ("Their ratings reflect documented teaching value", "they haven't been run against live APIs"),
+    }[locale]
+    assert basis in paragraph
+    assert untested in paragraph

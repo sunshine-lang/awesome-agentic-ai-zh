@@ -6,6 +6,8 @@
 
 **Prompt（提示）**不只是一个问题。它是交给模型的一整份任务包，可以放进指令、要处理的资料、范例和输出规则。
 
+> **云端范例兼容性**：现有 Anthropic 范例刻意保留 **Haiku 4.5 兼容性基准**，不代表最新或最低价模型。改用固定 ID `claude-haiku-5-5` 前，先按 [Haiku 5.5 迁移指南](https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide) 调整程序，不能只换 model ID：处理默认 adaptive thinking（自适应思考）、按 `type == "text"` 提取文字、移除 `temperature`／`top_p`／`top_k`，并重新计算 tokens、输出上限与预算。工具循环须原样保留 thinking 区块并只追加历史；离线测试通过不代表已验证真实模型质量。
+
 ## 📌 学习目标
 
 完成后，你可以：
@@ -258,7 +260,7 @@ Path A 六题两轮的 API 费用为 `$0`。Path B 先设 `$0.05` 上限；如�
   </thead>
   <tbody>
     <tr><th scope="rowgroup" rowspan="5">官方课程</th><td><a href="https://github.com/anthropics/prompt-eng-interactive-tutorial">Anthropic Prompt Engineering Tutorial</a></td><td>跟着 notebook 做第一章。</td><td>维护中；上游未提供 SPDX</td><td>⭐⭐⭐⭐</td></tr>
-    <tr><td><a href="https://github.com/anthropics/courses">Anthropic Courses</a></td><td>阅读 Real World Prompting 和 Prompt Evaluations。</td><td>维护中；上游未提供 SPDX</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/anthropics/courses">Anthropic Courses</a></td><td>阅读旧版 Real World Prompting 和 Prompt Evaluations；动手时对照本表的现行官方文档。</td><td>已归档；上游未提供 SPDX</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview">Anthropic Prompt Engineering</a></td><td>先读“什么时候该修改 prompt”。</td><td>官方文档</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://developers.openai.com/api/docs/guides/prompt-engineering">OpenAI Prompt Engineering</a></td><td>阅读消息角色、范例和 eval。</td><td>官方文档</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://ai.google.dev/gemini-api/docs/prompting-strategies">Google Prompt Design Strategies</a></td><td>阅读清晰指令和固定结构。</td><td>官方文档</td><td>⭐⭐⭐⭐</td></tr>
@@ -272,7 +274,7 @@ Path A 六题两轮的 API 费用为 `$0`。Path B 先设 `$0.05` 上限；如�
   <tbody>
     <tr><th scope="rowgroup" rowspan="4">跟着范例学</th><td><a href="https://github.com/dair-ai/Prompt-Engineering-Guide">DAIR.AI Prompt Engineering Guide</a></td><td>把它当查询手册，不必从头背完。</td><td>维护中；MIT</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://www.promptingguide.ai/">PromptingGuide.ai</a></td><td>用网站版快速找一个技巧。</td><td>维护中；网站</td><td>⭐⭐⭐</td></tr>
-    <tr><td><a href="https://github.com/NirDiamant/Prompt_Engineering">NirDiamant Prompt Engineering</a></td><td>挑一个 notebook，边运行边学习。</td><td>维护中；上游未提供 SPDX</td><td>⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/NirDiamant/Prompt_Engineering">NirDiamant Prompt Engineering</a></td><td>挑一个 notebook，边运行边学习。</td><td>自定义非商业授权；商用须另取得书面许可</td><td>⭐⭐⭐</td></tr>
     <tr><td><a href="https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php">李宏毅 GenAI-ML（2025 Fall）</a></td><td>需要中文课堂讲解时再看。</td><td>2025 Fall 课程网站；不是最新模型文档</td><td>⭐⭐⭐</td></tr>
   </tbody>
   <tbody>

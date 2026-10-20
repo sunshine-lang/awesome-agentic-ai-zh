@@ -1,5 +1,7 @@
 # Stage 6 — RAG 與 Memory：先找資料，再記住重要的事
 
+**RAG**（Retrieval-Augmented Generation）：先找相關資料，再依資料回答。
+
 > **繁體中文** | [简体中文](./06-memory-rag.zh-Hans.md) | [English](./06-memory-rag.en.md)
 
 <!-- freshness: canonical=stages/06-memory-rag.md; verified_on=2026-08-30; scope=rag,retrieval,embeddings,vector-stores,memory,evaluation,project-status; max_age_days=90 -->
@@ -197,7 +199,7 @@ RAG 有兩條路：一條先整理資料，一條在問題來時找資料。
 
 ### [進階 RAG：先找出哪一步壞了，再加新技巧](../resources/advanced-rag.md)
 
-適合已經做出最小 RAG、但遇到「找不到、排序錯、跨文件關係難找」的人。頁面會完整解釋 **Hybrid Search**、**Reranking**、**HyDE**、**Multi-Query**、**RAG Fusion**、**Contextual Retrieval**、**GraphRAG**、**Self-RAG**、**CRAG**、**Adaptive RAG**、**Agentic RAG**、**RAPTOR** 與 **DSPy**，並保留必讀與五星資源表。
+適合已經做出最小 RAG、但遇到「找不到、排序錯、跨文件關係難找」的人。頁面會完整解釋 **Hybrid Search**、**Reranking**、**HyDE**、**Multi-Query**、**RAG Fusion**、**Contextual Retrieval**、**GraphRAG**、**Self-RAG**、**CRAG**（Corrective Retrieval Augmented Generation，檢索不夠好時修正查詢或來源）、**Adaptive RAG**、**Agentic RAG**、**RAPTOR** 與 **DSPy**，並保留必讀與五星資源表。
 
 ### [Agent Memory：只記值得記、允許記、能刪掉的事](../resources/agent-memory.md)
 
@@ -225,7 +227,7 @@ RAG 有兩條路：一條先整理資料，一條在問題來時找資料。
   <tbody>
     <tr><th scope="rowgroup" rowspan="4">Vector data</th><td><a href="https://github.com/chroma-core/chroma">Chroma</a></td><td>⭐⭐⭐⭐⭐</td><td>第一次在本機做向量搜尋</td><td>collection、add、query</td><td>Apache-2.0；練習與 production 設定不同</td></tr>
     <tr><td><a href="https://github.com/qdrant/qdrant">Qdrant</a></td><td>⭐⭐⭐⭐⭐</td><td>需要自架或託管服務的團隊</td><td>dense、sparse、hybrid query</td><td>Apache-2.0；需規劃服務與備份</td></tr>
-    <tr><td><a href="https://github.com/weaviate/weaviate">Weaviate</a></td><td>⭐⭐⭐⭐</td><td>需要 schema 與 hybrid search</td><td>BM25 + vector search</td><td>BSD-3-Clause；功能多，先做小型基線</td></tr>
+    <tr><td><a href="https://github.com/weaviate/weaviate">Weaviate</a></td><td>⭐⭐⭐⭐</td><td>需要 schema 與 hybrid search</td><td>BM25 + vector search</td><td>wl/ 以外為 BSD-3-Clause；wl/ 另需企業授權；先做小型基線</td></tr>
     <tr><td><a href="https://github.com/pgvector/pgvector">pgvector</a></td><td>⭐⭐⭐⭐</td><td>已使用 PostgreSQL 的團隊</td><td>SQL 與 vector 同庫</td><td>PostgreSQL extension；仍需索引與查詢調校</td></tr>
   </tbody>
   <tbody>
@@ -242,4 +244,4 @@ RAG 有兩條路：一條先整理資料，一條在問題來時找資料。
 - [ ] 我能用一小組問題比較修改前後，而不是只看一次漂亮回答。
 - [ ] Memory 只保存必要且獲准的資料，使用者能查看、修改與刪除。
 
-都能做到後，前往 [Stage 7 — Agent Production Engineering：Harness、Loop 與 Graph](07-multi-agent-production.md)。
+都能做到後，前往 [Stage 7 — Agent 上線工程：可測、可看、可停、可恢復](07-multi-agent-production.md)。

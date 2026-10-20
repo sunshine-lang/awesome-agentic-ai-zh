@@ -1,10 +1,12 @@
 # Stage 1 — LLM Basics
 
+**LLM** (Large Language Model): a model that reads and writes language.
+
 > [繁體中文](./01-llm-basics.md) | **English** | [简体中文](./01-llm-basics.zh-Hans.md)
 
 > Purpose: first see how a model moves from data to an Agent, then use a repeatable local-to-cloud path to call an LLM through an API (application programming interface). You will understand **Token**, **Context Window**, and **Temperature**, and explain model choices using cost and latency.
 
-<!-- freshness: canonical=stages/01-llm-basics.md; verified_on=2026-09-01; scope=models,pricing,availability,deprecations,model-lifecycle; max_age_days=90 -->
+<!-- freshness: canonical=stages/01-llm-basics.md; verified_on=2026-09-22; scope=models,pricing,availability,deprecations,model-lifecycle; max_age_days=90 -->
 
 ## 📌 Learning Goals
 
@@ -20,11 +22,11 @@ By the end of this stage, you can:
 
 ### 1. **Token**
 
-A Token is a unit the model uses to read and write text, and it is often the unit used for API pricing. Think of it as a small block cut from a sentence: an English word may be one block or several, and one Chinese character is not guaranteed to be one block. In Exercise 2, this stage reads the actual input/output token counts and uses them to estimate cost; the count depends on the tokenizer, so character count cannot give an exact answer.
+A Token is a unit a model reads and writes; APIs often charge by token. Think of a sentence cut into small blocks: a word may be one block or several, and one Chinese character is not always one block. In Exercise 2, read actual input/output token counts to estimate cost. Character counts are not exact because tokenizers differ.
 
 ### 2. **Context Window**
 
-A Context Window is the token space a model can process for one request. Think of it as a desk: your prompt and chat history take space, and the model still needs room to write the answer. A model may also set a smaller, separate maximum-output limit, so check both numbers. This stage uses the term to decide when a long document needs trimming, summarizing, or batching.
+A Context Window is the token space for one request. Think of a desk: your prompt and chat history take space, and the model needs room for its answer. The maximum-output limit may be smaller, so check both numbers. Use them to decide when to trim, summarize, or split a long document.
 
 ### 3. **Temperature**
 
@@ -37,27 +39,43 @@ Keep this main path in mind:
 `Data → Pre-training → Base Model → Post-training → Instruct Model → Inference → Agent system`
 
 - **Pre-training**: the model learns patterns from large amounts of text, images, or code. This changes the model weights.
-- **Post-training**: demonstrations, preferences, or feedback teach the model to follow instructions and act more safely. Common methods include **SFT**, **DPO**, and **RLHF/RL**; this also changes weights.
+- **Post-training**: demonstrations, preferences, or feedback teach the model to follow instructions and act more safely. This also changes weights. Common methods include:
+  - **SFT** (Supervised Fine-Tuning): teach the model to imitate good inputs and answers.
+  - **DPO** (Direct Preference Optimization): teach preferences using pairs of better and worse answers.
+  - **RLHF** (Reinforcement Learning from Human Feedback): use human feedback in reinforcement learning.
+  - **RL** (Reinforcement Learning): learn from rewards, which can also come from rules.
 - **Fine-tuning**: smaller, specialized data is used to continue changing model weights. Post-training is the broad later-training stage; Fine-tuning is one common kind of it.
 - **Inference**: after training, the model receives one input and produces one result. This uses the model; it does not retrain it.
+
+**RAG** (Retrieval-Augmented Generation): retrieve relevant material, then answer using it.
 
 ![Data passes through Pre-training and Post-training to make a model ready for Inference; Prompt, RAG, Memory, Tools, and Harness surround the model in an Agent system and usually do not change its weights](../resources/diagrams/model-lifecycle-to-agent.en.png)
 
 **Agent** is not the next model checkpoint in the training process. It is a system that connects a model with Prompt, RAG, Memory, Tools, and Harness. These parts usually work outside the model and do not change its weights.
 
-For SFT, DPO, RLHF/RL, GRPO, LoRA/PEFT, Distillation, and Quantization, open the [optional model training and adaptation guide](../resources/model-training-guide.en.md). Beginners do not need to train a model in this stage.
+- **GRPO** (Group Relative Policy Optimization): compare several answers to the same question and learn from their relative results.
+- **LoRA** (Low-Rank Adaptation): freeze the original weights and train added low-rank matrices.
+- **PEFT** (Parameter-Efficient Fine-Tuning): a group of methods that trains fewer parameters.
+
+For comparisons with Distillation and Quantization, open the [optional model training and adaptation guide](../resources/model-training-guide.en.md). Beginners do not need to train a model in this stage.
 
 ## Scene-Based Model Picker
 
 Start with the task's constraints, then choose a model; you do not need to memorize a leaderboard.
 
+Not every AI model writes text. A **Typed Decision Model** chooses from answers you define and returns a choice, score, or probability. TypeSafe AI's **Jev** does this; it cannot replace an LLM for chat, summaries, or code.
+
 | Your situation | Start with | Why |
 |---|---|---|
 | Learning the API and iterating at zero cost | **Ollama + `gemma4:e4b`** | Runs locally, so each API call costs $0 and the example can be repeated freely. |
-| Comparing cloud quality when data may be sent out | **Claude Haiku 4.5 / Sonnet 5** | The Anthropic SDK path is simple; pricing is based on input and output tokens. |
-| Very long documents with images or video | **Gemini 3.7 Flash or Kimi K3** | Check the model's context and multimodal support, then test with your own document. |
-| Chinese-language API work with usage control | **DeepSeek V4 or GLM-5.3** | Compare official prices, output limits, and availability; do not choose by name alone. |
+| Comparing cloud quality when data may be sent out | **Claude Haiku 5.5 / Sonnet 5.5** | The Anthropic SDK (Software Development Kit, a toolkit of developer tools and libraries) path is simple; pricing is based on input and output tokens. |
+| OpenAI Agent API | **GPT-6.1 Sol / GPT-6 Luna** | Sol for harder work; Luna for simpler, repeated work. Test your task and check pricing. |
+| Very long documents with images or video | **Gemini 3.8 Flash or Kimi K3** | Check the model's context and multimodal support, then test with your own document. |
+| Chinese-language API work with usage control | **DeepSeek V4.1 Flash or GLM-5.3** | Compare official prices, output limits, and availability; do not choose by name alone. |
+| Classification, scoring, or routing with fixed choices that code will use directly | **Jev 1.13 (service in early access)** | Returns probabilities for Choice, Score, or Noul questions; send low-confidence or high-risk actions to a person or another model. |
 | Privacy, offline use, or self-hosting | **Llama 4, Qwen 3.8, Gemma 4, and other open weights** | Estimate hardware and license requirements, then measure real speed with Ollama or another runtime. |
+
+**Haiku 5.5 (released 2026-10-07; checked 2026-10-08)** suits classification, summarization, and narrowly scoped subagents; evaluate Sonnet/Opus for complex coding agents. Its fixed API ID is `claude-haiku-5-5`, without a date suffix or separate alias. Exercises 1 and 3 use 5.5; the temperature exercise and cross-stage examples retain a Haiku 4.5 compatibility baseline. With adaptive thinking enabled by default, select text by block `type`, preserve thinking blocks, and recount tokens; an ID-only swap is insufficient. See the [announcement](https://www.anthropic.com/claude-haiku-5-5) and [Haiku 5.5 migration guide](https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide).
 
 ## 🚪 Entry Conditions
 
@@ -98,7 +116,7 @@ Read 1–3 before starting the exercises; consult 4–7 when you need model, tok
 
 ### Exercise 1: LLM API (hello world)
 
-**Outcome:** Make a short core call, receive a response, and read output tokens from `usage`. Per-call budget: Ollama $0; Anthropic Haiku: calculate from this call's input/output usage and the official $1/$5 rates. Stage budget: local runs remain $0; add the actual usage from 3–5 cloud runs.
+**Outcome:** Make a short core call, receive a response, and read output tokens from `usage`. Per-call budget: Ollama $0; Anthropic Haiku: calculate from this call's input/output usage and the 5.5 rates of $0.10/$0.50 for prompts up to 100K tokens ($0.50/$2.50 above 100K). Stage budget: local runs remain $0; add the actual usage from 3–5 cloud runs.
 
 <details markdown="1" open>
 <summary>📋 <b>Starter — Path A (local Ollama <code>gemma4:e4b</code>, default)</b> (copy to <code>practice_1.py</code> and run <code>python practice_1.py</code>)</summary>
@@ -118,18 +136,19 @@ client = OpenAI(
 )
 
 r = client.chat.completions.create(
-    model="gemma4:e4b",   # qwen2.5:3b or llama3.2:3b also works if installed
+    model="gemma4:e4b",
     max_tokens=100,
+    reasoning_effort="none",
     messages=[{"role": "user", "content": "Introduce yourself in one sentence."}],
 )
 
 # === Self-check ===
-text = r.choices[0].message.content
+choice = r.choices[0]
+text = choice.message.content or ""
 print("Response:", text)
 print("usage:", r.usage)
 
-assert r.choices[0].finish_reason in ("stop", "length"), f"Unexpected finish_reason: {r.choices[0].finish_reason}"
-assert len(text) > 0, "The response must not be empty"
+assert choice.finish_reason == "stop" and text.strip(), f"Expected complete non-empty response; got finish_reason={choice.finish_reason!r}"
 assert r.usage.completion_tokens > 0, "Output tokens must be greater than zero"
 print("✅ Exercise 1 passed — Ollama gemma4:e4b answered locally at $0 per call")
 ```
@@ -150,13 +169,14 @@ import anthropic
 
 client = anthropic.Anthropic()
 msg = client.messages.create(
-    model="claude-haiku-4-5",  # Haiku is cheapest; change this line to use Sonnet
-    max_tokens=100,
+    model="claude-haiku-5-5",
+    max_tokens=4096,
+    output_config={"effort": "low"},
     messages=[{"role": "user", "content": "Introduce yourself in one sentence."}],
 )
 
 # === Self-check ===
-text = msg.content[0].text
+text = "".join(block.text for block in msg.content if block.type == "text")
 print("Response:", text)
 print("usage:", msg.usage)
 
@@ -198,9 +218,13 @@ for label, prompt in PROMPTS.items():
         r = client.chat.completions.create(
             model="gemma4:e4b",
             max_tokens=80,
+            reasoning_effort="none",
             temperature=1.0,  # Raise temperature to observe variation
             messages=[{"role": "user", "content": prompt}],
         )
+        choice = r.choices[0]
+        text = choice.message.content or ""
+        assert choice.finish_reason == "stop" and text.strip(), f"Discard incomplete/empty output (finish_reason={choice.finish_reason!r})"
         output_tokens.append(r.usage.completion_tokens)
     print(f"\n[{label}] prompt: {prompt}")
     print(f"  input tokens: {r.usage.prompt_tokens}")
@@ -304,31 +328,38 @@ import anthropic
 
 # Anthropic public pricing (USD per 1M tokens) — recheck before running: https://www.anthropic.com/pricing
 PRICING = {
-    "claude-haiku-4-5":   {"input": 1.00, "output":  5.00},
-    "claude-sonnet-5":    {"input": 2.00, "output": 10.00},
-    "claude-opus-5":      {"input": 5.00, "output": 25.00},
+    "claude-haiku-5-5":   {"input": 0.10, "output":  0.50},
+    "claude-sonnet-5-5":  {"input": 2.00, "output": 10.00},
+    "claude-opus-5-5":    {"input": 4.00, "output": 20.00},
     "claude-fable-5-1":   {"input": 10.00, "output": 50.00},
 }
 
-client = anthropic.Anthropic()
-MODEL = "claude-haiku-4-5"
+def rates_for(model, input_tokens):
+    if model == "claude-haiku-5-5" and input_tokens > 100_000:
+        return {"input": 0.50, "output": 2.50}
+    return PRICING[model]
 
-msg = client.messages.create(model=MODEL, max_tokens=200,
+client = anthropic.Anthropic()
+MODEL = "claude-haiku-5-5"
+
+msg = client.messages.create(model=MODEL, max_tokens=4096,
+                             output_config={"effort": "low"},
                              messages=[{"role": "user", "content": "Hello! Please introduce yourself."}])
 in_tok, out_tok = msg.usage.input_tokens, msg.usage.output_tokens
-rates = PRICING[MODEL]
+rates = rates_for(MODEL, in_tok)
 cost_one = (in_tok * rates["input"] + out_tok * rates["output"]) / 1_000_000
 
 print(f"model: {MODEL}")
 print(f"single: input={in_tok} output={out_tok} → ${cost_one:.6f}")
-print(f"1000 calls cost across model tiers:")
-for name, r in PRICING.items():
+print("1000-call rate-only illustration (not measured cross-model costs):")
+for name in PRICING:
+    r = rates_for(name, in_tok)
     c = (in_tok * r["input"] + out_tok * r["output"]) / 1_000_000 * 1000
     print(f"  {name:<22} ${c:.4f}")
 
 # === Self-check ===
 assert cost_one > 0, "A cloud LLM call must have a positive cost"
-print(f"\n✅ Exercise 3 passed (Anthropic) — 1000-call costs for Haiku, Sonnet, Opus, and Fable were calculated from actual tokens")
+print(f"\n✅ Exercise 3 passed (Anthropic) — this call is costed; cross-model figures compare rates only and require fresh token measurements")
 ```
 
 </details>
@@ -355,7 +386,7 @@ The table below keeps the 17 original extension entries. They are optional, not 
   <thead><tr><th scope="col">Category</th><th scope="col">Resource</th><th scope="col">Link</th><th scope="col">Recommendation</th><th scope="col">Use / status</th></tr></thead>
   <tbody>
     <tr><th scope="rowgroup" rowspan="4">Official API intro</th><td>Anthropic Cookbook</td><td><a href="https://github.com/anthropics/claude-cookbooks">GitHub</a></td><td>⭐⭐⭐⭐</td><td>Claude API notebooks for tool use, batch, and prompt cache.</td></tr>
-    <tr><td>Anthropic Courses</td><td><a href="https://github.com/anthropics/courses">GitHub</a></td><td>⭐⭐⭐⭐</td><td>Anthropic's official courses, starting with API fundamentals.</td></tr>
+    <tr><td>Anthropic Courses</td><td><a href="https://github.com/anthropics/courses">GitHub</a></td><td>⭐⭐⭐⭐</td><td>Archived official courses: read older examples, then check the current API Quickstart below before building.</td></tr>
     <tr><td>OpenAI Cookbook</td><td><a href="https://github.com/openai/openai-cookbook">GitHub</a></td><td>⭐⭐⭐⭐</td><td>OpenAI API, structured output, and function-calling examples.</td></tr>
     <tr><td>Anthropic Claude API Quickstart</td><td><a href="https://platform.claude.com/docs/en/get-started">Docs</a></td><td>⭐⭐⭐</td><td>Quick path to a first Claude API call.</td></tr>
   </tbody>
@@ -470,29 +501,580 @@ Without Ollama, replace `base_url` with [LM Studio](https://lmstudio.ai) (`http:
 </details>
 
 <details markdown="1">
-<summary>🌐 Complete 15-family table (official specification entries)</summary>
+<summary>🌐 Complete 18-family table (official specification entries)</summary>
 
-<small>Data checked: 2026-08-27 UTC.</small>
+<small>Full table checked: 2026-09-22 UTC. GPT row updated: 2026-10-02 UTC. Claude row updated: 2026-10-08 UTC. Gemini/Muse/Mistral/Jev and GPT electives updated: 2026-10-15 UTC.</small>
 
 If an official source gives no reliable public number, the table says “Not published by the official source.” Prices use USD per 1M tokens unless the provider uses another unit.
+**Cache** is like reusing a note you already read: reading old content and writing new content may have different prices.
 
-| Family | Current recommended models | Status | Context | Price or license | Good for | Limitations | Official source |
-|---|---|---|---|---|---|---|---|
-| Claude | Fable 5.1 (`claude-fable-5-1`); Mythos 5.1 (`claude-mythos-5-1`); Opus 5; Sonnet 5; Haiku 4.5 | Fable 5.1: generally available; Mythos 5.1: vetted access only | 1M context / 128K max output (Haiku 200K / 64K) | API: Fable/Mythos $10/$50, Opus $5/$25, Sonnet $2/$10, Haiku $1/$5 (input/output); Fable/Mythos cache reads $0.25 | Long-form, coding, long-running agent workflows | Mythos 5.1 is the same model as Fable 5.1 but is limited to vetted cybersecurity and life-science users | [Fable 5.1](https://platform.claude.com/docs/en/models/fable-5-1/overview) · [Mythos 5.1](https://platform.claude.com/docs/en/models/mythos-5-1/overview) |
-| GPT | GPT-5.6 Sol / Terra / Luna | Generally available | 1.05M | API: $4/$20, $2/$12, $0.20/$1.20 (input/output) | General chat, tool use, existing SDK integration | Price and limits vary by model and API plan | [OpenAI API models](https://developers.openai.com/api/docs/models) |
-| Gemini | Gemini 3.7 Flash | Generally available | 1M | Through 2026-12-31, introductory $0.75/$3.75 (input/output) | Long documents, multimodal tasks, Google integration | Gemini 3.1 Pro is Preview; introductory pricing has an end date | [Gemini models](https://ai.google.dev/gemini-api/docs/models) · [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing) |
-| DeepSeek | `deepseek-v4-flash` / `deepseek-v4-pro` | Generally available | 1M | Cache-miss: Flash $0.14/$0.28, Pro $0.435/$0.87 (input/output) | Reasoning, coding, high-token workloads | Legacy `deepseek-chat` / `deepseek-reasoner` aliases were deprecated 2026-07-24 | [DeepSeek pricing](https://api-docs.deepseek.com/quick_start/pricing/) |
-| Kimi | `kimi-k3` | Generally available | 1M | API: CNY 2/20/100 per million tokens for cache hit/input/output | Chinese long-form, vision input, long context | 2.8T parameters; deployment and quotas depend on the platform | [Kimi overview](https://platform.kimi.com/docs/overview) · [Kimi API pricing](https://platform.kimi.com/) |
-| Hunyuan | `Hy3` (TokenHub) | Generally available | Not published by the official source | API: CNY 0.25/1/4 per million tokens for cache hit/input/output | Chinese reasoning and Tencent Cloud integration | `hy3-preview` shuts down on 2026-08-31; older T1/TurboS models were shut down or migrated | [TokenHub pricing](https://cloud.tencent.com/document/product/1823/130055) · [Hy3 migration notice](https://cloud.tencent.com/announce/detail/2391) |
-| MiniMax | MiniMax M3 | Generally available | 1M | API: context ≤512K is US$0.30/$1.20; 512K–1M is $0.60/$2.40, per million input/output tokens | Text, vision, and coding tasks | Pricing varies by input length and plan | [MiniMax M3](https://www.minimax.io/blog/minimax-m3) · [MiniMax API pricing](https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise) |
-| Qwen | qwen3.8-max (API); Qwen3.8 open-weight variants | Generally available | 1M | API pricing varies by region; for example, Beijing is CNY 12/36 per million input/output tokens; open-weight variants use their own licenses | Chinese tasks, multimodal work, self-hosted workflows | API models and open-weight variants must be checked separately for availability and license | [Qwen 3.8 Max](https://help.aliyun.com/en/model-studio/qwen3-8-max) |
-| GLM | GLM-5.3 | Generally available | 1M (128K output) | API: US$1.40/$0.26/$4.40 per million tokens for input/cache hit/output | Chinese agents, tool use, reasoning | Text-only; reasoning is always enabled | [GLM-5.3 docs](https://docs.z.ai/guides/llm/glm-5.3) · [GLM API pricing](https://docs.z.ai/guides/overview/pricing) |
-| Yi | Yi-34B / Yi-9B and 200K variants | Maintained | 200K (some older models) | Repository license and existing service terms; current price not published | Existing Yi experiments and self-hosted baselines | No verified current frontier successor was found | [01.AI Yi repository](https://github.com/01-ai/Yi) |
-| Llama | Llama 4 Scout / Maverick; Llama 3.3 70B (more practical older baseline) | Open weights | Scout 10M | Llama Community License | Self-hosting, fine-tuning, ecosystem integration | Scout needs H100-class hardware; license is not Apache/MIT | [Meta AI developer docs](https://developer.meta.com/ai/docs/overview/) |
-| Muse | Muse Glimmer 30B | Open weights | 131K | Apache 2.0 | Local agents, coding agents, long tasks | Full or quantized deployments still need substantial consumer-GPU memory | [Hugging Face Muse Glimmer](https://huggingface.co/meta-models/Muse-Glimmer-30B) |
-| Gemma | Gemma 4: E2B, E4B, 12B, 26B A4B, 31B | Open weights | 128K for small models; 256K for medium models | Gemma 4 Terms/license; not Apache 2.0 | Edge, local use, constrained-hardware experiments | Read the license terms; hardware needs vary by model | [Gemma core docs](https://ai.google.dev/gemma/docs/core) · [Gemma Terms](https://ai.google.dev/gemma/terms) |
-| Mistral | Mistral Small 4; Large 3; Ministral 3 | Generally available | Small 4: 256K | Small 4 $0.15/$0.60; open-weight licenses vary by model, including Apache 2.0 versions | Reasoning, vision, coding, self-hosting | API and license terms differ by model | [Mistral Small 4](https://docs.mistral.ai/models/mistral-small-4-0-26-03) |
-| Phi | Phi-4 14B; Phi-4 mini / multimodal | Open weights | Phi-4 multimodal 128K | Phi-4 multimodal MIT; check each model's license | Small-model reasoning, multimodal work, edge use | Do not assume fixed RAM; quantization changes hardware needs | [Microsoft Phi](https://azure.microsoft.com/en-us/products/phi) · [Phi-4 multimodal](https://huggingface.co/microsoft/Phi-4-multimodal-instruct) |
+Open the family you need, then check its models, pricing, and limits.
+
+<details class="model-family" markdown="1">
+<summary>Claude</summary>
+
+<table data-model-family="Claude">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="5">Current recommended models</th><td>Fable 5.1 (<code>claude-fable-5-1</code>)</td></tr>
+    <tr><td>Mythos 5.1 (<code>claude-mythos-5-1</code>)</td></tr>
+    <tr><td>Opus 5.5 (<code>claude-opus-5-5</code>)</td></tr>
+    <tr><td>Sonnet 5.5 (<code>claude-sonnet-5-5</code>)</td></tr>
+    <tr><td>Haiku 5.5 (<code>claude-haiku-5-5</code>)</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Fable/Opus/Sonnet/Haiku: generally available; Mythos: vetted access only</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>1M context / 128K max output</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Claude API: Fable/Mythos US$10/$50, Opus US$4/$20, Sonnet US$2/$10, Haiku US$0.10/$0.50 (prompt ≤100K), US$0.50/$2.50 (prompt &gt;100K) per million input/output tokens; Sonnet cache read US$0.10, Opus US$0.20, Fable/Mythos US$0.25</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Long-form, coding, long-running agent workflows</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Mythos 5.1 is limited to vetted cybersecurity and life-science users; Sonnet 5.5 changes forced tool choice and temperature settings, so read the migration guide before upgrading existing code; cloud-partner prices differ</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://platform.claude.com/docs/en/models/overview">Claude model overview</a> · <a href="https://platform.claude.com/docs/en/models/opus-5-5/overview">Opus 5.5</a> · <a href="https://platform.claude.com/docs/en/models/sonnet-5-5/overview">Sonnet 5.5</a> · <a href="https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide">Migration guide</a> · <a href="https://platform.claude.com/docs/en/models/haiku-5-5/overview">Haiku 5.5</a> · <a href="https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide">Haiku 5.5 migration</a> · <a href="https://platform.claude.com/docs/en/about-claude/pricing">Claude API pricing</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>GPT</summary>
+
+<table data-model-family="GPT">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="3">Current recommended models</th><td>GPT-6 Astra (<code>gpt-6-astra</code>)</td></tr>
+    <tr><td>GPT-6.1 Sol (<code>gpt-6.1-sol</code>)</td></tr>
+    <tr><td>GPT-6 Luna (<code>gpt-6-luna</code>)</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Generally available API models; the Free tier is not supported</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>1.05M context / 128K max output</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Standard API, US$ per 1M tokens, input/cache read/cache write/output. Astra $10/$1/$12.50/$50. Sol 6.1 $2/$0.10/$2.50/$10. Luna $0.10/$0.01/$0.125/$0.50</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Sol 6.1 for coding and multi-step Agent work; Luna for focused, repeated tasks; evaluate Astra's cost-quality tradeoff on your own tasks</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Sol 6.1 tool calling requires Responses API; Chat Completions has no tool calling. Above 272K input, the full request uses 2× input/cache and 1.5× output rates. Batch/Flex are half-price, Fast is 2×. Tools may cost extra</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://developers.openai.com/api/docs/models/gpt-6-astra">GPT-6 Astra</a> · <a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol">GPT-6.1 Sol</a> · <a href="https://developers.openai.com/api/docs/models/gpt-6-luna">GPT-6 Luna</a> · <a href="https://developers.openai.com/api/docs/pricing">OpenAI API pricing</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Jev (TypeSafe AI)</summary>
+
+<table data-model-family="Jev (TypeSafe AI)">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="3">Current recommended models</th><td>TypeSafe direct: stable Jev 1.13 (<code>jev-1.13.0</code> / <code>jev-latest</code>)</td></tr>
+    <tr><td>Preview Jev 1.14 (<code>jev-1.14.0</code> / <code>jev-preview</code>)</td></tr>
+    <tr><td>Cloudflare route: <code>typesafe/jev</code></td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>1.13: official model; 1.14: Preview. Service remains in early access</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>TypeSafe direct: 64K per request, 32K for <code>state</code> plus the longest question. Cloudflare route: 32K</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>TypeSafe direct: US$0.042 per million input tokens, output is unmetered. Cloudflare route: see the Cloudflare dashboard</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Fixed-choice classification, routing, rubric scoring, and guardrail judgments</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Does not generate free-form text; probability is not correctness. Your code and Eval set thresholds, permissions, and fallbacks. 262K long context and images require separate opt-in; experimental, not defaults</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://docs.typesafe.ai/models">TypeSafe model specs</a> · <a href="https://docs.typesafe.ai/introduction">Jev introduction</a> · <a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">Early-access announcement</a> · <a href="https://developers.cloudflare.com/ai/models/typesafe/jev/">Cloudflare route</a> · <a href="https://docs.typesafe.ai/images">Image limits</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Gemini</summary>
+
+<table data-model-family="Gemini">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="2">Current recommended models</th><td>Gemini 3.8 Flash</td></tr>
+    <tr><td>Gemini 4 Argon (<code>gemini-4-argon</code>)</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Flash/Argon: generally available</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>Flash: 1,048,576 context / 65,536 max output. Argon: 1,048,576 combined input/output; default synchronous output 65,536</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>US$ per million tokens. Flash: $0.75/$3.75 input/output through 2026-12-31. Argon Standard input/cache/output: $2/$0.10/$10 through 2026-11-30. $4/$0.20/$20 from 2026-12-01</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Flash for multimodal and Agent practice. Argon for comparing long tasks and coding outcomes</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Argon has no free tier. Output up to 1M requires long decode, not the default for every request. This chapter still starts with local models</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash">Gemini 3.8 Flash</a> · <a href="https://ai.google.dev/gemini-api/docs/pricing">Gemini API pricing</a> · <a href="https://ai.google.dev/gemini-api/docs/models/gemini-4-argon">Gemini 4 Argon specs</a> · <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/">Launch announcement</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>DeepSeek</summary>
+
+<table data-model-family="DeepSeek">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="2">Current recommended models</th><td>V4.1 Flash (<code>deepseek-flash</code>)</td></tr>
+    <tr><td>V4 Pro (<code>deepseek-v4-pro</code>)</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Both APIs available; old V4 Flash retired</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>1M context / 384K max output</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Per million tokens, peak/off-peak: Flash input US$0.30/$0.15, output US$1.20/$0.60, cache hit US$0.006/$0.003; Pro input US$1.32/$0.66, output US$3.96/$1.98, cache hit US$0.044/$0.022</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Reasoning, coding, high-token workloads</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>The legacy <code>deepseek-v4-flash</code> name temporarily routes to V4.1 Flash; peak is Mon–Fri UTC 01–04 and 06–10</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://api-docs.deepseek.com/quick_start/pricing/">DeepSeek models and pricing</a> · <a href="https://api-docs.deepseek.com/updates/">Changelog</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Kimi</summary>
+
+<table data-model-family="Kimi">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="row">Current recommended models</th><td><code>kimi-k3</code></td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Generally available</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>1M</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>API: CNY 2/20/100 per million tokens for cache hit/input/output</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Chinese long-form, vision input, long context</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>2.8T parameters; deployment and quotas depend on the platform</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://platform.kimi.com/docs/overview">Kimi overview</a> · <a href="https://platform.kimi.com/">Kimi API pricing</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Hunyuan</summary>
+
+<table data-model-family="Hunyuan">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="row">Current recommended models</th><td><code>Hy3</code> (TokenHub)</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Generally available</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>256K</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>API: CNY 0.25/1/4 per million tokens for cache hit/input/output</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Chinese reasoning and Tencent Cloud integration</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td><code>hy3-preview</code> shut down on 2026-08-31; Hy4 remains Preview</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://cloud.tencent.com/document/product/1823/130051">TokenHub model list</a> · <a href="https://cloud.tencent.com/document/product/1823/130055">TokenHub pricing</a> · <a href="https://cloud.tencent.com/announce/detail/2391">Hy3 migration notice</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>MiniMax</summary>
+
+<table data-model-family="MiniMax">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="row">Current recommended models</th><td>MiniMax M3</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Open weights</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>1M</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>MiniMax API promotional price per million input/cache-read/output tokens: ≤512K US$0.30/$0.06/$1.20; 512K–1M US$0.60/$0.12/$2.40; MiniMax Community License</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Text, vision, coding, and self-hosting work</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Promotions and reseller prices may change; not Apache/MIT</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://huggingface.co/MiniMaxAI/MiniMax-M3">MiniMax M3 model card</a> · <a href="https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise">MiniMax API pricing</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Qwen</summary>
+
+<table data-model-family="Qwen">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="2">Current recommended models</th><td>qwen3.8-max (API)</td></tr>
+    <tr><td>Qwen3.8 open-weight variants</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Generally available</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>1M</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>API pricing varies by region; for example, Beijing is CNY 12/36 per million input/output tokens; open-weight variants use their own licenses</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Chinese tasks, multimodal work, self-hosted workflows</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>API models and open-weight variants must be checked separately for availability and license</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://help.aliyun.com/en/model-studio/qwen3-8-max">Qwen 3.8 Max</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>GLM</summary>
+
+<table data-model-family="GLM">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="row">Current recommended models</th><td>GLM-5.3</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Generally available</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>1M (128K output)</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>API: US$1.40/$0.26/$4.40 per million tokens for input/cache hit/output</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Chinese agents, tool use, reasoning</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Text-only; reasoning is always enabled</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://docs.z.ai/guides/llm/glm-5.3">GLM-5.3 docs</a> · <a href="https://docs.z.ai/guides/overview/pricing">GLM API pricing</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Yi</summary>
+
+<table data-model-family="Yi">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="row">Current recommended models</th><td>Yi-34B / Yi-9B and 200K variants</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Frozen / historical</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>200K (some older models)</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Repository license; current API price not published</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Reproducing existing Yi experiments and historical self-hosted baselines</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Repository does not establish current maintenance or a frontier successor</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://github.com/01-ai/Yi">01.AI Yi repository</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Llama</summary>
+
+<table data-model-family="Llama">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="2">Current recommended models</th><td>Llama 4 Scout / Maverick</td></tr>
+    <tr><td>Llama 3.3 70B (more practical older baseline)</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Open weights</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>Scout 10M</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Llama Community License</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Self-hosting, fine-tuning, ecosystem integration</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Scout needs H100-class hardware; license is not Apache/MIT</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://dev.meta.ai/llama">Meta Llama docs</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Muse</summary>
+
+<table data-model-family="Muse">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="3">Current recommended models</th><td>Muse Wonder (<code>muse-wonder-1.0</code>)</td></tr>
+    <tr><td>Muse Spark 1.3 (<code>muse-spark-1.3</code> / <code>muse-spark-1.3-contributor</code>)</td></tr>
+    <tr><td>Muse Glimmer 30B</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Wonder/Spark: available on API; Glimmer: open weights</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>Wonder/Spark: 1,048,576; Glimmer: 131K</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Per million input/cache-hit/output tokens. Wonder Standard: US$4/$0.20/$20. Spark Standard: US$1.25/$0.15/$4.25. Spark Contributor: US$0.10/$0.002/$0.20, allowing Meta to train on content. Glimmer: Apache 2.0</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Wonder for comparing long tasks and multi-file coding. Spark for focused cloud tasks; Glimmer for local agents</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Product Muse, API models, and open weights differ. Wonder API has no Contributor mode. Wonder Full requires specific Muse Code subscriptions, not max effort. Spark 1.3 audio support remains incomplete</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://dev.meta.ai/docs/models">Meta Model API models</a> · <a href="https://dev.meta.ai/docs/pricing-rate-limits">Pricing and data plans</a> · <a href="https://huggingface.co/meta-models/Muse-Glimmer-30B">Muse Glimmer</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Grok</summary>
+
+<table data-model-family="Grok">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="row">Current recommended models</th><td>Grok 4.7 (<code>grok-4.7</code>)</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Generally available</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>500K</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>xAI API: US$2/$0.50/$6 per million input/cache-hit/output tokens; when the prompt reaches 200K, the entire request uses US$4/$1/$12</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Coding, tool calls, and multi-step agents</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>US regional endpoints add 10%; server-side tool calls may cost extra</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://docs.x.ai/developers/models/grok-4.7">Grok 4.7 specs</a> · <a href="https://docs.x.ai/developers/pricing">xAI pricing</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>MiMo</summary>
+
+<table data-model-family="MiMo">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="row">Current recommended models</th><td>MiMo V2.6 Pro (<code>mimo-v2.6-pro</code>)</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Generally available API</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>1M context / 128K max output</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Xiaomi API: US$0.435/$0.0036/$0.87 per million input/cache-hit/output; also listed as CNY 3/0.025/6</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Long tasks, tool calls, and multimodal agent input</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Confirm account region, quota, and billing; vendor benchmarks are not cross-model rankings</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://mimo.mi.com/models/en-US/mimo-v2.6-pro">MiMo V2.6 Pro specs and pricing</a> · <a href="https://mimo.mi.com/docs/en-US/api/model/list-models">MiMo API models</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Gemma</summary>
+
+<table data-model-family="Gemma">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="row">Current recommended models</th><td>Gemma 4: E2B, E4B, 12B, 26B A4B, 31B</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Open weights</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>128K for small models; 256K for medium models</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Gemma 4 Terms/license; not Apache 2.0</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Edge, local use, constrained-hardware experiments</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Read the license terms; hardware needs vary by model</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://ai.google.dev/gemma/docs/core">Gemma core docs</a> · <a href="https://ai.google.dev/gemma/terms">Gemma Terms</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Mistral</summary>
+
+<table data-model-family="Mistral">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="5">Current recommended models</th><td>Mistral Large 4 (<code>mistral-large-4</code>)</td></tr>
+    <tr><td>Medium 3.5 (<code>mistral-medium-3-5</code>)</td></tr>
+    <tr><td>Small 4</td></tr>
+    <tr><td>Large 3</td></tr>
+    <tr><td>Ministral 3</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Large 4: Public Preview. Medium 3.5/Small 4: generally available</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>Large 4: 1M. Medium 3.5/Small 4: 256K</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>US$ per million tokens. Large 4 input/cache/output: promotional US$0.68/$0.07/$2.09, list US$1.36/$0.14/$4.18. Medium 3.5 input/output $1.50/$7.50, Modified MIT. Small 4: $0.15/$0.60, Apache 2.0</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Compare reasoning, vision, coding, and tool use. For self-hosting, choose a model with released weights and license terms</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Large 4 weights not yet released. Promotion lasts 2 weeks after launch, not a permanent rate. Do not treat the whole family as Apache 2.0</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://docs.mistral.ai/models/mistral-large-4-0">Large 4 specs and pricing</a> · <a href="https://docs.mistral.ai/resources/changelogs">Release status</a> · <a href="https://docs.mistral.ai/models/mistral-medium-3-5-26-04">Medium 3.5</a> · <a href="https://docs.mistral.ai/models/mistral-small-4-0-26-03">Small 4</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+<details class="model-family" markdown="1">
+<summary>Phi</summary>
+
+<table data-model-family="Phi">
+  <thead><tr><th scope="col">Field</th><th scope="col">Details</th></tr></thead>
+  <tbody data-field="models">
+    <tr><th scope="rowgroup" rowspan="2">Current recommended models</th><td>Phi-4 14B</td></tr>
+    <tr><td>Phi-4 mini / multimodal</td></tr>
+  </tbody>
+  <tbody data-field="status">
+    <tr><th scope="row">Status</th><td>Open weights</td></tr>
+  </tbody>
+  <tbody data-field="context">
+    <tr><th scope="row">Context</th><td>Phi-4 multimodal 128K</td></tr>
+  </tbody>
+  <tbody data-field="pricing">
+    <tr><th scope="row">Price or license</th><td>Phi-4 multimodal MIT; check each model's license</td></tr>
+  </tbody>
+  <tbody data-field="use">
+    <tr><th scope="row">Good for</th><td>Small-model reasoning, multimodal work, edge use</td></tr>
+  </tbody>
+  <tbody data-field="limits">
+    <tr><th scope="row">Limitations</th><td>Do not assume fixed RAM; quantization changes hardware needs</td></tr>
+  </tbody>
+  <tbody data-field="sources">
+    <tr><th scope="row">Official source</th><td><a href="https://azure.microsoft.com/en-us/products/phi">Microsoft Phi</a> · <a href="https://huggingface.co/microsoft/Phi-4-multimodal-instruct">Phi-4 multimodal</a></td></tr>
+  </tbody>
+</table>
+
+</details>
+
+For an agent that listens and answers immediately by voice, optionally read [Gemini 3.8 Live](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live). It is a separate stable voice API model, not the Gemini 3.8 Flash listed above; check the [Gemini API pricing page](https://ai.google.dev/gemini-api/docs/pricing) for cost and features.
+
+**GPT API electives**: finish a standard request first, then compare these two uses.
+
+- **Ultrafast (a paid lower-latency service tier)**: makes supported models respond faster; it is neither a new model nor free acceleration. The [official guide](https://developers.openai.com/api/docs/guides/ultrafast-mode) covers GPT-6.1 Sol; pricing depends on the service tier.
+- **Decisions API (a judgment interface, public beta)**: asks `gpt-6-luna` for a category, score, or probability that a condition is true. The [official guide](https://developers.openai.com/api/docs/guides/decisions) distinguishes it from text generation. It does not replace tool calling, and its billing is separate.
 
 </details>
 
@@ -507,7 +1089,8 @@ At each step an LLM predicts a probability distribution for the next token, then
 
 - `Connection refused`: make sure `ollama serve` is running and the `base_url` port is 11434.
 - Model not found: run `ollama list`, then install with `ollama pull gemma4:e4b`; do not guess a tag.
-- Truncated response: shorten the prompt or lower `max_tokens`, and check the model's context window.
+- Truncated response: check `finish_reason` and the model's context window first. If `finish_reason="length"` and the answer is incomplete, modestly raise `max_tokens` or shorten the requested answer; if the prompt and conversation history exceed the context window, shorten the input.
+- Ollama returns empty content or `finish_reason="length"`: `max_tokens` caps one generation. In the reported setup (`gemma4:e4b` with Ollama 0.34.2), thinking may consume this budget; both Path A examples set `reasoning_effort="none"` and accept only `finish_reason="stop"` with nonblank `content`. This is evidenced only for that model/version; verify compatibility before changing either. This is a per-call output limit, not a paid API quota.
 - API failure: save the model, status code, and request id. Retry only temporary network/service errors; fix authentication and context errors first.
 - Cost mismatch: multiply input and output separately; cache hits, batches, and plans can change the actual price.
 

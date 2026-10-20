@@ -43,6 +43,17 @@ DIAGRAM_DIR = REPO_ROOT / "resources" / "diagrams"
 
 # ![alt](path) — relative paths only; skip external URLs and data: URIs.
 IMAGE_RE = re.compile(r"!\[[^\]]*\]\((?!https?:|data:)([^)\s]+)\)")
+# Approved direct fallback links count as references; unrelated links stay
+# unchanged. The top banner no longer exposes a duplicate PNG link, so its
+# generated SVG -> PNG fallback is accounted for separately below.
+BANNER_FALLBACK_RE = re.compile(
+    r"(?<!!)\[[^\]]*\]\(((?:\.\./)*resources/diagrams/(?:banner|branch-decision-tree)(?:\.en|\.zh-Hans)?\.png)\)"
+)
+GENERATED_SVG_PNG_FALLBACKS = {
+    "banner.svg",
+    "banner.en.svg",
+    "banner.zh-Hans.svg",
+}
 LOCALE_SUFFIXES = {".en.md": "en", ".zh-Hans.md": "zh-Hans"}
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}
 # `.claude` and `.ai` are listed for parity with the other gates even though
@@ -84,7 +95,7 @@ def scan(page: Path):
     # toggle — see #95/#97. Blanking preserves line numbers.
     text = strip_code_blocks(page.read_text(encoding="utf-8"), source=str(page))
     for i, line in enumerate(text.split("\n"), 1):
-        for m in IMAGE_RE.finditer(line):
+        for m in (*IMAGE_RE.finditer(line), *BANNER_FALLBACK_RE.finditer(line)):
             asset = m.group(1)
             if Path(asset).suffix.lower() in IMAGE_EXTS:
                 yield i, asset
@@ -104,7 +115,13 @@ def unreferenced_diagrams() -> list[str]:
             continue
         page = REPO_ROOT / rel
         for _, asset in scan(page):
-            referenced.add((page.parent / asset).resolve())
+            resolved = (page.parent / asset).resolve()
+            referenced.add(resolved)
+            if (
+                resolved.parent == DIAGRAM_DIR.resolve()
+                and resolved.name in GENERATED_SVG_PNG_FALLBACKS
+            ):
+                referenced.add(resolved.with_suffix(".png"))
 
     if not DIAGRAM_DIR.exists():
         return []

@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import importlib.util
 import re
-from datetime import date
+import shutil
+import subprocess
+from collections import Counter
+from datetime import date, datetime
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -44,17 +47,46 @@ def test_page_manifest_has_one_ordered_trilingual_source() -> None:
 
 
 def test_release_notes_are_trilingual_mirrors() -> None:
-    manifest = rm.validate_notes_manifest(expected_version="v2026.09.01")
+    manifest = rm.validate_notes_manifest()
     rendered = rm.render_notes(
-        "v2026.09.01", sha="0123456789abcdef0123456789abcdef01234567"
+        manifest["release_version"], sha="0123456789abcdef0123456789abcdef01234567"
     )
     assert rendered.index("## 繁體中文") < rendered.index("## 简体中文") < rendered.index("## English")
     assert rendered.count("- `") == len(manifest["changes"]) * 3
     for change in manifest["changes"]:
         for locale in rm.LOCALES:
             assert change[locale] in rendered
-        for link in change["links"]:
-            assert rendered.count(f"]({link})") == 3
+    link_counts = Counter(link for change in manifest["changes"] for link in change["links"])
+    for link, count in link_counts.items():
+        assert rendered.count(f"]({link})") == count * len(rm.LOCALES)
+
+
+@pytest.mark.parametrize("locale", rm.LOCALES)
+def test_release_model_notes_keep_current_public_api_ids(locale: str) -> None:
+    """Do not republish the old restricted-Argon or pre-Haiku-5.5 summary."""
+    from model_reference_test_helpers import family_cells
+
+    notes = rm.validate_notes_manifest()
+    guidance = next(change for change in notes["changes"] if change["id"] == "current-model-guidance")
+    page = rm.ROOT / f"stages/01-llm-basics{rm.LOCALE_SUFFIX[locale]}.md"
+    source = page.read_text(encoding="utf-8")
+    for family, model_id in (("Claude", "claude-haiku-5-5"), ("Gemini", "gemini-4-argon")):
+        assert model_id in family_cells(source, family)[1]
+        assert model_id in guidance[locale], f"{locale}: release summary omits {model_id}"
+
+
+def test_validate_version_uses_utc_date(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[object] = []
+
+    class FixedUtcDateTime:
+        @staticmethod
+        def now(tz: object) -> object:
+            calls.append(tz)
+            return datetime(2026, 9, 8, 0, 5, tzinfo=rm.UTC)
+
+    monkeypatch.setattr(rm, "datetime", FixedUtcDateTime)
+    assert rm.validate_version("v2026.09.08") == date(2026, 9, 8)
+    assert calls == [rm.UTC]
 
 
 def test_release_notes_reject_a_different_dispatch_version() -> None:
@@ -78,6 +110,44 @@ def test_asset_names_are_exact_and_locale_specific() -> None:
     assert rm.asset_name("v2026.08.31", "zh-TW") == "awesome-agentic-ai-zh-v2026.08.31-zh-TW.pdf"
     assert rm.asset_name("v2026.08.31-2", "zh-Hans") == "awesome-agentic-ai-zh-v2026.08.31-2-zh-Hans.pdf"
     assert rm.asset_name("v2026.08.31", "en") == "awesome-agentic-ai-zh-v2026.08.31-en.pdf"
+
+
+@pytest.mark.parametrize("term", ["**快取（cache）**像便條", "**缓存（cache）**像便条", "**Cache** is a note"])
+def test_pdf_html_rejects_visible_unparsed_emphasis(term: str) -> None:
+    with pytest.raises(rm.ReleaseManifestError, match="unparsed Markdown emphasis"):
+        rm.prepare_pdf_html(f"<html><body><p>{term}</p></body></html>")
+
+
+def test_pdf_html_preserves_literal_emphasis_in_code_and_styles() -> None:
+    source = '<style>/* **literal** */</style><pre><code>**example**</code></pre><p><code>**inline**</code></p>'
+    assert rm.prepare_pdf_html(source) == source
+
+
+@pytest.mark.parametrize("term", ["快取（cache）", "缓存（cache）", "Cache"])
+def test_pdf_reader_renders_core_terms_without_rewriting_code(term: str) -> None:
+    pandoc = shutil.which("pandoc")
+    if pandoc is None:
+        pytest.skip("Pandoc runtime required; production prepare-html gate also checks visible emphasis")
+    script = (rm.ROOT / "scripts/build-pdf.sh").read_text(encoding="utf-8")
+    reader = re.search(r"--from=([^\s\\]+)", script)
+    assert reader is not None
+    source = (f'**{term}**像便條。\n\n`**literal**`\n\n```python\npattern = "**literal**"\n```\n'
+              '\n<a id="legacy"></a>\n## Resources\n\n| Kind | URL |\n|---|---|\n'
+              '| Official | https://example.com/ |\n\n- [ ] Task\n\n~~old~~\n'
+              '\n<table><tr><th rowspan="2">Shared</th><td>First</td></tr>'
+              '<tr><td>Second</td></tr></table>\n')
+    result = subprocess.run([pandoc, "--from=" + reader.group(1), "--to=html5"],
+                            input=source, text=True, encoding="utf-8", capture_output=True, check=True)
+    assert f"<strong>{term}</strong>" in result.stdout
+    assert '<code>**literal**</code>' in result.stdout
+    assert '&quot;**literal**&quot;' in result.stdout
+    assert '<h2 id="resources">Resources</h2>' in result.stdout
+    assert result.stdout.count('<table>') == 2
+    assert 'rowspan="2"' in result.stdout
+    assert '<a href="https://example.com/"' in result.stdout
+    assert '<del>old</del>' in result.stdout
+    assert 'type="checkbox"' in result.stdout
+    assert rm.prepare_pdf_html(result.stdout) == result.stdout
 
 
 def test_pdf_table_text_keeps_whole_words() -> None:
@@ -116,6 +186,8 @@ def test_pdf_validator_checks_every_heading_and_all_three_assets(
     monkeypatch.setattr(rm.shutil, "which", lambda _: "pdftotext")
 
     def fake_run(command: list[str], **_: object) -> SimpleNamespace:
+        if command[1] == "-bbox-layout":
+            return SimpleNamespace(stdout=b'<html><page width="595" height="842"><word xMin="10" yMin="10" xMax="20" yMax="20">OK</word></page></html>', stderr=b"")
         return SimpleNamespace(stdout=extracted[Path(command[2]).name], stderr=b"")
 
     monkeypatch.setattr(rm.subprocess, "run", fake_run)
@@ -123,6 +195,7 @@ def test_pdf_validator_checks_every_heading_and_all_three_assets(
     assert set(payload["assets"]) == set(rm.LOCALES)
     assert all(row["headings_verified"] == 28 for row in payload["assets"].values())
     assert all(row["body_markers_verified"] == 28 for row in payload["assets"].values())
+    assert all(row["geometry_pages_verified"] == 1 for row in payload["assets"].values())
 
 
 def test_pdf_validator_rejects_headings_that_only_appear_in_the_toc(
@@ -141,7 +214,10 @@ def test_pdf_validator_rejects_headings_that_only_appear_in_the_toc(
     monkeypatch.setattr(
         rm.subprocess,
         "run",
-        lambda command, **_: SimpleNamespace(stdout=extracted[Path(command[2]).name], stderr=b""),
+        lambda command, **_: SimpleNamespace(
+            stdout=(b'<html><page width="595" height="842"><word xMin="10" yMin="10" xMax="20" yMax="20">OK</word></page></html>'
+                    if command[1] == "-bbox-layout" else extracted[Path(command[2]).name]),
+            stderr=b""),
     )
     with pytest.raises(rm.ReleaseManifestError, match="missing page headings"):
         rm.validate_pdfs("v2026.08.31", tmp_path)
@@ -168,7 +244,10 @@ def test_pdf_validator_rejects_an_english_body_that_is_mostly_cjk(
     monkeypatch.setattr(
         rm.subprocess,
         "run",
-        lambda command, **_: SimpleNamespace(stdout=extracted[Path(command[2]).name], stderr=b""),
+        lambda command, **_: SimpleNamespace(
+            stdout=(b'<html><page width="595" height="842"><word xMin="10" yMin="10" xMax="20" yMax="20">OK</word></page></html>'
+                    if command[1] == "-bbox-layout" else extracted[Path(command[2]).name]),
+            stderr=b""),
     )
     with pytest.raises(rm.ReleaseManifestError, match="too much CJK"):
         rm.validate_pdfs("v2026.08.31", tmp_path)
@@ -195,7 +274,77 @@ def test_pdf_validator_rejects_broken_english_table_labels(
     monkeypatch.setattr(
         rm.subprocess,
         "run",
-        lambda command, **_: SimpleNamespace(stdout=extracted[Path(command[2]).name], stderr=b""),
+        lambda command, **_: SimpleNamespace(
+            stdout=(b'<html><page width="595" height="842"><word xMin="10" yMin="10" xMax="20" yMax="20">OK</word></page></html>'
+                    if command[1] == "-bbox-layout" else extracted[Path(command[2]).name]),
+            stderr=b""),
     )
     with pytest.raises(rm.ReleaseManifestError, match="splits an English table label"):
         rm.validate_pdfs("v2026.08.31", tmp_path)
+
+
+def test_pdf_html_marks_only_wide_tables_without_changing_content() -> None:
+    narrow = '<table><tr><th>One</th><th>Two</th></tr><tr><td>a</td><td>b</td></tr></table>'
+    cells = ''.join(f'<th>Column {i}</th>' for i in range(8))
+    wide = '<table class="existing"><thead><tr>' + cells + '</tr></thead><tbody><tr><td colspan="8">Unchanged text &amp; URL https://example.com</td></tr></tbody></table>'
+    source = '<html><body>' + narrow + wide + '</body></html>'
+    result = rm.prepare_pdf_html(source)
+    assert narrow in result
+    assert 'class="existing release-wide-table"' in result
+    assert result.replace('class="existing release-wide-table"', 'class="existing"') == source
+    assert rm.prepare_pdf_html(result) == result
+
+
+def test_pdf_html_wide_detection_counts_header_colspan_and_nested_tables() -> None:
+    source = '<table><tr><th colspan="8">Wide</th></tr><tr><td><table><tr><td>Nested narrow</td></tr></table></td></tr></table>'
+    result = rm.prepare_pdf_html(source)
+    assert result.count('release-wide-table') == 1
+    assert '<table><tr><td>Nested narrow' in result
+
+
+def test_pdf_geometry_accepts_portrait_and_landscape_bounds() -> None:
+    xml = '<html><page width="595" height="842"><word xMin="10" yMin="10" xMax="590" yMax="20">portrait</word></page><page width="842" height="595"><word xMin="10" yMin="10" xMax="800" yMax="20">landscape</word></page></html>'
+    assert rm.validate_pdf_geometry(xml, name='fixture.pdf') == {'pages': 2, 'words': 2}
+
+
+@pytest.mark.parametrize('word', [
+    'xMin="590" yMin="10" xMax="600" yMax="20"',
+    'xMin="-2" yMin="10" xMax="20" yMax="20"',
+    'xMin="10" yMin="840" xMax="20" yMax="850"',
+    'xMin="20" yMin="10" xMax="10" yMax="20"',
+    'xMin="nan" yMin="10" xMax="20" yMax="20"',
+])
+def test_pdf_geometry_rejects_clipped_or_invalid_word_boxes(word: str) -> None:
+    xml = f'<html><page width="595" height="842"><word {word}>bad</word></page></html>'
+    with pytest.raises(rm.ReleaseManifestError):
+        rm.validate_pdf_geometry(xml, name='fixture.pdf')
+
+
+@pytest.mark.parametrize('xml', ['broken XML', '<html/>', '<html><page width="nan" height="842"/></html>'])
+def test_pdf_geometry_fails_closed_on_missing_or_invalid_page_data(xml: str) -> None:
+    with pytest.raises(rm.ReleaseManifestError):
+        rm.validate_pdf_geometry(xml, name='fixture.pdf')
+
+
+def test_wide_pdf_tables_keep_readable_font_and_natural_columns() -> None:
+    css = (rm.ROOT / 'release/pdf.css').read_text(encoding='utf-8')
+    assert '@page release-wide' in css and 'size: A4 landscape' in css
+    assert 'table.release-wide-table' in css and 'page: release-wide' in css
+    assert 'font-size: 8.5pt' in css
+    assert 'table-layout: fixed' not in css  # It fitted the page but overlapped price cells.
+
+
+@pytest.mark.parametrize("opening,expected", [
+    ('<table data-class="tracking">', '<table data-class="tracking" class="release-wide-table">'),
+    ('<table data-class="tracking" class="existing">', '<table data-class="tracking" class="existing release-wide-table">'),
+    ('<table class="existing" data-class="tracking">', '<table class="existing release-wide-table" data-class="tracking">'),
+    ("<table title='class=\"decoy\"'>", "<table title='class=\"decoy\"' class=\"release-wide-table\">"),
+    ("<table title='class=\"decoy\"' class=\"existing\">", "<table title='class=\"decoy\"' class=\"existing release-wide-table\">"),
+    ("<table CLASS='existing' title=\" data-class='tracking'\">", "<table CLASS='existing release-wide-table' title=\" data-class='tracking'\">"),
+])
+def test_pdf_wide_class_changes_only_the_actual_attribute(opening: str, expected: str) -> None:
+    body = '<tr>' + ''.join('<th>Column</th>' for _ in range(8)) + '</tr></table>'
+    source = opening + body
+    result = rm.prepare_pdf_html(source)
+    assert result == expected + body
+    assert rm.prepare_pdf_html(result) == result

@@ -6,6 +6,8 @@ This stage teaches only three things: **say what you mean, give examples, and ch
 
 **Prompt** is not only one question. It is a complete task package for the model, which can include instructions, **Input Data**, examples, and output rules.
 
+> **Cloud example compatibility**: Existing Anthropic examples deliberately retain a **Haiku 4.5 compatibility baseline**, rather than claiming the latest or lowest-price model. Before adopting the fixed ID `claude-haiku-5-5`, follow the [Haiku 5.5 migration guide](https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide); changing only the model ID is insufficient. Handle default adaptive thinking, select text using `type == "text"`, omit `temperature`/`top_p`/`top_k`, and recount tokens, output limits, and budget. Tool loops must preserve thinking blocks unchanged and keep history append-only; passing offline tests does not validate live model quality.
+
 ## 📌 Learning Goals
 
 After finishing, you can:
@@ -258,7 +260,7 @@ Start with one of the three starting points above. The full list is a toolbox, n
   </thead>
   <tbody>
     <tr><th scope="rowgroup" rowspan="5">Official courses</th><td><a href="https://github.com/anthropics/prompt-eng-interactive-tutorial">Anthropic Prompt Engineering Tutorial</a></td><td>Follow the first notebook chapter.</td><td>Maintained; upstream does not provide SPDX</td><td>⭐⭐⭐⭐</td></tr>
-    <tr><td><a href="https://github.com/anthropics/courses">Anthropic Courses</a></td><td>Read Real World Prompting and Prompt Evaluations.</td><td>Maintained; upstream does not provide SPDX</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/anthropics/courses">Anthropic Courses</a></td><td>Read the older Real World Prompting and Prompt Evaluations examples; use the current official docs in this table when building.</td><td>Archived; upstream does not provide SPDX</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview">Anthropic Prompt Engineering</a></td><td>Read “When to change a prompt” first.</td><td>Official documentation</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://developers.openai.com/api/docs/guides/prompt-engineering">OpenAI Prompt Engineering</a></td><td>Read about message roles, examples, and evals.</td><td>Official documentation</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://ai.google.dev/gemini-api/docs/prompting-strategies">Google Prompt Design Strategies</a></td><td>Read about clear instructions and fixed structures.</td><td>Official documentation</td><td>⭐⭐⭐⭐</td></tr>
@@ -272,7 +274,7 @@ Start with one of the three starting points above. The full list is a toolbox, n
   <tbody>
     <tr><th scope="rowgroup" rowspan="4">Learn from examples</th><td><a href="https://github.com/dair-ai/Prompt-Engineering-Guide">DAIR.AI Prompt Engineering Guide</a></td><td>Use it as a reference. You do not need to memorize it from start to finish.</td><td>Maintained; MIT</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://www.promptingguide.ai/">PromptingGuide.ai</a></td><td>Use the website to find one technique quickly.</td><td>Maintained; website</td><td>⭐⭐⭐</td></tr>
-    <tr><td><a href="https://github.com/NirDiamant/Prompt_Engineering">NirDiamant Prompt Engineering</a></td><td>Choose one notebook and learn while running it.</td><td>Maintained; upstream does not provide SPDX</td><td>⭐⭐⭐</td></tr>
+    <tr><td><a href="https://github.com/NirDiamant/Prompt_Engineering">NirDiamant Prompt Engineering</a></td><td>Choose one notebook and learn while running it.</td><td>Custom non-commercial license; commercial use needs written permission</td><td>⭐⭐⭐</td></tr>
     <tr><td><a href="https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php">李宏毅 GenAI-ML (2025 Fall)</a></td><td>Use it when you need a Chinese classroom explanation.</td><td>2025 Fall course website; not current model documentation</td><td>⭐⭐⭐</td></tr>
   </tbody>
   <tbody>

@@ -6,7 +6,7 @@
 
 **Observability** is like adding an instrument panel to an agent: when it becomes slow, fails, or uses too many tokens, you can find the responsible step.
 
-Pairs with Core Exercise 2 in [Stage 7 — Agent Production Engineering: Harness, Loops, and Graphs](../../../stages/07-multi-agent-production.en.md).
+Pairs with Core Exercise 2 in [Stage 7 — Agent Production Engineering: Testable, Observable, Stoppable, and Recoverable](../../../stages/07-multi-agent-production.en.md).
 
 ## 🎯 Learning goals
 
@@ -109,7 +109,7 @@ Common problems:
 ## 📚 Required reading and learning resources
 
 - ⭐⭐⭐⭐⭐ [Langfuse](https://github.com/langfuse/langfuse): open-source traces, evals, and prompt management.
-- ⭐⭐⭐⭐⭐ [Arize Phoenix](https://github.com/Arize-ai/phoenix): open-source, OpenTelemetry-oriented observability.
+- ⭐⭐⭐⭐⭐ [Arize Phoenix](https://github.com/Arize-ai/phoenix): OpenTelemetry-oriented observability under Elastic License 2.0 (ELv2), with limits on hosted services for third parties.
 - ⭐⭐⭐⭐⭐ [datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents): Chapter-style Agent material for filling in the full background.
 - ⭐⭐⭐⭐ [LangSmith](https://smith.langchain.com/): useful in the LangChain and LangGraph ecosystem.
 - ⭐⭐⭐⭐ [Helicone](https://www.helicone.ai/): collect LLM request data through a proxy path.

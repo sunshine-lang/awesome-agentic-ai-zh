@@ -134,7 +134,7 @@
 <tbody>
 <tr><th scope="rowgroup" rowspan="7">Cloud API</th><td><a href="https://platform.openai.com/docs/quickstart">OpenAI API</a></td><td>官方 SDK 与 API；ChatGPT 订阅不等于 API billing</td><td>⭐⭐⭐⭐⭐</td></tr>
 <tr><td><a href="https://ai.google.dev/gemini-api/docs/openai">Gemini API</a></td><td>Google 官方提供 OpenAI libraries compatibility 说明</td><td>⭐⭐⭐⭐⭐</td></tr>
-<tr><td><a href="https://docs.api.nvidia.com/nim/re/reference/llm-apis">NVIDIA NIM</a></td><td>按 endpoint 查看支持的 API shape 与模型</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><a href="https://docs.api.nvidia.com/nim/reference/llm-apis">NVIDIA NIM</a></td><td>按 endpoint 查看支持的 API shape 与模型</td><td>⭐⭐⭐⭐</td></tr>
 <tr><td><a href="https://api-docs.deepseek.com/">DeepSeek API</a></td><td>官方文档提供 OpenAI-compatible 使用方式</td><td>⭐⭐⭐⭐</td></tr>
 <tr><td><a href="https://platform.kimi.com/docs/api/overview">Kimi API</a></td><td>地区、endpoint 与模型以官方 Console 为准</td><td>⭐⭐⭐⭐</td></tr>
 <tr><td><a href="https://help.aliyun.com/en/model-studio/base-url">Alibaba Model Studio／Qwen</a></td><td>按区域使用对应 base URL；官方提供 OpenAI-compatible endpoint</td><td>⭐⭐⭐⭐</td></tr>
@@ -234,8 +234,8 @@ load_dotenv()
 client = Anthropic()  # 从 ANTHROPIC_API_KEY 读取 key
 
 message = client.messages.create(
-    model="claude-sonnet-5",
-    max_tokens=120,
+    model="claude-sonnet-5-5",
+    max_tokens=1024,
     messages=[{"role": "user", "content": "请用一句话介绍你自己。"}],
 )
 

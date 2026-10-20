@@ -32,6 +32,14 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 
 > ⚠️ An MCP Server may touch real data. Even with an official source, confirm the signed-in account, scopes, writable tools, and approval screen.
 
+### Choosing the new tool
+
+<small>New entry verified: 2026-10-15 UTC</small>
+
+| Need | Suggested entry | Editorial rating | Check first |
+|---|---|---|---|
+| Find, install, or update Agent Skills | [Vercel Skills](#vercel-skills) | ⭐⭐⭐⭐ | It is not an MCP Server or model; inspect the source, permissions, and host support before installation |
+
 ### Index
 
 1. [Notes / Knowledge Bases](#1-notes--knowledge-bases)
@@ -82,7 +90,9 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **Audience**: heavy Obsidian users wanting Claude Code to organize daily notes, auto-link, search across files.
 **Notes**: requires the [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) plugin in Obsidian.
 
-### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) (archived, historical reference)
+### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) ⭐⭐⭐⭐
+
+**Status (2026-09-10 UTC)**: archived; the author no longer provides updates or support. Kept as a historical learning example, not a starting point for new workflows.
 
 | Field | Value |
 |---|---|
@@ -90,8 +100,8 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 | Rating | ⭐⭐⭐⭐ |
 
 **What it does**: a Claude Code Skill that uses browser automation to query Gemini Notebook (formerly NotebookLM), with citation-backed answers.
-**Audience**: people who manage papers / research notes in Gemini Notebook (formerly NotebookLM) but want to query from Claude Code in one prompt.
-**Notes**: As of 2026-09-21, the repository is archived. Keep it as a historical implementation reference, not a recommendation for new installs. The original implementation requires Google account authentication.
+**Audience**: people studying early browser-automation Skill design. For actual use, start with the official website or assess `notebooklm-py` below yourself.
+**Notes**: requires Google account auth.
 
 ### [teng-lin/notebooklm-py](https://github.com/teng-lin/notebooklm-py) ⭐⭐⭐⭐
 
@@ -115,16 +125,16 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **Audience**: Logseq users automating daily journals, cross-page links, backlink queries.
 **Notes**: enable Logseq's HTTP API (Settings → Features → HTTP API).
 
-### skridlevsky/graphthulhu (historical entry, source unavailable)
+### skridlevsky/graphthulhu ⭐⭐⭐ (archived / historical example)
 
 | Field | Value |
 |---|---|
-| License | MIT |
-| Status | Historical reference; installation recommendation suspended |
+| License | Previously recorded as MIT; cannot currently reverify |
+| Rating | ⭐⭐⭐ (historical rating; no longer publicly accessible) |
 
 **What it does**: a broad tool set across navigation, search, analysis, writing, journals, flashcards, whiteboards.
-**Audience**: people using both Logseq and Obsidian who don't want two MCP servers.
-**Notes**: As of 2026-09-21, the original GitHub repository returns 404; no official migration address has been verified. The description above records the former entry, not current installability. A same-named repository is not evidence of project continuity.
+**Audience**: people studying early Logseq + Obsidian MCP design; new projects should choose a maintained alternative.
+**Notes (2026-09-10 UTC)**: the original GitHub address returns 404, so its dead link has been removed. We do not infer deletion, a private repository, or a move. Only the historical name and rating remain, not an available learning resource.
 
 ### [ankimcp/anki-mcp-server](https://github.com/ankimcp/anki-mcp-server) ⭐⭐⭐
 
@@ -149,7 +159,7 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 
 | Field | Value |
 |---|---|
-| License | No license file (none provided upstream; confirm terms before use) |
+| License | Per-Skill licenses; many are Apache-2.0, while docx/pdf/pptx/xlsx are source-available under their folder terms |
 | Rating | ⭐⭐⭐⭐⭐ (**official examples**) |
 
 **What it does**: Anthropic's official Agent Skills examples include document workflows for docx, xlsx, pptx, and pdf files.
@@ -178,7 +188,7 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **Audience**: people who want LLMs to auto-generate decks from outlines / Markdown (consultants, lecturers, students).
 **Notes**: overlaps with `anthropics/skills`'s pptx skill; use this when the official one isn't enough.
 
-### [1weiho/open-slide](https://github.com/1weiho/open-slide) ⭐⭐⭐⭐
+### [open-slide/open-slide](https://github.com/open-slide/open-slide) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
@@ -188,17 +198,6 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **What it does**: a React slide framework built for coding agents — describe a deck in natural language and let Claude Code / Codex / Cursor write the React; ships two Claude Code Skills (`/create-slide`, `/slide-authoring`).
 **Audience**: people who want agents to produce decks as code (git-versionable) — a different route from PowerPoint-MCP's .pptx output.
 **Notes**: TypeScript / React / Vite; scaffold with `npx @open-slide/cli init`. It's an agent-native tool (agents author with it), not a Stage 4 agent-building / orchestration framework.
-
-### [SylphxAI/pdf-reader-mcp](https://github.com/SylphxAI/pdf-reader-mcp) ⭐⭐⭐⭐
-
-| Field | Value |
-|---|---|
-| License | MIT |
-| Rating | ⭐⭐⭐⭐ (high-throughput PDF) |
-
-**What it does**: high-speed PDF parsing MCP, ~5-10× faster than `anthropics/skills`'s pdf skill (per their claim).
-**Audience**: people doing batch reads of papers / contracts / reports.
-**Notes**: parallel processing; noticeable on large PDFs.
 
 ### [tfriedel/claude-office-skills](https://github.com/tfriedel/claude-office-skills) ⭐⭐⭐
 
@@ -641,16 +640,18 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **Audience**: SREs / DevOps using Grafana for metrics.
 **Notes**: "why did this dashboard line drop?" — ask, and the LLM pulls metrics for the answer.
 
-### [getsentry/sentry-mcp](https://github.com/getsentry/sentry-mcp) ⭐⭐⭐⭐
+### [getsentry/toolkit](https://github.com/getsentry/toolkit) ⭐⭐⭐⭐
 
 | Field | Value |
 |---|---|
-| License | NOASSERTION |
+| License | FSL-1.1-Apache-2.0 |
 | Rating | ⭐⭐⭐⭐ (**Sentry official**) |
 
 **What it does**: query Sentry error events / issues / traces from LLMs.
 **Audience**: engineers using Sentry for production errors.
 **Notes**: "show me last week's stack trace for this error" works directly in Claude Code.
+The former `getsentry/sentry-mcp` repository is now `getsentry/toolkit`, the same project (checked 2026-10-02). Sentry MCP still uses the name `sentry-mcp` and package `@sentry/mcp-server`.
+The license restricts Competing Use; it is not a blanket current Apache-2.0 license. Check the terms for the version used.
 
 ### [winor30/mcp-server-datadog](https://github.com/winor30/mcp-server-datadog) ⭐⭐⭐
 
@@ -865,17 +866,6 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **Audience**: developers wiring payment / billing into agent flows.
 **Notes**: ⚠️ this is real money. Test thoroughly in sandbox before going to production.
 
-### YIELD INTELLIGENCE MCP (Hosted Remote Server)
-
-| Field | Value |
-|---|---|
-| Type | hosted MCP server |
-| Rating | ⭐⭐⭐ (finance analysis tool; practical example of hosted vs self-hosted MCP architecture) |
-
-**What it does**: Uses a hosted remote MCP to read US Treasury yields and income-asset analysis, while showing the connection shape of hosted versus self-hosted MCP.
-**Audience**: learners who want to observe MCP requests and results with test finance questions; it is not an automatic trading entry point.
-**Notes**: The former endpoint `api.intuitek.ai/yield/mcp` returned 404 to an HTTP GET check on 2026-09-21. Connection recommendations are suspended pending verification; this does not establish that MCP POST requests or the entire service have stopped. The original implementation is provided by the MIT [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace) repository. Data timing, methods, authentication, and pricing can change; check current service documentation and original market data before use. Not investment advice.
-
 ### [ComposioHQ/composio](https://github.com/ComposioHQ/composio) ⭐⭐⭐⭐⭐
 
 | Field | Value |
@@ -886,6 +876,26 @@ Installation and testing belong in [Stage 5](../stages/05-claude-code-ecosystem.
 **What it does**: a platform (SDKs + MCP servers) that connects agents to many apps (Slack / GitHub / Gmail / Salesforce / Notion…) and handles the logins for you, so you don't build a separate connector for each one.
 **Audience**: teams whose agents need broad API coverage without maintaining dozens of separate MCP servers.
 **Notes**: provides MCP servers + Python / TypeScript SDKs; connect to Claude Code via MCP. A "tool aggregator" (compare with n8n / Zapier for automation).
+
+<a id="vercel-skills"></a>
+### [Vercel Skills](https://github.com/vercel-labs/skills) ⭐⭐⭐⭐
+
+| Field | Value |
+|---|---|
+| License | MIT |
+| Rating | ⭐⭐⭐⭐ |
+
+**What it teaches**: a **command-line interface (CLI)** lets you control a program with text commands in a terminal.
+Vercel Skills uses this interface to manage skills.
+Use `npx skills find`, `add`, and `update` to find, install, and update Agent Skills.
+This CLI manages skills; it is not an MCP Server or model.
+**Who it is for**: people managing skills across supported coding agents who will inspect each source and permission boundary.
+**Notes**: installation or update is not a safety review. It does not guarantee support in every host.
+This page reviewed the following commit:
+[`13e4063a1cf913f5606d57d42ab83a86f5001e04`](https://github.com/vercel-labs/skills/commit/13e4063a1cf913f5606d57d42ab83a86f5001e04).
+Review again after updating.
+The official README says the CLI collects anonymous usage records (usage telemetry).
+Set `DISABLE_TELEMETRY=1` or `DO_NOT_TRACK=1` to opt out.
 
 ---
 
@@ -1160,6 +1170,6 @@ Not an SLA — just "do what you can" guidance:
 - Treat vendor documentation or the canonical repo as the source for official status, licensing, permissions, and hosted endpoints.
 - CI periodically scans repository redirects, archive status, HTTP errors, and freshness signals. A warning still needs human judgment; do not remove a stable tool only because it has not released recently.
 - Define the reader's task and safety boundary before opening a new category, then add verifiable official or high-quality community entries.
-- Apply the same learning-value, maintenance, licensing, and permission standards to Chinese-community tools; do not use a star threshold.
+- Apply the same rule to Chinese-community tools: a newly added third-party GitHub repo needs at least 1,000 stars, plus checks for learning value, maintenance, licensing, and permissions. Official documentation, standards, and irreplaceable canonical sources are exempt.
 - Make wording and formatting clear enough for a five-year-old to follow while preserving exact terms, limits, and sources.
 </details>

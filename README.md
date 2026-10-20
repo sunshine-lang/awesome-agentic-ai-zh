@@ -4,7 +4,7 @@
 
 <div align="center" markdown="1">
 
-![AI Agent 學習路徑](resources/diagrams/banner.png)
+![從 Stage 0–2 共用基礎分流到 CLI 與 Agent 路線，共用 Stage 5、8，再依需求選角色路線](resources/diagrams/banner.svg)
 
 # awesome-agentic-ai-zh
 
@@ -27,13 +27,13 @@
 
 **AI Agent**（AI 代理人）是「能為了人的目標，自己判斷下一步並採取行動的 AI 系統」。人給它目標後，它會看目前情況、選擇下一步，必要時使用工具，再依結果繼續、修正、停止，或把控制權交還給人。它可以自動替人完成工作，但只能在人給的規則與權限內行動。只回答一次的聊天機器人，或每一步都固定寫好的腳本，不一定是 Agent。這個 repo 不要求你一開始就懂所有名詞，而是帶你依序完成三件事：
 
-1. **先懂基礎**：LLM、Prompt、API 與 Token 是什麼。
+1. **先懂基礎**：LLM（Large Language Model，能讀寫語言的模型）、Prompt、API（Application Programming Interface，讓程式呼叫服務的介面） 與 Token 是什麼。
 2. **再做出東西**：讓模型呼叫工具、跑 Agent Loop、讀文件與記住事情。
 3. **最後做得可靠**：加入權限、Eval、人工批准、觀測與失敗復原。
 
 這裡的角色是**學習路線圖 + 精選資源 + 可直接執行的小練習**。需要完整章節時，我們會帶你去官方文件、[Datawhale Hello-Agents](https://github.com/datawhalechina/hello-agents) 或對應的 Cookbook，不重寫另一套百科全書。需要連模型時，每個練習會再說明雲端或本機路徑。
 
-重要技術詞第一次出現時會先用白話說明，再保留正式英文。忘記某個詞時，直接查[名詞表](resources/glossary.md)。
+章節中的重要技術詞第一次出現時會先用白話說明，再保留正式英文。忘記某個詞時，直接查[名詞表](resources/glossary.md)。
 
 ## 🚀 現在就開始
 
@@ -71,9 +71,9 @@ cd awesome-agentic-ai-zh
 
 | Stage | 這一步解決什麼？ | 完成後你能做什麼？ |
 |---|---|---|
-| **0** · [基礎準備](stages/00-foundations.md) | 電腦與基本工具準備好了嗎？ | 用 Python 呼叫公開 API、讀 JSON，並用 Git 保存成果 |
+| **0** · [基礎準備](stages/00-foundations.md) | 電腦與基本工具準備好了嗎？ | 用 Python 呼叫公開 API、讀 JSON（JavaScript Object Notation，程式交換資料常用的文字格式），並用 Git 保存成果 |
 | **1** · [LLM 基礎](stages/01-llm-basics.md) | LLM、Token、Context 與模型差在哪裡？ | 呼叫一個 LLM，並依需求選雲端或本機模型 |
-| **2** · [Prompt 設計](stages/02-prompt-engineering.md) | 怎麼把目標、資料、規則與輸出說清楚？ | 用固定案例比較 Zero-Shot、One-Shot、Few-Shot 與 CoT 的邊界 |
+| **2** · [Prompt 設計](stages/02-prompt-engineering.md) | 怎麼把目標、資料、規則與輸出說清楚？ | 用固定案例比較 Zero-Shot、One-Shot、Few-Shot 與 CoT（Chain-of-Thought，以中間步驟處理問題的推理提示方法） 的邊界 |
 
 ### Track A：使用 CLI Agent 把工作做完
 
@@ -94,14 +94,14 @@ cd awesome-agentic-ai-zh
 | **3** · [工具使用與第一個 Agent Loop](stages/03-tool-use-and-hello-agent.md) | 模型怎麼安全呼叫工具並重複下一步？ | 做出有最大輪數、會驗證參數的 Agent Loop |
 | **4** · [Workflow Graph 與 Agent 框架](stages/04-agent-frameworks.md) | 怎麼把多個步驟畫成工作地圖？ | 選擇 Workflow、Agent、Graph 與 Framework |
 | **5** · [Claude Code 生態](stages/05-claude-code-ecosystem.md) | MCP、Skills、Plugins、Hooks 與 Subagents 怎麼合作？ | 組合工具、規則與可重用能力 |
-| **6** · [Memory · RAG](stages/06-memory-rag.md) | Agent 怎麼查文件、保存與取回重要資訊？ | 建立最小 RAG、long-term memory 與 contextual retrieval 流程 |
-| **7** · [Agent Production Engineering：Harness、Loop 與 Graph](stages/07-multi-agent-production.md) | Agent 怎麼在真實環境穩定運作？ | 加入 Eval、觀測、預算、Human-in-the-loop（HITL，人工批准）與復原 |
+| **6** · [Memory · RAG（Retrieval-Augmented Generation，先找相關資料，再依資料回答）](stages/06-memory-rag.md) | Agent 怎麼查文件、保存與取回重要資訊？ | 建立最小 RAG、long-term memory 與 contextual retrieval 流程 |
+| **7** · [Agent 上線工程：可測、可看、可停、可恢復](stages/07-multi-agent-production.md) | Agent 怎麼在真實環境穩定運作？ | 加入 Eval、觀測、預算、Human-in-the-loop（HITL，人工批准）與復原 |
 | **7.5** · [進階 Agentic 概念地圖](stages/07.5-advanced-agentic-concepts.md) | 還有哪些進階 Pattern 值得認得？ | 從 12 個概念選讀 PAR loop、agent-as-judge 等需要的主題 |
 | **8** · [Agent 操作介面](stages/08-agent-interfaces.md) | Agent 怎麼操作 API 以外的真實環境？ | 選擇 Computer Use、Browser Use 或 Code Sandbox |
 
 Stage 4 先看懂 **Workflow Graph**，再用 framework 把它做出來；Stage 7 再加入 Eval、觀測、批准與復原，讓同一張工作圖可以穩定運作。
 
-> 🔭 **學習順序**：Stage 2 Prompt → Stage 3 **Agent Loop** → Stage 4 **Workflow Graph**／Framework → Stage 5 工具與規則 → Stage 6 **Context Engineering** → Stage 7 production。`prompt → context → harness → loop → graph` 是五個控制問題，不是章節順序。
+> 🔭 **學習順序**：Stage 2 Prompt → Stage 3 **Agent Loop** → Stage 4 **Workflow Graph**／Framework → Stage 5 工具與規則 → Stage 6 **Context Engineering** → Stage 7 production。Prompt、Context、Harness、Loop、Graph 會一起工作；它們不是五層，也不是互相取代的產品世代。
 
 完成 A3 或 Stage 7 後，可以開始 [Capstone 專案](CAPSTONE.md)；想記錄進度可使用 [PROGRESS.md](PROGRESS.md)。
 
@@ -119,7 +119,9 @@ Stage 4 先看懂 **Workflow Graph**，再用 framework 把它做出來；Stage 
 
 ### 依你的身分繼續走
 
-![依身分選擇延伸路線](resources/diagrams/branch-decision-tree.png)
+![研究、開發、教學、知識工作與日常使用是五種選擇，依需求選讀，不必全部走完](resources/diagrams/branch-decision-tree.svg)
+
+[靜態圖](resources/diagrams/branch-decision-tree.png)
 
 | 路線 | 適合誰 | 你會處理什麼？ |
 |---|---|---|

@@ -32,6 +32,14 @@
 
 > ⚠️ MCP Server 可能碰到真实数据。即使来源是官方，也要确认登录账号、scope、可写工具与批准画面。
 
+### 新增工具怎么选
+
+<small>新增项目核查：2026-10-15 UTC</small>
+
+| 需求 | 建议入口 | 编辑评分 | 先确认 |
+|---|---|---|---|
+| 查找、安装或更新 Agent Skills | [Vercel Skills](#vercel-skills) | ⭐⭐⭐⭐ | 它不是 MCP server 或模型；安装前检查来源、权限与 host 支持 |
+
 ### 目录
 
 1. [笔记 / 知识库](#1-笔记--知识库)
@@ -81,7 +89,9 @@
 **适合谁**：Obsidian 重度用户，想用 Claude Code 整理 daily note、自动 link、跨文件搜索。
 **备注**：要先在 Obsidian 装 [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) plugin。
 
-### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) （已归档，历史参考）
+### [PleasePrompto/notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) ⭐⭐⭐⭐
+
+**状态（2026-09-10 UTC）**：已归档，作者不再提供更新或支持。保留作历史学习范例；新流程不要从它开始。
 
 | 栏位 | 内容 |
 |---|---|
@@ -89,8 +99,8 @@
 | 推荐度 | ⭐⭐⭐⭐ |
 
 **教什么**：Claude Code Skill，用浏览器自动化操作 Gemini Notebook（旧名 NotebookLM）、查询上传文件，回复带 citation。
-**适合谁**：用 Gemini Notebook（旧名 NotebookLM）管 paper 跟研究笔记，但想在 Claude Code 一条 prompt 直接查的人。
-**备注**：截至 2026-09-21，仓库已归档；仅保留作历史实现参考，不作新安装推荐。原实现需要 Google 账号登录授权。
+**适合谁**：想研究早期浏览器自动化 Skill 设计的人；实际使用请先看官方网页或下方仍需自行评估的 `notebooklm-py`。
+**备注**：需要 Google 账号登录授权。
 
 ### [teng-lin/notebooklm-py](https://github.com/teng-lin/notebooklm-py) ⭐⭐⭐⭐
 
@@ -114,16 +124,16 @@
 **适合谁**：Logseq 用户要自动化 daily journal、跨页 link、查询 backlinks。
 **备注**：需要 Logseq 开启 HTTP API（Settings → Features → HTTP API）。
 
-### skridlevsky/graphthulhu（历史条目，来源暂不可用）
+### skridlevsky/graphthulhu ⭐⭐⭐（已归档／历史范例）
 
 | 栏位 | 内容 |
 |---|---|
-| License | MIT |
-| 状态 | 历史参考；暂停安装推荐 |
+| License | 先前记录为 MIT；目前无法重新核对 |
+| 推荐度 | ⭐⭐⭐（历史评分；目前无法公开获取） |
 
 **教什么**：一组 tool，覆盖 navigation、search、analysis、writing、journals、flashcards、whiteboards。
-**适合谁**：同时用 Logseq 跟 Obsidian、不想装两套 MCP server 的人。
-**备注**：截至 2026-09-21，原 GitHub 仓库返回 404，尚未核实官方迁移地址。以上为原条目描述，不代表目前仍可安装；同名仓库不能直接视为原项目的延续。
+**适合谁**：想研究早期 Logseq + Obsidian MCP 设计的人；新项目应改找仍在维护的替代方案。
+**备注（2026-09-10 UTC）**：原 GitHub 入口返回 404，已移除失效链接。不推测它是删除、转为私有或迁移；此处只保留历史名称与评分，不再当作可获取的学习资源。
 
 ### [ankimcp/anki-mcp-server](https://github.com/ankimcp/anki-mcp-server) ⭐⭐⭐
 
@@ -148,7 +158,7 @@
 
 | 栏位 | 内容 |
 |---|---|
-| License | 无 license 文件（上游未提供；使用前请先确认授权） |
+| License | 各 Skill 分别授权；许多为 Apache-2.0，docx／pdf／pptx／xlsx 为 source-available，依各文件夹条款 |
 | 推荐度 | ⭐⭐⭐⭐⭐（**官方示例**） |
 
 **教什么**：Anthropic 官方 Agent Skills 示例仓库，包含 docx / xlsx / pptx / pdf 处理 skill。
@@ -177,7 +187,7 @@
 **适合谁**：要 LLM 从大纲 / Markdown 自动生 PPT 的人（顾问、讲师、学生）。
 **备注**：跟 anthropics/skills 的 pptx skill 重叠；那边不够用再来这边。
 
-### [1weiho/open-slide](https://github.com/1weiho/open-slide) ⭐⭐⭐⭐
+### [open-slide/open-slide](https://github.com/open-slide/open-slide) ⭐⭐⭐⭐
 
 | 栏位 | 内容 |
 |---|---|
@@ -187,17 +197,6 @@
 **教什么**：为 coding agent 打造的 React 简报框架——用自然语言描述简报、让 Claude Code / Codex / Cursor 写出 React slides；内附 `/create-slide`、`/slide-authoring` 两个 Claude Code Skill。
 **适合谁**：想让 agent 直接产出“代码即简报、可进 git 版控”的人，跟 PowerPoint-MCP 走 .pptx 不同路。
 **备注**：TypeScript / React / Vite，`npx @open-slide/cli init` 起手。它是 agent-native 工具（agent 来写），不是 Stage 4 那种构建 agent 的编排框架。
-
-### [SylphxAI/pdf-reader-mcp](https://github.com/SylphxAI/pdf-reader-mcp) ⭐⭐⭐⭐
-
-| 栏位 | 内容 |
-|---|---|
-| License | MIT |
-| 推荐度 | ⭐⭐⭐⭐（PDF 高效解析） |
-
-**教什么**：高速 PDF 解析 MCP，比 anthropics/skills 的 pdf skill 快 5-10×（号称）。
-**适合谁**：要批量读 paper / contract / report 的人。
-**备注**：parallel processing；大 PDF 处理速度有感差别。
 
 ### [tfriedel/claude-office-skills](https://github.com/tfriedel/claude-office-skills) ⭐⭐⭐
 
@@ -640,16 +639,18 @@
 **适合谁**：用 Grafana 看 metric 的 SRE / DevOps。
 **备注**：“dashboard 那条线为什么掉？”直接问，LLM 捞 metric 给答案。
 
-### [getsentry/sentry-mcp](https://github.com/getsentry/sentry-mcp) ⭐⭐⭐⭐
+### [getsentry/toolkit](https://github.com/getsentry/toolkit) ⭐⭐⭐⭐
 
 | 栏位 | 内容 |
 |---|---|
-| License | NOASSERTION |
+| License | FSL-1.1-Apache-2.0 |
 | 推荐度 | ⭐⭐⭐⭐（**Sentry 官方**） |
 
 **教什么**：从 LLM 查 Sentry error event、issue、trace。
 **适合谁**：用 Sentry 接 production error 的工程师。
 **备注**：“上周这个 error 的 stack trace 给我看”直接问 Claude Code。
+原 `getsentry/sentry-mcp` 已改名为 `getsentry/toolkit`。这是同一个项目（2026-10-02 核对）。Sentry MCP 的名称仍是 `sentry-mcp`，软件包仍是 `@sentry/mcp-server`。
+授权限制 Competing Use；不是目前全面采用 Apache-2.0，须按该版本 LICENSE 判断。
 
 ### [winor30/mcp-server-datadog](https://github.com/winor30/mcp-server-datadog) ⭐⭐⭐
 
@@ -866,17 +867,6 @@
 **适合谁**：要在 agent 内处理付款 / billing 的开发者。
 **备注**：⚠️ 涉及金流，务必用 sandbox 测试够了再接 production。
 
-### YIELD INTELLIGENCE MCP（Hosted Remote Server）
-
-| 栏位 | 内容 |
-|---|---|
-| 形式 | hosted MCP server |
-| 推荐度 | ⭐⭐⭐（金融分析工具；了解 hosted vs self-hosted MCP 实现差异的实例） |
-
-**教什么**：用 hosted remote MCP 读取美国国债收益率与收益型资产分析，并比较 hosted 与 self-hosted MCP 的连接形状。
-**适合谁**：想用测试问题观察金融分析 MCP request / result 的学习者；它不是自动下单入口。
-**备注**：原服务端点 `api.intuitek.ai/yield/mcp` 在 2026-09-21 的 HTTP GET 检查中返回 404；目前暂停连接推荐，未据此判定 MCP POST 请求或整个服务已停止。原实现由 [thebrierfox/intuitek-ace](https://github.com/thebrierfox/intuitek-ace)（MIT）提供。数据时间、方法、认证与费用可能改变；使用前查看当前服务文档并核对原始市场数据。非投资建议。
-
 ### [ComposioHQ/composio](https://github.com/ComposioHQ/composio) ⭐⭐⭐⭐⭐
 
 | 栏位 | 内容 |
@@ -887,6 +877,26 @@
 **教什么**：一个用 SDK 与 MCP server 把 Agent 连到多种应用的平台，并集中处理服务登录，不用每个服务都自行写连接器。
 **适合谁**：agent 要跨大量工具、但不想维护几十个独立 MCP server 的团队。
 **备注**：提供 MCP server + Python / TypeScript SDK；可通过 MCP 接到 Claude Code。属"工具聚合器"（跟 n8n / Zapier 自动化平台同类）。
+
+<a id="vercel-skills"></a>
+### [Vercel Skills](https://github.com/vercel-labs/skills) ⭐⭐⭐⭐
+
+| 栏位 | 内容 |
+|---|---|
+| License | MIT |
+| 推荐度 | ⭐⭐⭐⭐ |
+
+**教什么**：**CLI（命令行接口）**让你在终端用文字命令操作程序。
+Vercel Skills 用这种方式管理 skills。
+你可以用 `npx skills find`、`add` 与 `update` 查找、安装和更新 Agent Skills。
+它不是 MCP server 或模型。
+**适合谁**：需要在支持的 coding agent 间管理 skills，并愿意逐项检查来源与权限的人。
+**备注**：安装或更新不等于完成安全审查。也不保证每个 host 都支持。
+本页核查固定在以下 commit：
+[13e4063a1cf913f5606d57d42ab83a86f5001e04](https://github.com/vercel-labs/skills/commit/13e4063a1cf913f5606d57d42ab83a86f5001e04)。
+更新后要重新审查。
+CLI 根据官方 README 会收集匿名使用记录（usage telemetry）。
+可用 `DISABLE_TELEMETRY=1` 或 `DO_NOT_TRACK=1` 关闭。
 
 ---
 
@@ -1160,6 +1170,6 @@ PR 送出前看一下 [`resources/style-guide.zh-Hans.md`](style-guide.zh-Hans.m
 - 官方状态、授权、权限与 hosted endpoint 以供应商文档或 canonical repo 为准
 - CI 定期扫描 repository redirect、archive、HTTP error 与 freshness 信号；警告后仍要人工判断，不能只因很久没 release 就删除稳定工具
 - 新分类先说清楚读者任务与安全边界，再收录可核对的官方或优质社群入口
-- 中文社群工具使用同一套教学价值、维护、授权与权限标准，不使用 stars 门槛
+- 中文社群工具也使用同一套规则：新收录的第三方 GitHub repo 至少要有 1,000 stars，并继续检查教学价值、维护、授权和权限；官方文档、标准规范与不可替代的 canonical source 不受这个门槛限制
 - 用词与格式先修到五岁也能理解，同时保留精确术语、限制与来源
 </details>

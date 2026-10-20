@@ -180,6 +180,14 @@ The core idea of a Skill can be shared, but folders, permissions, frontmatter, a
 
 If you have no scope, evidence, or recovery method, do not increase permissions yet. This matters more than memorizing many tool names.
 
+> **After an upgrade, recheck safety boundaries:** In a disposable demo repo, rerun negative cases: a folder-disabled MCP stays off
+> after a headless directory change or plugin reload. A `PreToolUse` hook (run before a tool call) in managed settings (administrator settings)
+> must block a call it denies; if it also returns `"continue": false`, the turn must end. Denying only the call lets Claude choose another approach.
+> Read-only mode cannot write, and a command
+> requiring human approval is not auto-approved (include a `BASH_ARGV0` permission case). Anthropic’s [Claude Code v2.1.296 release
+> notes (Oct 9)](https://github.com/anthropics/claude-code/releases/tag/v2.1.296) supply upstream regression cues for MCP, hooks,
+> and `BASH_ARGV0`; they do not show that this repository or your installed version passed these checks.
+
 ### 📋 Playbook 4: Dispatching subagents for independent tasks
 
 **Outcome:** first list the agents the current tool really provides, then delegate an independent, verifiable task; do not assume every computer has an agent with the same name.
@@ -224,7 +232,7 @@ Editorial ratings are learning-map guidance, not GitHub stars. `⭐⭐⭐⭐⭐`
 </tbody>
 <tbody>
 <tr><th scope="rowgroup" rowspan="4">Observability and evaluation</th><td><code>langfuse/langfuse</code></td><td>Traces, usage, and eval</td><td>Viewing multiple runs together</td><td>⭐⭐⭐⭐⭐</td><td><a href="https://github.com/langfuse/langfuse">GitHub repo</a></td></tr>
-<tr><td><code>Arize-ai/phoenix</code></td><td>Tracing and evaluation</td><td>Observing an AI system with open source</td><td>⭐⭐⭐⭐</td><td><a href="https://github.com/Arize-ai/phoenix">GitHub repo</a></td></tr>
+<tr><td><code>Arize-ai/phoenix</code></td><td>Tracing and evaluation</td><td>Observing an AI system locally</td><td>⭐⭐⭐⭐</td><td><a href="https://github.com/Arize-ai/phoenix">GitHub repo</a></td></tr>
 <tr><td><code>Helicone/helicone</code></td><td>Proxy/gateway data flow and privacy boundary</td><td>Collecting request records from a gateway</td><td>⭐⭐⭐⭐</td><td><a href="https://github.com/Helicone/helicone">GitHub repo</a></td></tr>
 <tr><td><code>promptfoo/promptfoo</code></td><td>Eval cases and CI regression</td><td>Comparing whether a change made things worse</td><td>⭐⭐⭐⭐⭐</td><td><a href="https://github.com/promptfoo/promptfoo">GitHub repo</a></td></tr>
 </tbody>

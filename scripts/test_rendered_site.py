@@ -14,6 +14,52 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def test_markdown_renderer_pin_matches_reader_ux_lock_and_runtime() -> None:
+    import markdown
+
+    requirements = (ROOT / "requirements-docs.txt").read_text(encoding="utf-8")
+    reader_lock = (ROOT / "scripts" / "requirements-reader-ux.txt").read_text(
+        encoding="utf-8"
+    )
+    pins = [line.strip() for line in requirements.splitlines() if line.startswith("Markdown==")]
+    assert len(pins) == 1, "Pin the shared Markdown renderer used by PR, Pages and release builds"
+    expected = pins[0].split("==", 1)[1]
+    assert f"Markdown=={expected} \\" in reader_lock
+    assert markdown.__version__ == expected
+
+
+@pytest.mark.parametrize(
+    "source,term",
+    [
+        ("**Context（上下文）**是這次能看到的資料。", "Context（上下文）"),
+        ("**Context（上下文）**是这次能看到的资料。", "Context（上下文）"),
+        ("先認識**記憶**，再決定要保存什麼。", "記憶"),
+        ("先认识**记忆**，再决定要保存什么。", "记忆"),
+        ("**Agent Memory** stores approved information.", "Agent Memory"),
+    ],
+)
+@pytest.mark.parametrize("inside_details", [False, True])
+def test_project_markdown_renders_adjacent_core_terms(
+    tmp_path: Path, source: str, term: str, inside_details: bool
+) -> None:
+    import markdown
+    from mkdocs.config import load_config
+
+    config = load_config(str(ROOT / "mkdocs.yml"), docs_dir=str(tmp_path))
+    if inside_details:
+        source = '<details markdown="1">\n<summary>More</summary>\n\n' + source + "\n\n</details>"
+    rendered = markdown.markdown(
+        source,
+        extensions=config["markdown_extensions"],
+        extension_configs=config["mdx_configs"],
+    )
+    assert f"<strong>{term}</strong>" in rendered
+    assert "**" not in rendered
+    if inside_details:
+        assert "<details>" in rendered
+        assert "<details open" not in rendered
+
+
 def _load(name: str):
     path = ROOT / "scripts" / f"{name}.py"
     spec = importlib.util.spec_from_file_location(name.replace("-", "_"), path)
@@ -67,6 +113,67 @@ def test_good_rendered_site_passes(tmp_path: Path) -> None:
     assert audit.audit_site(
         _good_site(tmp_path), base_path="/docs/", site_url=SITE_URL
     ) == []
+
+
+def test_visible_literal_markdown_emphasis_fails_but_code_is_allowed(
+    tmp_path: Path,
+) -> None:
+    site = _good_site(tmp_path)
+    broken = _page("zh-TW").replace(
+        "</body>",
+        "<p>**Context（上下文）**</p>"
+        "<pre><code>**intentional example**</code></pre></body>",
+    )
+    (site / "index.html").write_text(broken, encoding="utf-8")
+
+    problems = audit.audit_site(site, base_path="/docs/", site_url=SITE_URL)
+
+    assert sum("visible literal Markdown emphasis" in item for item in problems) == 1
+
+
+@pytest.mark.parametrize(
+    "raw_markdown",
+    (
+        "- dash item",
+        "+ plus item",
+        "* star item",
+        "1. ordered item",
+        "1) ordered item",
+        "# heading",
+        "> quote",
+        "[a link](asset.txt)",
+        "Use `inline_code` here",
+    ),
+)
+def test_unparsed_markdown_inside_details_fails(
+    tmp_path: Path,
+    raw_markdown: str,
+) -> None:
+    site = _good_site(tmp_path)
+    broken = _page("zh-TW").replace(
+        "</body>",
+        "<details><summary>More</summary>\n"
+        f"{raw_markdown}\n"
+        "</details></body>",
+    )
+    (site / "index.html").write_text(broken, encoding="utf-8")
+
+    problems = audit.audit_site(site, base_path="/docs/", site_url=SITE_URL)
+
+    assert any("unparsed Markdown inside <details>" in item for item in problems)
+
+
+def test_rendered_markdown_inside_details_passes(tmp_path: Path) -> None:
+    site = _good_site(tmp_path)
+    rendered = _page("zh-TW").replace(
+        "</body>",
+        "<details><summary>More</summary>"
+        "<ul><li><strong>Bold item</strong> with <a href=\"asset.txt\">a link</a></li></ul>"
+        "</details></body>",
+    )
+    (site / "index.html").write_text(rendered, encoding="utf-8")
+
+    assert audit.audit_site(site, base_path="/docs/", site_url=SITE_URL) == []
 
 
 def test_broken_link_and_wrong_language_fail(tmp_path: Path) -> None:

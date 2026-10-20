@@ -78,10 +78,11 @@ python -m pytest scripts/test_stage07_examples.py -q
 
 ## `test_stage075_content.py` — 鎖住進階概念 reading-map
 
-這個 gate 檢查 Stage 7.5 三語是否保留六個可見粗體核心詞、12 個概念、四個真正合併的
-概念群組、9 個預設關閉選單、24 筆資源與 `5／5／5／5／4` rowgroups。它也鎖住
-freshness marker、AutoGen／Agent Framework／Sandbox Agents／Dynamic Workflows 現行狀態、
-legacy 深連結，以及兩組共六張不同的 `1672×941` locale 圖。
+這個 gate 檢查 Stage 7.5 三語是否保留四個可見粗體進階概念、五個選修模式、
+4 個預設關閉選單、24 筆資源與 `5／5／5／5／4` rowgroups。它也鎖住「正文先解釋
+九個名詞，第一張圖才出現」的順序、freshness marker、AutoGen／Agent Framework／
+Sandbox Agents／Dynamic Workflows 現行狀態、legacy 深連結，以及兩組共六張不同的
+`1672×941` locale 圖。
 
 ```powershell
 python -m pytest scripts/test_stage075_content.py -q
@@ -104,16 +105,17 @@ python scripts/check-2026-freshness.py
 ## `build-pdf.sh` — 從同一份清單建立三語 PDF
 
 ```bash
-RELEASE_VERSION=v2026.09.01 LANG_VARIANT=zh-TW bash scripts/build-pdf.sh
-RELEASE_VERSION=v2026.09.01 LANG_VARIANT=zh-Hans bash scripts/build-pdf.sh
-RELEASE_VERSION=v2026.09.01 LANG_VARIANT=en bash scripts/build-pdf.sh
+export RELEASE_VERSION="$(python -c 'import yaml; from pathlib import Path; print(yaml.safe_load(Path("release/notes.yml").read_text(encoding="utf-8"))["release_version"])')"
+LANG_VARIANT=zh-TW bash scripts/build-pdf.sh
+LANG_VARIANT=zh-Hans bash scripts/build-pdf.sh
+LANG_VARIANT=en bash scripts/build-pdf.sh
 ```
 
-輸出檔名固定為：
+指令從 `release/notes.yml` 讀取版本。輸出檔名中的 `${RELEASE_VERSION}` 會換成該版本：
 
-- `dist/awesome-agentic-ai-zh-v2026.09.01-zh-TW.pdf`
-- `dist/awesome-agentic-ai-zh-v2026.09.01-zh-Hans.pdf`
-- `dist/awesome-agentic-ai-zh-v2026.09.01-en.pdf`
+- `dist/awesome-agentic-ai-zh-${RELEASE_VERSION}-zh-TW.pdf`
+- `dist/awesome-agentic-ai-zh-${RELEASE_VERSION}-zh-Hans.pdf`
+- `dist/awesome-agentic-ai-zh-${RELEASE_VERSION}-en.pdf`
 
 頁面順序只寫在 [`release/pages.yml`](../release/pages.yml) 一次；工具會從同一列推導繁中、簡中、英文檔名，並阻擋缺頁、順序漂移和外部 URL 漂移。Stage 0–8、Stage 7.5、A1–A3、五條角色路線、walkthrough、Capstone、Setup、Glossary、Resources、Advanced RAG、Agent Memory、CLI 與模型訓練選修都在這份清單裡。正文裡預設收合的補充內容會在 PDF 中展開。
 
@@ -128,7 +130,7 @@ sudo apt-get install pandoc weasyprint poppler-utils \
 
 ```bash
 python scripts/release_manifest.py validate-pdfs \
-  --version v2026.09.01 --dist dist --json dist/pdf-validation.json
+  --version "$RELEASE_VERSION" --dist dist --json dist/pdf-validation.json
 ```
 
 [`release/notes.yml`](../release/notes.yml) 也只寫一次。`release_manifest.py render-notes` 會用相同 change ID、順序和共用連結產生三個語言段落。

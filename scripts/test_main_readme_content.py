@@ -181,7 +181,7 @@ def _section(text: str, start: str, end: str) -> str:
 
 
 def _normalized_internal_target(target: str) -> str:
-    target = re.sub(r"\.(?:en|zh-Hans)(?=\.(?:md|png)(?:#|$))", "", target)
+    target = re.sub(r"\.(?:en|zh-Hans)(?=\.(?:md|png|svg)(?:#|$))", "", target)
     return target.removeprefix("./")
 
 
@@ -196,6 +196,55 @@ def _rated_resource_links(text: str, heading: str) -> list[tuple[str, str]]:
         flags=re.DOTALL,
     )
     return [(_normalized_internal_target(target), rating) for target, rating in rows]
+
+
+def _assert_clean_navigation_header(text: str, locale: str) -> None:
+    suffix = "" if locale == "zh-TW" else f".{locale}"
+    hero = text.split('<div align="center" markdown="1">', 1)[1].split("</div>", 1)[0]
+    banner = re.search(
+        rf"^!\[[^\n]+\]\(resources/diagrams/banner{re.escape(suffix)}\.svg\)$",
+        hero,
+        flags=re.MULTILINE,
+    )
+    assert banner is not None
+    assert not hero[:banner.start()].strip(), "The banner leads the README header"
+    assert hero[banner.end():].lstrip().startswith("# awesome-agentic-ai-zh\n")
+    for full_name in ("Command-Line Interface", "Model Context Protocol"):
+        assert full_name not in hero, "Definitions belong at the learning destination"
+
+
+@pytest.mark.parametrize("locale,page", PAGES.items())
+def test_navigation_header_starts_with_banner_and_keeps_definition_routes(
+    locale: str, page: Path
+) -> None:
+    text = _text(page)
+    _assert_clean_navigation_header(text, locale)
+    suffix = "" if locale == "zh-TW" else f".{locale}"
+    visible = _without_details(text)
+    targets = re.findall(r'(?:href=|\]\()["\']?([^"\') >]+)', visible)
+    for stem in ("tracks/cli/A1-cli-intro", "resources/glossary"):
+        assert f"{stem}{suffix}.md" in targets
+
+
+@pytest.mark.parametrize("locale,page", PAGES.items())
+@pytest.mark.parametrize("position", ("before_banner", "after_banner", "after_title"))
+@pytest.mark.parametrize("term,full_name", (
+    ("CLI", "Command-Line Interface"),
+    ("MCP", "Model Context Protocol"),
+))
+def test_navigation_header_rejects_restored_definition_paragraphs(
+    locale: str, page: Path, position: str, term: str, full_name: str
+) -> None:
+    text = _text(page)
+    if position == "before_banner":
+        index = text.index('<div align="center" markdown="1">') + len('<div align="center" markdown="1">')
+    elif position == "after_banner":
+        index = text.index("# awesome-agentic-ai-zh")
+    else:
+        index = text.index("# awesome-agentic-ai-zh") + len("# awesome-agentic-ai-zh")
+    mutated = text[:index] + f"\n\n**{term}** ({full_name}): definition.\n\n" + text[index:]
+    with pytest.raises(AssertionError):
+        _assert_clean_navigation_header(mutated, locale)
 
 
 @pytest.mark.parametrize("locale,page", PAGES.items())
@@ -287,7 +336,8 @@ def test_trilingual_links_and_stable_facts_match() -> None:
             if not re.match(r"(?:https?:|mailto:|#)", target)
         ]
         external[locale] = [
-            target for target in targets if re.match(r"https?://", target)
+            re.sub(r"(?<=github.io/awesome-agentic-ai-zh/)(?:en|zh-Hans)/(?=about/$)", "", target)
+            for target in targets if re.match(r"https?://", target)
         ]
     assert internal["zh-TW"] == internal["en"] == internal["zh-Hans"]
     assert external["zh-TW"] == external["en"] == external["zh-Hans"]
@@ -304,7 +354,12 @@ def test_homepage_is_shorter_without_deleting_key_terms(page: Path) -> None:
     # English naturally uses more characters than either CJK mirror. All three
     # stay well below their previous 16k–22k versions without rewarding terse,
     # under-explained translations.
-    assert len(text) <= 14_000
+    # The English-only refresh equals its measured source length after the
+    # audited first-use names/meanings are added and compressed. Chinese limits
+    # stay unchanged; banner delivery has its own contract.
+    content = text[text.index("# awesome-agentic-ai-zh"):]
+    assert len(text) - len(content) <= 550
+    assert len(content) <= (14_277 if page == PAGES["en"] else 14_000)
     assert len(text.splitlines()) <= 230
     for banned in ("240+", "81+", "Agent Workflow Audit", "mv starter.py"):
         assert banned not in text

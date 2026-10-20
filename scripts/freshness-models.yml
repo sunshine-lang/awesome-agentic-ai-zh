@@ -11,33 +11,75 @@
 
 stage01_fact_pack:
   canonical: 'stages/01-llm-basics.md'
-  verified_on: '2026-09-01'
+  verified_on: '2026-09-22'
+  provider_updates:
+    gpt: '2026-10-02'
+    gemini: '2026-10-15'
+    anthropic: '2026-10-08'
+    typesafe_jev: '2026-10-15'
+    muse: '2026-10-15'
+    mistral: '2026-10-15'
+    gpt_features: '2026-10-15'
   scope: ['models', 'pricing', 'availability', 'deprecations', 'model-lifecycle']
   official_sources:
     openai_model_development: 'https://openai.com/policies/how-chatgpt-and-our-foundation-models-are-developed/'
     google_llm_tuning: 'https://developers.google.com/machine-learning/crash-course/llm/tuning'
     claude: 'https://platform.claude.com/docs/en/models/fable-5-1/overview'
-    gpt: 'https://developers.openai.com/api/docs/models'
-    gemini: 'https://ai.google.dev/gemini-api/docs/models'
+    claude_opus: 'https://platform.claude.com/docs/en/models/opus-5-5/overview'
+    claude_sonnet: 'https://platform.claude.com/docs/en/models/sonnet-5-5/overview'
+    claude_haiku: 'https://platform.claude.com/docs/en/models/haiku-5-5/overview'
+    claude_haiku_migration: 'https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide'
+    claude_haiku_release: 'https://www.anthropic.com/claude-haiku-5-5'
+    claude_sonnet_migration: 'https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide'
+    gpt: 'https://developers.openai.com/api/docs/models/gpt-6-astra'
+    gpt_sol: 'https://developers.openai.com/api/docs/models/gpt-6.1-sol'
+    gpt_luna: 'https://developers.openai.com/api/docs/models/gpt-6-luna'
+    gpt_pricing: 'https://developers.openai.com/api/docs/pricing'
+    gpt_ultrafast: 'https://developers.openai.com/api/docs/guides/ultrafast-mode'
+    gpt_decisions: 'https://developers.openai.com/api/docs/guides/decisions'
+    typesafe_jev: 'https://docs.typesafe.ai/introduction'
+    typesafe_jev_models: 'https://docs.typesafe.ai/models'
+    typesafe_jev_images: 'https://docs.typesafe.ai/images'
+    typesafe_jev_launch: 'https://typesafe.ai/blog/introducing-system-one-models-and-jev'
+    typesafe_jev_cloudflare: 'https://developers.cloudflare.com/ai/models/typesafe/jev/'
+    gemini: 'https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash'
+    gemini_argon: 'https://ai.google.dev/gemini-api/docs/models/gemini-4-argon'
+    gemini_live: 'https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live'
     deepseek: 'https://api-docs.deepseek.com/quick_start/pricing/'
+    deepseek_updates: 'https://api-docs.deepseek.com/updates/'
     kimi: 'https://platform.kimi.com/docs/overview'
-    hunyuan: 'https://cloud.tencent.com/document/product/1823/130055'
-    minimax: 'https://www.minimax.io/blog/minimax-m3'
+    hunyuan: 'https://cloud.tencent.com/document/product/1823/130051'
+    minimax: 'https://huggingface.co/MiniMaxAI/MiniMax-M3'
     qwen: 'https://help.aliyun.com/en/model-studio/qwen3-8-max'
     glm: 'https://docs.z.ai/guides/llm/glm-5.3'
     yi: 'https://github.com/01-ai/Yi'
-    llama: 'https://developer.meta.com/ai/docs/overview/'
+    llama: 'https://dev.meta.ai/llama'
     muse: 'https://huggingface.co/meta-models/Muse-Glimmer-30B'
+    muse_spark: 'https://dev.meta.ai/docs/models'
+    muse_wonder: 'https://dev.meta.ai/docs/models'
+    grok: 'https://docs.x.ai/developers/models/grok-4.7'
+    mimo: 'https://mimo.mi.com/models/en-US/mimo-v2.6-pro'
     gemma: 'https://ai.google.dev/gemma/docs/core'
     mistral: 'https://docs.mistral.ai/models'
+    mistral_large4: 'https://docs.mistral.ai/models/mistral-large-4-0'
+    mistral_medium35: 'https://docs.mistral.ai/models/mistral-medium-3-5-26-04'
+    mistral_releases: 'https://docs.mistral.ai/resources/changelogs'
     phi: 'https://azure.microsoft.com/en-us/products/phi'
   pricing_sources:
+    claude: 'https://platform.claude.com/docs/en/about-claude/pricing'
+    gpt: 'https://developers.openai.com/api/docs/pricing'
+    typesafe_jev: 'https://docs.typesafe.ai/models'
     gemini: 'https://ai.google.dev/gemini-api/docs/pricing'
     kimi: 'https://platform.kimi.com/'
     hunyuan: 'https://cloud.tencent.com/document/product/1823/130055'
     minimax: 'https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise'
     qwen: 'https://help.aliyun.com/en/model-studio/qwen3-8-max'
     glm: 'https://docs.z.ai/guides/overview/pricing'
+    deepseek: 'https://api-docs.deepseek.com/quick_start/pricing/'
+    muse_spark: 'https://dev.meta.ai/docs/pricing-rate-limits'
+    mistral_large4: 'https://docs.mistral.ai/models/mistral-large-4-0'
+    grok: 'https://docs.x.ai/developers/pricing'
+    mimo: 'https://mimo.mi.com/models/en-US/mimo-v2.6-pro'
   migration_sources:
     hunyuan: 'https://cloud.tencent.com/announce/detail/2391'
 
@@ -78,7 +120,7 @@ stage04_fact_pack:
     microsoft_migration_guide: 'https://learn.microsoft.com/en-us/agent-framework/migration-guide/'
     autogen: 'https://microsoft.github.io/autogen/'
     deepagents: 'https://docs.langchain.com/oss/python/deepagents/overview'
-    strands_agents: 'https://strandsagents.com/docs/user-guide/quickstart/overview/'
+    strands_agents: 'https://strandsagents.com/docs/user-guide/sdk/quickstart/overview/'
     smolagents_security: 'https://huggingface.co/docs/smolagents/tutorials/secure_code_execution'
     pydantic_ai_outputs: 'https://pydantic.dev/docs/ai/core-concepts/output/'
     agno: 'https://docs.agno.com/'
@@ -155,9 +197,20 @@ advanced_rag_fact_pack:
     raptor: 'https://github.com/parthsarthi03/raptor'
     dspy: 'https://github.com/stanfordnlp/dspy'
 
+mcp_skills_catalog_updates:
+  canonical: 'resources/mcp-skills-catalog.md'
+  entry_updates:
+    vercel_skills: '2026-10-15'
+  official_sources:
+    vercel_skills: 'https://github.com/vercel-labs/skills'
+    vercel_skills_reviewed_commit: 'https://github.com/vercel-labs/skills/tree/13e4063a1cf913f5606d57d42ab83a86f5001e04'
+
 agent_memory_fact_pack:
   canonical: 'resources/agent-memory.md'
   verified_on: '2026-08-30'
+  resource_updates:
+    hindsight: '2026-10-15'
+    openviking: '2026-10-15'
   scope: ['memory', 'privacy', 'retention', 'isolation', 'project-status']
   official_sources:
     langchain_memory: 'https://docs.langchain.com/oss/python/concepts/memory'
@@ -169,6 +222,10 @@ agent_memory_fact_pack:
     langmem: 'https://github.com/langchain-ai/langmem'
     graphiti: 'https://github.com/getzep/graphiti'
     zep: 'https://github.com/getzep/zep'
+    deja_vu: 'https://github.com/vshulcz/deja-vu'
+    hindsight: 'https://github.com/vectorize-io/hindsight'
+    openviking: 'https://github.com/volcengine/OpenViking'
+    openviking_license: 'https://github.com/volcengine/OpenViking/blob/main/LICENSE'
   research_sources:
     coala: 'https://arxiv.org/abs/2309.02427'
     generative_agents: 'https://arxiv.org/abs/2304.03442'
@@ -176,10 +233,14 @@ agent_memory_fact_pack:
 
 stage07_fact_pack:
   canonical: 'stages/07-multi-agent-production.md'
-  verified_on: '2026-08-31'
+  verified_on: '2026-09-13'
+  resource_updates:
+    openai_responses_multi_agent: '2026-10-02'
+    google_managed_agents: '2026-10-02'
   scope: ['evals', 'observability', 'human-approval', 'persistence', 'recovery', 'orchestration', 'resources']
   official_sources:
     anthropic_evals: 'https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents'
+    openai_graders: 'https://platform.openai.com/docs/api-reference/graders?api-mode=chat'
     anthropic_agent_patterns: 'https://www.anthropic.com/engineering/building-effective-agents'
     openai_tracing: 'https://openai.github.io/openai-agents-python/tracing/'
     openai_human_in_the_loop: 'https://openai.github.io/openai-agents-python/human_in_the_loop/'
@@ -187,10 +248,13 @@ stage07_fact_pack:
     langgraph_interrupts: 'https://docs.langchain.com/oss/python/langgraph/interrupts'
     ibm_loop_engineering: 'https://www.ibm.com/think/topics/loop-engineering'
     openai_harness_engineering: 'https://openai.com/index/harness-engineering/'
+    openai_responses_multi_agent: 'https://developers.openai.com/api/docs/guides/responses-multi-agent'
+    google_managed_agents: 'https://ai.google.dev/gemini-api/docs/agents'
+    google_antigravity_agent: 'https://ai.google.dev/gemini-api/docs/antigravity-agent'
 
 walkthrough_fact_pack:
   canonical: 'walkthroughs/build-first-agent-in-7-steps.md'
-  verified_on: '2026-08-31'
+  verified_on: '2026-09-13'
   scope: ['models', 'frameworks', 'evals', 'observability', 'human-approval', 'interfaces']
   official_sources:
     anthropic_model_ids: 'https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions'
@@ -203,7 +267,7 @@ walkthrough_fact_pack:
 
 stage075_fact_pack:
   canonical: 'stages/07.5-advanced-agentic-concepts.md'
-  verified_on: '2026-08-29'
+  verified_on: '2026-09-13'
   scope: ['agent-patterns', 'harnesses', 'evals', 'dynamic-workflows', 'framework-status', 'research']
   official_sources:
     anthropic_agent_patterns: 'https://www.anthropic.com/engineering/building-effective-agents'
@@ -333,12 +397,17 @@ agent_paradigms_fact_pack:
 courses_fact_pack:
   canonical: 'resources/courses.md'
   verified_on: '2026-08-29'
+  course_updates:
+    hugging_face_context: '2026-10-15'
+    langchain_deep_agents: '2026-10-15'
   scope: ['course-availability', 'cost', 'certificate', 'assessment', 'repository-status']
   official_sources:
     hugging_face_agents: 'https://huggingface.co/learn/agents-course'
+    hugging_face_context: 'https://huggingface.co/learn/context-course/unit0/introduction'
+    langchain_deep_agents: 'https://academy.langchain.com/courses/deep-agents-with-langgraph'
     microsoft_agents_for_beginners: 'https://github.com/microsoft/ai-agents-for-beginners'
     deeplearning_ai_agentic_ai: 'https://www.deeplearning.ai/courses/agentic-ai/'
-    wandb_agents: 'https://wandb.ai/site/courses/agents/'
+    # W&B Agents temporarily removed 2026-10-02: old URL returned 404; replacement could not be opened.
     claude_academy: 'https://academy.claude.com/'
     claude_academy_faq: 'https://academy.claude.com/help/faq'
     langchain_academy: 'https://academy.langchain.com/courses/intro-to-langgraph'
@@ -395,6 +464,8 @@ model_training_fact_pack:
 setup_guide_fact_pack:
   canonical: 'resources/setup-guide.md'
   verified_on: '2026-08-31'
+  provider_entrypoint_updates:
+    nvidia_nim_llm_api: '2026-10-15'
   scope: ['install-paths', 'api-keys', 'authentication', 'provider-entrypoints', 'project-status']
   official_sources:
     claude_api_quickstart: 'https://platform.claude.com/docs/en/get-started'
@@ -406,7 +477,7 @@ setup_guide_fact_pack:
     uv_python_policy: 'https://docs.astral.sh/uv/reference/policies/python/'
     openai_quickstart: 'https://platform.openai.com/docs/quickstart'
     gemini_openai_compatibility: 'https://ai.google.dev/gemini-api/docs/openai'
-    nvidia_nim_llm_api: 'https://docs.api.nvidia.com/nim/re/reference/llm-apis'
+    nvidia_nim_llm_api: 'https://docs.api.nvidia.com/nim/reference/llm-apis'
     deepseek_api: 'https://api-docs.deepseek.com/'
     kimi_api: 'https://platform.kimi.com/docs/api/overview'
     alibaba_model_studio: 'https://help.aliyun.com/en/model-studio/base-url'
@@ -477,24 +548,29 @@ verified_pages:
     max_age_days: 90
 
 current_frontier_models:
-  # Verified 2026-09-01 from provider docs / official model cards.
+  # GPT-6 Sol and Luna checked 2026-09-23; Claude Haiku 5.5 checked 2026-10-08.
   # This list documents what maintainers checked; stale_patterns below are the gate.
   anthropic:
     - "Fable 5.1"
     - "Mythos 5.1"   # same model; limited to vetted cyber and life-science users
-    - "Opus 5"
-    - "Sonnet 5"
-    - "Haiku 4.5"
+    - "Opus 5.5"
+    - "Sonnet 5.5"
+    - "Haiku 5.5"
+    - "Haiku 4.5 (exercise compatibility baseline)"
   openai:
-    - "GPT-5.6 Sol"
-    - "GPT-5.6 Terra"
-    - "GPT-5.6 Luna"
+    - "GPT-6 Astra"
+    - "GPT-6 Sol"
+    - "GPT-6 Luna"
+    - "GPT-5.6 Sol / Terra / Luna (previous generation; not Stage 01 defaults)"
+  typesafe_ai:
+    - "Jev 1.13 / jev-1.13.0 (official model; service in early access)"
+    - "Jev 1.14 / jev-1.14.0 (Preview; jev-preview, not jev-latest)"
   google_gemini:
-    - "Gemini 3.7 Flash"
+    - "Gemini 3.8 Flash"
     - "Gemini 3.1 Pro Preview"
   deepseek:
     - "DeepSeek-V4-Pro"
-    - "DeepSeek-V4-Flash"
+    - "DeepSeek-V4.1-Flash (deepseek-flash)"
   moonshot:
     - "Kimi K3"
   tencent:
@@ -507,13 +583,20 @@ current_frontier_models:
   zhipu:
     - "GLM-5.3"
   zero_one_ai:
-    - "Yi-34B / Yi-9B (maintenance or historical use)"
+    - "Yi-34B / Yi-9B (historical baseline; current maintenance unverified)"
   meta:
     - "Llama 4 Scout / Maverick"
     - "Muse Glimmer 30B"
+    - "Muse Spark 1.3 (Meta Model API public preview)"
+  xai:
+    - "Grok 4.7"
+  xiaomi:
+    - "MiMo V2.6 Pro"
   google_gemma:
     - "Gemma 4"
   mistral:
+    - "Mistral Large 4 (Public Preview API; weights forthcoming)"
+    - "Mistral Medium 3.5 (Modified MIT)"
     - "Mistral Small 4"
     - "Mistral Large 3"
     - "Ministral 3"
@@ -551,7 +634,7 @@ stale_patterns:
   - pattern: 'https://ai\.meta\.com/llama/get-started/'
     include_files: ['stages/01-llm-basics.md']
     qualifier_terms: []
-    note: 'Meta moved the current Llama developer entry point to developer.meta.com/ai/docs/overview/'
+    note: 'The current Meta Llama documentation entry point is https://dev.meta.ai/llama'
 
   - pattern: '(?:54 exercises|54 個練習|54 个练习|gemma4:e4b.{0,60}7\.5 GB|gemma4:e2b.{0,60}4\.0 GB)'
     include_files: ['examples/README.md']
@@ -591,12 +674,17 @@ stale_patterns:
     qualifier_terms: []
     note: 'Prompt and Context Engineering are overlapping responsibilities, not replacement generations'
 
-  # Stage 01 completed its 2026-08-27 refresh. These patterns are deliberately
+  # Stage 01 completed its 2026-09-23 refresh. These patterns are deliberately
   # scoped to its three mirrors so later stages can migrate in their own PRs.
+  - pattern: 'GPT-5\.6 Sol\s*(?:／|/)\s*Terra\s*(?:／|/)\s*Luna'
+    include_files: ['stages/01-llm-basics.md']
+    qualifier_terms: []
+    note: 'The former exact Stage 01 roster has been replaced with GPT-6 Astra, Sol and Luna; previous-generation models are not current defaults'
+
   - pattern: 'Gemini 3\.5 (Flash|Pro)'
     include_files: ['stages/01-llm-basics.md']
     qualifier_terms: ['前身', '歷史', '历史', '舊版', '旧版', 'legacy', 'historical', 'replaced', 'superseded']
-    note: 'Stage 01 recommends Gemini 3.7 Flash; Gemini 3.1 Pro remains Preview'
+    note: 'Stage 01 recommends Gemini 3.8 Flash; Gemini 3.1 Pro remains Preview'
 
   - pattern: 'GLM-5\.2'
     include_files: ['stages/01-llm-basics.md']
@@ -611,12 +699,22 @@ stale_patterns:
   - pattern: 'hy3-preview'
     include_files: ['stages/01-llm-basics.md']
     qualifier_terms: ['sunset', 'shutdown', 'shuts down', '2026-08-31', '下線', '下线', '歷史', '历史', 'legacy']
-    note: 'Tencent schedules hy3-preview to shut down on 2026-08-31; Stage 01 recommends Hy3'
+    note: 'Tencent shut down hy3-preview on 2026-08-31; Stage 01 recommends Hy3'
 
   - pattern: 'deepseek-chat|deepseek-reasoner'
     include_files: ['stages/01-llm-basics.md']
     qualifier_terms: ['前身', '歷史', '历史', '舊', '旧', 'legacy', 'historical', 'deprecated', '棄用', '弃用', '停用']
     note: 'DeepSeek retired the old aliases on 2026-07-24'
+
+  - pattern: 'deepseek-v4-flash|DeepSeek-V4-Flash'
+    include_files: ['stages/01-llm-basics.md']
+    qualifier_terms: ['舊名', '旧名', '舊', '旧', '退役', 'retired', 'legacy', 'historical']
+    note: 'The old V4 Flash model retired; its legacy alias now routes to V4.1 Flash'
+
+  - pattern: 'claude-opus-5(?!-5)|Opus 5(?!\.5)'
+    include_files: ['stages/01-llm-basics.md', 'CLAUDE.md']
+    qualifier_terms: ['前身', '舊版', '旧版', 'historical', 'legacy', 'previous']
+    note: 'Opus 5.5 is the current Opus-class default; Opus 5 remains available but is not the recommended default'
 
   - pattern: 'Claude 3\.5 Sonnet'
     qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', '基線', '基线', 'predecessor', 'history']
@@ -652,7 +750,7 @@ stale_patterns:
 
   - pattern: 'Opus 4\.7'
     qualifier_terms: ['前身', '歷史', 'lineage', '舊版', '原始', 'baseline', '基線', '基线', 'predecessor', 'history']
-    note: 'Opus 4.8 (May 2026) supersedes 4.7. Opus 5 (2026-07-24) is now the recommended Opus-class default, but Opus 4.8 stays ACTIVE (not deprecated) and is deliberately NOT listed as a stale pattern'
+    note: 'Opus 5.5 (2026-09-22) is now the recommended Opus-class default; Opus 4.8 stays ACTIVE (not deprecated) and is deliberately NOT listed as a stale pattern'
 
   # Stage 05 direct dependencies: Claude Code renamed the dispatch tool in
   # v2.1.63. `Task` survives only as a compatibility alias, so learner-facing
@@ -669,7 +767,7 @@ stale_patterns:
   - pattern: 'Dynamic Workflows.{0,120}(remains|still|仍是|仍為|仍为|綁定|绑定|bound).{0,80}Opus 4\.8|Opus 4\.8.{0,120}(feature|功能|專屬|专属)'
     include_files: ['stages/07.5-advanced-agentic-concepts.md']
     qualifier_terms: ['historical', 'history', 'originally', 'launch', 'legacy', '歷史', '历史', '最初', '發表時', '发布时']
-    note: 'Dynamic workflows are a Claude Code v2.1.154+ capability and are not bound to Opus 4.8'
+    note: 'Dynamic workflows are a current Claude Code capability without one general minimum version in the current product page and are not bound to Opus 4.8'
 
   - pattern: 'prompt.{0,40}(裡含|里含|contains).{0,20}`workflow`.{0,20}(字|word|keyword)|word `workflow`.{0,20}prompt'
     include_files: ['stages/07.5-advanced-agentic-concepts.md']

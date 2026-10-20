@@ -12,9 +12,9 @@
 - [**Agent**](#agent代理人) — 能为了人的目标，自己判断下一步并采取行动；只在规则和权限内自动做事的 AI 系统。
 - [**Tool Use（工具使用）**](#tool-use--function-calling) — 模型提出工具请求，程序检查后才真正执行。
 - [**Agent Loop**](#agent-loop) — Agent 重复“决定、行动、观察”，直到完成或停止的执行循环。
-- [**RAG**](#ragretrieval-augmented-generation) — 先找数据，再把证据交给模型回答。
+- [**RAG**（Retrieval-Augmented Generation）](#ragretrieval-augmented-generation) — 先找数据，再把证据交给模型回答。
 - [**Memory（记忆）**](#memory记忆-两种正交分类轴) — 把以后还要用的信息保存起来，再在需要时读回。
-- [**MCP**](#mcpmodel-context-protocol) — 让 AI 应用用共同方式连接工具和数据的开放协议。
+- [**MCP**（Model Context Protocol）](#mcpmodel-context-protocol) — 让 AI 应用用共同方式连接工具和数据的开放协议。
 - [**Eval（评估）**](#eval评估) — 用固定题目和成功条件检查改动是否真的变好。
 - [**Agent Harness（执行工作台）**](#agent-harness执行工作台) — 包住模型并管理工具、权限、状态、记录和停止规则的系统。
 - [**Workflow Graph（工作流程图）**](#workflow-graph工作流程图) — 用节点和连接把工作步骤、分支和状态画清楚。
@@ -28,8 +28,8 @@
 <tr><th>身份</th><th>白话工作</th><th>示例和边界</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Model Provider／API</strong></td><td>模型公司的服务入口。</td><td><a href="https://platform.claude.com/docs/en/api/overview">Anthropic API</a>；它返回模型结果，不是会修改文件的 Agent。</td></tr>
-<tr><td><strong>LLM Router</strong></td><td>用一个入口转接模型或供应商。</td><td><a href="https://openrouter.ai/docs/faq">OpenRouter</a>；它不是模型，也不是 coding agent。</td></tr>
+<tr><td><strong>Model Provider／API（Application Programming Interface）</strong></td><td>模型公司的服务入口。</td><td><a href="https://platform.claude.com/docs/en/api/overview">Anthropic API</a>；它返回模型结果，不是会修改文件的 Agent。</td></tr>
+<tr><td><strong>LLM（Large Language Model） Router</strong></td><td>LLM 是读写语言的模型；Router 用一个入口转接供应商。</td><td><a href="https://openrouter.ai/docs/faq">OpenRouter</a>；它不是模型，也不是 coding agent。</td></tr>
 <tr><td><strong>Model Runtime</strong></td><td>把模型在本机或服务上运行起来。</td><td><a href="https://docs.ollama.com/api/introduction">Ollama</a>；它提供模型 API，本身不会自动修改项目。</td></tr>
 <tr><td><strong>Coding Agent／Harness</strong></td><td>读取文件、修改文件、运行命令并报告结果。</td><td><a href="https://opencode.ai/docs">OpenCode</a>、<a href="https://github.com/earendil-works/pi">Pi</a>；里面的模型可以更换。</td></tr>
 <tr><td><strong>Agent Framework</strong></td><td>让开发者组合 Agent、工具、状态和流程。</td><td><a href="https://learn.microsoft.com/en-us/agent-framework/concepts/workflows/">Microsoft Agent Framework</a>；它是工具箱，不等于一个模型。</td></tr>
@@ -178,15 +178,15 @@
 
 ### RLHF / RL
 
-**RLHF/RL** 用人类或规则的反馈来训练模型。反馈设计错误时，模型也可能学会钻评分漏洞，所以仍要做独立 Eval。
+**RLHF**（Reinforcement Learning from Human Feedback）/RL（Reinforcement Learning） 用人类或规则的反馈来训练模型。反馈设计错误时，模型也可能学会钻评分漏洞，所以仍要做独立 Eval。
 
 ### GRPO
 
-**GRPO** 让同一问题的多个答案互相比较，再根据相对表现更新模型。它是 Post-training 方法之一，不是每个项目都必须使用。
+**GRPO**（Group Relative Policy Optimization） 让同一问题的多个答案互相比较，再根据相对表现更新模型。它是 Post-training 方法之一，不是每个项目都必须使用。
 
 ### PEFT / LoRA
 
-**PEFT** 是只训练较少参数的一组方法；**LoRA** 会冻结原来的权重，再训练新增的低秩矩阵。它们能减少需要更新的参数，但仍需要数据与 Eval。
+**PEFT**（Parameter-Efficient Fine-Tuning） 是只训练较少参数的一组方法；**LoRA**（Low-Rank Adaptation） 会冻结原来的权重，再训练新增的低秩矩阵。它们能减少需要更新的参数，但仍需要数据与 Eval。
 
 ### Distillation（蒸馏）
 
@@ -360,6 +360,42 @@
 
 📍 入门：[Stage 2](../stages/02-prompt-engineering.zh-Hans.md)；Agent 系统：[Stage 7](../stages/07-multi-agent-production.zh-Hans.md)
 
+### Case/Task（案例/任务）
+
+**Case/Task** 是 Eval 考卷上的一道题：固定输入、测试环境和成功条件。没有清楚的 case，就不知道两次执行是不是在考同一件事。
+
+### Suite（测试组）
+
+**Suite** 是一起执行和版本化的一组 cases。报告要记录 suite 的版本，否则“这次 90 分”不能和换过题目的上次直接比较。
+
+### Golden Set/Reference Set（黄金集/参考集）
+
+**Golden Set/Reference Set** 是人先审查过、能代表真实工作的案例与预期标准。Golden Set 是常见实践叫法，不是跨供应商的正式规范；它用来检查系统，不等于训练数据或 Few-shot 示例。
+
+### Reference Solution/Criteria（参考答案/标准）
+
+**Reference Solution/Criteria** 说明怎样才算成功。Agent 任务常有不止一种好答案，所以可以写必要证据、允许范围、禁止行为和 rubric，不一定只放一段标准文字。
+
+### Trial（试跑）
+
+**Trial** 是同一个 case 的一次完整执行。模型输出可能变化，所以高风险或不稳定案例要跑多次，不能用一次结果假装成固定能力。
+
+### Grader（评分器）
+
+**Grader** 按规则判断 trial。能用程序精确检查的先用 deterministic grader；模糊质量可以加模型或人工评分，但要留下 rubric、版本和原始证据。
+
+### Baseline（基线）
+
+**Baseline** 是修改前的比较起点。它必须使用同一版 cases、环境、trial 次数和阈值，否则前后分数不能公平比较。
+
+### Regression（回归）
+
+**Regression** 是新版本相对 baseline 出现超过阈值的退步，可能发生在质量、成本、安全或可靠性。先看多次 trials 和失败案例，再决定是否阻挡发布。
+
+### Holdout Set（保留测试集）
+
+**Holdout Set** 是平常不拿来反复调整的冻结案例。开发时使用 development/reference cases；准备发布或做最后验证时才打开 holdout，避免把系统调成只会回答已经看过的考题。
+
 ### Observability
 
 **Observability** 把 Agent 的步骤、工具、状态、时间、usage 和结果留下可查询记录。它像行车记录仪；记录时仍要遮住 secret、私人数据和不必要的 Prompt 内容。
@@ -426,7 +462,7 @@
 
 **Agent Production Engineering** 是本学习地图对“让 Agent 可以长期、安全、可观察地运行”的上位名称。它把 Harness、Loop、Workflow Graph、Eval、Guardrails、成本、恢复和人工批准放在同一章讨论。
 
-学习顺序是 [Stage 3 的 Agent Loop](../stages/03-tool-use-and-hello-agent.zh-Hans.md) → [Stage 4 的 Workflow Graph／Agent Framework](../stages/04-agent-frameworks.zh-Hans.md) → [Stage 7 的 Agent Production Engineering](../stages/07-multi-agent-production.zh-Hans.md)。Prompt、Context、Harness、Loop、Graph 是五个会重叠的控制问题，不是五个互相取代的产品世代。
+学习顺序是 [Stage 3 的 Agent Loop](../stages/03-tool-use-and-hello-agent.zh-Hans.md) → [Stage 4 的 Workflow Graph／Agent Framework](../stages/04-agent-frameworks.zh-Hans.md) → [Stage 7 的 Agent Production Engineering](../stages/07-multi-agent-production.zh-Hans.md)。Prompt、Context、Harness、Loop、Graph 会一起工作；它们不是五层，也不是互相取代的产品世代。
 
 📍 完整章节：[Stage 7](../stages/07-multi-agent-production.zh-Hans.md)
 

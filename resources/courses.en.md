@@ -28,13 +28,16 @@ To follow this project and build step by step, return to the [main learning path
 | You want lots of executable code | [Microsoft AI Agents for Beginners](https://github.com/microsoft/ai-agents-for-beginners) | Every lesson includes text, video, and code; the examples lean toward Microsoft Agent Framework. |
 | You want a complete Chinese-language textbook | [Datawhale Hello-Agents](https://github.com/datawhalechina/hello-agents) | Goes from principles all the way to RAG, Multi-Agent, MCP, and deployment. |
 | You want to learn framework-neutral design methods first | [DeepLearning.AI Agentic AI](https://www.deeplearning.ai/courses/agentic-ai/) | Builds reflection, tool use, planning, eval, and multi-agent systems from scratch. |
-| You want to fill in observability and evaluation | [W&B AI Engineering: Agents](https://wandb.ai/site/courses/agents/) | Puts accuracy, latency, and cost together in a rerunnable Eval. |
 | You have decided to use Claude / LangGraph | [Claude Academy](https://academy.claude.com/) / [LangChain Academy](https://academy.langchain.com/courses/intro-to-langgraph) | Learn the vendors' current tools directly; remember to separate general concepts from product-specific buttons. |
+| You want to organize the rules and tools given to a coding agent | [Hugging Face Context Course](https://huggingface.co/learn/context-course/unit0/introduction) | Use **context engineering**—organizing knowledge so an agent can find the right material when needed. |
+| You know Agent foundations and want deeper task decomposition | [LangChain Project: Deep Agents](https://academy.langchain.com/courses/deep-agents-with-langgraph) | Use a work list, files, and **Subagents**—agents assigned part of a larger job—to complete a fuller Agent. |
 | Your main goal is a certificate series | [IBM](https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai) / [Vanderbilt](https://www.coursera.org/specializations/ai-agents) | These are longer paid course series; first confirm that the cost, language, and projects fit your needs. |
 
 ## 🎯 Selected courses and learning paths
 
 The stars are this project's **editorial recommendation**, not a certificate ranking: ⭐⭐⭐⭐⭐ works well as a main path; ⭐⭐⭐⭐ is well worth taking but leans more toward a specific tool or purpose; ⭐⭐⭐ suits people who have already decided to use that vendor.
+
+<small>New-course verification: 2026-10-15 UTC; scope limited to Hugging Face Context Course and LangChain Project: Deep Agents.</small>
 
 <table>
   <thead>
@@ -46,10 +49,11 @@ The stars are this project's **editorial recommendation**, not a certificate ran
     <tr><td><a href="https://github.com/datawhalechina/hello-agents">Datawhale — Hello-Agents</a></td><td>Simplified Chinese; free and open source</td><td>Go from Agent principles and classic patterns to RAG, memory, Multi-Agent, MCP, and complete projects.</td><td>No Certificate of Completion; there are many chapters, so choose based on your own question—you do not need to read them all at once.</td><td>⭐⭐⭐⭐⭐</td></tr>
   </tbody>
   <tbody>
-    <tr><th scope="rowgroup" rowspan="5">Build and ship</th><td><a href="https://www.deeplearning.ai/courses/agentic-ai/">DeepLearning.AI — Agentic AI</a></td><td>English; videos are free to audit</td><td>Build reflection, tool use, planning, Multi-Agent systems, error analysis, and component Eval from scratch.</td><td>Quizzes, graded assignments, and the certificate require Pro; free auditing does not include a certificate.</td><td>⭐⭐⭐⭐⭐</td></tr>
-    <tr><td><a href="https://wandb.ai/site/courses/agents/">Weights &amp; Biases — AI Engineering: Agents</a></td><td>English; free</td><td>Build deterministic workflows, a single Agent, memory, Multi-Agent systems, and accuracy / latency / cost Eval.</td><td>About two hours; the current public page does not clearly state certificate requirements, so do not assume a certificate is issued before registering.</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><th scope="rowgroup" rowspan="6">Build and ship</th><td><a href="https://www.deeplearning.ai/courses/agentic-ai/">DeepLearning.AI — Agentic AI</a></td><td>English; videos are free to audit</td><td>Build reflection, tool use, planning, Multi-Agent systems, error analysis, and component Eval from scratch.</td><td>Quizzes, graded assignments, and the certificate require Pro; free auditing does not include a certificate.</td><td>⭐⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://academy.claude.com/">Claude Academy</a></td><td>English; free</td><td>Learn Claude API, Claude Code, MCP, Agent Skills, and Subagents as needed.</td><td>Passing the course quiz can earn a free completion badge; this is a Claude product path and does not replace general Agent foundations.</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://huggingface.co/learn/context-course/unit0/introduction">Hugging Face — Context Course</a></td><td>English; course material is free, but external API or Agent subscriptions may cost</td><td>Turn reusable instructions into a <strong>Skill (a rule bundle)</strong> and connect tools through <strong>MCP (a tool-connection protocol)</strong>. Add <strong>Plugins (tool bundles)</strong> and <strong>Subagents (delegated agents)</strong>. Use <strong>Hooks (event-triggered actions)</strong>, then inspect a <strong>Nano Harness (a tiny execution harness)</strong>.</td><td>The official page lists two certificate levels, but the advanced certificate requires a capstone still to be announced in a live stream; do not treat it as currently completable.</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://academy.langchain.com/courses/intro-to-langgraph">LangChain Academy — Introduction to LangGraph</a></td><td>English; free</td><td>Build with graph, state, memory, HITL, subgraph, deployment, and long-term memory.</td><td>Leans toward LangGraph / LangSmith; the current public course page does not clearly list certificate requirements.</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td><a href="https://academy.langchain.com/courses/deep-agents-with-langgraph">LangChain Project: Deep Agents</a></td><td>English; free course, but model/API usage may cost; 30 lessons and about 2 hours of video</td><td>Use a <strong>Todo list (work list)</strong> to break down planning, then add files and Subagents to assemble a complete Agent.</td><td>For readers who know Agent foundations; it leans toward LangGraph / Deep Agents, and the public page does not state a certificate threshold.</td><td>⭐⭐⭐⭐</td></tr>
     <tr><td><a href="https://www.kaggle.com/learn-guide/5-day-agents">Google × Kaggle — 5-Day AI Agents Intensive</a></td><td>English; free self-study</td><td>Understand Agent through models, tools, orchestration, memory, and Eval, then build a capstone.</td><td>Originally a time-limited intensive, now used as a self-study guide; do not treat cohort participation eligibility as a permanent certificate.</td><td>⭐⭐⭐⭐</td></tr>
   </tbody>
   <tbody>
@@ -97,6 +101,8 @@ The smallest project can be an Agent that looks up information, calls one tool, 
 - Do not list items that have only a marketing page, an unverifiable syllabus, or a generic completion certificate presented as a license.
 - Repository stars are used only to discover community attention and are not written into the main text; maintenance status comes from whether the repository is archived, its recent updates, and its current documentation.
 - When costs, certificates, or cohorts change, update all three locales and their tests together.
+
+- On 2026-10-02, W&B AI Engineering: Agents was temporarily removed from current recommendations. The old link returned 404 and the replacement could not be opened. This does not establish permanent discontinuation; reconsider after a working official course entrance is confirmed.
 
 </details>
 

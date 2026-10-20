@@ -4,7 +4,7 @@
 
 <div align="center" markdown="1">
 
-![AI Agent 学习路径](resources/diagrams/banner.zh-Hans.png)
+![从 Stage 0–2 共用基础分流到 CLI 与 Agent 路线，共用 Stage 5、8，再按需选择角色路线](resources/diagrams/banner.zh-Hans.svg)
 
 # awesome-agentic-ai-zh
 
@@ -27,13 +27,13 @@
 
 **AI Agent**（AI 智能体）是“能为了人的目标，自己判断下一步并采取行动的 AI 系统”。人给它目标后，它会读取当前情况、选择下一步，需要时使用工具，再根据结果继续、修正、停止，或把控制权交还给人。它可以自动替人完成工作，但只能在人给的规则和权限内行动。只回答一次的聊天机器人，或每一步都预先固定好的脚本，不一定是 Agent。这个 repo 不要求你一开始就懂所有名词，而是带你依序完成三件事：
 
-1. **先懂基础**：LLM、Prompt、API 与 Token 是什么。
+1. **先懂基础**：LLM（Large Language Model，能读写语言的模型）、Prompt、API（Application Programming Interface，让程序调用服务的接口） 与 Token 是什么。
 2. **再做出东西**：让模型调用工具、跑 Agent Loop、读文件与记住事情。
 3. **最后做得可靠**：加入权限、Eval、人工批准、观测与失败恢复。
 
 这里的角色是**学习路线图 + 精选资源 + 可直接运行的小练习**。需要完整章节时，我们会带你去官方文档、[Datawhale Hello-Agents](https://github.com/datawhalechina/hello-agents) 或对应的 Cookbook，不重写另一套百科全书。需要连接模型时，每个练习会再说明云端或本机路径。
 
-重要技术词第一次出现时会先用白话说明，再保留正式英文。忘记某个词时，直接查[名词表](resources/glossary.zh-Hans.md)。
+章节中的重要技术词第一次出现时会先用白话说明，再保留正式英文。忘记某个词时，直接查[名词表](resources/glossary.zh-Hans.md)。
 
 ## 🚀 现在就开始
 
@@ -71,9 +71,9 @@ cd awesome-agentic-ai-zh
 
 | Stage | 这一步解决什么？ | 完成后你能做什么？ |
 |---|---|---|
-| **0** · [基础准备](stages/00-foundations.zh-Hans.md) | 电脑与基本工具准备好了吗？ | 用 Python 调用公开 API、读 JSON，并用 Git 保存成果 |
+| **0** · [基础准备](stages/00-foundations.zh-Hans.md) | 电脑与基本工具准备好了吗？ | 用 Python 调用公开 API、读 JSON（JavaScript Object Notation，程序交换数据常用的文本格式），并用 Git 保存成果 |
 | **1** · [LLM 基础](stages/01-llm-basics.zh-Hans.md) | LLM、Token、Context 与模型差在哪里？ | 调用一个 LLM，并依需求选云端或本机模型 |
-| **2** · [Prompt 设计](stages/02-prompt-engineering.zh-Hans.md) | 怎么把目标、数据、规则与输出说清楚？ | 用固定案例比较 Zero-Shot、One-Shot、Few-Shot 与 CoT 的边界 |
+| **2** · [Prompt 设计](stages/02-prompt-engineering.zh-Hans.md) | 怎么把目标、数据、规则与输出说清楚？ | 用固定案例比较 Zero-Shot、One-Shot、Few-Shot 与 CoT（Chain-of-Thought，用中间步骤处理问题的推理提示方法） 的边界 |
 
 ### Track A：使用 CLI Agent 把工作做完
 
@@ -94,14 +94,14 @@ cd awesome-agentic-ai-zh
 | **3** · [工具使用与第一个 Agent Loop](stages/03-tool-use-and-hello-agent.zh-Hans.md) | 模型怎么安全调用工具并重复下一步？ | 做出有最大轮数、会验证参数的 Agent Loop |
 | **4** · [Workflow Graph 与 Agent 框架](stages/04-agent-frameworks.zh-Hans.md) | 怎么把多个步骤画成工作地图？ | 选择 Workflow、Agent、Graph 与 Framework |
 | **5** · [Claude Code 生态](stages/05-claude-code-ecosystem.zh-Hans.md) | MCP、Skills、Plugins、Hooks 与 Subagents 怎么合作？ | 组合工具、规则与可重用能力 |
-| **6** · [Memory · RAG](stages/06-memory-rag.zh-Hans.md) | Agent 怎么查文件、保存与取回重要信息？ | 建立最小 RAG、long-term memory 与 contextual retrieval 流程 |
-| **7** · [Agent Production Engineering：Harness、Loop 与 Graph](stages/07-multi-agent-production.zh-Hans.md) | Agent 怎么在真实环境稳定运作？ | 加入 Eval、观测、预算、Human-in-the-loop（HITL，人工批准）与恢复 |
+| **6** · [Memory · RAG（Retrieval-Augmented Generation，先找相关资料，再依资料回答）](stages/06-memory-rag.zh-Hans.md) | Agent 怎么查文件、保存与取回重要信息？ | 建立最小 RAG、long-term memory 与 contextual retrieval 流程 |
+| **7** · [Agent 上线工程：可测、可看、可停、可恢复](stages/07-multi-agent-production.zh-Hans.md) | Agent 怎么在真实环境稳定运作？ | 加入 Eval、观测、预算、Human-in-the-loop（HITL，人工批准）与恢复 |
 | **7.5** · [进阶 Agentic 概念地图](stages/07.5-advanced-agentic-concepts.zh-Hans.md) | 还有哪些进阶 Pattern 值得认得？ | 从 12 个概念选读 PAR loop、agent-as-judge 等需要的主题 |
 | **8** · [Agent 操作界面](stages/08-agent-interfaces.zh-Hans.md) | Agent 怎么操作 API 以外的真实环境？ | 选择 Computer Use、Browser Use 或 Code Sandbox |
 
 Stage 4 先看懂 **Workflow Graph**，再用 framework 把它做出来；Stage 7 再加入 Eval、观测、批准与恢复，让同一张工作图可以稳定运行。
 
-> 🔭 **学习顺序**：Stage 2 Prompt → Stage 3 **Agent Loop** → Stage 4 **Workflow Graph**／Framework → Stage 5 工具与规则 → Stage 6 **Context Engineering** → Stage 7 production。`prompt → context → harness → loop → graph` 是五个控制问题，不是章节顺序。
+> 🔭 **学习顺序**：Stage 2 Prompt → Stage 3 **Agent Loop** → Stage 4 **Workflow Graph**／Framework → Stage 5 工具与规则 → Stage 6 **Context Engineering** → Stage 7 production。Prompt、Context、Harness、Loop、Graph 会一起工作；它们不是五层，也不是互相取代的产品世代。
 
 完成 A3 或 Stage 7 后，可以开始 [Capstone 项目](CAPSTONE.zh-Hans.md)；想记录进度可使用 [PROGRESS.zh-Hans.md](PROGRESS.zh-Hans.md)。
 
@@ -119,7 +119,9 @@ Stage 4 先看懂 **Workflow Graph**，再用 framework 把它做出来；Stage 
 
 ### 依你的身份继续走
 
-![依身份选择延伸路线](resources/diagrams/branch-decision-tree.zh-Hans.png)
+![研究、开发、教学、知识工作与日常使用是五种选择，按需选读，不必全部走完](resources/diagrams/branch-decision-tree.zh-Hans.svg)
+
+[静态图](resources/diagrams/branch-decision-tree.zh-Hans.png)
 
 | 路线 | 适合谁 | 你会处理什么？ |
 |---|---|---|
